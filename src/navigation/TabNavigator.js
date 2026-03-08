@@ -1,5 +1,4 @@
-/**
- import React from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, CheckSquare, Target, Clock, BarChart2 } from 'lucide-react-native';
 import HomeScreen from '../screens/Home/HomeScreen';
@@ -13,35 +12,70 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   const { theme } = useTheme();
-  const colors = theme === 'dark' ? { background: '#1E1B4B', text: '#E0E7FF' } : { background: '#F3E8FF', text: '#4B5563' };
-  console.log('Theme:', theme);
-  console.log('Colors:', colors);
-  console.log('Header Title Style:', {
-  fontFamily: 'Poppins-Bold',
-  fontWeight: 'bold',
-}); 
+  const colors = theme === 'dark' 
+    ? { background: '#1E1B4B', text: '#E0E7FF' } 
+    : { background: '#F3E8FF', text: '#4B5563' };
+
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: colors.background, borderTopWidth: 0, elevation: 5 },
+        headerShown: false, // Add this to prevent header errors
+        tabBarStyle: { 
+          backgroundColor: colors.background, 
+          borderTopWidth: 0, 
+          elevation: 5 
+        },
         tabBarActiveTintColor: '#8B5CF6',
         tabBarInactiveTintColor: colors.text,
-      
       }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarIcon: ({ color }) => <Home color={color} size={24} /> }} />
-      <Tab.Screen name="Tasks" component={TasksScreen} options={{ tabBarIcon: ({ color }) => <CheckSquare color={color} size={24} /> }} />
-      <Tab.Screen name="Focus" component={FocusScreen} options={{ tabBarIcon: ({ color }) => <Target color={color} size={24} /> }} />
-      <Tab.Screen name="Timeline" component={TimelineScreen} options={{ tabBarIcon: ({ color }) => <Clock color={color} size={24} /> }} />
-      <Tab.Screen name="Reports" component={ReportsScreen} options={{ tabBarIcon: ({ color }) => <BarChart2 color={color} size={24} /> }} />
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <Home color={color} size={24} />,
+          tabBarLabel: 'Home', // Explicit label
+        }} 
+      />
+      <Tab.Screen 
+        name="Tasks" 
+        component={TasksScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <CheckSquare color={color} size={24} />,
+          tabBarLabel: 'Tasks',
+        }} 
+      />
+      <Tab.Screen 
+        name="Focus" 
+        component={FocusScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <Target color={color} size={24} />,
+          tabBarLabel: 'Focus',
+        }} 
+      />
+      <Tab.Screen 
+        name="Timeline" 
+        component={TimelineScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <Clock color={color} size={24} />,
+          tabBarLabel: 'Timeline',
+        }} 
+      />
+      <Tab.Screen 
+        name="Reports" 
+        component={ReportsScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <BarChart2 color={color} size={24} />,
+          tabBarLabel: 'Reports',
+        }} 
+      />
     </Tab.Navigator>
   );
 };
 
 export default TabNavigator;
-*/
 
-
+/** 
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // Assuming installed; matches Expo setup
@@ -121,3 +155,4 @@ const TabNavigator = () => {
 };
 
 export default TabNavigator;
+*/
