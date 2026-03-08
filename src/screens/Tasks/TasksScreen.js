@@ -23,6 +23,11 @@ const TasksScreen = () => {
   const completeTask = (id) => {
     setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
   };
+    const renderEmptyState = () => (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ color: themeColors.text, fontSize: 16 }}>No tasks yet. Add one to get started!</Text>
+    </View>
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: themeColors.background }]}>
@@ -32,6 +37,7 @@ const TasksScreen = () => {
         keyExtractor={item => item.id}
         renderItem={({ item }) => <TaskCard task={item} onComplete={() => completeTask(item.id)} />}
       />
+      ListEmptyComponent={renderEmptyState} 
       <TouchableOpacity style={styles.addButton} onPress={() => { /* Open bottom sheet ref if needed */ }}>
         <Text style={styles.addText}>+ Add Task</Text>
       </TouchableOpacity>
