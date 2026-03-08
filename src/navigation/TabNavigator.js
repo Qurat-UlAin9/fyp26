@@ -1,4 +1,82 @@
 import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Home, CheckSquare, Target, Clock, BarChart2 } from 'lucide-react-native';
+import HomeScreen from '../screens/Home/HomeScreen';
+import TasksScreen from '../screens/Tasks/TasksScreen';
+import FocusScreen from '../screens/Focus/FocusScreen';
+import TimelineScreen from '../screens/Timeline/TimelineScreen';
+import ReportsScreen from '../screens/Reports/ReportsScreen';
+import { useTheme } from '../contexts/ThemeContext';
+
+const Tab = createBottomTabNavigator();
+
+const TabNavigator = () => {
+  const { theme } = useTheme();
+  const colors = theme === 'dark' 
+    ? { background: '#1E1B4B', text: '#E0E7FF' } 
+    : { background: '#F3E8FF', text: '#4B5563' };
+
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false, // Add this to prevent header errors
+        tabBarStyle: { 
+          backgroundColor: colors.background, 
+          borderTopWidth: 0, 
+          elevation: 5 
+        },
+        tabBarActiveTintColor: '#8B5CF6',
+        tabBarInactiveTintColor: colors.text,
+      }}
+    >
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <Home color={color} size={24} />,
+          tabBarLabel: 'Home', // Explicit label
+        }} 
+      />
+      <Tab.Screen 
+        name="Tasks" 
+        component={TasksScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <CheckSquare color={color} size={24} />,
+          tabBarLabel: 'Tasks',
+        }} 
+      />
+      <Tab.Screen 
+        name="Focus" 
+        component={FocusScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <Target color={color} size={24} />,
+          tabBarLabel: 'Focus',
+        }} 
+      />
+      <Tab.Screen 
+        name="Timeline" 
+        component={TimelineScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <Clock color={color} size={24} />,
+          tabBarLabel: 'Timeline',
+        }} 
+      />
+      <Tab.Screen 
+        name="Reports" 
+        component={ReportsScreen} 
+        options={{ 
+          tabBarIcon: ({ color }) => <BarChart2 color={color} size={24} />,
+          tabBarLabel: 'Reports',
+        }} 
+      />
+    </Tab.Navigator>
+  );
+};
+
+export default TabNavigator;
+
+/** 
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -61,36 +139,5 @@ const TabNavigator = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  tabBar: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    bottom: 14,
-    borderTopWidth: 0,
-    elevation: 0,
-    height: 72,
-    paddingBottom: 8,
-    paddingTop: 6,
-    borderRadius: 28,
-    shadowColor: '#312E81',
-    shadowOpacity: 0.28,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-  },
-  tabBarBackground: {
-    flex: 1,
-    borderRadius: 28,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
-  },
-  label: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 12,
-  },
-  iconWrap: {
-    marginTop: 2,
-  },
-});
-
 export default TabNavigator;
+*/
