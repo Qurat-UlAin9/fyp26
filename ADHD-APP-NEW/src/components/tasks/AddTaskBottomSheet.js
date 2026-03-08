@@ -64,3 +64,5 @@ const styles = StyleSheet.create({
   workloadRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 24 },
   workloadOption: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1 },
 });
+
+export default AddTaskBottomSheet;

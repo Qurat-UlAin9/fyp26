@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../contexts/ThemeContext';
 import ADHDButton from '../../components/common/ADHDButton';
@@ -44,3 +44,5 @@ const styles = StyleSheet.create({
   freqRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 16 },
   freqOption: { paddingVertical: 8, paddingHorizontal: 20, borderRadius: 20, borderWidth: 1 },
 });
+
+export default AddHabitBottomSheet;

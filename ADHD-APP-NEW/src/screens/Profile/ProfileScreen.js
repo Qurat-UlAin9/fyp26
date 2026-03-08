@@ -1,44 +1,49 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { User, Edit, LogOut } from 'lucide-react-native';
+import { User, Award, Settings, LogOut } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
-import GlassCard from '../../components/common/GlassCard';
-import ADHDButton from '../../components/common/ADHDButton';
 
 export default function ProfileScreen({ navigation }) {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
+
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.avatarContainer}>
-          <View style={[styles.avatar, { backgroundColor: theme.card }]}>
-            <User color={theme.text} size={60} />
-          </View>
-          <TouchableOpacity style={styles.editIcon} onPress={() => navigation.navigate('EditProfile')}>
-            <Edit color={theme.text} size={20} />
-          </TouchableOpacity>
+        <View style={[styles.avatarWrap, { backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : '#FFFFFF' }]}>
+          <User color={theme.accentGradient[0]} size={56} />
         </View>
-        <Text style={[styles.name, { color: theme.text }]}>Alex Johnson</Text>
-        <Text style={[styles.email, { color: theme.textSecondary }]}>alex@example.com</Text>
+        <Text style={[styles.name, { color: theme.text }]}>Ain</Text>
 
-        <GlassCard style={styles.statsCard}>
-          <View style={styles.statRow}>
-            <Text style={[styles.statValue, { color: theme.text }]}>42</Text>
-            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Focus Sessions</Text>
+        <View style={styles.statsGrid}>
+          <View style={[styles.statCard, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#FFFFFF' }]}>
+            <Text style={[styles.statValue, { color: theme.text }]}>62</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Focus mins/day</Text>
           </View>
-          <View style={styles.statRow}>
-            <Text style={[styles.statValue, { color: theme.text }]}>7</Text>
-            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Habit Streak</Text>
+          <View style={[styles.statCard, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#FFFFFF' }]}>
+            <Text style={[styles.statValue, { color: theme.text }]}>5</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Habit streak</Text>
           </View>
-          <View style={styles.statRow}>
-            <Text style={[styles.statValue, { color: theme.text }]}>89%</Text>
-            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Task Completion</Text>
+          <View style={[styles.statCard, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#FFFFFF' }]}>
+            <Text style={[styles.statValue, { color: theme.text }]}>78%</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Mood summary</Text>
           </View>
-        </GlassCard>
+        </View>
 
-        <ADHDButton title="Edit Profile" onPress={() => navigation.navigate('EditProfile')} style={styles.button} />
-        <ADHDButton title="Logout" onPress={() => navigation.replace('Login')} gradient={false} style={styles.button} />
+        <TouchableOpacity style={styles.actionBtn} onPress={() => navigation.navigate('Rewards')}>
+          <Award color="#FFFFFF" size={18} />
+          <Text style={styles.actionText}>Rewards</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionBtn} onPress={() => navigation.navigate('Settings')}>
+          <Settings color="#FFFFFF" size={18} />
+          <Text style={styles.actionText}>Settings</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#EF4444' }]} onPress={() => navigation.replace('Login')}>
+          <LogOut color="#FFFFFF" size={18} />
+          <Text style={styles.actionText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -46,15 +51,36 @@ export default function ProfileScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { flex: 1, alignItems: 'center', paddingTop: 60, paddingHorizontal: 20 },
-  avatarContainer: { position: 'relative', marginBottom: 16 },
-  avatar: { width: 120, height: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' },
-  editIcon: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#8B5CF6', borderRadius: 20, padding: 6 },
-  name: { fontSize: 24, fontWeight: '700', marginBottom: 4 },
-  email: { fontSize: 16, marginBottom: 24 },
-  statsCard: { width: '100%', flexDirection: 'row', justifyContent: 'space-around', padding: 20, marginBottom: 32 },
-  statRow: { alignItems: 'center' },
-  statValue: { fontSize: 22, fontWeight: '700' },
-  statLabel: { fontSize: 12, marginTop: 4 },
-  button: { width: '100%', marginBottom: 12 },
+  content: { flex: 1, paddingHorizontal: 20, alignItems: 'center', paddingTop: 36 },
+  avatarWrap: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  name: { fontSize: 26, fontWeight: '700', marginBottom: 20 },
+  statsGrid: { width: '100%', gap: 10, marginBottom: 26 },
+  statCard: {
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(148,163,184,0.22)',
+  },
+  statValue: { fontSize: 24, fontWeight: '700' },
+  statLabel: { marginTop: 4, fontSize: 13 },
+  actionBtn: {
+    width: '100%',
+    borderRadius: 14,
+    paddingVertical: 13,
+    marginBottom: 10,
+    backgroundColor: '#7C3AED',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+  },
+  actionText: { color: '#FFFFFF', fontWeight: '700', fontSize: 15 },
 });
