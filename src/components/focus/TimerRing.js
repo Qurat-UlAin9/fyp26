@@ -1,50 +1,38 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming } from 'react-native-reanimated';
-import { Circle } from 'react-native-svg';
+import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../../contexts/ThemeContext';
-import { colors } from '../../theme/colors';
 
-const TimerRing = ({ progress, isPlaying }) => {
+export default function TimerRing({ progress }) {
   const { theme } = useTheme();
-  const themeColors = colors[theme];
-  const glow = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: glow.value,
-  }));
-
-  React.useEffect(() => {
-    if (isPlaying) {
-      glow.value = withRepeat(withTiming(0.5, { duration: 1000 }), -1, true);
-    } else {
-      glow.value = 1;
-    }
-  }, [isPlaying]);
+  const size = 250;
+  const strokeWidth = 10;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference * (1 - progress);
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.ring, animatedStyle, { borderColor: themeColors.primary }]}>
-        <Circle cx="100" cy="100" r="90" stroke={themeColors.accent} strokeWidth="10" fill="none" strokeDasharray={`${progress * 565}, 565`} />
-      </Animated.View>
-    </View>
+    <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <Circle
+        stroke={theme.textSecondary + '40'}
+        fill="none"
+        cx={size/2}
+        cy={size/2}
+        r={radius}
+        strokeWidth={strokeWidth}
+      />
+      <Circle
+        stroke={theme.accentGradient[0]}
+        fill="none"
+        cx={size/2}
+        cy={size/2}
+        r={radius}
+        strokeWidth={strokeWidth}
+        strokeDasharray={`${circumference} ${circumference}`}
+        strokeDashoffset={strokeDashoffset}
+        strokeLinecap="round"
+        rotation="-90"
+        origin={`${size/2}, ${size/2}`}
+      />
+    </Svg>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    width: 200,
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  ring: {
-    borderWidth: 10,
-    borderRadius: 100,
-    shadowOpacity: 0.5,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-});
-
-export default TimerRing;
+}

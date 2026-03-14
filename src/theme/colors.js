@@ -1,21 +1,21 @@
-export const colors = {
-  light: {
-    background: '#F3E8FF',
-    text: '#4B5563',
-    primary: '#8B5CF6',
-    accent: '#EC4899',
-    success: '#34D399',
-    warning: '#FBBF24',
-    card: '#FFFFFF',
-  },
-  dark: {
-    background: '#1E1B4B',
-    text: '#E0E7FF',
-    primary: '#8B5CF6',
-    accent: '#EC4899',
-    success: '#34D399',
-    warning: '#FBBF24',
-    card: '#312E81',
-  },
-  gradients: ['#A78BFA', '#EC4899', '#3B82F6'],
+export const darkTheme = {
+  background: ['#0F172A', '#1E293B', '#0B1120'],
+  card: 'rgba(255,255,255,0.06)',
+  text: '#FFFFFF',
+  textSecondary: '#CBD5E1',
+  accentGradient: ['#8B5CF6', '#EC4899', '#3B82F6'],
+  border: 'rgba(255,255,255,0.1)',
+  shadow: '#00000080',
+  glow: '#8B5CF6',
+};
+
+export const lightTheme = {
+  background: ['#F1F5F9', '#F1F5F9', '#F1F5F9'],
+  card: '#FFFFFF',
+  text: '#0F172A',
+  textSecondary: '#334155',
+  accentGradient: ['#8B5CF6', '#EC4899', '#3B82F6'],
+  border: '#E2E8F0',
+  shadow: '#CBD5E1',
+  glow: '#8B5CF6',
 };

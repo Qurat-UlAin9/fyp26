@@ -1,42 +1,39 @@
 import React from 'react';
-import { View, Text, Switch, StyleSheet } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { colors } from '../../theme/colors';
+import { View, Text, ScrollView } from 'react-native';
+import { useTheme } from '../../components/common/ThemeProvider';
+import ADHDCard from '../../components/common/ADHDCard';
+import ADHDButton from '../../components/common/ADHDButton';
+import { Globe, Sun, Moon } from 'lucide-react-native';
 
-const LanguageThemeScreen = () => {
-  const { theme, toggleTheme } = useTheme();
-  const themeColors = colors[theme];
-  const isDark = theme === 'dark';
+const LanguageThemeScreen = ({ navigation }) => {
+  const { colors, toggleTheme } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
-      <Text style={[styles.title, { color: themeColors.text }]}>Select Language & Theme</Text>
-      {/* Language dropdown */}
-      <View style={styles.option}>
-        <Text style={[styles.label, { color: themeColors.text }]}>Dark Theme</Text>
-        <Switch value={isDark} onValueChange={() => toggleTheme(isDark ? 'light' : 'dark')} />
+    <ScrollView style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ padding: 24 }}>
+      <View style={{ alignItems: 'center', marginBottom: 32 }}>
+        <Text style={{ fontSize: 32, fontWeight: '800', color: colors.text }}>Get Started</Text>
+        <Text style={{ fontSize: 16, color: colors.textSecondary, textAlign: 'center' }}>
+          Choose your preferences
+        </Text>
       </View>
-    </View>
+
+      <ADHDCard title="Language" subtitle="Select your language">
+        <View style={{ flexDirection: 'row', gap: 12 }}>
+          <ADHDButton title="🇺🇸 English" variant="outline" style={{ flex: 1 }} />
+          <ADHDButton title="🇪🇸 Español" variant="outline" style={{ flex: 1 }} />
+        </View>
+      </ADHDCard>
+
+      <ADHDCard title="Theme" subtitle="Choose your visual style">
+        <View style={{ flexDirection: 'row', gap: 12 }}>
+          <ADHDButton title="Light" icon="Sun" variant="outline" style={{ flex: 1 }} onPress={toggleTheme} />
+          <ADHDButton title="Dark" icon="Moon" variant="outline" style={{ flex: 1 }} onPress={toggleTheme} />
+        </View>
+      </ADHDCard>
+
+      <ADHDButton title="Continue to Login" onPress={() => navigation.replace('LoginScreen')} style={{ marginTop: 20 }} />
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  option: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 18,
-  },
-});
 
 export default LanguageThemeScreen;
