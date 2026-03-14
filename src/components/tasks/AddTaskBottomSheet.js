@@ -1,52 +1,68 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
-import BottomSheet from '@gorhom/bottom-sheet';
+import React, { forwardRef, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../contexts/ThemeContext';
-import { colors } from '../../theme/colors';
+import ADHDButton from '../common/ADHDButton';
 
-const AddTaskBottomSheet = ({ onAdd }) => {
+const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
   const { theme } = useTheme();
-  const themeColors = colors[theme];
-  const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
-  const [task, setTask] = React.useState('');
+  const [title, setTitle] = useState('');
+  const [deadline, setDeadline] = useState('');
+  const [workload, setWorkload] = useState('Medium');
 
-  const handleSheetChanges = useCallback((index) => {
-    if (index === -1) setTask('');
-  }, []);
+  const handleSubmit = () => {
+    if (!title.trim()) return;
+    onSubmit({ title, deadline, workload });
+    setTitle('');
+    setDeadline('');
+    setWorkload('Medium');
+  };
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={-1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-      backgroundStyle={{ backgroundColor: themeColors.background }}
-    >
-      <View style={styles.content}>
+    <BottomSheet ref={ref} index={-1} snapPoints={['50%']} enablePanDownToClose backgroundStyle={{ backgroundColor: theme.card }}>
+      <BottomSheetView style={styles.content}>
+        <Text style={[styles.title, { color: theme.text }]}>Add New Task</Text>
         <TextInput
-          style={[styles.input, { color: themeColors.text, borderColor: themeColors.primary }]}
-          placeholder="New Task"
-          value={task}
-          onChangeText={setTask}
+          placeholder="Task title"
+          placeholderTextColor={theme.textSecondary}
+          style={[styles.input, { color: theme.text, borderColor: theme.border }]}
+          value={title}
+          onChangeText={setTitle}
         />
-        <Button title="Add" onPress={() => { onAdd(task); bottomSheetRef.current.close(); }} color={themeColors.primary} />
-      </View>
+        <TextInput
+          placeholder="Deadline (YYYY-MM-DD)"
+          placeholderTextColor={theme.textSecondary}
+          style={[styles.input, { color: theme.text, borderColor: theme.border }]}
+          value={deadline}
+          onChangeText={setDeadline}
+        />
+        <View style={styles.workloadRow}>
+          {['Low', 'Medium', 'High'].map(level => (
+            <TouchableOpacity
+              key={level}
+              style={[
+                styles.workloadOption,
+                { borderColor: theme.border },
+                workload === level && { backgroundColor: theme.accentGradient[0] + '40' }
+              ]}
+              onPress={() => setWorkload(level)}
+            >
+              <Text style={{ color: theme.text }}>{level}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <ADHDButton title="Create Task" onPress={handleSubmit} />
+      </BottomSheetView>
     </BottomSheet>
   );
-};
+});
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-  },
+  content: { padding: 20 },
+  title: { fontSize: 22, fontWeight: '700', marginBottom: 20 },
+  input: { borderWidth: 1, borderRadius: 16, padding: 12, fontSize: 16, marginBottom: 16 },
+  workloadRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 24 },
+  workloadOption: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1 },
 });
 
 export default AddTaskBottomSheet;

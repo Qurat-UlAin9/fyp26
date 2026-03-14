@@ -1,34 +1,20 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import GlassCard from '../common/GlassCard';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
-import { colors } from '../../theme/colors';
+import GlassCard from '../common/GlassCard';
 
-const SoundCard = ({ sound, onSelect }) => {
+export default function SoundCard({ title, selected, onSelect }) {
   const { theme } = useTheme();
-  const themeColors = colors[theme];
-
   return (
-    <TouchableOpacity onPress={() => onSelect(sound)}>
-      <GlassCard style={styles.card}>
-        <Text style={[styles.text, { color: themeColors.text }]}>{sound.name}</Text>
+    <TouchableOpacity onPress={onSelect}>
+      <GlassCard style={[styles.card, selected && { borderColor: theme.accentGradient[0], borderWidth: 2 }]}>
+        <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
       </GlassCard>
     </TouchableOpacity>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  card: {
-    width: 100,
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10,
-  },
-  text: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
+  card: { padding: 16, marginBottom: 8 },
+  title: { fontSize: 16, fontWeight: '500' },
 });
-
-export default SoundCard;
