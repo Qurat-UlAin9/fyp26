@@ -1,215 +1,232 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Play, Pause, RotateCcw, Mic, Lock } from 'lucide-react-native';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
-import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
+import { Audio } from 'expo-av';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/ThemeContext';
+import TimerRing from '../../components/focus/TimerRing';
+import ControlButtons from '../../components/focus/ControlButtons';
+import SoundBottomSheet from '../../components/focus/SoundBottomSheet';
+import StatsSection from '../../components/focus/StatsSection';
+import UnlockMusicCard from '../../components/focus/UnlockMusicCard';
 
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-const TOTAL_SECONDS = 25 * 60;
+const DEFAULT_TIMER_SECONDS = 25 * 60;
+
+const SOUND_OPTIONS = [
+  { key: 'deep-focus', label: 'Deep Focus', source: require('../../../assets/sounds/analog-beats.mp3') },
+  { key: 'brown-noise', label: 'Brown Noise', source: require('../../../assets/sounds/forest.mp3') },
+  { key: 'rain-rhythm', label: 'Rain Rhythm', source: require('../../../assets/sounds/rain.mp3') },
+  { key: 'soft-beats', label: 'Soft Beats', source: require('../../../assets/sounds/ocean.mp3') },
+  { key: 'alpha-waves', label: 'Alpha Waves', source: require('../../../assets/sounds/analog-beats.mp3') },
+];
 
 export default function FocusScreen() {
-  const { theme, isDark } = useTheme();
-  const bottomSheetRef = useRef(null);
-  const [timeLeft, setTimeLeft] = useState(TOTAL_SECONDS);
-  const [isActive, setIsActive] = useState(false);
-  const [selectedSound, setSelectedSound] = useState('Rain');
-  const progress = useSharedValue(1);
+  const { theme } = useTheme();
 
-  const sounds = useMemo(() => ['Rain', 'Forest', 'Brown Noise', 'Instrumental'], []);
+  const soundSheetRef = useRef(null);
+  const timerIntervalRef = useRef(null);
+  const timerEndAtRef = useRef(null);
+  const activeSoundRef = useRef(null);
+
+  const [timeLeft, setTimeLeft] = useState(DEFAULT_TIMER_SECONDS);
+  const [isRunning, setIsRunning] = useState(false);
+  const [completedSessions, setCompletedSessions] = useState(0);
+  const [totalMinutes, setTotalMinutes] = useState(0);
+  const [selectedSound, setSelectedSound] = useState(null);
+  const [completionMessage, setCompletionMessage] = useState('');
+
+  const sounds = useMemo(() => SOUND_OPTIONS, []);
 
   useEffect(() => {
-    let timer = null;
-    if (isActive && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    }
-    if (timeLeft === 0) {
-      setIsActive(false);
-    }
+    Audio.setAudioModeAsync({
+      staysActiveInBackground: true,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+    }).catch(() => {});
+
     return () => {
-      if (timer) clearInterval(timer);
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+      if (activeSoundRef.current) {
+        activeSoundRef.current.stopAsync().catch(() => {});
+        activeSoundRef.current.unloadAsync().catch(() => {});
+      }
     };
-  }, [isActive, timeLeft]);
+  }, []);
 
-  useEffect(() => {
-    progress.value = withTiming(timeLeft / TOTAL_SECONDS, {
-      duration: 800,
-      easing: Easing.linear,
-    });
-  }, [timeLeft, progress]);
+  const clearTimerInterval = useCallback(() => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+  }, []);
 
-  const size = 260;
-  const stroke = 14;
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
+  const onTimerComplete = useCallback(() => {
+    clearTimerInterval();
+    timerEndAtRef.current = null;
+    setIsRunning(false);
+    setTimeLeft(0);
+    setCompletedSessions((prev) => prev + 1);
+    setTotalMinutes((prev) => prev + DEFAULT_TIMER_SECONDS / 60);
+    setCompletionMessage('Great job! Focus session completed.');
 
-  const animatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: circumference * (1 - progress.value),
-  }));
+    Audio.Sound.createAsync(require('../../../assets/sounds/ocean.mp3'), { shouldPlay: true, isLooping: false })
+      .then(({ sound }) => {
+        setTimeout(() => {
+          sound.unloadAsync().catch(() => {});
+        }, 1600);
+      })
+      .catch(() => {});
 
-  const formatTime = () => {
-    const m = Math.floor(timeLeft / 60)
-      .toString()
-      .padStart(2, '0');
-    const s = (timeLeft % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  };
+    Alert.alert('Session Complete', 'Great job! Focus session completed.');
+  }, [clearTimerInterval]);
 
-  const resetTimer = () => {
-    setIsActive(false);
-    setTimeLeft(TOTAL_SECONDS);
-  };
+  const startTimer = useCallback(() => {
+    if (isRunning || timeLeft <= 0) {
+      return;
+    }
+
+    setCompletionMessage('');
+    setIsRunning(true);
+    timerEndAtRef.current = Date.now() + timeLeft * 1000;
+
+    clearTimerInterval();
+    timerIntervalRef.current = setInterval(() => {
+      const remainingMs = (timerEndAtRef.current || Date.now()) - Date.now();
+      const nextSeconds = Math.max(0, Math.ceil(remainingMs / 1000));
+      setTimeLeft(nextSeconds);
+
+      if (nextSeconds <= 0) {
+        onTimerComplete();
+      }
+    }, 250);
+  }, [clearTimerInterval, isRunning, onTimerComplete, timeLeft]);
+
+  const pauseTimer = useCallback(() => {
+    if (!isRunning) {
+      return;
+    }
+
+    const remainingMs = (timerEndAtRef.current || Date.now()) - Date.now();
+    setTimeLeft(Math.max(0, Math.ceil(remainingMs / 1000)));
+    setIsRunning(false);
+    timerEndAtRef.current = null;
+    clearTimerInterval();
+  }, [clearTimerInterval, isRunning]);
+
+  const handleTogglePlay = useCallback(() => {
+    if (isRunning) {
+      pauseTimer();
+      return;
+    }
+
+    if (timeLeft === 0) {
+      setTimeLeft(DEFAULT_TIMER_SECONDS);
+    }
+
+    startTimer();
+  }, [isRunning, pauseTimer, startTimer, timeLeft]);
+
+  const handleReset = useCallback(() => {
+    clearTimerInterval();
+    timerEndAtRef.current = null;
+    setIsRunning(false);
+    setTimeLeft(DEFAULT_TIMER_SECONDS);
+    setCompletionMessage('');
+  }, [clearTimerInterval]);
+
+  const handleSelectSound = useCallback(async (soundKey) => {
+    const selected = sounds.find((item) => item.key === soundKey);
+    if (!selected) {
+      return;
+    }
+
+    try {
+      if (activeSoundRef.current) {
+        await activeSoundRef.current.stopAsync();
+        await activeSoundRef.current.unloadAsync();
+        activeSoundRef.current = null;
+      }
+
+      const { sound } = await Audio.Sound.createAsync(selected.source, {
+        shouldPlay: true,
+        isLooping: true,
+        volume: 0.55,
+      });
+      activeSoundRef.current = sound;
+      setSelectedSound(soundKey);
+    } catch (error) {
+      Alert.alert('Audio Error', 'Unable to play this sound right now.');
+    }
+  }, [sounds]);
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
-      <View style={styles.inner}>
-        <Text style={[styles.title, { color: theme.text }]}>Focus Session</Text>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.content}>
+          <Text style={[styles.title, { color: theme.text }]}>Focus Session</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Stay present. One task at a time.</Text>
 
-        <View style={styles.timerWrap}>
-          <Svg width={size} height={size}>
-            <Defs>
-              <SvgGradient id="ringGradient" x1="0" y1="0" x2="1" y2="1">
-                <Stop offset="0%" stopColor={theme.accentGradient[0]} />
-                <Stop offset="50%" stopColor={theme.accentGradient[1]} />
-                <Stop offset="100%" stopColor={theme.accentGradient[2]} />
-              </SvgGradient>
-            </Defs>
-            <Circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(15,23,42,0.12)'}
-              strokeWidth={stroke}
-              fill="none"
-            />
-            <AnimatedCircle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke="url(#ringGradient)"
-              strokeWidth={stroke}
-              strokeLinecap="round"
-              fill="none"
-              strokeDasharray={`${circumference} ${circumference}`}
-              animatedProps={animatedProps}
-              rotation={-90}
-              originX={size / 2}
-              originY={size / 2}
-            />
-          </Svg>
-
-          <TouchableOpacity style={[styles.mainPlay, { backgroundColor: isDark ? '#151F45' : '#FFFFFF' }]} onPress={() => setIsActive((p) => !p)}>
-            <LinearGradient colors={theme.accentGradient} style={styles.mainPlayGradient}>
-              {isActive ? <Pause color="#FFFFFF" size={40} /> : <Play color="#FFFFFF" size={40} />}
-            </LinearGradient>
-            <Text style={styles.timerText}>{formatTime()}</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.controlsRow}>
-          <TouchableOpacity onPress={resetTimer} style={styles.smallControl}>
-            <RotateCcw color={theme.textSecondary} size={26} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => bottomSheetRef.current?.expand()} style={styles.smallControl}>
-            <Mic color={theme.textSecondary} size={26} />
-          </TouchableOpacity>
-        </View>
-
-        <View style={[styles.unlockCard, { backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)' }]}>
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.unlockTitle, { color: theme.text }]}>Unlock Music</Text>
-            <Text style={[styles.unlockText, { color: theme.textSecondary }]}>Complete 3 more sessions to unlock your playlist.</Text>
+          <View style={styles.ringWrapper}>
+            <TimerRing totalSeconds={DEFAULT_TIMER_SECONDS} timeLeft={timeLeft} isRunning={isRunning} />
           </View>
-          <Lock color={theme.accentGradient[0]} size={20} />
-        </View>
-      </View>
 
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={['45%']}
-        enablePanDownToClose
-        handleIndicatorStyle={{ backgroundColor: theme.textSecondary }}
-        backgroundStyle={{ backgroundColor: isDark ? 'rgba(17,24,39,0.92)' : 'rgba(248,250,252,0.95)' }}
-      >
-        <BottomSheetView style={styles.sheetContent}>
-          <Text style={[styles.sheetTitle, { color: theme.text }]}>Background Sounds</Text>
-          {sounds.map((sound) => (
-            <TouchableOpacity key={sound} onPress={() => setSelectedSound(sound)} activeOpacity={0.85}>
-              <LinearGradient
-                colors={
-                  selectedSound === sound
-                    ? [theme.accentGradient[0], theme.accentGradient[2]]
-                    : isDark
-                    ? ['#1E293B', '#334155']
-                    : ['#FFFFFF', '#EEF2FF']
-                }
-                style={styles.soundCard}
-              >
-                <Text style={[styles.soundText, { color: selectedSound === sound ? '#FFFFFF' : theme.text }]}>{sound}</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          ))}
-        </BottomSheetView>
-      </BottomSheet>
+          <ControlButtons
+            isRunning={isRunning}
+            onReset={handleReset}
+            onTogglePlay={handleTogglePlay}
+            onOpenSound={() => soundSheetRef.current?.expand()}
+          />
+
+          <StatsSection completedSessions={completedSessions} totalMinutes={totalMinutes} />
+          <UnlockMusicCard completedSessions={completedSessions} />
+
+          {!!completionMessage && <Text style={[styles.completionText, { color: '#38BDF8' }]}>{completionMessage}</Text>}
+        </View>
+      </SafeAreaView>
+
+      <SoundBottomSheet
+        sheetRef={soundSheetRef}
+        sounds={sounds}
+        selectedSound={selectedSound}
+        onSelectSound={handleSelectSound}
+      />
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  inner: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 },
-  title: { fontSize: 28, fontWeight: '700', marginBottom: 18 },
-  timerWrap: { alignItems: 'center', justifyContent: 'center', marginBottom: 22 },
-  mainPlay: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 72,
-    width: 144,
-    height: 144,
-    shadowColor: '#8B5CF6',
-    shadowOpacity: 0.35,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 8,
+  container: {
+    flex: 1,
   },
-  mainPlayGradient: {
-    width: 86,
-    height: 86,
-    borderRadius: 43,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
+  safeArea: {
+    flex: 1,
   },
-  timerText: { color: '#FFFFFF', fontSize: 24, fontWeight: '700' },
-  controlsRow: { width: '70%', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
-  smallControl: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(148,163,184,0.12)',
+    paddingTop: 8,
   },
-  unlockCard: {
-    width: '100%',
-    borderRadius: 18,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    marginTop: 8,
   },
-  unlockTitle: { fontSize: 16, fontWeight: '700', marginBottom: 4 },
-  unlockText: { fontSize: 13, paddingRight: 12 },
-  sheetContent: { padding: 20, gap: 10 },
-  sheetTitle: { fontSize: 20, fontWeight: '700', marginBottom: 8 },
-  soundCard: { borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16 },
-  soundText: { fontSize: 15, fontWeight: '600' },
+  subtitle: {
+    fontSize: 15,
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  ringWrapper: {
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  completionText: {
+    marginTop: 20,
+    fontWeight: '700',
+    fontSize: 14,
+    textAlign: 'center',
+  },
 });
