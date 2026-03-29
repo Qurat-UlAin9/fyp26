@@ -67,19 +67,8 @@ export default function OnboardingScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: isDark ? '#0F172A' : '#F8FAFC' }]}>
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={back} disabled={currentSlide === 0} style={[styles.arrowBtn, currentSlide === 0 && styles.disabled]}>
-          <ChevronLeft color={currentSlide === 0 ? '#94A3B8' : theme.primary} size={22} />
-        </TouchableOpacity>
-
         <TouchableOpacity onPress={finish}>
           <Text style={[styles.skipText, { color: theme.primary }]}>Skip</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={next}
-          style={styles.arrowBtn}
-        >
-          <ChevronRight color={theme.primary} size={22} />
         </TouchableOpacity>
       </View>
 
@@ -123,6 +112,21 @@ export default function OnboardingScreen({ navigation }) {
       <View style={styles.bottomControls}>
         <ADHDButton title={currentSlide === slides.length - 1 ? 'Get Started' : 'Next'} onPress={next} />
       </View>
+
+      <View pointerEvents="box-none" style={styles.sideArrowsLayer}>
+        <TouchableOpacity
+          onPress={back}
+          disabled={currentSlide === 0}
+          style={[styles.sideArrowBtn, styles.leftArrow, currentSlide === 0 && styles.disabled]}
+          accessibilityRole="button"
+        >
+          <ChevronLeft color={currentSlide === 0 ? '#94A3B8' : theme.primary} size={26} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={next} style={[styles.sideArrowBtn, styles.rightArrow]} accessibilityRole="button">
+          <ChevronRight color={theme.primary} size={26} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -137,16 +141,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     marginBottom: 14,
-  },
-  arrowBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: 'rgba(148,163,184,0.12)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   disabled: {
     opacity: 0.35,
@@ -200,5 +196,27 @@ const styles = StyleSheet.create({
   bottomControls: {
     marginTop: 22,
     paddingHorizontal: 20,
+  },
+  sideArrowsLayer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 20,
+    justifyContent: 'center',
+  },
+  sideArrowBtn: {
+    position: 'absolute',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(148,163,184,0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: '50%',
+    marginTop: -24,
+  },
+  leftArrow: {
+    left: 10,
+  },
+  rightArrow: {
+    right: 10,
   },
 });
