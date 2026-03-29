@@ -21,7 +21,7 @@ export default function RegisterScreen({ navigation }) {
 
   const handleRegister = () => {
     // Dummy register
-    navigation.replace('MainTabs');
+    navigation.replace('Onboarding');
   };
 
   return (
