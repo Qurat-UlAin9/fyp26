@@ -11,7 +11,7 @@ export default function HomeScreen() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
-  const screenBackground = isDark ? '#0F172A' : '#F1F5F9';
+  const screenBackground = isDark ? '#0B1028' : '#F1F5F9';
 
   const quickActions = [
     {
@@ -19,7 +19,7 @@ export default function HomeScreen() {
       title: 'Focus Quick Start',
       info: '25:00',
       icon: Timer,
-      colors: isDark ? ['#6D28D9', '#2563EB'] : ['#A78BFA', '#60A5FA'],
+      colors: isDark ? ['#4C1D95', '#1D4ED8'] : ['#A78BFA', '#60A5FA'],
       onPress: () => navigation.navigate('Focus'),
     },
     {
@@ -27,7 +27,7 @@ export default function HomeScreen() {
       title: 'Emotion Check-In',
       info: 'Track mood',
       icon: SmilePlus,
-      colors: isDark ? ['#9333EA', '#DB2777'] : ['#F0ABFC', '#F9A8D4'],
+      colors: isDark ? ['#6D28D9', '#2563EB'] : ['#F0ABFC', '#F9A8D4'],
       onPress: () => navigation.navigate('EmotionRegulation'),
     },
     {
@@ -35,7 +35,7 @@ export default function HomeScreen() {
       title: 'Habits',
       info: '5 day streak',
       icon: Leaf,
-      colors: isDark ? ['#0F766E', '#0284C7'] : ['#6EE7B7', '#7DD3FC'],
+      colors: isDark ? ['#312E81', '#1E40AF'] : ['#6EE7B7', '#7DD3FC'],
       onPress: () => navigation.navigate('Habits'),
     },
   ];
@@ -61,7 +61,7 @@ export default function HomeScreen() {
 
         <View style={[styles.quoteOuter, { backgroundColor: isDark ? '#111A4A' : '#FFFFFF' }]}>
           <LinearGradient
-            colors={isDark ? ['#1E2A78', '#4C1D95', '#7E5ACD'] : ['#7DD3FC', '#60A5FA', '#A78BFA']}
+            colors={isDark ? ['#1E1B4B', '#1E3A8A', '#6D28D9'] : ['#7DD3FC', '#60A5FA', '#A78BFA']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.quoteInner}
@@ -76,7 +76,7 @@ export default function HomeScreen() {
 
         <TouchableOpacity onPress={() => navigation.navigate('Questionnaire')} activeOpacity={0.9}>
           <LinearGradient
-            colors={isDark ? ['#4338CA', '#7C3AED'] : ['#C4B5FD', '#A5B4FC']}
+            colors={isDark ? ['#4C1D95', '#2563EB'] : ['#C4B5FD', '#A5B4FC']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.assessmentCard}
@@ -88,7 +88,7 @@ export default function HomeScreen() {
 
         <TouchableOpacity onPress={() => navigation.navigate('Chatbot')} activeOpacity={0.9}>
           <LinearGradient
-            colors={isDark ? ['#7C3AED', '#2563EB'] : ['#A78BFA', '#22D3EE']}
+            colors={isDark ? ['#5B21B6', '#1D4ED8'] : ['#A78BFA', '#22D3EE']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.aiCard}
@@ -114,19 +114,19 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.snapshotRow}>
-          <LinearGradient colors={isDark ? ['#312E81', '#1D4ED8'] : ['#FFFFFF', '#E0E7FF']} style={styles.snapshotCard}>
+          <LinearGradient colors={isDark ? ['#1E1B4B', '#1D4ED8'] : ['#FFFFFF', '#E0E7FF']} style={styles.snapshotCard}>
             <ListChecks color={isDark ? '#C4B5FD' : '#6366F1'} size={18} />
             <Text style={[styles.snapshotTitle, { color: isDark ? '#BFDBFE' : '#4338CA' }]}>Tasks</Text>
             <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#1E1B4B' }]}>3 pending</Text>
           </LinearGradient>
 
-          <LinearGradient colors={isDark ? ['#4C1D95', '#C026D3'] : ['#FCE7F3', '#E9D5FF']} style={styles.snapshotCard}>
+          <LinearGradient colors={isDark ? ['#4C1D95', '#2563EB'] : ['#FCE7F3', '#E9D5FF']} style={styles.snapshotCard}>
             <Clock3 color={isDark ? '#F0ABFC' : '#9333EA'} size={18} />
             <Text style={[styles.snapshotTitle, { color: isDark ? '#F5D0FE' : '#6B21A8' }]}>Focus</Text>
             <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#3B0764' }]}>62 min</Text>
           </LinearGradient>
 
-          <LinearGradient colors={isDark ? ['#155E75', '#1D4ED8'] : ['#D1FAE5', '#BAE6FD']} style={styles.snapshotCard}>
+          <LinearGradient colors={isDark ? ['#1E3A8A', '#312E81'] : ['#D1FAE5', '#BAE6FD']} style={styles.snapshotCard}>
             <Flame color={isDark ? '#FDE68A' : '#EA580C'} size={18} />
             <Text style={[styles.snapshotTitle, { color: isDark ? '#BAE6FD' : '#0E7490' }]}>Habits</Text>
             <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#0C4A6E' }]}>5 days</Text>

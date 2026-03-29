@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInRight, FadeOutLeft, Layout } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import QuestionCard from '../../components/detection/QuestionCard';
 import OptionCard from '../../components/detection/OptionCard';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const QUESTIONS = [
   'How often do you have trouble finishing tasks once the challenging parts are done?',
@@ -31,6 +32,7 @@ const QUESTIONS = [
 const OPTIONS = ['Never', 'Rarely', 'Sometimes', 'Often', 'Very Often'];
 
 export default function QuestionnaireScreen({ navigation }) {
+  const { isDark } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null));
 
@@ -65,26 +67,43 @@ export default function QuestionnaireScreen({ navigation }) {
       return;
     }
 
-    const answeredCount = answers.filter(Boolean).length;
-    Alert.alert('Assessment complete', `You answered ${answeredCount} out of ${QUESTIONS.length} questions.`);
+    const scoreMap = { Never: 0, Rarely: 1, Sometimes: 2, Often: 3, 'Very Often': 4 };
+    const score = answers.reduce((sum, answer) => sum + (scoreMap[answer] ?? 0), 0);
+    const maxScore = QUESTIONS.length * 4;
+    const percentage = Math.round((score / maxScore) * 100);
+
+    navigation.navigate('AssessmentResult', {
+      score,
+      maxScore,
+      percentage,
+      answeredCount: answers.filter(Boolean).length,
+      totalQuestions: QUESTIONS.length,
+    });
   };
 
   return (
-    <LinearGradient colors={['#F8FAFF', '#EEF2FF', '#E0E7FF']} style={styles.container}>
+    <LinearGradient
+      colors={isDark ? ['#0B1028', '#1E1B4B', '#1E3A8A'] : ['#F8FAFF', '#EEF2FF', '#E0E7FF']}
+      style={styles.container}
+    >
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.headerRow}>
-          <Pressable style={styles.backButton} onPress={goBack} accessibilityRole="button">
-            <Ionicons name="chevron-back" size={20} color="#312E81" />
-            <Text style={styles.backText}>Back</Text>
+          <Pressable
+            style={[styles.backButton, { backgroundColor: isDark ? 'rgba(30,58,138,0.35)' : 'rgba(255, 255, 255, 0.7)' }]}
+            onPress={goBack}
+            accessibilityRole="button"
+          >
+            <Ionicons name="chevron-back" size={20} color={isDark ? '#E2E8F0' : '#312E81'} />
+            <Text style={[styles.backText, { color: isDark ? '#E2E8F0' : '#312E81' }]}>Back</Text>
           </Pressable>
 
-          <Text style={styles.progressText}>Question {currentIndex + 1} of 18</Text>
+          <Text style={[styles.progressText, { color: isDark ? '#CBD5E1' : '#475569' }]}>Question {currentIndex + 1} of 18</Text>
         </View>
 
-        <View style={styles.progressTrack}>
+        <View style={[styles.progressTrack, { backgroundColor: isDark ? 'rgba(148,163,184,0.2)' : 'rgba(99, 102, 241, 0.16)' }]}>
           <Animated.View
             layout={Layout.duration(280)}
-            style={[styles.progressFill, { width: `${progress * 100}%` }]}
+            style={[styles.progressFill, { width: `${progress * 100}%`, backgroundColor: isDark ? '#60A5FA' : '#6366F1' }]}
           />
         </View>
 
@@ -103,6 +122,7 @@ export default function QuestionnaireScreen({ navigation }) {
                 label={option}
                 selected={selectedAnswer === option}
                 onPress={() => handleSelect(option)}
+                style={styles.optionCardWrap}
               />
             ))}
           </View>
@@ -115,7 +135,7 @@ export default function QuestionnaireScreen({ navigation }) {
             style={[styles.finishButton, !selectedAnswer && styles.finishButtonDisabled]}
           >
             <LinearGradient
-              colors={selectedAnswer ? ['#7C3AED', '#6366F1'] : ['#A5B4FC', '#A5B4FC']}
+              colors={selectedAnswer ? (isDark ? ['#5B21B6', '#2563EB'] : ['#7C3AED', '#6366F1']) : ['#A5B4FC', '#A5B4FC']}
               style={styles.finishGradient}
             >
               <Text style={styles.finishText}>Finish screening</Text>
@@ -149,35 +169,38 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   backText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#312E81',
   },
   progressText: {
     fontSize: 14,
-    color: '#475569',
     fontWeight: '600',
   },
   progressTrack: {
     height: 10,
     borderRadius: 999,
-    backgroundColor: 'rgba(99, 102, 241, 0.16)',
     overflow: 'hidden',
     marginBottom: 22,
   },
   progressFill: {
     height: '100%',
     borderRadius: 999,
-    backgroundColor: '#6366F1',
   },
   contentWrap: {
     flex: 1,
   },
   optionList: {
     marginTop: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    columnGap: 10,
+  },
+  optionCardWrap: {
+    flexBasis: '31%',
+    maxWidth: '31%',
   },
   finishButton: {
     marginTop: 12,

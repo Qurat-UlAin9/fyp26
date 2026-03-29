@@ -26,27 +26,32 @@ function TaskItem({ task, onToggle, onToggleSubtask, theme, isDark }) {
 
   return (
     <Animated.View style={bounce}>
-      <TouchableOpacity onPress={pressCard} activeOpacity={0.9} style={[styles.taskCard, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#FFFFFF' }]}>
-        <View style={styles.taskTop}>
-          <Text style={[styles.taskTitle, { color: theme.text }]}>{task.title}</Text>
-          <Text style={[styles.deadline, { color: isOverdue ? '#EF4444' : theme.textSecondary }]}>{task.deadline}</Text>
-        </View>
-        <Text style={[styles.meta, { color: theme.textSecondary }]}>{task.subtasks.length} AI subtasks • {pct}% done</Text>
-
-        {task.expanded && (
-          <View style={styles.expandedWrap}>
-            {task.subtasks.map((subtask) => (
-              <TouchableOpacity key={subtask.id} onPress={() => onToggleSubtask(task.id, subtask.id)} style={styles.subtaskRow}>
-                <View style={[styles.checkCircle, { backgroundColor: subtask.done ? '#22C55E' : '#94A3B8' }]} />
-                <Text style={[styles.subtaskText, { color: theme.text, textDecorationLine: subtask.done ? 'line-through' : 'none' }]}>{subtask.title}</Text>
-              </TouchableOpacity>
-            ))}
-            <View style={[styles.progressTrack, { backgroundColor: isDark ? '#334155' : '#E2E8F0' }]}>
-              <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: theme.accentGradient[0] }]} />
-            </View>
-            <Text style={[styles.meta, { color: theme.textSecondary }]}>Progress: {completed}/{task.subtasks.length}</Text>
+      <TouchableOpacity onPress={pressCard} activeOpacity={0.9} style={styles.taskCard}>
+        <LinearGradient
+          colors={isDark ? ['#1E1B4B', '#1E3A8A'] : ['#FFFFFF', '#E0E7FF']}
+          style={styles.taskGradient}
+        >
+          <View style={styles.taskTop}>
+            <Text style={[styles.taskTitle, { color: isDark ? '#F8FAFC' : theme.text }]}>{task.title}</Text>
+            <Text style={[styles.deadline, { color: isOverdue ? '#EF4444' : isDark ? '#CBD5E1' : theme.textSecondary }]}>{task.deadline}</Text>
           </View>
-        )}
+          <Text style={[styles.meta, { color: isDark ? '#CBD5E1' : theme.textSecondary }]}>{task.subtasks.length} AI subtasks • {pct}% done</Text>
+
+          {task.expanded && (
+            <View style={styles.expandedWrap}>
+              {task.subtasks.map((subtask) => (
+                <TouchableOpacity key={subtask.id} onPress={() => onToggleSubtask(task.id, subtask.id)} style={styles.subtaskRow}>
+                  <View style={[styles.checkCircle, { backgroundColor: subtask.done ? '#22C55E' : '#94A3B8' }]} />
+                  <Text style={[styles.subtaskText, { color: isDark ? '#E2E8F0' : theme.text, textDecorationLine: subtask.done ? 'line-through' : 'none' }]}>{subtask.title}</Text>
+                </TouchableOpacity>
+              ))}
+              <View style={[styles.progressTrack, { backgroundColor: isDark ? '#334155' : '#E2E8F0' }]}>
+                <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: theme.accentGradient[0] }]} />
+              </View>
+              <Text style={[styles.meta, { color: isDark ? '#CBD5E1' : theme.textSecondary }]}>Progress: {completed}/{task.subtasks.length}</Text>
+            </View>
+          )}
+        </LinearGradient>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -156,10 +161,14 @@ const styles = StyleSheet.create({
   subHeader: { marginTop: 4, marginBottom: 14, fontSize: 13 },
   taskCard: {
     borderRadius: 16,
-    padding: 14,
     marginBottom: 12,
+    overflow: 'hidden',
+  },
+  taskGradient: {
+    borderRadius: 16,
+    padding: 14,
     borderWidth: 1,
-    borderColor: 'rgba(148,163,184,0.2)',
+    borderColor: 'rgba(148,163,184,0.25)',
   },
   taskTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   taskTitle: { fontSize: 15, fontWeight: '700', flex: 1, marginRight: 8 },

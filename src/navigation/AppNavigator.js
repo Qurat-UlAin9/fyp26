@@ -13,6 +13,7 @@ import RewardsScreen from '../screens/Rewards/RewardsScreen';
 import EmotionRegulationScreen from '../screens/Emotion/EmotionRegulationScreen';
 import ChatbotScreen from '../screens/Chatbot/ChatbotScreen';
 import QuestionnaireScreen from '../screens/Detection/QuestionnaireScreen';
+import AssessmentResultScreen from '../screens/Detection/AssessmentResultScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,7 @@ export default function AppNavigator() {
       <Stack.Screen name="EmotionRegulation" component={EmotionRegulationScreen} options={{ title: 'Emotion Regulation' }} />
       <Stack.Screen name="Chatbot" component={ChatbotScreen} options={{ title: 'AI Coach' }} />
       <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="AssessmentResult" component={AssessmentResultScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
