@@ -20,7 +20,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = () => {
     // Dummy auth – replace with real logic
-    navigation.replace('MainTabs');
+    navigation.replace('Onboarding');
   };
 
   return (

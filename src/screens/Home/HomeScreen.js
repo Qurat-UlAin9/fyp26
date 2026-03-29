@@ -73,6 +73,19 @@ export default function HomeScreen() {
           </LinearGradient>
         </View>
 
+
+        <TouchableOpacity onPress={() => navigation.navigate('Questionnaire')} activeOpacity={0.9}>
+          <LinearGradient
+            colors={isDark ? ['#4338CA', '#7C3AED'] : ['#C4B5FD', '#A5B4FC']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.assessmentCard}
+          >
+            <Text style={styles.assessmentTitle}>Start Assessment</Text>
+            <Text style={styles.assessmentSubtitle}>Answer a quick questionnaire to personalize your plan</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate('Chatbot')} activeOpacity={0.9}>
           <LinearGradient
             colors={isDark ? ['#7C3AED', '#2563EB'] : ['#A78BFA', '#22D3EE']}
@@ -166,6 +179,21 @@ const styles = StyleSheet.create({
   },
   quoteText: { color: '#FFFFFF', fontSize: 24, lineHeight: 32, textAlign: 'center', fontWeight: '700' },
   quoteAuthor: { color: '#E2E8F0', marginTop: 10, fontSize: 16, fontWeight: '600' },
+
+  assessmentCard: {
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    marginBottom: 14,
+    shadowColor: '#4C1D95',
+    shadowOpacity: 0.28,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 7,
+  },
+  assessmentTitle: { color: '#FFFFFF', fontSize: 21, fontWeight: '800' },
+  assessmentSubtitle: { color: '#EDE9FE', marginTop: 6, fontSize: 14, fontWeight: '600' },
+
   aiCard: {
     borderRadius: 28,
     paddingVertical: 16,
