@@ -169,7 +169,9 @@ export default function EmotionRegulationScreen({ navigation }) {
             onPress={() =>
               portal.title === 'Immediate Relief'
                 ? navigation.navigate('ImmediateRelief')
-                : navigation.navigate('EmotionCategory', { title: portal.routeTitle })
+                : portal.title === 'Mindful Growth'
+                ? navigation.navigate('MindfulGrowth')
+                : navigation.navigate('CognitivePower')
             }
           />
         ))}

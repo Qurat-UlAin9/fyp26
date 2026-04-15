@@ -1,330 +1,250 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
-  BackHandler,
   Dimensions,
   FlatList,
   Pressable,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { ChevronLeft, Circle, Droplets, Sparkles } from 'lucide-react-native';
+import { ChevronLeft, CircleDot, Droplets, Sparkles } from 'lucide-react-native';
+import Animated, {
+  Easing,
+  FadeInDown,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import BackgroundOrb from '../../components/emotion/BackgroundOrb';
 
-const { width: screenWidth } = Dimensions.get('window');
-const CARD_HORIZONTAL_MARGIN = 14;
-const CARD_WIDTH = screenWidth - 64;
-const SNAP_INTERVAL = CARD_WIDTH + CARD_HORIZONTAL_MARGIN * 2;
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.85;
 
-const EXERCISES = [
-  {
-    id: 'balloon-breath',
-    title: 'Balloon Breathing',
-    duration: '60 seconds',
-    icon: Circle,
-    iconColor: '#E2ECFF',
-    accent: 'rgba(129, 201, 255, 0.9)',
-  },
-  {
-    id: 'grounding-54321',
-    title: '5-4-3-2-1 Grounding',
-    duration: '90 seconds',
-    icon: Sparkles,
-    iconColor: '#E8EFFF',
-    accent: 'rgba(154, 221, 255, 0.92)',
-  },
-  {
-    id: 'cold-water',
-    title: 'Cold Water Splash',
-    duration: '30 seconds',
-    icon: Droplets,
-    iconColor: '#D8F0FF',
-    accent: 'rgba(111, 195, 255, 0.95)',
-  },
+const RELIEF_ITEMS = [
+  { id: 'breathing', title: 'Balloon Breathing', subtitle: 'Inhale for 4 · Exhale for 6', icon: CircleDot },
+  { id: 'grounding', title: '5-4-3-2-1 Grounding', subtitle: 'Notice five things around you', icon: Sparkles },
+  { id: 'water', title: 'Cold Water Splash', subtitle: 'Quick reset for body and mind', icon: Droplets },
 ];
 
-function ExerciseCard({ exercise, isCentered, onStart }) {
-  const IconComponent = exercise.icon;
+function BalloonAnimation() {
+  const breathe = useSharedValue(0);
+
+  useEffect(() => {
+    breathe.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 2400, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 1800, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      false
+    );
+  }, [breathe]);
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: interpolate(breathe.value, [0, 1], [0.72, 1.08]) }],
+    opacity: interpolate(breathe.value, [0, 1], [0.55, 0.95]),
+  }));
 
   return (
-    <View style={styles.cardOuterWrap}>
-      <View
-        style={[
-          styles.cardGlow,
-          isCentered && {
-            shadowColor: exercise.accent,
-            shadowOpacity: 0.62,
-            shadowRadius: 24,
-            elevation: 12,
-            borderColor: 'rgba(255,255,255,0.48)',
-          },
-        ]}
-      >
-        <BlurView intensity={44} tint="light" style={styles.cardBlur}>
-          <LinearGradient
-            colors={['rgba(255,255,255,0.28)', 'rgba(255,255,255,0.09)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.cardGradient}
-          >
-            <View style={styles.badgeWrap}>
-              <Text style={styles.badgeText}>{exercise.duration}</Text>
-            </View>
-
-            <View style={styles.iconArea}>
-              <View style={[styles.iconOrb, isCentered && styles.iconOrbCentered]}>
-                <IconComponent size={74} color={exercise.iconColor} strokeWidth={1.5} />
-              </View>
-            </View>
-
-            <Text style={styles.cardTitle}>{exercise.title}</Text>
-
-            <Pressable style={styles.startButton} onPress={() => onStart(exercise)}>
-              <Text style={styles.startText}>Start</Text>
-            </Pressable>
-          </LinearGradient>
-        </BlurView>
-      </View>
+    <View style={styles.animationWrap}>
+      <Animated.View style={[styles.breathOuter, style]} />
+      <Animated.View style={[styles.breathInner, style]} />
     </View>
   );
 }
 
-export default function ImmediateReliefScreen({ navigation }) {
-  const flatListRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+function TwinkleStar({ progress, index }) {
+  const starStyle = useAnimatedStyle(() => ({
+    opacity: 0.25 + ((progress.value + index * 0.19) % 1) * 0.75,
+    transform: [{ scale: 0.7 + ((progress.value + index * 0.24) % 1) * 0.5 }],
+  }));
 
-  const onViewableItemsChanged = useRef(({ viewableItems }) => {
-    if (viewableItems?.length) {
-      const centered = viewableItems[0];
-      if (centered?.index != null) {
-        setActiveIndex(centered.index);
-      }
-    }
-  }).current;
+  return <Animated.View style={[styles.star, STAR_POSITIONS[index], starStyle]} />;
+}
 
-  const viewabilityConfig = useMemo(
-    () => ({
-      itemVisiblePercentThreshold: 65,
-    }),
-    []
-  );
+function GroundingAnimation() {
+  const twinkle = useSharedValue(0);
 
-  const handleQuickExit = useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-      return;
-    }
-
-    BackHandler.exitApp();
-  }, [navigation]);
-
-  const handleStart = useCallback((exercise) => {
-    // Keeping this modular for future deep-linking to dedicated exercise experiences.
-    console.log(`Start requested for: ${exercise.id}`);
-  }, []);
+  useEffect(() => {
+    twinkle.value = withRepeat(withTiming(1, { duration: 1400, easing: Easing.linear }), -1, false);
+  }, [twinkle]);
 
   return (
-    <LinearGradient
-      colors={['#DCEAFF', '#CFE2FF', '#DDEEFF']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
-    >
-      <StatusBar barStyle="dark-content" />
+    <View style={styles.animationWrap}>
+      {[0, 1, 2, 3, 4].map((index) => (
+        <TwinkleStar key={`star-${index}`} progress={twinkle} index={index} />
+      ))}
+    </View>
+  );
+}
+
+function WaterRippleAnimation() {
+  const ripple = useSharedValue(0);
+
+  useEffect(() => {
+    ripple.value = withRepeat(withTiming(1, { duration: 2200, easing: Easing.out(Easing.ease) }), -1, false);
+  }, [ripple]);
+
+  const dropStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: interpolate(ripple.value, [0, 1], [0, 6]) }],
+  }));
+
+  const ringStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: 0.65 + ripple.value * 0.85 }],
+    opacity: 0.55 - ripple.value * 0.5,
+  }));
+
+  return (
+    <View style={styles.animationWrap}>
+      <Animated.View style={[styles.drop, dropStyle]} />
+      <Animated.View style={[styles.rippleRing, ringStyle]} />
+      <Animated.View style={[styles.rippleRing, styles.rippleRingSecond, ringStyle]} />
+    </View>
+  );
+}
+
+function ReliefCard({ item }) {
+  const Icon = item.icon;
+
+  return (
+    <Animated.View entering={FadeInDown.duration(500)} style={styles.cardWrap}>
+      <BlurView intensity={40} tint="dark" style={styles.cardBlur}>
+        <LinearGradient colors={['rgba(56,189,248,0.22)', 'rgba(15,23,42,0.6)']} style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Icon color="#7DD3FC" size={22} strokeWidth={1.5} />
+            <Text style={styles.cardTitle}>{item.title}</Text>
+          </View>
+          <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+
+          {item.id === 'breathing' && <BalloonAnimation />}
+          {item.id === 'grounding' && <GroundingAnimation />}
+          {item.id === 'water' && <WaterRippleAnimation />}
+        </LinearGradient>
+      </BlurView>
+    </Animated.View>
+  );
+}
+
+export default function ImmediateReliefScreen({ navigation }) {
+  return (
+    <LinearGradient colors={['#020617', '#0f172a']} style={styles.container}>
+      <BackgroundOrb size={280} color="rgba(59,130,246,0.22)" top={70} left={-30} />
+      <BackgroundOrb size={220} color="rgba(14,165,233,0.18)" top={420} right={-40} duration={11000} />
+
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.headerRow}>
+        <Animated.View entering={FadeInDown.duration(450)} style={styles.headerRow}>
           <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-            <ChevronLeft size={24} color="#23344E" />
+            <ChevronLeft color="#E2E8F0" size={20} strokeWidth={1.5} />
             <Text style={styles.backText}>Back</Text>
           </Pressable>
+          <Text style={styles.title}>Immediate Relief</Text>
+        </Animated.View>
 
-          <Text style={styles.headerTitle}>Quick Calm</Text>
-
-          <View style={styles.headerSpacer} />
-        </View>
-
-        <Text style={styles.encouragement}>Just breathe, Ain. You&apos;ve got this.</Text>
-
-        <View style={styles.carouselSection}>
-          <FlatList
-            ref={flatListRef}
-            data={EXERCISES}
-            keyExtractor={(item) => item.id}
-            horizontal
-            pagingEnabled
-            snapToInterval={SNAP_INTERVAL}
-            decelerationRate="fast"
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.carouselContent}
-            renderItem={({ item, index }) => (
-              <ExerciseCard
-                exercise={item}
-                isCentered={index === activeIndex}
-                onStart={handleStart}
-              />
-            )}
-            onViewableItemsChanged={onViewableItemsChanged}
-            viewabilityConfig={viewabilityConfig}
-          />
-        </View>
-
-        <Pressable style={styles.quickExitButton} onPress={handleQuickExit}>
-          <Text style={styles.quickExitText}>Quick Exit</Text>
-        </Pressable>
+        <FlatList
+          data={RELIEF_ITEMS}
+          keyExtractor={(item) => item.id}
+          horizontal
+          pagingEnabled
+          decelerationRate="fast"
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.carouselContent}
+          renderItem={({ item }) => <ReliefCard item={item} />}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
+const STAR_POSITIONS = [
+  { top: 22, left: 30 },
+  { top: 40, right: 36 },
+  { top: 66, left: 68 },
+  { top: 98, right: 58 },
+  { top: 108, left: 26 },
+];
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 22,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  backButton: {
-    minWidth: 72,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: 8,
-  },
-  backText: {
-    fontSize: 16,
-    color: '#23344E',
-    fontWeight: '500',
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-    marginRight: 72,
-    fontSize: 28,
-    color: '#203048',
-    fontFamily: 'Georgia',
-    letterSpacing: 0.4,
-  },
-  headerSpacer: {
-    width: 0,
-  },
-  encouragement: {
-    marginTop: 14,
-    color: '#2B3E59',
-    fontSize: 18,
-    lineHeight: 28,
-    textAlign: 'center',
-    paddingHorizontal: 10,
-  },
-  carouselSection: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  carouselContent: {
-    paddingHorizontal: 4,
-  },
-  cardOuterWrap: {
+  container: { flex: 1 },
+  safeArea: { flex: 1, paddingTop: 14 },
+  headerRow: { paddingHorizontal: 20, marginBottom: 16 },
+  backButton: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 14 },
+  backText: { color: '#E2E8F0', fontSize: 15 },
+  title: { color: '#F8FAFC', fontSize: 30, fontWeight: '700' },
+  carouselContent: { paddingHorizontal: width * 0.075 },
+  cardWrap: {
     width: CARD_WIDTH,
-    marginHorizontal: CARD_HORIZONTAL_MARGIN,
-  },
-  cardGlow: {
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.36)',
-    shadowColor: '#86B7FF',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.26,
-    shadowRadius: 16,
-    elevation: 6,
-    overflow: 'hidden',
+    alignSelf: 'center',
+    marginRight: width * 0.03,
   },
   cardBlur: {
-    borderRadius: 30,
+    borderRadius: 26,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(125,211,252,0.45)',
   },
-  cardGradient: {
+  card: {
     minHeight: 420,
-    borderRadius: 30,
+    borderRadius: 26,
     padding: 24,
+    justifyContent: 'space-between',
   },
-  badgeWrap: {
-    alignSelf: 'flex-end',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.48)',
-    backgroundColor: 'rgba(255,255,255,0.22)',
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  badgeText: {
-    color: '#274363',
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.3,
-  },
-  iconArea: {
+  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  cardTitle: { color: '#E0F2FE', fontSize: 24, fontWeight: '700', flexShrink: 1 },
+  cardSubtitle: { color: 'rgba(224,242,254,0.8)', marginTop: 10, fontSize: 15 },
+  animationWrap: {
     marginTop: 34,
     alignItems: 'center',
     justifyContent: 'center',
+    height: 180,
   },
-  iconOrb: {
-    width: 152,
-    height: 152,
-    borderRadius: 76,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.42)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.17)',
+  breathOuter: {
+    width: 142,
+    height: 142,
+    borderRadius: 71,
+    backgroundColor: 'rgba(56,189,248,0.25)',
+    position: 'absolute',
   },
-  iconOrbCentered: {
-    backgroundColor: 'rgba(255,255,255,0.26)',
+  breathInner: {
+    width: 98,
+    height: 98,
+    borderRadius: 49,
+    backgroundColor: 'rgba(125,211,252,0.66)',
   },
-  cardTitle: {
-    marginTop: 34,
-    textAlign: 'center',
-    color: '#1E3552',
-    fontSize: 28,
-    fontWeight: '600',
-    lineHeight: 34,
+  star: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#BAE6FD',
+    position: 'absolute',
+    shadowColor: '#7DD3FC',
+    shadowOpacity: 0.95,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 0 },
   },
-  startButton: {
-    marginTop: 'auto',
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.75)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.65)',
-    paddingVertical: 14,
-    alignItems: 'center',
+  drop: {
+    width: 42,
+    height: 58,
+    borderRadius: 30,
+    backgroundColor: 'rgba(125,211,252,0.8)',
   },
-  startText: {
-    color: '#1F3553',
-    fontSize: 17,
-    fontWeight: '600',
-    letterSpacing: 0.2,
+  rippleRing: {
+    position: 'absolute',
+    width: 132,
+    height: 132,
+    borderRadius: 66,
+    borderWidth: 2,
+    borderColor: 'rgba(125,211,252,0.42)',
   },
-  quickExitButton: {
-    marginTop: 16,
-    backgroundColor: 'rgba(29, 47, 74, 0.85)',
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-  },
-  quickExitText: {
-    color: '#F6FAFF',
-    fontSize: 16,
-    fontWeight: '600',
-    letterSpacing: 0.2,
+  rippleRingSecond: {
+    width: 168,
+    height: 168,
+    borderRadius: 84,
+    borderColor: 'rgba(125,211,252,0.22)',
   },
 });
