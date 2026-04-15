@@ -1,224 +1,403 @@
-import React, { useEffect } from 'react';
-import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { BrainCircuit, ChevronLeft, Palette, Stars } from 'lucide-react-native';
+import { ArrowLeft, BrainCircuit, Palette, Stars } from 'lucide-react-native';
 import Animated, {
   Easing,
-  FadeInDown,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withRepeat,
-  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import BackgroundOrb from '../../components/emotion/BackgroundOrb';
 
-const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.42;
+const GAMES = [
+  { id: 'nback', title: 'N-Back', subtitle: 'Working Memory', icon: BrainCircuit },
+  { id: 'stroop', title: 'Stroop', subtitle: 'Inhibition', icon: Palette },
+  { id: 'pattern', title: 'Pattern Match', subtitle: 'Focus', icon: Stars },
+];
 
-function FlashCell({ progress, index }) {
-  const style = useAnimatedStyle(() => {
-    const phase = (progress.value + index * 0.13) % 1;
-    return {
-      backgroundColor: phase > 0.78 ? 'rgba(196,181,253,0.9)' : 'rgba(76,29,149,0.38)',
-      borderColor: phase > 0.78 ? 'rgba(233,213,255,1)' : 'rgba(196,181,253,0.4)',
-      transform: [{ scale: phase > 0.78 ? 1.08 : 1 }],
-    };
-  });
+function NBackGame() {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [score, setScore] = useState(0);
+  const [round, setRound] = useState(0);
+  const n = 2;
 
-  return <Animated.View style={[styles.gridCell, style]} />;
-}
-
-function NBackGrid() {
-  const progress = useSharedValue(0);
   useEffect(() => {
-    progress.value = withRepeat(withTiming(1, { duration: 2200, easing: Easing.linear }), -1, false);
-  }, [progress]);
+    const int = setInterval(() => {
+      const next = Math.floor(Math.random() * 9);
+      setActiveIndex(next);
+      setHistory((prev) => [...prev, next].slice(-12));
+      setRound((prev) => prev + 1);
+    }, 1300);
+    return () => clearInterval(int);
+  }, []);
+
+  const targetMatch = history.length > n && history[history.length - 1] === history[history.length - 1 - n];
 
   return (
-    <View style={styles.gridWrap}>
-      {Array.from({ length: 9 }).map((_, index) => (
-        <FlashCell key={`cell-${index}`} progress={progress} index={index} />
-      ))}
+    <View style={styles.gameBody}>
+      <Text style={styles.gameLabel}>N={n} • Round {round}</Text>
+      <View style={styles.grid3x3}>
+        {Array.from({ length: 9 }).map((_, idx) => (
+          <View
+            key={`cell-${idx}`}
+            style={[styles.gridCell, idx === activeIndex && styles.gridCellActive]}
+          />
+        ))}
+      </View>
+      <Pressable
+        style={styles.gameButton}
+        onPress={() => setScore((prev) => prev + (targetMatch ? 1 : -1))}
+      >
+        <Text style={styles.gameButtonText}>Match ({n}-Back)</Text>
+      </Pressable>
+      <Text style={styles.gameScore}>Score: {score}</Text>
     </View>
   );
 }
 
-function StroopText() {
-  const pulse = useSharedValue(0);
-  useEffect(() => {
-    pulse.value = withRepeat(
-      withSequence(withTiming(1, { duration: 900 }), withTiming(0, { duration: 900 })),
-      -1,
-      false
-    );
-  }, [pulse]);
-
-  const style = useAnimatedStyle(() => ({
-    transform: [{ scale: interpolate(pulse.value, [0, 1], [0.96, 1.06]) }],
-  }));
-
-  return (
-    <Animated.Text style={[styles.stroopWord, style]}>
-      YELLOW
-    </Animated.Text>
+function StroopGame() {
+  const choices = useMemo(
+    () => [
+      { word: 'RED', color: '#60A5FA', answer: 'BLUE' },
+      { word: 'GREEN', color: '#F97316', answer: 'ORANGE' },
+      { word: 'YELLOW', color: '#A78BFA', answer: 'PURPLE' },
+      { word: 'BLUE', color: '#34D399', answer: 'GREEN' },
+    ],
+    []
   );
-}
 
-function Constellation() {
-  const glow = useSharedValue(0);
-  useEffect(() => {
-    glow.value = withRepeat(withTiming(1, { duration: 1600, easing: Easing.inOut(Easing.ease) }), -1, true);
-  }, [glow]);
+  const [index, setIndex] = useState(0);
+  const [score, setScore] = useState(0);
 
-  const starStyle = useAnimatedStyle(() => ({
-    opacity: 0.5 + glow.value * 0.5,
-  }));
+  const trial = choices[index % choices.length];
+  const options = ['BLUE', 'ORANGE', 'PURPLE', 'GREEN'];
 
   return (
-    <View style={styles.constellationWrap}>
-      <View style={styles.constellationLineOne} />
-      <View style={styles.constellationLineTwo} />
-      <Animated.View style={[styles.dot, { top: 18, left: 12 }, starStyle]} />
-      <Animated.View style={[styles.dot, { top: 48, left: 58 }, starStyle]} />
-      <Animated.View style={[styles.dot, { top: 30, right: 26 }, starStyle]} />
-      <Animated.View style={[styles.dot, { bottom: 24, right: 58 }, starStyle]} />
+    <View style={styles.gameBody}>
+      <Text style={[styles.stroopWord, { color: trial.color }]}>{trial.word}</Text>
+      <View style={styles.stroopButtons}>
+        {options.map((option) => (
+          <Pressable
+            key={option}
+            style={styles.colorButton}
+            onPress={() => {
+              setScore((prev) => prev + (option === trial.answer ? 1 : -1));
+              setIndex((prev) => prev + 1);
+            }}
+          >
+            <Text style={styles.colorButtonText}>{option}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <Text style={styles.gameScore}>Score: {score}</Text>
     </View>
   );
 }
 
-function PowerCard({ title, icon: Icon, children, delay }) {
+function PatternGame() {
+  const [sequence, setSequence] = useState([1, 3, 4, 6, 2]);
+  const [input, setInput] = useState([]);
+  const [showing, setShowing] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowing(false), 2200);
+    return () => clearTimeout(t);
+  }, [sequence]);
+
+  const onTap = (idx) => {
+    if (showing) return;
+    const next = [...input, idx];
+    setInput(next);
+
+    const isWrong = sequence[next.length - 1] !== idx;
+    if (isWrong) {
+      setInput([]);
+      return;
+    }
+
+    if (next.length === sequence.length) {
+      const nextLength = Math.min(7, sequence.length + 1);
+      const generated = Array.from({ length: nextLength }, () => Math.floor(Math.random() * 7));
+      setSequence(generated);
+      setInput([]);
+      setShowing(true);
+    }
+  };
+
   return (
-    <Animated.View entering={FadeInDown.delay(delay).duration(520)} style={styles.cardWrap}>
-      <BlurView intensity={40} tint="dark" style={styles.cardBlur}>
-        <LinearGradient colors={['rgba(139,92,246,0.28)', 'rgba(15,23,42,0.58)']} style={styles.card}>
-          <View style={styles.headRow}>
-            <Icon color="#DDD6FE" size={18} strokeWidth={1.5} />
-            <Text style={styles.cardTitle}>{title}</Text>
-          </View>
-          <View style={styles.content}>{children}</View>
-        </LinearGradient>
-      </BlurView>
-    </Animated.View>
+    <View style={styles.gameBody}>
+      <Text style={styles.gameLabel}>{showing ? 'Memorize the constellation' : 'Tap the same sequence'}</Text>
+      <View style={styles.starsRow}>
+        {Array.from({ length: 7 }).map((_, idx) => (
+          <Pressable key={`star-${idx}`} onPress={() => onTap(idx)}>
+            <View
+              style={[
+                styles.starNode,
+                showing && sequence.includes(idx) && styles.starNodeActive,
+                !showing && input.includes(idx) && styles.starNodeInput,
+              ]}
+            />
+          </Pressable>
+        ))}
+      </View>
+      <Text style={styles.gameScore}>Length: {sequence.length}</Text>
+    </View>
   );
+}
+
+function ExpandedGame({ game }) {
+  if (game.id === 'nback') return <NBackGame />;
+  if (game.id === 'stroop') return <StroopGame />;
+  return <PatternGame />;
 }
 
 export default function CognitivePowerScreen({ navigation }) {
+  const { width, height } = useWindowDimensions();
+  const cardWidth = width * 0.85;
+  const [layouts, setLayouts] = useState({});
+  const [activeGame, setActiveGame] = useState(null);
+  const progress = useSharedValue(0);
+
+  const activeLayout = activeGame ? layouts[activeGame.id] : null;
+
+  useEffect(() => {
+    progress.value = withTiming(activeGame ? 1 : 0, { duration: 360, easing: Easing.out(Easing.cubic) });
+  }, [activeGame, progress]);
+
+  const overlayStyle = useAnimatedStyle(() => {
+    const left = activeLayout ? activeLayout.x : width * 0.075;
+    const top = activeLayout ? activeLayout.y : 160;
+    const startWidth = activeLayout ? activeLayout.width : cardWidth;
+    const startHeight = activeLayout ? activeLayout.height : 240;
+
+    return {
+      left: interpolate(progress.value, [0, 1], [left, 0]),
+      top: interpolate(progress.value, [0, 1], [top, 0]),
+      width: interpolate(progress.value, [0, 1], [startWidth, width]),
+      height: interpolate(progress.value, [0, 1], [startHeight, height]),
+      borderRadius: interpolate(progress.value, [0, 1], [24, 0]),
+      opacity: activeGame ? 1 : progress.value,
+    };
+  });
+
+  const overlayBg = useAnimatedStyle(() => ({ opacity: progress.value }));
+
   return (
-    <LinearGradient colors={['#020617', '#0f172a']} style={styles.container}>
-      <BackgroundOrb size={260} color="rgba(139,92,246,0.2)" top={90} left={-70} />
-      <BackgroundOrb size={220} color="rgba(168,85,247,0.2)" top={380} right={-40} duration={9800} />
+    <LinearGradient colors={['#060918', '#0E1130', '#1A1240']} style={styles.container}>
+      <BackgroundOrb size={280} color="rgba(168,85,247,0.2)" top={100} left={-90} duration={10000} />
+      <BackgroundOrb size={260} color="rgba(56,189,248,0.12)" top={420} right={-90} duration={9200} />
 
       <SafeAreaView style={styles.safeArea}>
-        <Animated.View entering={FadeInDown.duration(450)} style={styles.headerRow}>
+        <View style={styles.headerRow}>
           <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-            <ChevronLeft color="#F5F3FF" size={20} strokeWidth={1.5} />
-            <Text style={styles.backText}>Back</Text>
+            <ArrowLeft size={18} color="#E2E8F0" />
           </Pressable>
           <Text style={styles.title}>Cognitive Power</Text>
-        </Animated.View>
-
-        <View style={styles.grid}>
-          <PowerCard title="N-Back Challenge" icon={BrainCircuit} delay={50}>
-            <NBackGrid />
-          </PowerCard>
-
-          <PowerCard title="Stroop Effect" icon={Palette} delay={120}>
-            <StroopText />
-          </PowerCard>
-
-          <PowerCard title="Pattern Recall" icon={Stars} delay={180}>
-            <Constellation />
-          </PowerCard>
+          <Text style={styles.screenTag}>Mind Gym</Text>
         </View>
+
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {GAMES.map((game) => {
+            const Icon = game.icon;
+            return (
+              <Pressable
+                key={game.id}
+                onLayout={(evt) => {
+                  const { x, y, width: layoutWidth, height: layoutHeight } = evt.nativeEvent.layout;
+                  setLayouts((prev) => ({ ...prev, [game.id]: { x, y, width: layoutWidth, height: layoutHeight } }));
+                }}
+                onPress={() => setActiveGame(game)}
+                style={[styles.cardWrap, { width: cardWidth }]}
+              >
+                <BlurView intensity={20} tint="dark" style={styles.cardBlur}>
+                  <LinearGradient colors={['rgba(255,255,255,0.16)', 'rgba(255,255,255,0.04)']} style={styles.cardContent}>
+                    <View style={styles.cardHead}>
+                      <View style={styles.cardIcon}>
+                        <Icon size={18} color="#C4B5FD" />
+                      </View>
+                      <View>
+                        <Text style={styles.cardTitle}>{game.title}</Text>
+                        <Text style={styles.cardSubtitle}>{game.subtitle}</Text>
+                      </View>
+                    </View>
+                    <Text style={styles.cardHint}>Tap to enter full-screen training mode.</Text>
+                  </LinearGradient>
+                </BlurView>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
       </SafeAreaView>
+
+      <Animated.View pointerEvents="none" style={[styles.overlayBackdrop, overlayBg]}>
+        <BlurView intensity={45} tint="dark" style={StyleSheet.absoluteFill} />
+      </Animated.View>
+
+      {activeGame && (
+        <Animated.View style={[styles.overlayCard, overlayStyle]}>
+          <LinearGradient colors={['#120E2F', '#0D122F', '#151A3A']} style={styles.overlayCardInner}>
+            <Pressable style={styles.overlayBackButton} onPress={() => setActiveGame(null)}>
+              <ArrowLeft size={17} color="#E2E8F0" />
+              <Text style={styles.overlayBackText}>Back</Text>
+            </Pressable>
+            <ExpandedGame game={activeGame} />
+          </LinearGradient>
+        </Animated.View>
+      )}
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  safeArea: { flex: 1, paddingTop: 14 },
-  headerRow: { paddingHorizontal: 20, marginBottom: 8 },
-  backButton: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 12 },
-  backText: { color: '#F5F3FF', fontSize: 15 },
-  title: { color: '#EDE9FE', fontSize: 30, fontWeight: '700' },
-  grid: {
+  safeArea: { flex: 1, paddingTop: 10 },
+  headerRow: {
+    paddingHorizontal: 16,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
-    paddingTop: 12,
-    rowGap: 14,
+    alignItems: 'center',
+    gap: 10,
   },
-  cardWrap: {
-    width: CARD_WIDTH,
-    minHeight: 220,
-    alignSelf: 'center',
+  backButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
+  title: { color: '#EDE9FE', fontSize: 24, fontWeight: '700', flex: 1 },
+  screenTag: { color: '#C4B5FD', fontSize: 13, fontWeight: '600' },
+  scrollContent: { paddingTop: 20, paddingBottom: 30, alignItems: 'center', gap: 14 },
+  cardWrap: { borderRadius: 24 },
   cardBlur: {
-    flex: 1,
-    borderRadius: 20,
+    borderRadius: 24,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(196,181,253,0.46)',
-    shadowColor: '#A78BFA',
-    shadowOpacity: 0.85,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 0 },
+    borderColor: 'rgba(255,255,255,0.32)',
   },
-  card: { flex: 1, borderRadius: 20, padding: 14 },
-  headRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  cardTitle: { color: '#F5F3FF', fontSize: 14, fontWeight: '700', flexShrink: 1 },
-  content: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  gridWrap: {
-    width: 95,
+  cardContent: { borderRadius: 24, minHeight: 170, padding: 18, justifyContent: 'space-between' },
+  cardHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  cardIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 1,
+    borderColor: 'rgba(196,181,253,0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  cardTitle: { color: '#F8FAFC', fontSize: 22, fontWeight: '700' },
+  cardSubtitle: { color: '#DDD6FE', fontSize: 14, marginTop: 2 },
+  cardHint: { color: 'rgba(226,232,240,0.84)', marginTop: 18, fontSize: 14 },
+  overlayBackdrop: { ...StyleSheet.absoluteFillObject },
+  overlayCard: {
+    position: 'absolute',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.24)',
+  },
+  overlayCardInner: { flex: 1, paddingTop: 48 },
+  overlayBackButton: {
+    marginLeft: 16,
+    width: 76,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.24)',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 4,
+  },
+  overlayBackText: { color: '#E2E8F0', fontWeight: '600' },
+  gameBody: { flex: 1, paddingHorizontal: 22, paddingTop: 24, alignItems: 'center' },
+  gameLabel: { color: '#DDD6FE', fontSize: 16, fontWeight: '600', marginBottom: 14 },
+  grid3x3: {
+    width: 220,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: 10,
     justifyContent: 'center',
+    marginBottom: 20,
   },
   gridCell: {
-    width: 26,
-    height: 26,
-    borderRadius: 8,
+    width: 62,
+    height: 62,
+    borderRadius: 12,
     borderWidth: 1,
+    borderColor: 'rgba(196,181,253,0.45)',
+    backgroundColor: 'rgba(67,56,202,0.3)',
   },
-  stroopWord: {
-    color: '#8B5CF6',
-    fontSize: 32,
-    fontWeight: '800',
-    letterSpacing: 1,
+  gridCellActive: {
+    backgroundColor: 'rgba(196,181,253,0.9)',
+    borderColor: '#F5D0FE',
   },
-  constellationWrap: { width: 118, height: 118, position: 'relative' },
-  constellationLineOne: {
-    position: 'absolute',
-    left: 20,
-    top: 30,
-    width: 76,
-    borderTopWidth: 1,
-    borderColor: 'rgba(216,180,254,0.6)',
-    transform: [{ rotate: '12deg' }],
+  gameButton: {
+    marginTop: 6,
+    width: 170,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: 'rgba(216,180,254,0.9)',
+    backgroundColor: 'rgba(196,181,253,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  constellationLineTwo: {
-    position: 'absolute',
-    right: 26,
-    top: 34,
-    width: 44,
-    borderTopWidth: 1,
-    borderColor: 'rgba(216,180,254,0.6)',
-    transform: [{ rotate: '50deg' }],
+  gameButtonText: { color: '#F5F3FF', fontWeight: '700' },
+  gameScore: { marginTop: 14, color: '#BFDBFE', fontSize: 16, fontWeight: '600' },
+  stroopWord: { fontSize: 54, fontWeight: '800', marginBottom: 22 },
+  stroopButtons: { width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: 'center' },
+  colorButton: {
+    width: 140,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
-  dot: {
-    position: 'absolute',
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    backgroundColor: '#E9D5FF',
-    shadowColor: '#C084FC',
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 0 },
+  colorButtonText: { color: '#E2E8F0', fontSize: 14, fontWeight: '700' },
+  starsRow: {
+    width: '100%',
+    minHeight: 130,
+    marginTop: 16,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  starNode: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: 'rgba(196,181,253,0.6)',
+    backgroundColor: 'rgba(99,102,241,0.3)',
+  },
+  starNodeActive: {
+    backgroundColor: '#C4B5FD',
+    borderColor: '#F5D0FE',
+  },
+  starNodeInput: {
+    backgroundColor: '#7DD3FC',
+    borderColor: '#BAE6FD',
   },
 });

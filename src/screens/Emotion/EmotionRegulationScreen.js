@@ -1,304 +1,206 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import { BrainCircuit, Sparkles, Wind, MessageCircleHeart, ArrowLeft } from 'lucide-react-native';
+import BackgroundOrb from '../../components/emotion/BackgroundOrb';
 
-const PORTALS = [
+const PORTAL_ITEMS = [
   {
-    title: 'Immediate Relief',
-    subtitle: 'Short-term',
-    glowColor: 'rgba(96, 165, 250, 0.95)',
-    style: { top: 18, left: 26 },
-    routeTitle: 'Immediate Relief',
+    id: 'immediate',
+    title: 'Calm Zone',
+    subtitle: 'Immediate Relief',
+    description: 'Breathing, grounding, and body-first resets for emotional overload.',
+    icon: Wind,
+    accent: 'rgba(125, 211, 252, 0.9)',
+    route: 'ImmediateRelief',
   },
   {
+    id: 'cognitive',
+    title: 'Mind Gym',
+    subtitle: 'Cognitive Power',
+    description: 'Train working memory, inhibition, and focus with quick brain games.',
+    icon: BrainCircuit,
+    accent: 'rgba(196, 181, 253, 0.9)',
+    route: 'CognitivePower',
+  },
+  {
+    id: 'reframing',
+    title: 'Thought Reframing',
+    subtitle: 'AI Guided',
+    description: 'Shift stressful thoughts into balanced alternatives with your coach.',
+    icon: MessageCircleHeart,
+    accent: 'rgba(253, 186, 116, 0.9)',
+    route: 'Chatbot',
+    params: { context: 'reframing' },
+  },
+  {
+    id: 'growth',
     title: 'Mindful Growth',
-    subtitle: 'Long-term',
-    glowColor: 'rgba(250, 204, 21, 0.95)',
-    style: { top: 188, right: 20 },
-    routeTitle: 'Mindful Growth',
-  },
-  {
-    title: 'Cognitive Power',
-    subtitle: 'Training',
-    glowColor: 'rgba(192, 132, 252, 0.95)',
-    style: { top: 328, left: 56 },
-    routeTitle: 'Cognitive Power',
+    subtitle: 'Long-Term',
+    description: 'Build steady emotional habits to stay grounded over time.',
+    icon: Sparkles,
+    accent: 'rgba(167, 243, 208, 0.9)',
+    route: 'MindfulGrowth',
   },
 ];
 
-function Portal({ config, index, onPress }) {
-  const floatOffset = useSharedValue(0);
-  const pulseScale = useSharedValue(1);
-  const spin = useSharedValue(0);
-  const sparkle = useSharedValue(0.5);
-
-  useEffect(() => {
-    floatOffset.value = withRepeat(
-      withSequence(
-        withTiming(-8 - index * 1.2, { duration: 2600 + index * 220, easing: Easing.inOut(Easing.ease) }),
-        withTiming(7 + index, { duration: 2600 + index * 220, easing: Easing.inOut(Easing.ease) })
-      ),
-      -1,
-      true
-    );
-
-    if (config.title === 'Immediate Relief') {
-      pulseScale.value = withRepeat(
-        withSequence(
-          withTiming(1.08, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0.96, { duration: 1200, easing: Easing.inOut(Easing.ease) })
-        ),
-        -1,
-        true
-      );
-    }
-
-    if (config.title === 'Mindful Growth') {
-      spin.value = withRepeat(withTiming(360, { duration: 8200, easing: Easing.linear }), -1, false);
-    }
-
-    if (config.title === 'Cognitive Power') {
-      sparkle.value = withRepeat(
-        withSequence(
-          withTiming(1, { duration: 650, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0.35, { duration: 650, easing: Easing.inOut(Easing.ease) })
-        ),
-        -1,
-        true
-      );
-    }
-  }, [config.title, floatOffset, index, pulseScale, sparkle, spin]);
-
-  const floatingStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: floatOffset.value }],
-  }));
-
-  const pulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulseScale.value }],
-    opacity: 0.55 + (pulseScale.value - 0.95) * 2.5,
-  }));
-
-  const spinStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${spin.value}deg` }],
-  }));
-
-  const sparkleStyle = useAnimatedStyle(() => ({
-    opacity: sparkle.value,
-  }));
+function PortalCard({ item, cardWidth, onPress }) {
+  const Icon = item.icon;
 
   return (
-    <Animated.View style={[styles.portalWrap, config.style, floatingStyle]}>
-      <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
-        <View style={styles.portalTouchableArea}>
-          {config.title === 'Immediate Relief' && (
-            <Animated.View style={[styles.pulseGlow, { borderColor: config.glowColor }, pulseStyle]} />
-          )}
-
-          {config.title === 'Mindful Growth' && (
-            <Animated.View style={[styles.rotateGlow, { borderColor: config.glowColor }, spinStyle]} />
-          )}
-
-          {config.title === 'Cognitive Power' && (
-            <>
-              <Animated.View style={[styles.spark, styles.sparkTop, { backgroundColor: config.glowColor }, sparkleStyle]} />
-              <Animated.View
-                style={[
-                  styles.spark,
-                  styles.sparkRight,
-                  { backgroundColor: config.glowColor },
-                  sparkleStyle,
-                ]}
-              />
-              <Animated.View
-                style={[
-                  styles.spark,
-                  styles.sparkLeft,
-                  { backgroundColor: config.glowColor },
-                  sparkleStyle,
-                ]}
-              />
-            </>
-          )}
-
-          <BlurView intensity={42} tint="dark" style={styles.portalGlass}>
-            <LinearGradient
-              colors={['rgba(255,255,255,0.18)', 'rgba(255,255,255,0.04)']}
-              start={{ x: 0.1, y: 0.1 }}
-              end={{ x: 0.9, y: 0.9 }}
-              style={styles.portalGradient}
-            >
-              <Text style={styles.portalTitle}>{config.title}</Text>
-              <Text style={styles.portalSubtitle}>{config.subtitle}</Text>
-            </LinearGradient>
-          </BlurView>
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
+    <Pressable style={[styles.cardWrap, { width: cardWidth }]} onPress={onPress}>
+      <BlurView intensity={20} tint="dark" style={styles.cardBlur}>
+        <LinearGradient
+          colors={['rgba(255,255,255,0.16)', 'rgba(255,255,255,0.04)']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.cardContent}
+        >
+          <View style={[styles.iconWrap, { borderColor: item.accent }]}> 
+            <Icon size={20} color={item.accent} strokeWidth={1.8} />
+          </View>
+          <View style={styles.cardTextWrap}>
+            <Text style={styles.subtitle}>{item.subtitle}</Text>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.description}>{item.description}</Text>
+          </View>
+        </LinearGradient>
+      </BlurView>
+    </Pressable>
   );
 }
 
 export default function EmotionRegulationScreen({ navigation }) {
+  const { width } = useWindowDimensions();
+  const cardWidth = width * 0.85;
+
   return (
     <LinearGradient
-      colors={['#090B1B', '#120D2A', '#1A1240', '#160C38', '#0A0F24']}
-      start={{ x: 0, y: 0 }}
+      colors={['#060918', '#0E1130', '#1A1240', '#120B32', '#060A1E']}
+      start={{ x: 0.05, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <View style={styles.meshBlobOne} />
-      <View style={styles.meshBlobTwo} />
-      <View style={styles.meshBlobThree} />
+      <BackgroundOrb size={320} color="rgba(59,130,246,0.2)" top={40} left={-100} drift={30} duration={12000} />
+      <BackgroundOrb size={280} color="rgba(168,85,247,0.18)" top={220} right={-120} drift={24} duration={9800} />
+      <BackgroundOrb size={240} color="rgba(14,165,233,0.16)" top={530} left={-80} drift={22} duration={10800} />
 
-      <Text style={styles.header}>Explore your inner space, Ain</Text>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.headerRow}>
+          <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+            <ArrowLeft size={18} color="#E2E8F0" />
+          </Pressable>
+          <Text style={styles.headerTitle}>Emotion Regulation</Text>
+        </View>
 
-      <View style={styles.portalsStage}>
-        {PORTALS.map((portal, index) => (
-          <Portal
-            key={portal.title}
-            config={portal}
-            index={index}
-            onPress={() =>
-              portal.title === 'Immediate Relief'
-                ? navigation.navigate('ImmediateRelief')
-                : portal.title === 'Mindful Growth'
-                ? navigation.navigate('MindfulGrowth')
-                : navigation.navigate('CognitivePower')
-            }
-          />
-        ))}
-      </View>
+        <Text style={styles.leadText}>Step into your portal. Choose calm now, or train for stronger focus later.</Text>
+
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          {PORTAL_ITEMS.map((item) => (
+            <PortalCard
+              key={item.id}
+              item={item}
+              cardWidth={cardWidth}
+              onPress={() => navigation.navigate(item.route, item.params)}
+            />
+          ))}
+        </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 72,
-    paddingHorizontal: 22,
+  container: { flex: 1 },
+  safeArea: { flex: 1, paddingTop: 10 },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 16,
   },
-  header: {
-    color: '#EEF2FF',
-    fontSize: 28,
-    fontWeight: '700',
-    letterSpacing: 0.2,
-    marginBottom: 30,
-    lineHeight: 36,
-  },
-  portalsStage: {
-    flex: 1,
-    position: 'relative',
-    paddingTop: 6,
-  },
-  portalWrap: {
-    position: 'absolute',
-  },
-  portalTouchableArea: {
-    width: 176,
-    height: 176,
+  backButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
-  portalGlass: {
-    width: 164,
-    height: 164,
-    borderRadius: 82,
+  headerTitle: {
+    color: '#EEF2FF',
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  leadText: {
+    color: 'rgba(224, 231, 255, 0.82)',
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 16,
+    paddingHorizontal: 18,
+  },
+  scrollContent: {
+    alignItems: 'center',
+    paddingVertical: 22,
+    paddingBottom: 34,
+    gap: 16,
+  },
+  cardWrap: {
+    borderRadius: 24,
+  },
+  cardBlur: {
+    borderRadius: 24,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.35)',
-    backgroundColor: 'rgba(255,255,255,0.07)',
+    borderColor: 'rgba(255,255,255,0.3)',
   },
-  portalGradient: {
-    flex: 1,
+  cardContent: {
+    borderRadius: 24,
+    minHeight: 170,
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    flexDirection: 'row',
+    gap: 14,
+  },
+  iconWrap: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    marginTop: 2,
   },
-  portalTitle: {
+  cardTextWrap: {
+    flex: 1,
+  },
+  subtitle: {
+    color: '#BFDBFE',
+    fontSize: 13,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  title: {
     color: '#F8FAFC',
-    textAlign: 'center',
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '700',
-    marginBottom: 6,
+    marginBottom: 8,
   },
-  portalSubtitle: {
-    color: 'rgba(226,232,240,0.88)',
+  description: {
+    color: 'rgba(226, 232, 240, 0.86)',
     fontSize: 14,
-    fontWeight: '500',
-  },
-  pulseGlow: {
-    position: 'absolute',
-    width: 174,
-    height: 174,
-    borderRadius: 87,
-    borderWidth: 2,
-    shadowColor: '#60A5FA',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 25,
-    elevation: 9,
-  },
-  rotateGlow: {
-    position: 'absolute',
-    width: 176,
-    height: 176,
-    borderRadius: 88,
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    shadowColor: '#FACC15',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.7,
-    shadowRadius: 24,
-    elevation: 8,
-  },
-  spark: {
-    position: 'absolute',
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    shadowColor: '#C084FC',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  sparkTop: { top: 10, left: 84 },
-  sparkRight: { top: 44, right: 14 },
-  sparkLeft: { bottom: 38, left: 14 },
-  meshBlobOne: {
-    position: 'absolute',
-    top: 95,
-    left: -40,
-    width: 215,
-    height: 215,
-    borderRadius: 120,
-    backgroundColor: 'rgba(56, 189, 248, 0.14)',
-  },
-  meshBlobTwo: {
-    position: 'absolute',
-    bottom: 115,
-    right: -60,
-    width: 240,
-    height: 240,
-    borderRadius: 130,
-    backgroundColor: 'rgba(168, 85, 247, 0.16)',
-  },
-  meshBlobThree: {
-    position: 'absolute',
-    top: 290,
-    right: 48,
-    width: 120,
-    height: 120,
-    borderRadius: 80,
-    backgroundColor: 'rgba(251, 191, 36, 0.12)',
+    lineHeight: 20,
   },
 });
