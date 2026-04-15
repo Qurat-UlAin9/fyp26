@@ -166,7 +166,11 @@ export default function EmotionRegulationScreen({ navigation }) {
             key={portal.title}
             config={portal}
             index={index}
-            onPress={() => navigation.navigate('EmotionCategory', { title: portal.routeTitle })}
+            onPress={() =>
+              portal.title === 'Immediate Relief'
+                ? navigation.navigate('ImmediateRelief')
+                : navigation.navigate('EmotionCategory', { title: portal.routeTitle })
+            }
           />
         ))}
       </View>

@@ -12,6 +12,7 @@ import SettingsScreen from '../screens/Settings/SettingsScreen';
 import RewardsScreen from '../screens/Rewards/RewardsScreen';
 import EmotionRegulationScreen from '../screens/Emotion/EmotionRegulationScreen';
 import EmotionCategoryPlaceholderScreen from '../screens/Emotion/EmotionCategoryPlaceholderScreen';
+import ImmediateReliefScreen from '../screens/Emotion/ImmediateReliefScreen';
 import ChatbotScreen from '../screens/Chatbot/ChatbotScreen';
 import QuestionnaireScreen from '../screens/Detection/QuestionnaireScreen';
 import AssessmentResultScreen from '../screens/Detection/AssessmentResultScreen';
@@ -39,6 +40,7 @@ export default function AppNavigator() {
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
       <Stack.Screen name="Rewards" component={RewardsScreen} options={{ title: 'Rewards' }} />
       <Stack.Screen name="EmotionRegulation" component={EmotionRegulationScreen} options={{ title: 'Emotion Regulation' }} />
+      <Stack.Screen name="ImmediateRelief" component={ImmediateReliefScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="EmotionCategory"
         component={EmotionCategoryPlaceholderScreen}
