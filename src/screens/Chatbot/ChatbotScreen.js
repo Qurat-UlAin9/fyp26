@@ -4,13 +4,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Send } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 
-const starter = [
+const baseStarter = [
   { id: '1', role: 'ai', text: 'Hey Ain 🌿 I am here with calm ADHD-friendly support. What feels hardest right now?' },
 ];
 
-export default function ChatbotScreen() {
+const reframingStarter = [
+  { id: '1', role: 'ai', text: "Hey Ain, let's look at those thoughts together. What's on your mind?" },
+];
+
+export default function ChatbotScreen({ route }) {
   const { theme, isDark } = useTheme();
-  const [messages, setMessages] = useState(starter);
+  const mode = route?.params?.context;
+  const [messages, setMessages] = useState(mode === 'reframing' ? reframingStarter : baseStarter);
   const [input, setInput] = useState('');
 
   const aiReplies = useMemo(
