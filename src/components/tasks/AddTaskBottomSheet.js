@@ -1,6 +1,7 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useMemo, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BlurView } from 'expo-blur';
 import { useTheme } from '../../contexts/ThemeContext';
 import ADHDButton from '../common/ADHDButton';
 
@@ -9,6 +10,13 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
   const [title, setTitle] = useState('');
   const [deadline, setDeadline] = useState('');
   const [workload, setWorkload] = useState('Medium');
+  const snapPoints = useMemo(() => ['50%'], []);
+
+  const renderBackdrop = (props) => (
+    <BottomSheetBackdrop {...props} opacity={0.3} appearsOnIndex={0} disappearsOnIndex={-1}>
+      <BlurView intensity={30} tint="light" style={StyleSheet.absoluteFill} />
+    </BottomSheetBackdrop>
+  );
 
   const handleSubmit = () => {
     if (!title.trim()) return;
@@ -19,7 +27,14 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
   };
 
   return (
-    <BottomSheet ref={ref} index={-1} snapPoints={['50%']} enablePanDownToClose backgroundStyle={{ backgroundColor: theme.card }}>
+    <BottomSheet
+      ref={ref}
+      index={-1}
+      snapPoints={snapPoints}
+      enablePanDownToClose
+      backdropComponent={renderBackdrop}
+      backgroundStyle={{ backgroundColor: '#FFFFFF', opacity: 0.9 }}
+    >
       <BottomSheetView style={styles.content}>
         <Text style={[styles.title, { color: theme.text }]}>Add New Task</Text>
         <TextInput
@@ -37,13 +52,13 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
           onChangeText={setDeadline}
         />
         <View style={styles.workloadRow}>
-          {['Low', 'Medium', 'High'].map(level => (
+          {['Low', 'Medium', 'High'].map((level) => (
             <TouchableOpacity
               key={level}
               style={[
                 styles.workloadOption,
                 { borderColor: theme.border },
-                workload === level && { backgroundColor: theme.accentGradient[0] + '40' }
+                workload === level && { backgroundColor: `${theme.accentGradient[0]}40` },
               ]}
               onPress={() => setWorkload(level)}
             >

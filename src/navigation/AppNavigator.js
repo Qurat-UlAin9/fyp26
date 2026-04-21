@@ -27,7 +27,7 @@ export default function AppNavigator() {
       screenOptions={{
         headerTintColor: '#8B5CF6',
         headerTitleStyle: { fontWeight: '700' },
-        animation: 'slide_from_right',
+        animation: 'fade_from_bottom',
       }}
     >
       <Stack.Screen name="Splash" component={SplashIntroScreen} options={{ headerShown: false }} />

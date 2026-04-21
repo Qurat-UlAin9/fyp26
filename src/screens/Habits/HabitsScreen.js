@@ -1,95 +1,102 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useMemo, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Plus, Flame } from 'lucide-react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
-import { useTheme } from '../../contexts/ThemeContext';
+import { Plus } from 'lucide-react-native';
 import AddHabitBottomSheet from './AddHabitBottomSheet';
+import CoinPill from '../../components/common/CoinPill';
 
-function HabitCard({ habit, onToggle, theme, isDark }) {
-  const flameScale = useSharedValue(1);
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const TODAY_INDEX = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
-  React.useEffect(() => {
-    if (habit.completedToday) {
-      flameScale.value = withRepeat(withTiming(1.18, { duration: 500 }), 4, true);
-    } else {
-      flameScale.value = withTiming(1, { duration: 200 });
-    }
-  }, [habit.completedToday, flameScale]);
-
-  const flameStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: flameScale.value }],
-  }));
-
+function HabitRow({ habit, onToggleBubble }) {
   return (
-    <View style={[styles.habitCard, { backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : '#FFFFFF' }]}>
-      <View style={styles.habitTop}>
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.habitName, { color: theme.text }]}>{habit.name}</Text>
-          <View style={styles.streakRow}>
-            <Animated.View style={flameStyle}>
-              <Flame color="#F97316" size={16} />
-            </Animated.View>
-            <Text style={[styles.streakText, { color: theme.textSecondary }]}>{habit.streak} day streak</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity onPress={onToggle} style={[styles.toggleBtn, { backgroundColor: habit.completedToday ? '#22C55E' : '#64748B' }]}>
-          <Text style={styles.toggleText}>{habit.completedToday ? 'Done' : 'Mark'}</Text>
-        </TouchableOpacity>
+    <View style={styles.habitRow}>
+      <View>
+        <Text style={styles.habitName}>{habit.name}</Text>
+        <Text style={styles.habitMeta}>{habit.time}</Text>
       </View>
-
-      <View style={[styles.weeklyTrack, { backgroundColor: isDark ? '#334155' : '#E2E8F0' }]}>
-        <View style={[styles.weeklyFill, { width: `${habit.weeklyProgress * 100}%`, backgroundColor: theme.accentGradient[0] }]} />
+      <View style={styles.bubblesWrap}>
+        {Array.from({ length: habit.frequency }).map((_, i) => {
+          const filled = i < habit.doneCount;
+          return (
+            <TouchableOpacity
+              key={`${habit.id}-${i}`}
+              style={[styles.bubble, !filled && styles.bubbleEmpty]}
+              onPress={() => onToggleBubble(habit.id, i)}
+            >
+              {filled ? <LinearGradient colors={['#A855F7', '#22D3EE']} style={styles.bubbleFill} /> : null}
+            </TouchableOpacity>
+          );
+        })}
       </View>
-      <Text style={[styles.weeklyLabel, { color: theme.textSecondary }]}>Weekly progress {Math.round(habit.weeklyProgress * 100)}%</Text>
     </View>
   );
 }
 
 export default function HabitsScreen() {
-  const { theme, isDark } = useTheme();
   const bottomSheetRef = useRef(null);
+  const [coins] = useState(182);
+  const [selectedMood, setSelectedMood] = useState('🙂');
   const [habits, setHabits] = useState([
-    { id: '1', name: 'Morning hydration', streak: 5, weeklyProgress: 0.72, completedToday: false },
-    { id: '2', name: '10-min tidy up', streak: 8, weeklyProgress: 0.84, completedToday: true },
-    { id: '3', name: 'Evening reflection', streak: 3, weeklyProgress: 0.45, completedToday: false },
+    { id: '1', name: 'Medication', frequency: 3, doneCount: 1, time: '08:00', days: [1, 2, 3, 4, 5] },
+    { id: '2', name: 'Water Intake', frequency: 5, doneCount: 2, time: '09:00', days: [1, 2, 3, 4, 5, 6, 0] },
+    { id: '3', name: 'Stretch Break', frequency: 2, doneCount: 0, time: '18:00', days: [2, 4, 6] },
   ]);
 
-  const addHabit = (habit) => {
-    setHabits((prev) => [
-      ...prev,
-      { id: Date.now().toString(), name: habit.name, streak: 0, weeklyProgress: 0.1, completedToday: false },
-    ]);
-  };
+  const todayHabits = useMemo(() => habits.filter((h) => h.days.includes(new Date().getDay())), [habits]);
 
-  const toggleHabit = (id) => {
+  const toggleBubble = (id, bubbleIndex) => {
     setHabits((prev) =>
       prev.map((habit) => {
         if (habit.id !== id) return habit;
-        const completed = !habit.completedToday;
-        return {
-          ...habit,
-          completedToday: completed,
-          streak: completed ? habit.streak + 1 : Math.max(0, habit.streak - 1),
-          weeklyProgress: Math.min(1, Math.max(0, habit.weeklyProgress + (completed ? 0.12 : -0.12))),
-        };
+        return { ...habit, doneCount: bubbleIndex < habit.doneCount ? bubbleIndex : Math.min(habit.frequency, bubbleIndex + 1) };
       })
     );
   };
 
+  const addHabit = (habit) => {
+    setHabits((prev) => [...prev, { id: Date.now().toString(), name: habit.name, frequency: 3, doneCount: 0, time: '12:00', days: [1, 2, 3, 4, 5] }]);
+    bottomSheetRef.current?.close();
+  };
+
   return (
-    <LinearGradient colors={theme.background} style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={[styles.header, { color: theme.text }]}>Habits</Text>
-        {habits.map((habit) => (
-          <HabitCard key={habit.id} habit={habit} onToggle={() => toggleHabit(habit.id)} theme={theme} isDark={isDark} />
+    <LinearGradient colors={['#F8FAFF', '#EEF2FF', '#FDF4FF']} style={styles.container}>
+      <View style={styles.headerRow}>
+        <Text style={styles.header}>Habits</Text>
+        <CoinPill coins={coins} />
+      </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.weeklyCard}>
+          <Text style={styles.weeklyTitle}>Weekly Vibes</Text>
+          <View style={styles.weekColumns}>
+            {DAYS.map((day) => (
+              <View key={day} style={styles.weekCol}>
+                <View style={styles.emojiSlot}><Text>{day === DAYS[TODAY_INDEX] ? selectedMood : '🙂'}</Text></View>
+                <Text style={styles.weekLabel}>{day}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.moodCard}>
+          <Text style={styles.moodTitle}>How are you feeling today?</Text>
+          <View style={styles.moodRow}>
+            {['😄', '🙂', '😌', '😵‍💫', '😴'].map((emoji) => (
+              <TouchableOpacity key={emoji} onPress={() => setSelectedMood(emoji)} style={[styles.emojiBtn, selectedMood === emoji && styles.emojiSelected]}>
+                <Text style={styles.emoji}>{emoji}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {todayHabits.map((habit) => (
+          <HabitRow key={habit.id} habit={habit} onToggleBubble={toggleBubble} />
         ))}
       </ScrollView>
 
       <TouchableOpacity style={styles.fab} onPress={() => bottomSheetRef.current?.expand()}>
-        <LinearGradient colors={theme.accentGradient} style={styles.fabGradient}>
-          <Plus color="#FFF" size={28} />
+        <LinearGradient colors={['#8B5CF6', '#22D3EE']} style={styles.fabGrad}>
+          <Plus color="#FFF" size={22} />
         </LinearGradient>
       </TouchableOpacity>
 
@@ -99,33 +106,37 @@ export default function HabitsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scrollContent: { padding: 18, paddingBottom: 100 },
-  header: { fontSize: 28, fontWeight: '700', marginBottom: 16 },
-  habitCard: {
+  container: { flex: 1, paddingTop: 14 },
+  headerRow: { paddingHorizontal: 18, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  header: { fontSize: 29, fontWeight: '800', color: '#0F172A' },
+  content: { padding: 18, paddingBottom: 100 },
+  weeklyCard: { borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.8)', padding: 14, marginBottom: 12 },
+  weeklyTitle: { fontSize: 17, fontWeight: '800', color: '#1E293B', marginBottom: 10 },
+  weekColumns: { flexDirection: 'row', justifyContent: 'space-between' },
+  weekCol: { alignItems: 'center', width: '13%' },
+  emojiSlot: { width: 32, height: 52, borderRadius: 16, backgroundColor: '#F8FAFC', justifyContent: 'center', alignItems: 'center' },
+  weekLabel: { fontSize: 11, color: '#64748B', marginTop: 4 },
+  moodCard: { borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.84)', padding: 14, marginBottom: 14 },
+  moodTitle: { fontWeight: '800', color: '#1E293B', marginBottom: 10, fontSize: 18 },
+  moodRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  emojiBtn: { padding: 7, borderRadius: 18 },
+  emojiSelected: { backgroundColor: '#EDE9FE' },
+  emoji: { fontSize: 26 },
+  habitRow: {
+    backgroundColor: 'rgba(255,255,255,0.86)',
     borderRadius: 16,
-    marginBottom: 12,
     padding: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(148,163,184,0.2)',
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  habitTop: { flexDirection: 'row', alignItems: 'center' },
-  habitName: { fontSize: 16, fontWeight: '700' },
-  streakRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
-  streakText: { marginLeft: 5, fontSize: 13 },
-  toggleBtn: { borderRadius: 12, paddingVertical: 8, paddingHorizontal: 14 },
-  toggleText: { color: '#FFF', fontWeight: '700', fontSize: 12 },
-  weeklyTrack: { marginTop: 12, height: 8, borderRadius: 99, overflow: 'hidden' },
-  weeklyFill: { height: '100%', borderRadius: 99 },
-  weeklyLabel: { marginTop: 7, fontSize: 12 },
-  fab: {
-    position: 'absolute',
-    bottom: 28,
-    right: 18,
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    overflow: 'hidden',
-  },
-  fabGradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  habitName: { fontSize: 16, fontWeight: '800', color: '#1E293B' },
+  habitMeta: { marginTop: 2, color: '#64748B', fontSize: 12 },
+  bubblesWrap: { flexDirection: 'row', gap: 8 },
+  bubble: { width: 22, height: 22, borderRadius: 11, overflow: 'hidden' },
+  bubbleEmpty: { borderWidth: 1, borderColor: '#CBD5E1' },
+  bubbleFill: { flex: 1, borderRadius: 11 },
+  fab: { position: 'absolute', right: 20, bottom: 24, width: 58, height: 58, borderRadius: 29, overflow: 'hidden' },
+  fabGrad: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
