@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useProductivity } from '../../contexts/ProductivityContext';
 import TimerRing from '../../components/focus/TimerRing';
 import ControlButtons from '../../components/focus/ControlButtons';
 import SoundBottomSheet from '../../components/focus/SoundBottomSheet';
@@ -22,6 +23,7 @@ const SOUND_OPTIONS = [
 
 export default function FocusScreen() {
   const { theme } = useTheme();
+  const { activeSessionTask } = useProductivity();
 
   const soundSheetRef = useRef(null);
   const timerIntervalRef = useRef(null);
@@ -167,6 +169,9 @@ export default function FocusScreen() {
         <View style={styles.content}>
           <Text style={[styles.title, { color: theme.text }]}>Focus Session</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Stay present. One task at a time.</Text>
+          <Text style={[styles.activeTask, { color: theme.text }]}>
+            {activeSessionTask ? `Active task: ${activeSessionTask.title}` : 'No active task selected yet'}
+          </Text>
 
           <View style={styles.ringWrapper}>
             <TimerRing totalSeconds={DEFAULT_TIMER_SECONDS} timeLeft={timeLeft} isRunning={isRunning} />
@@ -217,7 +222,12 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 15,
     marginTop: 8,
-    marginBottom: 24,
+    marginBottom: 8,
+  },
+  activeTask: {
+    fontSize: 13,
+    marginBottom: 16,
+    fontWeight: '600',
   },
   ringWrapper: {
     marginTop: 8,

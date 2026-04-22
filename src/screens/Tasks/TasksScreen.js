@@ -1,12 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Plus } from 'lucide-react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useProductivity } from '../../contexts/ProductivityContext';
 import AddTaskBottomSheet from '../../components/tasks/AddTaskBottomSheet';
 
-function TaskItem({ task, onToggle, onToggleSubtask, theme, isDark }) {
+function TaskItem({ task, onToggle, onToggleSubtask, onStartFocus, theme, isDark }) {
   const scale = useSharedValue(1);
 
   const bounce = useAnimatedStyle(() => ({
@@ -22,20 +24,18 @@ function TaskItem({ task, onToggle, onToggleSubtask, theme, isDark }) {
 
   const completed = task.subtasks.filter((s) => s.done).length;
   const pct = task.subtasks.length ? Math.round((completed / task.subtasks.length) * 100) : 0;
-  const isOverdue = new Date(task.deadline) < new Date() && pct < 100;
 
   return (
     <Animated.View style={bounce}>
       <TouchableOpacity onPress={pressCard} activeOpacity={0.9} style={styles.taskCard}>
-        <LinearGradient
-          colors={isDark ? ['#1E1B4B', '#1E3A8A'] : ['#FFFFFF', '#E0E7FF']}
-          style={styles.taskGradient}
-        >
+        <LinearGradient colors={isDark ? ['#1E1B4B', '#1E3A8A'] : ['#FFFFFF', '#E0E7FF']} style={styles.taskGradient}>
           <View style={styles.taskTop}>
             <Text style={[styles.taskTitle, { color: isDark ? '#F8FAFC' : theme.text }]}>{task.title}</Text>
-            <Text style={[styles.deadline, { color: isOverdue ? '#EF4444' : isDark ? '#CBD5E1' : theme.textSecondary }]}>{task.deadline}</Text>
+            <Text style={[styles.deadline, { color: isDark ? '#CBD5E1' : theme.textSecondary }]}>{task.deadline}</Text>
           </View>
-          <Text style={[styles.meta, { color: isDark ? '#CBD5E1' : theme.textSecondary }]}>{task.subtasks.length} AI subtasks • {pct}% done</Text>
+          <Text style={[styles.meta, { color: isDark ? '#CBD5E1' : theme.textSecondary }]}>
+            {task.dayKey} • {task.startHour}:00 • {task.duration}h
+          </Text>
 
           {task.expanded && (
             <View style={styles.expandedWrap}>
@@ -48,7 +48,9 @@ function TaskItem({ task, onToggle, onToggleSubtask, theme, isDark }) {
               <View style={[styles.progressTrack, { backgroundColor: isDark ? '#334155' : '#E2E8F0' }]}>
                 <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: theme.accentGradient[0] }]} />
               </View>
-              <Text style={[styles.meta, { color: isDark ? '#CBD5E1' : theme.textSecondary }]}>Progress: {completed}/{task.subtasks.length}</Text>
+              <TouchableOpacity style={styles.startFocusBtn} onPress={() => onStartFocus(task)}>
+                <Text style={styles.startFocusText}>Start Focus Session</Text>
+              </TouchableOpacity>
             </View>
           )}
         </LinearGradient>
@@ -59,31 +61,9 @@ function TaskItem({ task, onToggle, onToggleSubtask, theme, isDark }) {
 
 export default function TasksScreen() {
   const { theme, isDark } = useTheme();
+  const navigation = useNavigation();
   const bottomSheetRef = useRef(null);
-  const [tasks, setTasks] = useState([
-    {
-      id: '1',
-      title: 'Complete assignment draft',
-      deadline: '2026-03-12',
-      expanded: false,
-      subtasks: [
-        { id: '1-1', title: 'Create outline', done: true },
-        { id: '1-2', title: 'Write intro', done: false },
-        { id: '1-3', title: 'Add references', done: false },
-      ],
-    },
-    {
-      id: '2',
-      title: 'Prepare presentation',
-      deadline: '2026-03-10',
-      expanded: false,
-      subtasks: [
-        { id: '2-1', title: 'Gather slides', done: true },
-        { id: '2-2', title: 'Add speaker notes', done: true },
-        { id: '2-3', title: 'Practice once', done: false },
-      ],
-    },
-  ]);
+  const { tasks, setTasks, addTask, setActiveSessionTask } = useProductivity();
 
   const generateSubtasks = (task) => {
     const base = task.title || 'Task';
@@ -96,16 +76,7 @@ export default function TasksScreen() {
   };
 
   const handleAddTask = (task) => {
-    setTasks((prev) => [
-      ...prev,
-      {
-        id: Date.now().toString(),
-        title: task.title,
-        deadline: task.deadline,
-        expanded: false,
-        subtasks: generateSubtasks(task),
-      },
-    ]);
+    addTask({ ...task, subtasks: generateSubtasks(task) });
     bottomSheetRef.current?.close();
   };
 
@@ -126,17 +97,23 @@ export default function TasksScreen() {
     );
   };
 
+  const startFocusForTask = (task) => {
+    setActiveSessionTask(task);
+    navigation.navigate('Focus');
+  };
+
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={[styles.header, { color: theme.text }]}>Tasks</Text>
-        <Text style={[styles.subHeader, { color: theme.textSecondary }]}>Tap a card to expand AI subtasks and progress.</Text>
+        <Text style={[styles.subHeader, { color: theme.textSecondary }]}>Create tasks here and they will auto-appear in Focus Timeline.</Text>
         {tasks.map((task) => (
           <TaskItem
             key={task.id}
             task={task}
             onToggle={() => toggleTask(task.id)}
             onToggleSubtask={toggleSubtask}
+            onStartFocus={startFocusForTask}
             theme={theme}
             isDark={isDark}
           />
@@ -159,17 +136,8 @@ const styles = StyleSheet.create({
   scrollContent: { padding: 18, paddingBottom: 100 },
   header: { fontSize: 28, fontWeight: '700' },
   subHeader: { marginTop: 4, marginBottom: 14, fontSize: 13 },
-  taskCard: {
-    borderRadius: 16,
-    marginBottom: 12,
-    overflow: 'hidden',
-  },
-  taskGradient: {
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(148,163,184,0.25)',
-  },
+  taskCard: { borderRadius: 16, marginBottom: 12, overflow: 'hidden' },
+  taskGradient: { borderRadius: 16, padding: 14, borderWidth: 1, borderColor: 'rgba(148,163,184,0.25)' },
   taskTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   taskTitle: { fontSize: 15, fontWeight: '700', flex: 1, marginRight: 8 },
   deadline: { fontSize: 12, fontWeight: '600' },
@@ -180,14 +148,14 @@ const styles = StyleSheet.create({
   subtaskText: { fontSize: 13 },
   progressTrack: { marginTop: 10, height: 7, borderRadius: 99, overflow: 'hidden' },
   progressFill: { height: '100%' },
-  fab: {
-    position: 'absolute',
-    bottom: 26,
-    right: 18,
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    overflow: 'hidden',
+  startFocusBtn: {
+    marginTop: 12,
+    borderRadius: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
+    backgroundColor: '#3B82F6',
   },
+  startFocusText: { color: '#FFF', fontWeight: '700', fontSize: 13 },
+  fab: { position: 'absolute', bottom: 26, right: 18, width: 62, height: 62, borderRadius: 31, overflow: 'hidden' },
   fabGradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
