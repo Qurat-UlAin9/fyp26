@@ -1,177 +1,165 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { useTheme } from '../../contexts/ThemeContext';
+import { BlurView } from 'expo-blur';
+import { useNavigation } from '@react-navigation/native';
+import { useProductivity } from '../../contexts/ProductivityContext';
 
-const NODE_DATA = [
-  { key: 'Mood', x: 0.2, y: 0.34, score: '78%', trend: 'Up 8%', description: 'Mood is improving with better sleep consistency.' },
-  { key: 'Tasks', x: 0.78, y: 0.32, score: '12/16', trend: '75% complete', description: 'Most tasks are completed before the due date.' },
-  { key: 'Habits', x: 0.2, y: 0.62, score: '5 day', trend: '2 habits strong', description: 'Morning routine and hydration are stable.' },
-  { key: 'Focus', x: 0.78, y: 0.62, score: '62 min', trend: 'Avg 55 min/day', description: 'Focus blocks are getting longer each week.' },
+const WEEK_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const START_HOUR = 6;
+const END_HOUR = 22;
+const HOUR_HEIGHT = 62;
+const TIME_COL_WIDTH = 54;
+
+const GRADIENTS = [
+  ['#FF9A8B', '#FF6A88'],
+  ['#5DAEFF', '#3A8DFF'],
+  ['#6EE7B7', '#34D399'],
+  ['#A78BFA', '#7C3AED'],
+  ['#FFD166', '#FCA311'],
+  ['#4FD1C5', '#2CB1BC'],
+  ['#FF7EB3', '#FF4D6D'],
 ];
 
-function Node({ item, selected, onPress, isDark, color }) {
-  const scale = useSharedValue(1);
-  const glow = useSharedValue(0.35);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    shadowOpacity: glow.value,
-  }));
-
-  React.useEffect(() => {
-    if (selected) {
-      scale.value = withSpring(1.18, { damping: 12 });
-      glow.value = withSpring(0.9);
-    } else {
-      scale.value = withSpring(1);
-      glow.value = withSpring(0.35);
-    }
-  }, [selected, scale, glow]);
-
-  return (
-    <Animated.View
-      style={[
-        styles.nodeWrap,
-        {
-          left: `${item.x * 100}%`,
-          top: `${item.y * 100}%`,
-          marginLeft: -38,
-          marginTop: -38,
-          shadowColor: color,
-          backgroundColor: isDark ? 'rgba(30,41,59,0.86)' : '#FFFFFF',
-        },
-        animatedStyle,
-      ]}
-    >
-      <TouchableOpacity onPress={onPress} style={[styles.nodeInner, { borderColor: color }]}>
-        <Text style={[styles.nodeText, { color }]}>{item.key}</Text>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-}
+const formatHour = (hour) => {
+  const suffix = hour >= 12 ? 'PM' : 'AM';
+  const base = hour % 12 === 0 ? 12 : hour % 12;
+  return `${base} ${suffix}`;
+};
 
 export default function TimelineScreen() {
-  const { theme, isDark } = useTheme();
-  const [selected, setSelected] = useState(NODE_DATA[0]);
+  const navigation = useNavigation();
+  const { width } = useWindowDimensions();
+  const { tasks } = useProductivity();
+  const [selectedDay, setSelectedDay] = useState('Mon');
 
-  const stars = useMemo(
-    () =>
-      Array.from({ length: 24 }, (_, i) => ({
-        id: i,
-        left: `${(i * 17) % 100}%`,
-        top: `${(i * 31) % 70}%`,
-        size: 1 + (i % 3),
-      })),
-    []
-  );
+  const hours = useMemo(() => Array.from({ length: END_HOUR - START_HOUR + 1 }, (_, idx) => START_HOUR + idx), []);
+  const gridHeight = hours.length * HOUR_HEIGHT;
+  const timelineWidth = Math.max(220, width - 32 - TIME_COL_WIDTH - 12);
+  const dayWidth = timelineWidth / 7;
 
   return (
-    <LinearGradient colors={isDark ? ['#020617', '#0B1120', '#1E1B4B'] : ['#E0E7FF', '#EEF2FF', '#F8FAFC']} style={styles.container}>
-      <Text style={[styles.title, { color: theme.text }]}>Visualization Dashboard</Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>Focus Timeline</Text>
 
-      <View style={styles.galaxyArea}>
-        {stars.map((s) => (
-          <View key={s.id} style={[styles.star, { left: s.left, top: s.top, width: s.size, height: s.size }]} />
-        ))}
+        <BlurView intensity={24} tint="light" style={styles.headerCard}>
+          <View style={styles.weekRow}>
+            {WEEK_DAYS.map((day) => (
+              <TouchableOpacity key={day} style={[styles.dayPill, selectedDay === day && styles.dayPillActive]} onPress={() => setSelectedDay(day)}>
+                <Text style={[styles.dayText, selectedDay === day && styles.dayTextActive]}>{day}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <View style={styles.controlsRow}>
+            <TouchableOpacity style={styles.monthBtn}><Text style={styles.monthBtnText}>May 2023 ▾</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.todayBtn}><Text style={styles.todayBtnText}>Today</Text></TouchableOpacity>
+          </View>
+        </BlurView>
 
-        <View style={[styles.centerNode, { backgroundColor: theme.accentGradient[0] }]}>
-          <View style={[styles.centerCore, { backgroundColor: theme.accentGradient[1] }]} />
+        <View style={styles.timelineCard}>
+          <View style={styles.daysHeaderRow}>
+            <View style={{ width: TIME_COL_WIDTH }} />
+            <View style={[styles.dayHeaderGrid, { width: timelineWidth }]}>
+              {WEEK_DAYS.map((d) => (
+                <View key={d} style={[styles.dayHeaderCell, { width: dayWidth }]}>
+                  <Text style={styles.dayHeaderText}>{d}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <ScrollView style={{ maxHeight: 520 }} nestedScrollEnabled showsVerticalScrollIndicator={false}>
+            <View style={[styles.gridRow, { height: gridHeight }]}> 
+              <View style={styles.timeColumn}>
+                {hours.map((hour, index) => (
+                  <Text key={hour} style={[styles.hourText, { top: index * HOUR_HEIGHT + 2 }]}>{formatHour(hour)}</Text>
+                ))}
+              </View>
+
+              <View style={[styles.dayGridArea, { width: timelineWidth }]}>
+                {WEEK_DAYS.map((day, idx) => (
+                  <View key={day} style={[styles.dayColumn, { left: idx * dayWidth, width: dayWidth }]} />
+                ))}
+                {hours.map((hour, index) => (
+                  <View key={`line-${hour}`} style={[styles.hourLine, { top: index * HOUR_HEIGHT }]} />
+                ))}
+
+                {tasks.map((task, index) => {
+                  const dayIndex = WEEK_DAYS.indexOf(task.dayKey);
+                  const top = (task.startHour - START_HOUR) * HOUR_HEIGHT + 6;
+                  const taskHeight = Math.max(48, task.duration * HOUR_HEIGHT - 10);
+                  const left = Math.max(0, dayIndex) * dayWidth + 4;
+                  return (
+                    <TouchableOpacity key={task.id} style={[styles.taskWrap, { top, left, width: dayWidth - 8, height: taskHeight }]} activeOpacity={0.9}>
+                      <LinearGradient colors={GRADIENTS[index % GRADIENTS.length]} style={styles.taskCard}>
+                        <Text style={styles.taskTitle} numberOfLines={2}>{task.title}</Text>
+                        <Text style={styles.taskTime}>{formatHour(task.startHour)} · {task.duration}h</Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+          </ScrollView>
         </View>
 
-        {NODE_DATA.map((item, index) => (
-          <Node
-            key={item.key}
-            item={item}
-            selected={selected.key === item.key}
-            onPress={() => setSelected(item)}
-            isDark={isDark}
-            color={theme.accentGradient[index % 3]}
-          />
-        ))}
-      </View>
-
-      <View style={[styles.summaryCard, { backgroundColor: isDark ? 'rgba(15,23,42,0.88)' : 'rgba(255,255,255,0.92)' }]}>
-        <Text style={[styles.summaryTitle, { color: theme.text }]}>{selected.key} Summary</Text>
-        <Text style={[styles.summaryMetric, { color: theme.accentGradient[0] }]}>Score: {selected.score}</Text>
-        <Text style={[styles.summaryTrend, { color: theme.textSecondary }]}>Weekly Trend: {selected.trend}</Text>
-        <View style={styles.miniChartRow}>
-          {[30, 46, 38, 60, 52].map((h, i) => (
-            <View key={i} style={[styles.miniBar, { height: h, backgroundColor: theme.accentGradient[i % 3] }]} />
-          ))}
+        <View style={styles.focusCard}>
+          <Text style={styles.focusTitle}>Focus</Text>
+          <Text style={styles.focusEmpty}>Start a task to begin your focus journey ✨</Text>
         </View>
-        <Text style={[styles.summaryDesc, { color: theme.textSecondary }]}>{selected.description}</Text>
-      </View>
-    </LinearGradient>
+
+        <View style={styles.bottomSpace}>
+          <TouchableOpacity style={styles.bubbleBtn} onPress={() => navigation.navigate('Tasks')}>
+            <LinearGradient colors={['#5DAEFF', '#3A8DFF']} style={styles.bubble}><Text style={styles.bubbleText}>Tasks</Text></LinearGradient>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bubbleBtn} onPress={() => navigation.navigate('Focus')}>
+            <LinearGradient colors={['#A78BFA', '#7C3AED']} style={styles.bubble}><Text style={styles.bubbleText}>Focus</Text></LinearGradient>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bubbleBtn} onPress={() => navigation.navigate('Habits')}>
+            <LinearGradient colors={['#6EE7B7', '#34D399']} style={styles.bubble}><Text style={styles.bubbleText}>Habits</Text></LinearGradient>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingHorizontal: 18, paddingTop: 20, paddingBottom: 28 },
-  title: { fontSize: 24, fontWeight: '700', marginBottom: 16 },
-  galaxyArea: {
-    flex: 1,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: 'rgba(148,163,184,0.25)',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  star: {
-    position: 'absolute',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    opacity: 0.55,
-  },
-  centerNode: {
-    position: 'absolute',
-    left: '50%',
-    top: '48%',
-    marginLeft: -40,
-    marginTop: -40,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#8B5CF6',
-    shadowOpacity: 0.8,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 0 },
-  },
-  centerCore: { width: 36, height: 36, borderRadius: 18 },
-  nodeWrap: {
-    position: 'absolute',
-    width: 76,
-    height: 76,
-    borderRadius: 38,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 0 },
-    elevation: 10,
-  },
-  nodeInner: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-  },
-  nodeText: { fontWeight: '700', fontSize: 13 },
-  summaryCard: {
-    marginTop: 14,
-    borderRadius: 18,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(148,163,184,0.2)',
-  },
-  summaryTitle: { fontSize: 18, fontWeight: '700', marginBottom: 4 },
-  summaryMetric: { fontSize: 16, fontWeight: '700' },
-  summaryTrend: { fontSize: 13, marginTop: 2 },
-  miniChartRow: { marginTop: 12, flexDirection: 'row', alignItems: 'flex-end', gap: 7, height: 66 },
-  miniBar: { width: 12, borderRadius: 6 },
-  summaryDesc: { marginTop: 10, fontSize: 13, lineHeight: 18 },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 150 },
+  title: { fontSize: 30, fontWeight: '800', color: '#111827', marginBottom: 14 },
+  headerCard: { borderRadius: 24, borderWidth: 1, borderColor: 'rgba(148,163,184,0.25)', backgroundColor: 'rgba(255,255,255,0.72)', padding: 10, marginBottom: 14 },
+  weekRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  dayPill: { paddingVertical: 6, minWidth: 42, borderRadius: 12, alignItems: 'center' },
+  dayPillActive: { backgroundColor: '#EFF6FF' },
+  dayText: { fontSize: 12, fontWeight: '700', color: '#6B7280' },
+  dayTextActive: { color: '#2563EB' },
+  controlsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
+  monthBtn: { paddingHorizontal: 12, paddingVertical: 9, borderRadius: 14, borderWidth: 1, borderColor: 'rgba(148,163,184,0.35)' },
+  monthBtnText: { color: '#111827', fontWeight: '600' },
+  todayBtn: { borderRadius: 14, paddingHorizontal: 14, paddingVertical: 9, backgroundColor: '#3B82F6' },
+  todayBtnText: { color: '#FFF', fontWeight: '700' },
+  timelineCard: { borderRadius: 20, borderWidth: 1, borderColor: 'rgba(148,163,184,0.25)', backgroundColor: 'rgba(255,255,255,0.9)', overflow: 'hidden' },
+  daysHeaderRow: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'rgba(148,163,184,0.2)' },
+  dayHeaderGrid: { flexDirection: 'row' },
+  dayHeaderCell: { paddingVertical: 8, alignItems: 'center' },
+  dayHeaderText: { fontSize: 11, fontWeight: '700', color: '#64748B' },
+  gridRow: { flexDirection: 'row' },
+  timeColumn: { width: TIME_COL_WIDTH, position: 'relative' },
+  hourText: { position: 'absolute', left: 5, fontSize: 10, color: '#6B7280', fontWeight: '600' },
+  dayGridArea: { position: 'relative' },
+  dayColumn: { position: 'absolute', top: 0, bottom: 0, borderRightWidth: 1, borderRightColor: 'rgba(148,163,184,0.2)' },
+  hourLine: { position: 'absolute', left: 0, right: 0, height: 1, backgroundColor: 'rgba(148,163,184,0.2)' },
+  taskWrap: { position: 'absolute', borderRadius: 13, overflow: 'hidden' },
+  taskCard: { flex: 1, paddingHorizontal: 8, paddingVertical: 8, borderRadius: 13 },
+  taskTitle: { color: '#FFF', fontWeight: '700', fontSize: 12 },
+  taskTime: { color: 'rgba(255,255,255,0.92)', fontSize: 10, marginTop: 6, fontWeight: '600' },
+  focusCard: { marginTop: 16, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(148,163,184,0.2)', backgroundColor: 'rgba(255,255,255,0.86)', padding: 14 },
+  focusTitle: { fontSize: 17, fontWeight: '700', color: '#111827' },
+  focusEmpty: { marginTop: 8, color: '#64748B', fontSize: 14 },
+  bottomSpace: { marginTop: 20, flexDirection: 'row', justifyContent: 'space-around' },
+  bubbleBtn: { padding: 4 },
+  bubble: { width: 74, height: 74, borderRadius: 37, alignItems: 'center', justifyContent: 'center' },
+  bubbleText: { color: '#FFF', fontWeight: '700', fontSize: 13 },
 });
