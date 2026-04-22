@@ -1,87 +1,201 @@
-'''import pandas as pd
+import pandas as pd
+import numpy as np
+import joblib
+import shap
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 
+# =========================
+# 1️⃣ Load & Clean Dataset
+# =========================
 df = pd.read_csv("data/adhd.csv", encoding="latin1")
-
-print("Dataset Loaded Successfully")
-print(df.head())
-print("\nDataset Info:")
-print(df.info())
-# Remove empty unnamed columns
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-
-print("\nAfter Removing Unnamed Columns:")
-print(df.shape)
-print("\nDataset Info:")
-print(df.info())
-
-print("\nColumn Names:")
-print(df.columns)
-
-print("\nChecking possible label columns:")
-
-print("\nasrs1_total.y unique values:")
-print(df['asrs1_total.y'].unique())
-
-print("\naas_change unique values:")
-print(df['aas_change'].unique())
-
-
-# Remove rows where target is missing
 df = df.dropna(subset=['asrs1_total.y'])
 
-
-# Create binary ADHD label
+# Create label (Target)
 df['ADHD_label'] = df['asrs1_total.y'].apply(lambda x: 1 if x >= 24 else 0)
 
-print("\nNew ADHD Label Created")
-print(df['ADHD_label'].value_counts())
-
-print("Shape after removing missing target:", df.shape)
-
-# Separate features and target
-X = df.drop(['asrs1_total.y', 'ADHD_label'], axis=1)
+# 🛑 LEAKAGE FIX
+leakage_cols = ['asrs1_total.y', 'ADHD_label', 'bai1_total', 'aas_change']
+X = df.drop(leakage_cols, axis=1)
 y = df['ADHD_label']
 
-print("\nFeature Shape:", X.shape)
-print("Target Shape:", y.shape)
-# Keep only numeric columns
+# Keep only numeric and handle Missing Values
 X = X.select_dtypes(include=['int64', 'float64'])
+imputer = SimpleImputer(strategy='median')
+X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
 
-print("\nAfter Keeping Only Numeric Features:")
-print(X.shape)
+# Scale numeric features
+scaler = StandardScaler()
+X_scaled = pd.DataFrame(scaler.fit_transform(X_imputed), columns=X_imputed.columns)
 
-from sklearn.model_selection import train_test_split
-
+# =========================
+# 2️⃣ Train-Test Split
+# =========================
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X_scaled, y, test_size=0.2, random_state=42, stratify=y
 )
 
-print("\nTraining Data Shape:", X_train.shape)
-print("Testing Data Shape:", X_test.shape)
+# =========================
+# 3️⃣ Hyperparameter Tuning
+# =========================
+print("⚙️ Tuning Random Forest...")
+param_grid = {
+    'n_estimators': [100, 200],
+    'max_depth': [None, 10, 20],
+    'min_samples_split': [2, 5],
+    'class_weight': ['balanced']
+}
 
-from sklearn.ensemble import RandomForestClassifier
+grid = GridSearchCV(RandomForestClassifier(random_state=42), param_grid, cv=5, scoring='accuracy')
+grid.fit(X_train, y_train)
+best_model = grid.best_estimator_
 
-model = RandomForestClassifier(random_state=42)
-model.fit(X_train, y_train)
+# =========================
+# 4️⃣ Feature Selection
+# =========================
+importances = best_model.feature_importances_
+feat_imp = pd.Series(importances, index=X_train.columns).sort_values(ascending=False)
+top_features = feat_imp.head(15).index
 
-print("\nModel Trained Successfully")
+X_train_final = X_train[top_features]
+X_test_final = X_test[top_features]
 
+# Retrain on best features
+best_model.fit(X_train_final, y_train)
 
-from sklearn.metrics import accuracy_score
+# =========================
+# 5️⃣ Evaluation & SHAP
+# =========================
+y_pred = best_model.predict(X_test_final)
+print(f"\n✅ Final Accuracy: {accuracy_score(y_test, y_pred):.4f}")
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
 
-y_pred = model.predict(X_test)
+# SHAP Explanations
+print("\n🧠 Generating SHAP Visuals...")
+explainer = shap.TreeExplainer(best_model)
+shap_values = explainer.shap_values(X_test_final)
 
-accuracy = accuracy_score(y_test, y_pred)
-print("\nModel Accuracy:", accuracy)
+if isinstance(shap_values, list):
+    shap.summary_plot(shap_values[1], X_test_final, show=False)
+else:
+    shap.summary_plot(shap_values, X_test_final, show=False)
 
-import joblib
+plt.savefig("models/shap_summary.png")
 
-joblib.dump(model, "models/adhd_model.pkl")
+# =========================
+# 6️⃣ Save Everything
+# =========================
+joblib.dump(best_model, "models/adhd_model_final.pkl")
+joblib.dump(top_features.tolist(), "models/features.pkl")
+joblib.dump(scaler, "models/scaler.pkl")
+joblib.dump(imputer, "models/imputer.pkl")
 
-print("\nModel Saved Successfully")
+print("\n🚀 Model, Features, Scaler, and Imputer Saved Successfully!")
 
 '''
+version 2
+import pandas as pd
+import numpy as np
+import joblib
+import shap
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
 
+# =========================
+# 1️⃣ Load & Clean Dataset
+# =========================
+df = pd.read_csv("data/adhd.csv", encoding="latin1")
+df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+df = df.dropna(subset=['asrs1_total.y'])
+
+# Create label (Target)
+df['ADHD_label'] = df['asrs1_total.y'].apply(lambda x: 1 if x >= 24 else 0)
+
+# 🛑 LEAKAGE FIX: In columns ko list mein dalen jo target se related hain
+leakage_cols = ['asrs1_total.y', 'ADHD_label', 'bai1_total', 'aas_change'] 
+# Agar ASRS ke individual sawal (Q1, Q2...) hain, unhein bhi yahan add karen.
+
+X = df.drop(leakage_cols, axis=1)
+y = df['ADHD_label']
+
+# Keep only numeric and handle Missing Values
+X = X.select_dtypes(include=['int64', 'float64'])
+imputer = SimpleImputer(strategy='median') # Median is safer than mean
+X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
+
+# =========================
+# 2️⃣ Train-Test Split
+# =========================
+X_train, X_test, y_train, y_test = train_test_split(
+    X_imputed, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# =========================
+# 3️⃣ Hyperparameter Tuning
+# =========================
+print("⚙️ Tuning Random Forest (Wait for 1-2 mins)...")
+param_grid = {
+    'n_estimators': [100, 200],
+    'max_depth': [None, 10, 20],
+    'min_samples_split': [2, 5],
+    'class_weight': ['balanced'] # Handles imbalance
+}
+
+grid = GridSearchCV(RandomForestClassifier(random_state=42), param_grid, cv=5, scoring='accuracy')
+grid.fit(X_train, y_train)
+best_model = grid.best_estimator_
+
+# =========================
+# 4️⃣ Feature Selection (FIXED: Done on X_train only)
+# =========================
+importances = best_model.feature_importances_
+feat_imp = pd.Series(importances, index=X.columns).sort_values(ascending=False)
+top_features = feat_imp.head(15).index # Using top 15 for stability
+
+X_train_final = X_train[top_features]
+X_test_final = X_test[top_features]
+
+# Retrain on best features
+best_model.fit(X_train_final, y_train)
+
+# =========================
+# 5️⃣ Evaluation & SHAP
+# =========================
+y_pred = best_model.predict(X_test_final)
+print(f"\n✅ Final Accuracy: {accuracy_score(y_test, y_pred):.4f}")
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# SHAP Explanations
+print("\n🧠 Generating SHAP Visuals...")
+explainer = shap.TreeExplainer(best_model)
+shap_values = explainer.shap_values(X_test_final)
+
+# Handle SHAP version differences
+if isinstance(shap_values, list):
+    shap.summary_plot(shap_values[1], X_test_final)
+else:
+    shap.summary_plot(shap_values, X_test_final)
+
+# =========================
+# 6️⃣ Save Everything
+# =========================
+joblib.dump(best_model, "models/adhd_model_final.pkl")
+joblib.dump(top_features.tolist(), "models/features.pkl")
+print("\n🚀 Model and Features Saved Successfully!")
+'''
+
+
+'''
+version1
 import pandas as pd
 import joblib
 
@@ -211,4 +325,7 @@ print("Cross Validation Accuracy:", scores.mean())
 
 joblib.dump(model, "models/adhd_model.pkl")
 print("\nModel Saved Successfully")
+'''
+
+
 
