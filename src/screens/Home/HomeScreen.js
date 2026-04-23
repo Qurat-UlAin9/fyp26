@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Award, Settings, MessageCircle, Timer, SmilePlus, Leaf, ListChecks, Clock3, Flame } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
+import CoinBalancePill from '../../components/common/CoinBalancePill';
+import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
 
 export default function HomeScreen() {
   const { theme, isDark } = useTheme();
@@ -11,7 +13,7 @@ export default function HomeScreen() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
-  const screenBackground = isDark ? '#0B1028' : '#F1F5F9';
+  const screenBackground = theme.background[0];
 
   const quickActions = [
     {
@@ -41,7 +43,8 @@ export default function HomeScreen() {
   ];
 
   return (
-    <View style={[styles.container, { backgroundColor: screenBackground }]}> 
+    <View style={[styles.container, { backgroundColor: screenBackground }]}>
+      <AnimatedOrbsBackground colors={[theme.glow + '40', theme.accentGradient[0] + '20', theme.accentGradient[1] + '20']} />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <View style={styles.greetingWrap}>
@@ -50,6 +53,7 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.rightIcons}>
+            <CoinBalancePill />
             <TouchableOpacity onPress={() => navigation.navigate('Rewards')} style={[styles.iconButton, { backgroundColor: isDark ? '#1E293B' : '#FFFFFF' }]}>
               <Award color={theme.accentGradient[0]} size={20} />
             </TouchableOpacity>
@@ -60,17 +64,12 @@ export default function HomeScreen() {
         </View>
 
         <View style={[styles.quoteOuter, { backgroundColor: isDark ? '#111A4A' : '#FFFFFF' }]}>
-          <LinearGradient
-            colors={isDark ? ['#1E1B4B', '#1E3A8A', '#6D28D9'] : ['#7DD3FC', '#60A5FA', '#A78BFA']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.quoteInner}
-          >
+          <ImageBackground source={{ uri: theme.quoteImage }} style={styles.quoteInner} imageStyle={styles.quoteImage}>
             <View style={styles.quoteOverlay}>
               <Text style={styles.quoteText}>“Small steps every day lead to big changes.”</Text>
               <Text style={styles.quoteAuthor}>— Daily Motivation</Text>
             </View>
-          </LinearGradient>
+          </ImageBackground>
         </View>
 
 
@@ -144,14 +143,14 @@ const styles = StyleSheet.create({
   greetingWrap: { flex: 1, marginRight: 8 },
   greeting: { fontSize: 30, fontWeight: '800' },
   subGreeting: { fontSize: 18, fontWeight: '600', marginTop: 6 },
-  rightIcons: { flexDirection: 'row' },
+  rightIcons: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   iconButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    marginLeft: 0,
     shadowColor: '#312E81',
     shadowOpacity: 0.2,
     shadowRadius: 8,
@@ -169,6 +168,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   quoteInner: { borderRadius: 20, minHeight: 220, justifyContent: 'flex-end', overflow: 'hidden' },
+  quoteImage: { borderRadius: 20 },
   quoteOverlay: {
     margin: 14,
     backgroundColor: 'rgba(7,10,36,0.35)',

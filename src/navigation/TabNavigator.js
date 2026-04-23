@@ -13,7 +13,7 @@ import HabitsScreen from '../screens/Habits/HabitsScreen';
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
-  const { isDark } = useTheme();
+  const { isDark, theme } = useTheme();
 
   return (
     <Tab.Navigator
@@ -22,7 +22,7 @@ export default function TabNavigator() {
         tabBarStyle: styles.tabBar,
         tabBarBackground: () => (
           <LinearGradient
-            colors={isDark ? ['#111A4A', '#1E1B4B', '#1E3A8A'] : ['#FFFFFF', '#EEF2FF', '#F5F3FF']}
+            colors={theme.tabGradient || (isDark ? ['#111A4A', '#1E1B4B', '#1E3A8A'] : ['#FFFFFF', '#EEF2FF', '#F5F3FF'])}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.tabBackground}

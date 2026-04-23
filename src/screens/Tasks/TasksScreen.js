@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Animated as RNAnimated, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Plus } from 'lucide-react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -7,13 +7,33 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useProductivity } from '../../contexts/ProductivityContext';
 import AddTaskBottomSheet from '../../components/tasks/AddTaskBottomSheet';
+import CoinBalancePill from '../../components/common/CoinBalancePill';
+
+function CoinFly({ tick }) {
+  const translate = useRef(new RNAnimated.ValueXY({ x: 0, y: 0 })).current;
+  const opacity = useRef(new RNAnimated.Value(0)).current;
+
+  React.useEffect(() => {
+    if (!tick) return;
+    translate.setValue({ x: 0, y: 0 });
+    opacity.setValue(1);
+    RNAnimated.parallel([
+      RNAnimated.timing(translate, { toValue: { x: 130, y: -440 }, duration: 900, useNativeDriver: true }),
+      RNAnimated.timing(opacity, { toValue: 0, duration: 900, useNativeDriver: true }),
+    ]).start();
+  }, [tick, opacity, translate]);
+
+  return (
+    <RNAnimated.View pointerEvents="none" style={[styles.coinFx, { opacity, transform: [{ translateX: translate.x }, { translateY: translate.y }] }]}>
+      <Text style={styles.coinFxText}>🪙✨</Text>
+    </RNAnimated.View>
+  );
+}
 
 function TaskItem({ task, onToggle, onToggleSubtask, onStartFocus, theme, isDark }) {
   const scale = useSharedValue(1);
 
-  const bounce = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const bounce = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
   const pressCard = () => {
     scale.value = withSpring(0.97, { damping: 14 }, () => {
@@ -60,23 +80,20 @@ function TaskItem({ task, onToggle, onToggleSubtask, onStartFocus, theme, isDark
 }
 
 export default function TasksScreen() {
-  const { theme, isDark } = useTheme();
+  const { theme, isDark, registerTaskCompletion, registerSubtaskCompletion } = useTheme();
   const navigation = useNavigation();
   const bottomSheetRef = useRef(null);
   const { tasks, setTasks, addTask, setActiveSessionTask } = useProductivity();
+  const [coinFxTick, setCoinFxTick] = useState(0);
 
   const generateSubtasks = (task) => {
     const base = task.title || 'Task';
     const count = task.workload === 'Low' ? 3 : task.workload === 'Medium' ? 4 : 5;
-    return Array.from({ length: count }, (_, i) => ({
-      id: `${Date.now()}-${i}`,
-      title: `${base}: step ${i + 1}`,
-      done: false,
-    }));
+    return Array.from({ length: count }, (_, i) => ({ id: `${Date.now()}-${i}`, title: `${base}: step ${i + 1}`, done: false }));
   };
 
   const handleAddTask = (task) => {
-    addTask({ ...task, subtasks: generateSubtasks(task) });
+    addTask({ ...task, subtasks: generateSubtasks(task), completedRewarded: false });
     bottomSheetRef.current?.close();
   };
 
@@ -86,14 +103,24 @@ export default function TasksScreen() {
 
   const toggleSubtask = (taskId, subtaskId) => {
     setTasks((prev) =>
-      prev.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              subtasks: task.subtasks.map((sub) => (sub.id === subtaskId ? { ...sub, done: !sub.done } : sub)),
-            }
-          : task
-      )
+      prev.map((task) => {
+        if (task.id !== taskId) return task;
+        const target = task.subtasks.find((sub) => sub.id === subtaskId);
+        if (!target) return task;
+        const updatedSubtasks = task.subtasks.map((sub) => (sub.id === subtaskId ? { ...sub, done: !sub.done } : sub));
+        const toggledToDone = !target.done;
+        if (toggledToDone) {
+          registerSubtaskCompletion();
+          setCoinFxTick((x) => x + 1);
+        }
+        const allDone = updatedSubtasks.every((item) => item.done);
+        const shouldRewardTask = allDone && !task.completedRewarded;
+        if (shouldRewardTask) {
+          registerTaskCompletion();
+          setCoinFxTick((x) => x + 1);
+        }
+        return { ...task, subtasks: updatedSubtasks, completedRewarded: shouldRewardTask ? true : task.completedRewarded };
+      })
     );
   };
 
@@ -104,19 +131,17 @@ export default function TasksScreen() {
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
+      <CoinFly tick={coinFxTick} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={[styles.header, { color: theme.text }]}>Tasks</Text>
-        <Text style={[styles.subHeader, { color: theme.textSecondary }]}>Create tasks here and they will auto-appear in Focus Timeline.</Text>
+        <View style={styles.headRow}>
+          <View>
+            <Text style={[styles.header, { color: theme.text }]}>Tasks</Text>
+            <Text style={[styles.subHeader, { color: theme.textSecondary }]}>Task +5, subtask +1 coins. Keep building momentum.</Text>
+          </View>
+          <CoinBalancePill />
+        </View>
         {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onToggle={() => toggleTask(task.id)}
-            onToggleSubtask={toggleSubtask}
-            onStartFocus={startFocusForTask}
-            theme={theme}
-            isDark={isDark}
-          />
+          <TaskItem key={task.id} task={task} onToggle={() => toggleTask(task.id)} onToggleSubtask={toggleSubtask} onStartFocus={startFocusForTask} theme={theme} isDark={isDark} />
         ))}
       </ScrollView>
 
@@ -134,8 +159,11 @@ export default function TasksScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContent: { padding: 18, paddingBottom: 100 },
+  headRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 },
   header: { fontSize: 28, fontWeight: '700' },
-  subHeader: { marginTop: 4, marginBottom: 14, fontSize: 13 },
+  subHeader: { marginTop: 4, marginBottom: 14, fontSize: 13, maxWidth: 260 },
+  coinFx: { position: 'absolute', right: 34, bottom: 120, zIndex: 30 },
+  coinFxText: { fontSize: 24 },
   taskCard: { borderRadius: 16, marginBottom: 12, overflow: 'hidden' },
   taskGradient: { borderRadius: 16, padding: 14, borderWidth: 1, borderColor: 'rgba(148,163,184,0.25)' },
   taskTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
@@ -148,13 +176,7 @@ const styles = StyleSheet.create({
   subtaskText: { fontSize: 13 },
   progressTrack: { marginTop: 10, height: 7, borderRadius: 99, overflow: 'hidden' },
   progressFill: { height: '100%' },
-  startFocusBtn: {
-    marginTop: 12,
-    borderRadius: 12,
-    paddingVertical: 10,
-    alignItems: 'center',
-    backgroundColor: '#3B82F6',
-  },
+  startFocusBtn: { marginTop: 12, borderRadius: 12, paddingVertical: 10, alignItems: 'center', backgroundColor: '#3B82F6' },
   startFocusText: { color: '#FFF', fontWeight: '700', fontSize: 13 },
   fab: { position: 'absolute', bottom: 26, right: 18, width: 62, height: 62, borderRadius: 31, overflow: 'hidden' },
   fabGradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },

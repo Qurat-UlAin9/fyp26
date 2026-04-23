@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -106,8 +107,9 @@ function PowerCard({ title, icon: Icon, children, delay }) {
 }
 
 export default function CognitivePowerScreen({ navigation }) {
+  const { theme } = useTheme();
   return (
-    <LinearGradient colors={['#020617', '#0f172a']} style={styles.container}>
+    <LinearGradient colors={theme.background} style={styles.container}>
       <BackgroundOrb size={260} color="rgba(139,92,246,0.2)" top={90} left={-70} />
       <BackgroundOrb size={220} color="rgba(168,85,247,0.2)" top={380} right={-40} duration={9800} />
 

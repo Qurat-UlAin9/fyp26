@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 import { Dimensions, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -102,8 +103,9 @@ function GrowthCard({ title, desc, icon: Icon, children, delay }) {
 }
 
 export default function MindfulGrowthScreen({ navigation }) {
+  const { theme } = useTheme();
   return (
-    <LinearGradient colors={['#020617', '#0f172a']} style={styles.container}>
+    <LinearGradient colors={theme.background} style={styles.container}>
       <BackgroundOrb size={250} color="rgba(251,191,36,0.2)" top={60} left={-45} />
       <BackgroundOrb size={230} color="rgba(245,158,11,0.16)" top={380} right={-65} duration={10500} />
 

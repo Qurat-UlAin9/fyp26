@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -147,9 +148,11 @@ function Portal({ config, index, onPress }) {
 }
 
 export default function EmotionRegulationScreen({ navigation }) {
+  const { theme } = useTheme();
+
   return (
     <LinearGradient
-      colors={['#090B1B', '#120D2A', '#1A1240', '#160C38', '#0A0F24']}
+      colors={theme.background}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}

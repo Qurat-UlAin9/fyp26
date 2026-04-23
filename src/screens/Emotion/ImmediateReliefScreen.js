@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
   Pressable,
   SafeAreaView,
@@ -231,6 +232,7 @@ function ExpandedExercise({ exercise, onClose }) {
 }
 
 export default function ImmediateReliefScreen({ navigation }) {
+  const { theme } = useTheme();
   const { width, height } = useWindowDimensions();
   const cardWidth = width * 0.85;
   const [activeExercise, setActiveExercise] = useState(null);
@@ -266,7 +268,7 @@ export default function ImmediateReliefScreen({ navigation }) {
   const headerRight = useMemo(() => <Text style={styles.screenTag}>Calm Zone</Text>, []);
 
   return (
-    <LinearGradient colors={['#050917', '#0B1130', '#150F35']} style={styles.container}>
+    <LinearGradient colors={theme.background} style={styles.container}>
       <BackgroundOrb size={260} color="rgba(59,130,246,0.18)" top={80} left={-80} duration={11000} />
       <BackgroundOrb size={280} color="rgba(168,85,247,0.14)" top={420} right={-120} duration={9000} />
 
