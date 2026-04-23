@@ -53,11 +53,11 @@ export default function TimelineScreen() {
   const hours = useMemo(() => Array.from({ length: END_HOUR - START_HOUR + 1 }, (_, idx) => START_HOUR + idx), []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background[0] }]}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Focus Timeline</Text>
+        <Text style={[styles.title, { color: theme.text }]}>Focus Timeline</Text>
 
-        <BlurView intensity={25} tint="light" style={styles.headerCard}>
+        <BlurView intensity={25} tint={theme.mode} style={[styles.headerCard, { borderColor: theme.border, backgroundColor: theme.card }]}>
           <View style={styles.weekRow}>
             {WEEK_DAYS.map((day) => (
               <TouchableOpacity
@@ -81,7 +81,7 @@ export default function TimelineScreen() {
           </View>
         </BlurView>
 
-        <View style={styles.timelineCard}>
+        <View style={[styles.timelineCard, { borderColor: theme.border, backgroundColor: theme.card }]}>
           <ScrollView nestedScrollEnabled style={styles.timelineScroll} showsVerticalScrollIndicator={false}>
             <View style={{ height: hours.length * HOUR_HEIGHT }}>
               {hours.map((hour, index) => (
@@ -115,7 +115,7 @@ export default function TimelineScreen() {
           </ScrollView>
         </View>
 
-        <View style={styles.focusCard}>
+        <View style={[styles.focusCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
           <Text style={styles.focusTitle}>Focus</Text>
           <Text style={styles.focusEmpty}>Start a task to begin your focus journey ✨</Text>
         </View>
@@ -139,7 +139,7 @@ export default function TimelineScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1 },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 150 },
   title: { fontSize: 30, fontWeight: '800', color: '#111827', marginBottom: 14 },
   headerCard: {

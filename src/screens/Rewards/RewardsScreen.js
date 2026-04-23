@@ -1,252 +1,132 @@
-import React, { useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useMemo } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
-import {
-  Award,
-  Bot,
-  Flame,
-  Lock,
-  Palette,
-  ShoppingBag,
-  Sparkles,
-  Star,
-} from 'lucide-react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
+import { Crown, Lock, Music, PauseCircle, PlayCircle, Sparkles } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
+import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
 
-const ACHIEVEMENTS = [
-  { name: 'First Step', progress: 'Complete your first task', unlocked: true },
-  { name: 'Momentum Builder', progress: 'Keep a 3-day streak', unlocked: true },
-  { name: 'Focus Navigator', progress: 'Complete 25 focus sessions', unlocked: false },
-  { name: 'Routine Creator', progress: 'Maintain a 14-day streak', unlocked: false },
-];
+function TitleCard({ item, unlocked }) {
+  const pulse = useSharedValue(0.8);
+  React.useEffect(() => {
+    if (!unlocked) return;
+    pulse.value = withRepeat(withSequence(withTiming(1, { duration: 1400 }), withTiming(0.75, { duration: 1400 })), -1, true);
+  }, [pulse, unlocked]);
 
-const INVENTORY = [
-  { name: 'Neon Visor', cost: 80, type: 'Accessory', unlocked: true, equipped: true },
-  { name: 'Jetpack Wings', cost: 150, type: 'Upgrade', unlocked: true, equipped: false },
-  { name: 'Spark Aura', cost: 100, type: 'Effect', unlocked: false, equipped: false },
-  { name: 'Galaxy Shell', cost: 220, type: 'Skin', unlocked: false, equipped: false },
-];
+  const glowStyle = useAnimatedStyle(() => ({ opacity: pulse.value }));
 
-const THEMES = [
-  { name: 'Focus Night', colors: ['#1D4ED8', '#312E81'], unlocked: true },
-  { name: 'Calm Lavender', colors: ['#A78BFA', '#F9A8D4'], unlocked: true },
-  { name: 'Energy Pulse', colors: ['#0EA5E9', '#7C3AED'], unlocked: false },
-];
-
-const TABS = ['Achievements', 'Companion', 'Inventory', 'Themes'];
-
-const TAB_ICONS = {
-  Achievements: Award,
-  Companion: Bot,
-  Inventory: ShoppingBag,
-  Themes: Palette,
-};
+  return (
+    <View style={[styles.titleCard, !unlocked && styles.lockedCard]}>
+      {unlocked && <Animated.View style={[styles.titleGlow, glowStyle]} />}
+      <Text style={styles.titleEmoji}>{item.icon}</Text>
+      <Text style={styles.titleName}>{item.name}</Text>
+      <Text style={styles.titleStatus}>{unlocked ? 'Unlocked' : 'Locked'}</Text>
+      {!unlocked && <Lock size={16} color="#94a3b8" />}
+    </View>
+  );
+}
 
 export default function RewardsScreen() {
-  const { theme, isDark } = useTheme();
-  const [activeTab, setActiveTab] = useState('Achievements');
-  const float = useSharedValue(0);
-  const glow = useSharedValue(0.75);
+  const {
+    theme,
+    titles,
+    themes,
+    coins,
+    unlockedThemes,
+    selectedThemeId,
+    unlockTheme,
+    selectTheme,
+    sounds,
+    unlockedSounds,
+    selectedSoundId,
+    unlockSound,
+    selectSound,
+    toggleSoundPlayback,
+    isSoundPlaying,
+    stats,
+  } = useTheme();
 
-  React.useEffect(() => {
-    float.value = withRepeat(withSequence(withTiming(-6, { duration: 1200 }), withTiming(6, { duration: 1200 })), -1, true);
-    glow.value = withRepeat(withTiming(1, { duration: 900 }), -1, true);
-  }, [float, glow]);
+  const orbColors = useMemo(() => [theme.glow + '55', theme.accentGradient[0] + '35', theme.accentGradient[1] + '35'], [theme]);
 
-  const botFloatStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: float.value }],
-  }));
+  const onThemePress = (id) => {
+    if (!unlockedThemes.includes(id)) {
+      const result = unlockTheme(id);
+      if (!result.ok) return Alert.alert('Not enough coins', 'Keep completing tasks and habits to earn coins.');
+    }
+    selectTheme(id);
+  };
 
-  const botGlowStyle = useAnimatedStyle(() => ({
-    opacity: glow.value,
-  }));
-
-  const unlockedAchievements = useMemo(
-    () => ACHIEVEMENTS.filter((item) => item.unlocked).length,
-    []
-  );
-
-  const coins = 245;
-  const streak = 6;
-  const equippedTitle = 'Momentum Builder';
-
-  const renderAchievements = () => (
-    <View style={styles.panelStack}>
-      {ACHIEVEMENTS.map((item) => (
-        <View
-          key={item.name}
-          style={[
-            styles.rowCard,
-            {
-              backgroundColor: isDark ? 'rgba(15,23,42,0.78)' : 'rgba(255,255,255,0.92)',
-              borderColor: item.unlocked ? 'rgba(56,189,248,0.55)' : 'rgba(148,163,184,0.35)',
-            },
-          ]}
-        >
-          <View style={[styles.badgeIcon, { backgroundColor: item.unlocked ? '#0EA5E9' : '#64748B' }]}>
-            {item.unlocked ? <Star color="#FFFFFF" size={16} /> : <Lock color="#FFFFFF" size={16} />}
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.rowTitle, { color: theme.text }]}>{item.name}</Text>
-            <Text style={[styles.rowMeta, { color: theme.textSecondary }]}>{item.progress}</Text>
-          </View>
-          <Text style={[styles.statusText, { color: item.unlocked ? '#22C55E' : theme.textSecondary }]}>
-            {item.unlocked ? 'Unlocked' : 'Locked'}
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-
-  const renderCompanion = () => (
-    <View
-      style={[
-        styles.companionCard,
-        { backgroundColor: isDark ? 'rgba(15,23,42,0.82)' : 'rgba(255,255,255,0.92)' },
-      ]}
-    >
-      <Text style={[styles.sectionTitle, { color: theme.text }]}>Virtual Champion</Text>
-      <Text style={[styles.sectionSubtitle, { color: theme.textSecondary }]}>A tiny robot that reacts to your focus wins.</Text>
-
-      <View style={styles.robotStage}>
-        <Animated.View style={[styles.robotGlow, botGlowStyle]} />
-        <Animated.View style={[styles.robotBody, botFloatStyle]}>
-          <Bot color="#67E8F9" size={58} strokeWidth={2.2} />
-          <View style={styles.robotEyesRow}>
-            <View style={styles.robotEye} />
-            <View style={styles.robotEye} />
-          </View>
-        </Animated.View>
-      </View>
-
-      <View style={styles.reactionRow}>
-        <View style={styles.reactionItem}>
-          <Sparkles size={16} color="#22D3EE" />
-          <Text style={[styles.reactionText, { color: theme.textSecondary }]}>Celebrates after tasks</Text>
-        </View>
-        <View style={styles.reactionItem}>
-          <Flame size={16} color="#F97316" />
-          <Text style={[styles.reactionText, { color: theme.textSecondary }]}>Boosts streak motivation</Text>
-        </View>
-      </View>
-    </View>
-  );
-
-  const renderInventory = () => (
-    <View style={styles.panelStack}>
-      {INVENTORY.map((item) => (
-        <View
-          key={item.name}
-          style={[
-            styles.rowCard,
-            {
-              backgroundColor: isDark ? 'rgba(15,23,42,0.78)' : 'rgba(255,255,255,0.92)',
-              borderColor: item.equipped ? '#22D3EE' : 'rgba(148,163,184,0.35)',
-            },
-          ]}
-        >
-          <View style={[styles.badgeIcon, { backgroundColor: item.unlocked ? '#8B5CF6' : '#64748B' }]}>
-            <ShoppingBag color="#FFFFFF" size={14} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.rowTitle, { color: theme.text }]}>{item.name}</Text>
-            <Text style={[styles.rowMeta, { color: theme.textSecondary }]}>{item.type} • {item.cost} coins</Text>
-          </View>
-          <Text style={[styles.statusText, { color: item.unlocked ? '#22C55E' : '#94A3B8' }]}>
-            {item.equipped ? 'Equipped' : item.unlocked ? 'Owned' : 'Locked'}
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-
-  const renderThemes = () => (
-    <View style={styles.themeGrid}>
-      {THEMES.map((item) => (
-        <View key={item.name} style={styles.themeWrap}>
-          <LinearGradient colors={item.colors} style={[styles.themePreview, { opacity: item.unlocked ? 1 : 0.5 }]}>
-            {!item.unlocked && <Lock color="#FFFFFF" size={16} />}
-          </LinearGradient>
-          <Text style={[styles.themeName, { color: theme.text }]}>{item.name}</Text>
-        </View>
-      ))}
-    </View>
-  );
-
-  const renderTabContent = () => {
-    if (activeTab === 'Companion') return renderCompanion();
-    if (activeTab === 'Inventory') return renderInventory();
-    if (activeTab === 'Themes') return renderThemes();
-    return renderAchievements();
+  const onSoundPress = (id) => {
+    if (!unlockedSounds.includes(id)) {
+      const result = unlockSound(id);
+      if (!result.ok) return Alert.alert('Not enough coins', 'You need more coins to unlock this sound.');
+    }
+    selectSound(id);
   };
 
   return (
-    <LinearGradient colors={isDark ? ['#020617', '#0F172A', '#1E1B4B'] : ['#E0F2FE', '#EEF2FF', '#F8FAFC']} style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.headerCard}>
-          <View style={styles.headerTop}>
-            <View>
-              <Text style={styles.screenTitle}>Reward Hub</Text>
-              <Text style={styles.screenSubtitle}>Keep your momentum with coins, titles, and robot upgrades.</Text>
-            </View>
-            <Animated.View style={botGlowStyle}>
-              <Sparkles color="#67E8F9" size={22} />
-            </Animated.View>
+    <LinearGradient colors={theme.background} style={styles.container}>
+      <AnimatedOrbsBackground colors={orbColors} />
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <BlurView intensity={45} tint={theme.mode} style={[styles.hero, { borderColor: theme.border }]}>
+          <View style={styles.heroTop}>
+            <Text style={[styles.heading, { color: theme.text }]}>Rewards System</Text>
+            <View style={styles.coinPill}><Text style={styles.coinText}>🪙 {coins}</Text></View>
           </View>
+          <Text style={[styles.subheading, { color: theme.textSecondary }]}>Gamified progress with themes, titles, and relaxing sounds.</Text>
+          <Text style={[styles.progress, { color: theme.textSecondary }]}>Tasks: {stats.tasksCompleted} • Habit streak: {stats.habitStreak} • Focus: {stats.focusMinutes} min</Text>
+        </BlurView>
 
-          <View style={styles.statsRow}>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>{coins}</Text>
-              <Text style={styles.statLabel}>Focus Coins</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>{streak} days</Text>
-              <Text style={styles.statLabel}>Streak</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>{unlockedAchievements}/{ACHIEVEMENTS.length}</Text>
-              <Text style={styles.statLabel}>Titles</Text>
-            </View>
-          </View>
-
-          <View style={styles.currentTitleWrap}>
-            <Text style={styles.currentTitleLabel}>Active title</Text>
-            <Text style={styles.currentTitleValue}>{equippedTitle}</Text>
-          </View>
-        </View>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsRow}>
-          {TABS.map((tab) => {
-            const Icon = TAB_ICONS[tab];
-            const active = activeTab === tab;
-            return (
-              <TouchableOpacity
-                key={tab}
-                onPress={() => setActiveTab(tab)}
-                style={[
-                  styles.tabButton,
-                  {
-                    backgroundColor: active ? '#0EA5E9' : isDark ? 'rgba(30,41,59,0.8)' : 'rgba(255,255,255,0.82)',
-                    borderColor: active ? '#22D3EE' : 'rgba(148,163,184,0.35)',
-                  },
-                ]}
-                activeOpacity={0.9}
-              >
-                <Icon color={active ? '#FFFFFF' : theme.textSecondary} size={16} />
-                <Text style={[styles.tabText, { color: active ? '#FFFFFF' : theme.text }]}>{tab}</Text>
-              </TouchableOpacity>
-            );
-          })}
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>🏆 Titles (Achievements)</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalRow}>
+          {titles.map((title) => (
+            <TitleCard key={title.id} item={title} unlocked={title.unlocked} />
+          ))}
         </ScrollView>
 
-        {renderTabContent()}
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>🎨 Themes</Text>
+        {themes.map((item) => {
+          const selected = selectedThemeId === item.id;
+          const unlocked = unlockedThemes.includes(item.id);
+          return (
+            <TouchableOpacity key={item.id} activeOpacity={0.9} onPress={() => onThemePress(item.id)}>
+              <BlurView intensity={42} tint={theme.mode} style={[styles.optionCard, { borderColor: selected ? theme.glow : theme.border }]}>
+                <LinearGradient colors={item.background} style={styles.themePreview} />
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.optionTitle, { color: theme.text }]}>{item.name}</Text>
+                  <Text style={[styles.optionMeta, { color: theme.textSecondary }]}>{item.mode === 'dark' ? 'Dark mode' : 'Light mode'} • {item.cost === 0 ? 'Free' : `${item.cost} coins`}</Text>
+                </View>
+                {unlocked ? <Sparkles color={selected ? theme.glow : theme.textSecondary} size={18} /> : <Lock color={theme.textSecondary} size={18} />}
+              </BlurView>
+            </TouchableOpacity>
+          );
+        })}
+
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>🎵 Sounds</Text>
+        {sounds.map((item) => {
+          const unlocked = unlockedSounds.includes(item.id);
+          const active = selectedSoundId === item.id;
+          return (
+            <TouchableOpacity key={item.id} activeOpacity={0.9} onPress={() => onSoundPress(item.id)}>
+              <BlurView intensity={42} tint={theme.mode} style={[styles.optionCard, { borderColor: active ? theme.glow : theme.border }]}>
+                <View style={[styles.soundIcon, { backgroundColor: theme.card }]}><Music color={theme.accentGradient[0]} size={18} /></View>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.optionTitle, { color: theme.text }]}>{item.name}</Text>
+                  <Text style={[styles.optionMeta, { color: theme.textSecondary }]}>{item.cost === 0 ? 'Free' : `${item.cost} coins`}</Text>
+                </View>
+                {!unlocked && <Lock color={theme.textSecondary} size={18} />}
+                {unlocked && active && (
+                  <TouchableOpacity onPress={toggleSoundPlayback}>
+                    {isSoundPlaying ? <PauseCircle color={theme.glow} size={22} /> : <PlayCircle color={theme.glow} size={22} />}
+                  </TouchableOpacity>
+                )}
+              </BlurView>
+            </TouchableOpacity>
+          );
+        })}
+
+        <View style={styles.footerPad} />
       </ScrollView>
     </LinearGradient>
   );
@@ -254,118 +134,44 @@ export default function RewardsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scrollContent: { padding: 16, paddingBottom: 32 },
-  headerCard: {
-    borderRadius: 24,
-    padding: 18,
-    backgroundColor: 'rgba(15,23,42,0.58)',
+  content: { padding: 16, paddingBottom: 120 },
+  hero: { borderRadius: 24, padding: 16, borderWidth: 1, overflow: 'hidden' },
+  heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  heading: { fontSize: 28, fontWeight: '800' },
+  coinPill: { backgroundColor: 'rgba(255,215,0,0.18)', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 6 },
+  coinText: { color: '#f8fafc', fontSize: 13, fontWeight: '700' },
+  subheading: { marginTop: 8, fontSize: 13 },
+  progress: { marginTop: 8, fontSize: 12, fontWeight: '600' },
+  sectionTitle: { marginTop: 18, marginBottom: 10, fontSize: 18, fontWeight: '800' },
+  horizontalRow: { gap: 12, paddingRight: 12 },
+  titleCard: {
+    width: 150,
+    borderRadius: 20,
+    padding: 14,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
-    borderColor: 'rgba(103,232,249,0.3)',
-    marginBottom: 14,
-  },
-  headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
-  screenTitle: { fontSize: 28, fontWeight: '800', color: '#FFFFFF' },
-  screenSubtitle: { color: '#CFFAFE', fontSize: 13, marginTop: 4, maxWidth: 260 },
-  statsRow: { flexDirection: 'row', gap: 10, marginBottom: 12 },
-  statItem: {
-    flex: 1,
-    borderRadius: 14,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    backgroundColor: 'rgba(15,23,42,0.48)',
-    borderWidth: 1,
-    borderColor: 'rgba(148,163,184,0.35)',
-  },
-  statValue: { color: '#FFFFFF', fontSize: 16, fontWeight: '700', textAlign: 'center' },
-  statLabel: { color: '#BAE6FD', fontSize: 11, textAlign: 'center', marginTop: 4 },
-  currentTitleWrap: {
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    backgroundColor: 'rgba(14,165,233,0.2)',
-    borderWidth: 1,
-    borderColor: 'rgba(34,211,238,0.45)',
-  },
-  currentTitleLabel: { color: '#BAE6FD', fontSize: 12 },
-  currentTitleValue: { color: '#FFFFFF', fontSize: 15, fontWeight: '700', marginTop: 2 },
-  tabsRow: { paddingVertical: 8, paddingRight: 8, gap: 10 },
-  tabButton: {
-    flexDirection: 'row',
+    borderColor: 'rgba(255,255,255,0.25)',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 999,
-    borderWidth: 1,
+    overflow: 'hidden',
   },
-  tabText: { fontSize: 13, fontWeight: '600' },
-  panelStack: { marginTop: 8, gap: 10 },
-  rowCard: {
-    borderRadius: 16,
+  lockedCard: { opacity: 0.75 },
+  titleGlow: { ...StyleSheet.absoluteFillObject, borderWidth: 2, borderColor: '#22d3ee', borderRadius: 20 },
+  titleEmoji: { fontSize: 28 },
+  titleName: { marginTop: 8, color: '#fff', fontSize: 14, fontWeight: '700', textAlign: 'center' },
+  titleStatus: { marginTop: 8, color: '#e2e8f0', fontSize: 12, marginBottom: 4 },
+  optionCard: {
+    marginBottom: 10,
+    borderRadius: 20,
     borderWidth: 1,
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-  },
-  badgeIcon: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowTitle: { fontSize: 14, fontWeight: '700' },
-  rowMeta: { fontSize: 12, marginTop: 2 },
-  statusText: { fontSize: 12, fontWeight: '700' },
-  companionCard: {
-    marginTop: 8,
-    borderRadius: 20,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(103,232,249,0.32)',
-  },
-  sectionTitle: { fontSize: 18, fontWeight: '700' },
-  sectionSubtitle: { marginTop: 4, fontSize: 12 },
-  robotStage: {
-    height: 190,
-    marginTop: 14,
-    borderRadius: 18,
-    backgroundColor: 'rgba(30,41,59,0.65)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    gap: 12,
     overflow: 'hidden',
   },
-  robotGlow: {
-    position: 'absolute',
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: 'rgba(34,211,238,0.25)',
-  },
-  robotBody: { alignItems: 'center', justifyContent: 'center' },
-  robotEyesRow: { flexDirection: 'row', gap: 12, marginTop: -10 },
-  robotEye: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#A5F3FC' },
-  reactionRow: { flexDirection: 'row', gap: 8, marginTop: 12 },
-  reactionItem: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    borderRadius: 12,
-    padding: 10,
-    backgroundColor: 'rgba(15,23,42,0.55)',
-  },
-  reactionText: { fontSize: 11, flexShrink: 1 },
-  themeGrid: { marginTop: 10, flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  themeWrap: { width: '48%' },
-  themePreview: {
-    height: 100,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.35)',
-  },
-  themeName: { marginTop: 6, fontSize: 12, fontWeight: '600' },
+  themePreview: { width: 52, height: 52, borderRadius: 14 },
+  optionTitle: { fontSize: 15, fontWeight: '700' },
+  optionMeta: { marginTop: 4, fontSize: 12 },
+  soundIcon: { width: 52, height: 52, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  footerPad: { height: 24 },
 });
