@@ -16,17 +16,18 @@ function getApiUrl() {
   const envUrl = process.env.EXPO_PUBLIC_API_URL;
   if (envUrl) return envUrl;
 
+  const hostIp = detectHostIp();
+  if (hostIp) {
+    return `http://${hostIp}:5000`;
+  }
+
   if (Platform.OS === 'android') {
+    // Android emulator loopback for local dev when host IP is unavailable.
     return 'http://10.0.2.2:5000';
   }
 
   if (Platform.OS === 'web') {
     return 'http://127.0.0.1:5000';
-  }
-
-  const hostIp = detectHostIp();
-  if (hostIp) {
-    return `http://${hostIp}:5000`;
   }
 
   return 'http://127.0.0.1:5000';

@@ -21,13 +21,7 @@ export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-<<<<<<< Updated upstream
   const { updateProfile } = useAppData();
-
-  const handleRegister = () => {
-    updateProfile({ name: name.trim() || 'Friend', email });
-    navigation.replace('Onboarding');
-=======
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
@@ -47,13 +41,13 @@ export default function RegisterScreen({ navigation }) {
         email: email.trim(),
         password: password.trim(),
       });
+      updateProfile({ name: name.trim() || 'Friend', email: email.trim() });
       navigation.replace('Onboarding');
     } catch (error) {
       Alert.alert('Registration failed', error.message);
     } finally {
       setLoading(false);
     }
->>>>>>> Stashed changes
   };
 
   return (
