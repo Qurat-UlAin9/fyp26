@@ -7,7 +7,6 @@ import { AudioLines, ChevronLeft, CloudSun, Flower2 } from 'lucide-react-native'
 import Animated, {
   Easing,
   FadeInDown,
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -16,24 +15,31 @@ import Animated, {
 import BackgroundOrb from '../../components/emotion/BackgroundOrb';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.85;
+const CARD_WIDTH = width * 0.88;
 
-function ZenLotus() {
-  const spin = useSharedValue(0);
-  useEffect(() => {
-    spin.value = withRepeat(withTiming(1, { duration: 7000, easing: Easing.linear }), -1, false);
-  }, [spin]);
-
-  const spinStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${spin.value * 360}deg` }],
-  }));
-
-  return (
-    <Animated.View style={[styles.iconOrb, spinStyle]}>
-      <Flower2 color="#FDE68A" size={56} strokeWidth={1.5} />
-    </Animated.View>
-  );
-}
+const GROWTH_PATHS = [
+  {
+    id: 'meditation',
+    title: 'Meditation Session',
+    desc: 'Slow down, settle attention, and reset.',
+    icon: Flower2,
+    route: 'MeditationSession',
+  },
+  {
+    id: 'reframing',
+    title: 'Thought Reframing',
+    desc: 'Shift automatic negative thoughts with your AI coach.',
+    icon: CloudSun,
+    route: 'Chatbot',
+  },
+  {
+    id: 'soundscapes',
+    title: 'Soundscapes',
+    desc: 'Immersive classical tracks to support calm focus.',
+    icon: AudioLines,
+    route: 'Soundscapes',
+  },
+];
 
 function ReframeFlip() {
   const progress = useSharedValue(0);
@@ -62,42 +68,29 @@ function ReframeFlip() {
   );
 }
 
-function SoundBar({ progress, idx }) {
-  const barStyle = useAnimatedStyle(() => ({
-    height: 26 + Math.abs(Math.sin((progress.value + idx * 0.2) * Math.PI * 2)) * 54,
-  }));
+function GrowthCard({ item, delay, onPress }) {
+  const Icon = item.icon;
 
-  return <Animated.View style={[styles.bar, barStyle]} />;
-}
-
-function SoundBars() {
-  const progress = useSharedValue(0);
-  useEffect(() => {
-    progress.value = withRepeat(withTiming(1, { duration: 1200, easing: Easing.linear }), -1, true);
-  }, [progress]);
-
-  return (
-    <View style={styles.barsWrap}>
-      {[0, 1, 2, 3, 4].map((idx) => (
-        <SoundBar key={`bar-${idx}`} progress={progress} idx={idx} />
-      ))}
-    </View>
-  );
-}
-
-function GrowthCard({ title, desc, icon: Icon, children, delay }) {
   return (
     <Animated.View entering={FadeInDown.delay(delay).duration(550)} style={styles.cardWrap}>
-      <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
-        <LinearGradient colors={['rgba(251,191,36,0.18)', 'rgba(15,23,42,0.62)']} style={styles.card}>
-          <View style={styles.row}>
-            <Icon color="#FDE68A" size={20} strokeWidth={1.5} />
-            <Text style={styles.cardTitle}>{title}</Text>
-          </View>
-          <Text style={styles.cardDesc}>{desc}</Text>
-          {children}
-        </LinearGradient>
-      </BlurView>
+      <Pressable onPress={onPress}>
+        <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
+          <LinearGradient colors={['rgba(251,191,36,0.18)', 'rgba(15,23,42,0.62)']} style={styles.card}>
+            <View style={styles.row}>
+              <Icon color="#FDE68A" size={20} strokeWidth={1.5} />
+              <Text style={styles.cardTitle}>{item.title}</Text>
+            </View>
+            <Text style={styles.cardDesc}>{item.desc}</Text>
+            {item.id === 'reframing' ? (
+              <ReframeFlip />
+            ) : (
+              <View style={styles.ctaRow}>
+                <Text style={styles.ctaText}>Open Session</Text>
+              </View>
+            )}
+          </LinearGradient>
+        </BlurView>
+      </Pressable>
     </Animated.View>
   );
 }
@@ -119,17 +112,14 @@ export default function MindfulGrowthScreen({ navigation }) {
         </Animated.View>
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <GrowthCard title="Guided Meditation" desc="Slow down, settle attention, and reset." icon={Flower2} delay={50}>
-            <ZenLotus />
-          </GrowthCard>
-
-          <GrowthCard title="Thought Reframing" desc="Shift from automatic negative thoughts." icon={CloudSun} delay={140}>
-            <ReframeFlip />
-          </GrowthCard>
-
-          <GrowthCard title="Nature Soundscapes" desc="Use ambient sounds to anchor your focus." icon={AudioLines} delay={220}>
-            <SoundBars />
-          </GrowthCard>
+          {GROWTH_PATHS.map((item, index) => (
+            <GrowthCard
+              key={item.id}
+              item={item}
+              delay={40 + index * 80}
+              onPress={() => navigation.navigate(item.route)}
+            />
+          ))}
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -143,54 +133,39 @@ const styles = StyleSheet.create({
   backButton: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 12 },
   backText: { color: '#F8FAFC', fontSize: 15 },
   title: { color: '#FEF3C7', fontSize: 30, fontWeight: '700' },
-  scrollContent: { paddingBottom: 34, paddingTop: 10 },
-  cardWrap: {
-    width: CARD_WIDTH,
-    alignSelf: 'center',
-    marginBottom: 16,
-  },
+  scrollContent: { paddingBottom: 34, paddingTop: 10, alignItems: 'center', gap: 16 },
+  cardWrap: { width: CARD_WIDTH },
   cardBlur: {
     borderRadius: 24,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(253,230,138,0.36)',
   },
-  card: { borderRadius: 24, padding: 22, minHeight: 220 },
+  card: { borderRadius: 24, padding: 22, minHeight: 210 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   cardTitle: { color: '#FEF3C7', fontSize: 22, fontWeight: '700' },
   cardDesc: { color: 'rgba(254,243,199,0.84)', marginTop: 10, marginBottom: 16 },
-  iconOrb: {
-    alignSelf: 'center',
-    width: 122,
-    height: 122,
-    borderRadius: 61,
-    alignItems: 'center',
-    justifyContent: 'center',
+  ctaRow: {
+    marginTop: 'auto',
+    alignSelf: 'flex-start',
     borderWidth: 1,
-    borderColor: 'rgba(253,230,138,0.46)',
-    backgroundColor: 'rgba(251,191,36,0.14)',
+    borderColor: 'rgba(253,230,138,0.5)',
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
   },
-  flipWrap: { height: 120, alignItems: 'center', justifyContent: 'center' },
+  ctaText: { color: '#FDE68A', fontWeight: '700', fontSize: 12, letterSpacing: 0.2 },
+  flipWrap: { height: 98, alignItems: 'center', justifyContent: 'center' },
   flipFace: {
     position: 'absolute',
-    width: 110,
-    height: 110,
-    borderRadius: 55,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: 'rgba(253,230,138,0.42)',
     backgroundColor: 'rgba(251,191,36,0.12)',
   },
-  flipText: { fontSize: 44 },
-  barsWrap: { height: 120, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: 10 },
-  bar: {
-    width: 12,
-    borderRadius: 999,
-    backgroundColor: '#FCD34D',
-    shadowColor: '#F59E0B',
-    shadowOpacity: 0.85,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 0 },
-  },
+  flipText: { fontSize: 36 },
 });

@@ -17,6 +17,15 @@ import CognitivePowerScreen from '../screens/Emotion/CognitivePowerScreen';
 import ChatbotScreen from '../screens/Chatbot/ChatbotScreen';
 import QuestionnaireScreen from '../screens/Detection/QuestionnaireScreen';
 import AssessmentResultScreen from '../screens/Detection/AssessmentResultScreen';
+import BalloonSession from '../screens/Emotion/BallonSession';
+import SplashSession from '../screens/Emotion/SplashSession';
+import GroundingSession from '../screens/Emotion/GroundingSession';
+import HarmonicRipples from '../screens/Emotion/HarmonicRipples';
+import MeditationSession from '../screens/Emotion/MeditationSession';
+import NBackGame from '../screens/Emotion/NBackGame';
+import StroopGame from '../screens/Emotion/StroopGame';
+import PatternRecallGame from '../screens/Emotion/PatternRecallGame';
+import SoundscapesScreen from '../screens/Emotion/SoundscapesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +53,15 @@ export default function AppNavigator() {
       <Stack.Screen name="ImmediateRelief" component={ImmediateReliefScreen} options={{ headerShown: false }} />
       <Stack.Screen name="MindfulGrowth" component={MindfulGrowthScreen} options={{ headerShown: false }} />
       <Stack.Screen name="CognitivePower" component={CognitivePowerScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="BalloonSession" component={BalloonSession} options={{ headerShown: false, animation: 'fade' }} />
+      <Stack.Screen name="SplashSession" component={SplashSession} options={{ headerShown: false, animation: 'fade' }} />
+      <Stack.Screen name="GroundingSession" component={GroundingSession} options={{ headerShown: false, animation: 'fade' }} />
+      <Stack.Screen name="HarmonicRipples" component={HarmonicRipples} options={{ headerShown: false, animation: 'fade' }} />
+      <Stack.Screen name="MeditationSession" component={MeditationSession} options={{ headerShown: false, animation: 'fade' }} />
+      <Stack.Screen name="Soundscapes" component={SoundscapesScreen} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+      <Stack.Screen name="NBackGame" component={NBackGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+      <Stack.Screen name="StroopGame" component={StroopGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+      <Stack.Screen name="PatternRecallGame" component={PatternRecallGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="Chatbot" component={ChatbotScreen} options={{ title: 'AI Coach' }} />
       <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} options={{ headerShown: false }} />
       <Stack.Screen name="AssessmentResult" component={AssessmentResultScreen} options={{ headerShown: false }} />

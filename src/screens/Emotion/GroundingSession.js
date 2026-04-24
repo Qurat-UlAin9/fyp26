@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -11,8 +11,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Eye, Hand, Ear, Flower2, ChefHat } from 'lucide-react-native';
 
-const { width } = Dimensions.get('window');
-
 const SENSE_STEPS = [
   { key: 'see', count: 5, label: 'things you can See', icon: Eye, color: '#A5F3FC' },
   { key: 'touch', count: 4, label: 'things you can Touch', icon: Hand, color: '#FBCFE8' },
@@ -21,7 +19,7 @@ const SENSE_STEPS = [
   { key: 'taste', count: 1, label: 'thing you can Taste', icon: ChefHat, color: '#FDE68A' },
 ];
 
-export default function GroundingSession({ onClose }) {
+export default function GroundingSession({ navigation, onClose }) {
   const [stepIndex, setStepIndex] = useState(0);
   const step = SENSE_STEPS[stepIndex];
   const Icon = step.icon;
@@ -46,7 +44,7 @@ export default function GroundingSession({ onClose }) {
     if (stepIndex < SENSE_STEPS.length - 1) {
       setStepIndex(prev => prev + 1);
     } else {
-      onClose();
+      if (onClose) onClose(); else navigation.goBack();
     }
   };
 

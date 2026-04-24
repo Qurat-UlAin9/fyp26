@@ -11,7 +11,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
-  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import BackgroundOrb from '../../components/emotion/BackgroundOrb';
@@ -19,89 +18,48 @@ import BackgroundOrb from '../../components/emotion/BackgroundOrb';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.42;
 
-function FlashCell({ progress, index }) {
-  const style = useAnimatedStyle(() => {
-    const phase = (progress.value + index * 0.13) % 1;
-    return {
-      backgroundColor: phase > 0.78 ? 'rgba(196,181,253,0.9)' : 'rgba(76,29,149,0.38)',
-      borderColor: phase > 0.78 ? 'rgba(233,213,255,1)' : 'rgba(196,181,253,0.4)',
-      transform: [{ scale: phase > 0.78 ? 1.08 : 1 }],
-    };
-  });
+const GAMES = [
+  { id: 'nback', title: 'N-Back Challenge', icon: BrainCircuit, route: 'NBackGame' },
+  { id: 'memory', title: 'Memory Match', icon: Stars, route: 'PatternRecallGame' },
+  { id: 'stroop', title: 'Stroop Challenge', icon: Palette, route: 'StroopGame' },
+];
 
-  return <Animated.View style={[styles.gridCell, style]} />;
-}
-
-function NBackGrid() {
-  const progress = useSharedValue(0);
-  useEffect(() => {
-    progress.value = withRepeat(withTiming(1, { duration: 2200, easing: Easing.linear }), -1, false);
-  }, [progress]);
-
-  return (
-    <View style={styles.gridWrap}>
-      {Array.from({ length: 9 }).map((_, index) => (
-        <FlashCell key={`cell-${index}`} progress={progress} index={index} />
-      ))}
-    </View>
-  );
-}
-
-function StroopText() {
+function PreviewPulse({ color = '#A78BFA' }) {
   const pulse = useSharedValue(0);
+
   useEffect(() => {
-    pulse.value = withRepeat(
-      withSequence(withTiming(1, { duration: 900 }), withTiming(0, { duration: 900 })),
-      -1,
-      false
-    );
+    pulse.value = withRepeat(withTiming(1, { duration: 1300, easing: Easing.inOut(Easing.ease) }), -1, true);
   }, [pulse]);
 
   const style = useAnimatedStyle(() => ({
-    transform: [{ scale: interpolate(pulse.value, [0, 1], [0.96, 1.06]) }],
+    transform: [{ scale: interpolate(pulse.value, [0, 1], [0.88, 1.08]) }],
+    opacity: interpolate(pulse.value, [0, 1], [0.62, 1]),
   }));
 
-  return (
-    <Animated.Text style={[styles.stroopWord, style]}>
-      YELLOW
-    </Animated.Text>
-  );
+  return <Animated.View style={[styles.previewDot, { backgroundColor: color }, style]} />;
 }
 
-function Constellation() {
-  const glow = useSharedValue(0);
-  useEffect(() => {
-    glow.value = withRepeat(withTiming(1, { duration: 1600, easing: Easing.inOut(Easing.ease) }), -1, true);
-  }, [glow]);
+function PowerCard({ item, delay, onPress }) {
+  const Icon = item.icon;
 
-  const starStyle = useAnimatedStyle(() => ({
-    opacity: 0.5 + glow.value * 0.5,
-  }));
-
-  return (
-    <View style={styles.constellationWrap}>
-      <View style={styles.constellationLineOne} />
-      <View style={styles.constellationLineTwo} />
-      <Animated.View style={[styles.dot, { top: 18, left: 12 }, starStyle]} />
-      <Animated.View style={[styles.dot, { top: 48, left: 58 }, starStyle]} />
-      <Animated.View style={[styles.dot, { top: 30, right: 26 }, starStyle]} />
-      <Animated.View style={[styles.dot, { bottom: 24, right: 58 }, starStyle]} />
-    </View>
-  );
-}
-
-function PowerCard({ title, icon: Icon, children, delay }) {
   return (
     <Animated.View entering={FadeInDown.delay(delay).duration(520)} style={styles.cardWrap}>
-      <BlurView intensity={40} tint="dark" style={styles.cardBlur}>
-        <LinearGradient colors={['rgba(139,92,246,0.28)', 'rgba(15,23,42,0.58)']} style={styles.card}>
-          <View style={styles.headRow}>
-            <Icon color="#DDD6FE" size={18} strokeWidth={1.5} />
-            <Text style={styles.cardTitle}>{title}</Text>
-          </View>
-          <View style={styles.content}>{children}</View>
-        </LinearGradient>
-      </BlurView>
+      <Pressable onPress={onPress} style={styles.cardPressable}>
+        <BlurView intensity={40} tint="dark" style={styles.cardBlur}>
+          <LinearGradient colors={['rgba(139,92,246,0.28)', 'rgba(15,23,42,0.58)']} style={styles.card}>
+            <View style={styles.headRow}>
+              <Icon color="#DDD6FE" size={18} strokeWidth={1.5} />
+              <Text style={styles.cardTitle}>{item.title}</Text>
+            </View>
+
+            <View style={styles.content}>
+              <PreviewPulse color={item.id === 'stroop' ? '#F472B6' : item.id === 'memory' ? '#FDE68A' : '#A78BFA'} />
+            </View>
+
+            <Text style={styles.openText}>Play</Text>
+          </LinearGradient>
+        </BlurView>
+      </Pressable>
     </Animated.View>
   );
 }
@@ -123,17 +81,9 @@ export default function CognitivePowerScreen({ navigation }) {
         </Animated.View>
 
         <View style={styles.grid}>
-          <PowerCard title="N-Back Challenge" icon={BrainCircuit} delay={50}>
-            <NBackGrid />
-          </PowerCard>
-
-          <PowerCard title="Stroop Effect" icon={Palette} delay={120}>
-            <StroopText />
-          </PowerCard>
-
-          <PowerCard title="Pattern Recall" icon={Stars} delay={180}>
-            <Constellation />
-          </PowerCard>
+          {GAMES.map((game, index) => (
+            <PowerCard key={game.id} item={game} delay={50 + index * 70} onPress={() => navigation.navigate(game.route)} />
+          ))}
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -156,9 +106,10 @@ const styles = StyleSheet.create({
   },
   cardWrap: {
     width: CARD_WIDTH,
-    minHeight: 220,
+    minHeight: 210,
     alignSelf: 'center',
   },
+  cardPressable: { flex: 1 },
   cardBlur: {
     flex: 1,
     borderRadius: 20,
@@ -174,53 +125,13 @@ const styles = StyleSheet.create({
   headRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   cardTitle: { color: '#F5F3FF', fontSize: 14, fontWeight: '700', flexShrink: 1 },
   content: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  gridWrap: {
-    width: 95,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    justifyContent: 'center',
-  },
-  gridCell: {
-    width: 26,
-    height: 26,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  stroopWord: {
-    color: '#8B5CF6',
-    fontSize: 32,
-    fontWeight: '800',
-    letterSpacing: 1,
-  },
-  constellationWrap: { width: 118, height: 118, position: 'relative' },
-  constellationLineOne: {
-    position: 'absolute',
-    left: 20,
-    top: 30,
-    width: 76,
-    borderTopWidth: 1,
-    borderColor: 'rgba(216,180,254,0.6)',
-    transform: [{ rotate: '12deg' }],
-  },
-  constellationLineTwo: {
-    position: 'absolute',
-    right: 26,
-    top: 34,
-    width: 44,
-    borderTopWidth: 1,
-    borderColor: 'rgba(216,180,254,0.6)',
-    transform: [{ rotate: '50deg' }],
-  },
-  dot: {
-    position: 'absolute',
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    backgroundColor: '#E9D5FF',
-    shadowColor: '#C084FC',
-    shadowOpacity: 1,
-    shadowRadius: 8,
+  previewDot: {
+    width: 58,
+    height: 58,
+    borderRadius: 999,
+    shadowOpacity: 0.9,
+    shadowRadius: 14,
     shadowOffset: { width: 0, height: 0 },
   },
+  openText: { color: '#DDD6FE', fontWeight: '700', fontSize: 13 },
 });

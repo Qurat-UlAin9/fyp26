@@ -8,7 +8,6 @@ import Animated, {
   withDelay,
   Easing,
   interpolate,
-  Extrapolate
 } from 'react-native-reanimated';
 import { Droplets } from 'lucide-react-native';
 
@@ -54,7 +53,7 @@ const FallingDrop = ({ delay, xPos }) => {
   );
 };
 
-export default function SplashSession({ onClose }) {
+export default function SplashSession({ navigation, onClose }) {
   const [running, setRunning] = useState(false);
   const [timer, setTimer] = useState(30);
 
@@ -63,7 +62,7 @@ export default function SplashSession({ onClose }) {
     if (running && timer > 0) {
       interval = setInterval(() => setTimer(t => t - 1), 1000);
     } else if (timer === 0) {
-      onClose();
+      if (onClose) onClose(); else navigation.goBack();
     }
     return () => clearInterval(interval);
   }, [running, timer]);
