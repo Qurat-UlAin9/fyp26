@@ -2,14 +2,16 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { Award, Settings, MessageCircle, Timer, SmilePlus, Leaf, ListChecks, Clock3, Flame } from 'lucide-react-native';
+import { Award, Settings, MessageCircle, Timer, SmilePlus, Leaf, ListChecks, Clock3, Flame, UserCircle2 } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
 import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
 import FocusSessionScheduler from '../../components/focus/FocusSessionScheduler';
+import { useAppData } from '../../contexts/AppDataContext';
 
 export default function HomeScreen() {
-  const { theme, isDark } = useTheme();
+  const { theme, isDark, stats } = useTheme();
+  const { profile, tasks, habits, focusSessions } = useAppData();
   const navigation = useNavigation();
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
@@ -50,7 +52,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <View style={styles.greetingWrap}>
-            <Text style={[styles.greeting, { color: theme.text }]}>{`${greeting}, Ain ✨`}</Text>
+            <View style={styles.greetRow}><TouchableOpacity onPress={() => navigation.navigate('Profile')} style={[styles.profileBtn, { backgroundColor: isDark ? 'rgba(15,23,42,0.6)' : '#fff' }]}><UserCircle2 color={theme.accentGradient[0]} size={20} /></TouchableOpacity><Text style={[styles.greeting, { color: theme.text }]}>{`${greeting}, ${profile.name || 'Friend'} ✨`}</Text></View>
             <Text style={[styles.subGreeting, { color: theme.textSecondary }]}>Let's make today amazing!</Text>
           </View>
 
@@ -119,19 +121,19 @@ export default function HomeScreen() {
           <LinearGradient colors={isDark ? ['#1E1B4B', '#1D4ED8'] : ['#FFFFFF', '#E0E7FF']} style={styles.snapshotCard}>
             <ListChecks color={isDark ? '#C4B5FD' : '#6366F1'} size={18} />
             <Text style={[styles.snapshotTitle, { color: isDark ? '#BFDBFE' : '#4338CA' }]}>Tasks</Text>
-            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#1E1B4B' }]}>3 pending</Text>
+            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#1E1B4B' }]}>{tasks.length} pending</Text>
           </LinearGradient>
 
           <LinearGradient colors={isDark ? ['#4C1D95', '#2563EB'] : ['#FCE7F3', '#E9D5FF']} style={styles.snapshotCard}>
             <Clock3 color={isDark ? '#F0ABFC' : '#9333EA'} size={18} />
             <Text style={[styles.snapshotTitle, { color: isDark ? '#F5D0FE' : '#6B21A8' }]}>Focus</Text>
-            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#3B0764' }]}>62 min</Text>
+            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#3B0764' }]}>{stats.focusMinutes} min</Text>
           </LinearGradient>
 
           <LinearGradient colors={isDark ? ['#1E3A8A', '#312E81'] : ['#D1FAE5', '#BAE6FD']} style={styles.snapshotCard}>
             <Flame color={isDark ? '#FDE68A' : '#EA580C'} size={18} />
             <Text style={[styles.snapshotTitle, { color: isDark ? '#BAE6FD' : '#0E7490' }]}>Habits</Text>
-            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#0C4A6E' }]}>5 days</Text>
+            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#0C4A6E' }]}>{Math.max(stats.habitStreak, habits.length)} days</Text>
           </LinearGradient>
         </View>
       </ScrollView>
@@ -144,6 +146,8 @@ const styles = StyleSheet.create({
   scrollContent: { paddingHorizontal: 16, paddingTop: 24, paddingBottom: 120 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 },
   greetingWrap: { flex: 1, marginRight: 8 },
+  greetRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  profileBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', shadowColor: '#312E81', shadowOpacity: 0.18, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
   greeting: { fontSize: 30, fontWeight: '800' },
   subGreeting: { fontSize: 18, fontWeight: '600', marginTop: 6 },
   rightIcons: { flexDirection: 'row', alignItems: 'center', gap: 8 },

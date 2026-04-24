@@ -26,16 +26,24 @@ import NBackGame from '../screens/Emotion/NBackGame';
 import StroopGame from '../screens/Emotion/StroopGame';
 import PatternRecallGame from '../screens/Emotion/PatternRecallGame';
 import SoundscapesScreen from '../screens/Emotion/SoundscapesScreen';
+import ThemedBackButton from '../components/common/ThemedBackButton';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
+  const { theme } = useTheme();
+
   return (
     <Stack.Navigator
       initialRouteName="Splash"
       screenOptions={{
-        headerTintColor: '#8B5CF6',
+        headerTintColor: theme.text,
         headerTitleStyle: { fontWeight: '700' },
+        headerStyle: { backgroundColor: theme.background[0] },
+        headerShadowVisible: false,
+        headerBackVisible: false,
+        headerLeft: () => <ThemedBackButton />,
         animation: 'slide_from_right',
       }}
     >

@@ -27,6 +27,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppData } from '../../contexts/AppDataContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 // ─── Layout constants ─────────────────────────────────────────────────────────
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -229,6 +230,7 @@ function EventBlock({ event, colIdx, onPress }) {
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export default function TimelineScreen() {
   const { timelineEvents } = useAppData();
+  const { theme, isDark } = useTheme();
 
   const today       = new Date();
   const [weekBase,   setWeekBase]   = useState(today);
@@ -255,7 +257,7 @@ export default function TimelineScreen() {
   const visibleEvents = useMemo(() => {
     return timelineEvents.filter((e) => {
       if (!weekKeys.includes(e.isoKey)) return false;
-      if (activeTab === 'All')    return true;
+      if (activeTab === 'All')    return e.type !== 'focus';
       if (activeTab === 'Tasks')  return e.type === 'task';
       if (activeTab === 'Focus')  return e.type === 'focus';
       if (activeTab === 'Habits') return e.type === 'habit';
@@ -295,7 +297,7 @@ export default function TimelineScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background[0] }]} edges={['top']}>
       <WeekPickerModal
         visible={pickerOpen}
         currentBase={weekBase}
@@ -311,7 +313,7 @@ export default function TimelineScreen() {
       >
         {/* ── Header ───────────────────────────────────────────────────────── */}
         <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>Timeline</Text>
+          <Text style={[styles.screenTitle, { color: theme.text }]}>Timeline</Text>
           <View style={styles.monthRow}>
             <TouchableOpacity onPress={goToPrevWeek} style={styles.navBtn}>
               <Text style={styles.navBtnText}>‹</Text>
@@ -320,10 +322,10 @@ export default function TimelineScreen() {
             {/* Dropdown trigger — shows week range, opens picker */}
             <TouchableOpacity
               onPress={() => setPickerOpen(true)}
-              style={styles.monthDropdown}
+              style={[styles.monthDropdown, { backgroundColor: isDark ? 'rgba(15,23,42,0.5)' : '#fff', borderColor: theme.border }]}
               activeOpacity={0.7}
             >
-              <Text style={styles.monthLabel}>{monthLabel}</Text>
+              <Text style={[styles.monthLabel, { color: theme.text }]}>{monthLabel}</Text>
               <Text style={styles.dropdownCaret}>▾</Text>
             </TouchableOpacity>
 
@@ -355,8 +357,8 @@ export default function TimelineScreen() {
                     <Text style={styles.tabTextActive}>{tab.key}</Text>
                   </LinearGradient>
                 ) : (
-                  <View style={styles.tabInactive}>
-                    <Text style={styles.tabTextInactive}>{tab.key}</Text>
+                  <View style={[styles.tabInactive, { backgroundColor: isDark ? 'rgba(15,23,42,0.4)' : '#fff', borderColor: theme.border }]}>
+                    <Text style={[styles.tabTextInactive, { color: theme.textSecondary }]}>{tab.key}</Text>
                   </View>
                 )}
               </TouchableOpacity>

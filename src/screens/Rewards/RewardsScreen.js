@@ -48,6 +48,9 @@ export default function RewardsScreen() {
   } = useTheme();
 
   const orbColors = useMemo(() => [theme.glow + '55', theme.accentGradient[0] + '35', theme.accentGradient[1] + '35'], [theme]);
+  const coinPulse = useSharedValue(1);
+  React.useEffect(() => { coinPulse.value = withRepeat(withSequence(withTiming(1.07, { duration: 900 }), withTiming(1, { duration: 900 })), -1, true); }, [coinPulse]);
+  const coinStyle = useAnimatedStyle(() => ({ transform: [{ scale: coinPulse.value }] }));
 
   const onThemePress = (id) => {
     if (!unlockedThemes.includes(id)) {
@@ -72,7 +75,7 @@ export default function RewardsScreen() {
         <BlurView intensity={45} tint={theme.mode} style={[styles.hero, { borderColor: theme.border }]}>
           <View style={styles.heroTop}>
             <Text style={[styles.heading, { color: theme.text }]}>Rewards System</Text>
-            <View style={styles.coinPill}><Text style={styles.coinText}>🪙 {coins}</Text></View>
+            <Animated.View style={[styles.coinPill, coinStyle]}><Text style={styles.coinText}>🪙 {coins}</Text></Animated.View>
           </View>
           <Text style={[styles.subheading, { color: theme.textSecondary }]}>Gamified progress with themes, titles, and relaxing sounds.</Text>
           <Text style={[styles.progress, { color: theme.textSecondary }]}>Tasks: {stats.tasksCompleted} • Habit streak: {stats.habitStreak} • Focus: {stats.focusMinutes} min</Text>
@@ -92,7 +95,7 @@ export default function RewardsScreen() {
           return (
             <TouchableOpacity key={item.id} activeOpacity={0.9} onPress={() => onThemePress(item.id)}>
               <BlurView intensity={42} tint={theme.mode} style={[styles.optionCard, { borderColor: selected ? theme.glow : theme.border }]}>
-                <LinearGradient colors={item.background} style={styles.themePreview} />
+                <LinearGradient colors={item.background} style={styles.themePreview}><View style={styles.previewBadge}><Text style={styles.previewBadgeText}>{item.mode === 'dark' ? 'Dark' : 'Light'}</Text></View></LinearGradient>
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.optionTitle, { color: theme.text }]}>{item.name}</Text>
                   <Text style={[styles.optionMeta, { color: theme.textSecondary }]}>{item.mode === 'dark' ? 'Dark mode' : 'Light mode'} • {item.cost === 0 ? 'Free' : `${item.cost} coins`}</Text>
@@ -138,8 +141,8 @@ const styles = StyleSheet.create({
   hero: { borderRadius: 24, padding: 16, borderWidth: 1, overflow: 'hidden' },
   heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   heading: { fontSize: 28, fontWeight: '800' },
-  coinPill: { backgroundColor: 'rgba(255,215,0,0.18)', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 6 },
-  coinText: { color: '#f8fafc', fontSize: 13, fontWeight: '700' },
+  coinPill: { backgroundColor: 'rgba(255,255,255,0.14)', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
+  coinText: { color: '#FDE68A', fontSize: 14, fontWeight: '800' },
   subheading: { marginTop: 8, fontSize: 13 },
   progress: { marginTop: 8, fontSize: 12, fontWeight: '600' },
   sectionTitle: { marginTop: 18, marginBottom: 10, fontSize: 18, fontWeight: '800' },
@@ -169,7 +172,9 @@ const styles = StyleSheet.create({
     gap: 12,
     overflow: 'hidden',
   },
-  themePreview: { width: 52, height: 52, borderRadius: 14 },
+  themePreview: { width: 58, height: 58, borderRadius: 14, overflow: 'hidden', justifyContent: 'flex-end' },
+  previewBadge: { backgroundColor: 'rgba(15,23,42,0.5)', paddingVertical: 3 },
+  previewBadgeText: { color: '#fff', fontSize: 9, textAlign: 'center', fontWeight: '700' },
   optionTitle: { fontSize: 15, fontWeight: '700' },
   optionMeta: { marginTop: 4, fontSize: 12 },
   soundIcon: { width: 52, height: 52, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
