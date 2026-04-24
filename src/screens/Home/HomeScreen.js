@@ -6,6 +6,7 @@ import { Award, Settings, MessageCircle, Timer, SmilePlus, Leaf, ListChecks, Clo
 import { useTheme } from '../../contexts/ThemeContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
 import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
+import FocusSessionScheduler from '../../components/focus/FocusSessionScheduler';
 
 export default function HomeScreen() {
   const { theme, isDark } = useTheme();
@@ -43,6 +44,7 @@ export default function HomeScreen() {
   ];
 
   return (
+    
     <View style={[styles.container, { backgroundColor: screenBackground }]}>
       <AnimatedOrbsBackground colors={[theme.glow + '40', theme.accentGradient[0] + '20', theme.accentGradient[1] + '20']} />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -96,6 +98,7 @@ export default function HomeScreen() {
             <Text style={styles.aiText}>AI Chat • Ask for support right now</Text>
           </LinearGradient>
         </TouchableOpacity>
+        <FocusSessionScheduler navigation={navigation} />
 
         <View style={styles.quickRow}>
           {quickActions.map((action) => {

@@ -5,17 +5,22 @@ import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from './src/contexts/ThemeContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import { ProductivityProvider } from './src/contexts/ProductivityContext';
+import { AppDataProvider } from './src/contexts/AppDataContext';
+import FocusSessionScheduler from './src/components/focus/FocusSessionScheduler';
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <ThemeProvider>
-          <ProductivityProvider>
-            <NavigationContainer>
-              <AppNavigator />
-            </NavigationContainer>
-          </ProductivityProvider>
+          <AppDataProvider>  
+            <FocusSessionScheduler /> 
+              <ProductivityProvider>
+                <NavigationContainer>
+                  <AppNavigator />
+                </NavigationContainer>
+              </ProductivityProvider>
+          </AppDataProvider>  
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
