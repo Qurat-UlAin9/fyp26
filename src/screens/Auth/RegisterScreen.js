@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   View,
   Text,
   TextInput,
@@ -12,6 +13,7 @@ import { Mail, Lock, User } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import ADHDButton from '../../components/common/ADHDButton';
+import { registerUser } from '../../services/api';
 
 export default function RegisterScreen({ navigation }) {
   const { theme } = useTheme();
@@ -19,11 +21,39 @@ export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+<<<<<<< Updated upstream
   const { updateProfile } = useAppData();
 
   const handleRegister = () => {
     updateProfile({ name: name.trim() || 'Friend', email });
     navigation.replace('Onboarding');
+=======
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      Alert.alert('Missing fields', 'Please fill all required fields.');
+      return;
+    }
+    if (password !== confirm) {
+      Alert.alert('Password mismatch', 'Password and confirm password must match.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await registerUser({
+        full_name: name.trim(),
+        email: email.trim(),
+        password: password.trim(),
+      });
+      navigation.replace('Onboarding');
+    } catch (error) {
+      Alert.alert('Registration failed', error.message);
+    } finally {
+      setLoading(false);
+    }
+>>>>>>> Stashed changes
   };
 
   return (
@@ -49,7 +79,7 @@ export default function RegisterScreen({ navigation }) {
             <TextInput placeholder="Confirm Password" placeholderTextColor={theme.textSecondary} style={[styles.input, { color: theme.text, borderColor: theme.border }]} value={confirm} onChangeText={setConfirm} secureTextEntry />
           </View>
 
-          <ADHDButton title="Register" onPress={handleRegister} style={styles.button} />
+          <ADHDButton title={loading ? 'Registering...' : 'Register'} onPress={handleRegister} style={styles.button} disabled={loading} />
         </View>
       </KeyboardAvoidingView>
     </LinearGradient>

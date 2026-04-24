@@ -3,12 +3,12 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../contexts/ThemeContext';
 
-export default function ADHDButton({ title, onPress, style, textStyle, gradient = true }) {
+export default function ADHDButton({ title, onPress, style, textStyle, gradient = true, disabled = false }) {
   const { theme } = useTheme();
 
   if (gradient) {
     return (
-      <TouchableOpacity onPress={onPress} style={[styles.wrapper, style]}>
+      <TouchableOpacity onPress={onPress} style={[styles.wrapper, style, disabled && styles.disabled]} disabled={disabled}>
         <LinearGradient
           colors={theme.accentGradient}
           start={{ x: 0, y: 0 }}
@@ -22,7 +22,7 @@ export default function ADHDButton({ title, onPress, style, textStyle, gradient 
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.solid, { backgroundColor: theme.card }, style]}>
+    <TouchableOpacity onPress={onPress} style={[styles.solid, { backgroundColor: theme.card }, style, disabled && styles.disabled]} disabled={disabled}>
       <Text style={[styles.text, { color: theme.text }, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
@@ -32,5 +32,6 @@ const styles = StyleSheet.create({
   wrapper: { borderRadius: 30, overflow: 'hidden' },
   gradient: { paddingVertical: 14, paddingHorizontal: 24, alignItems: 'center' },
   solid: { paddingVertical: 14, paddingHorizontal: 24, borderRadius: 30, alignItems: 'center' },
+  disabled: { opacity: 0.6 },
   text: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
 });

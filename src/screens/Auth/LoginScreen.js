@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   View,
   Text,
   TextInput,
@@ -12,15 +13,28 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Mail, Lock } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import ADHDButton from '../../components/common/ADHDButton';
+import { loginUser } from '../../services/api';
 
 export default function LoginScreen({ navigation }) {
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    // Dummy auth – replace with real logic
-    navigation.replace('Onboarding');
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Missing fields', 'Please enter email and password.');
+      return;
+    }
+    try {
+      setLoading(true);
+      await loginUser({ email: email.trim(), password: password.trim() });
+      navigation.replace('Onboarding');
+    } catch (error) {
+      Alert.alert('Login failed', error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,7 +68,7 @@ export default function LoginScreen({ navigation }) {
             />
           </View>
 
-          <ADHDButton title="Login" onPress={handleLogin} style={styles.button} />
+          <ADHDButton title={loading ? 'Logging in...' : 'Login'} onPress={handleLogin} style={styles.button} disabled={loading} />
 
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={[styles.link, { color: theme.textSecondary }]}>

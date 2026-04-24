@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInRight, FadeOutLeft, Layout } from 'react-native-reanimated';
@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import QuestionCard from '../../components/detection/QuestionCard';
 import OptionCard from '../../components/detection/OptionCard';
 import { useTheme } from '../../contexts/ThemeContext';
+import { getCurrentUser, submitAssessment } from '../../services/api';
 
 const QUESTIONS = [
   'How often do you have trouble finishing tasks once the challenging parts are done?',
@@ -35,6 +36,7 @@ export default function QuestionnaireScreen({ navigation }) {
   const { isDark } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null));
+  const [submitting, setSubmitting] = useState(false);
 
   const progress = useMemo(() => (currentIndex + 1) / QUESTIONS.length, [currentIndex]);
   const selectedAnswer = answers[currentIndex];
@@ -62,23 +64,33 @@ export default function QuestionnaireScreen({ navigation }) {
     }, 240);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedAnswer) {
       return;
     }
 
     const scoreMap = { Never: 0, Rarely: 1, Sometimes: 2, Often: 3, 'Very Often': 4 };
-    const score = answers.reduce((sum, answer) => sum + (scoreMap[answer] ?? 0), 0);
-    const maxScore = QUESTIONS.length * 4;
-    const percentage = Math.round((score / maxScore) * 100);
+    const numericAnswers = answers.map((answer) => scoreMap[answer] ?? 0);
+    const user = await getCurrentUser();
 
-    navigation.navigate('AssessmentResult', {
-      score,
-      maxScore,
-      percentage,
-      answeredCount: answers.filter(Boolean).length,
-      totalQuestions: QUESTIONS.length,
-    });
+    try {
+      setSubmitting(true);
+      const result = await submitAssessment(numericAnswers, user?.id);
+      navigation.navigate('AssessmentResult', {
+        score: result.score,
+        maxScore: result.max_score,
+        percentage: result.percentage,
+        answeredCount: answers.filter(Boolean).length,
+        totalQuestions: QUESTIONS.length,
+        predictedLabel: result.predicted_label,
+        adhdProbability: result.adhd_probability,
+        topFactors: result.top_factors || [],
+      });
+    } catch (error) {
+      Alert.alert('Prediction error', error.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -138,7 +150,7 @@ export default function QuestionnaireScreen({ navigation }) {
               colors={selectedAnswer ? (isDark ? ['#5B21B6', '#2563EB'] : ['#7C3AED', '#6366F1']) : ['#A5B4FC', '#A5B4FC']}
               style={styles.finishGradient}
             >
-              <Text style={styles.finishText}>Finish screening</Text>
+              <Text style={styles.finishText}>{submitting ? 'Submitting...' : 'Finish screening'}</Text>
             </LinearGradient>
           </Pressable>
         ) : null}

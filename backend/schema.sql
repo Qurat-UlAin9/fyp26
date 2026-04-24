@@ -1,0 +1,24 @@
+CREATE DATABASE IF NOT EXISTS aimdb;
+USE aimdb;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(120) NOT NULL,
+  email VARCHAR(190) UNIQUE NOT NULL,
+  password VARCHAR(190) NOT NULL,
+  created_at DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS assessments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NULL,
+  score INT NOT NULL,
+  percentage FLOAT NOT NULL,
+  predicted_label VARCHAR(30) NOT NULL,
+  adhd_probability FLOAT NOT NULL,
+  top_factor_1 VARCHAR(255) NULL,
+  top_factor_2 VARCHAR(255) NULL,
+  top_factor_3 VARCHAR(255) NULL,
+  created_at DATETIME NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);

@@ -18,6 +18,9 @@ export default function AssessmentResultScreen({ navigation, route }) {
   const percentage = route?.params?.percentage ?? 0;
   const answeredCount = route?.params?.answeredCount ?? 0;
   const totalQuestions = route?.params?.totalQuestions ?? 18;
+  const predictedLabel = route?.params?.predictedLabel ?? 'Unknown';
+  const adhdProbability = route?.params?.adhdProbability ?? 0;
+  const topFactors = route?.params?.topFactors ?? [];
   const riskLabel = getRiskLabel(percentage);
 
   return (
@@ -37,6 +40,9 @@ export default function AssessmentResultScreen({ navigation, route }) {
             <Text style={styles.scoreLabel}>ADHD Score</Text>
             <Text style={styles.scoreValue}>{score} / {maxScore}</Text>
             <Text style={styles.scorePct}>{percentage}% • {riskLabel}</Text>
+            <Text style={styles.scorePrediction}>
+              Model output: {predictedLabel} ({Math.round(adhdProbability * 100)}%)
+            </Text>
           </LinearGradient>
 
           <View style={[styles.sectionCard, { backgroundColor: isDark ? 'rgba(15,23,42,0.68)' : '#FFFFFF' }]}>
@@ -44,6 +50,19 @@ export default function AssessmentResultScreen({ navigation, route }) {
             <Text style={[styles.bodyText, { color: isDark ? '#CBD5E1' : '#475569' }]}>• You answered {answeredCount} of {totalQuestions} questions, with frequent responses around inattention and task completion difficulties.</Text>
             <Text style={[styles.bodyText, { color: isDark ? '#CBD5E1' : '#475569' }]}>• In the backend, SHAP analysis will show which responses contributed most to this score for transparent explanations.</Text>
             <Text style={[styles.bodyText, { color: isDark ? '#CBD5E1' : '#475569' }]}>• Final interpretation should always be confirmed with a qualified healthcare professional.</Text>
+          </View>
+
+          <View style={[styles.sectionCard, { backgroundColor: isDark ? 'rgba(15,23,42,0.68)' : '#FFFFFF' }]}>
+            <Text style={[styles.sectionTitle, { color: isDark ? '#E2E8F0' : '#1E293B' }]}>Top influencing factors (SHAP)</Text>
+            {topFactors.length === 0 ? (
+              <Text style={[styles.bodyText, { color: isDark ? '#CBD5E1' : '#475569' }]}>No factor details were returned by backend.</Text>
+            ) : (
+              topFactors.map((factor, index) => (
+                <Text key={`${factor.feature}-${index}`} style={[styles.bodyText, { color: isDark ? '#CBD5E1' : '#475569' }]}>
+                  • {index + 1}. {factor.question} (impact: {factor.impact.toFixed(4)})
+                </Text>
+              ))
+            )}
           </View>
         </ScrollView>
 
@@ -77,6 +96,7 @@ const styles = StyleSheet.create({
   scoreLabel: { color: '#E2E8F0', fontSize: 14, fontWeight: '700' },
   scoreValue: { marginTop: 8, color: '#FFFFFF', fontSize: 38, fontWeight: '900' },
   scorePct: { marginTop: 6, color: '#DBEAFE', fontSize: 17, fontWeight: '700' },
+  scorePrediction: { marginTop: 8, color: '#E0E7FF', fontSize: 14, fontWeight: '600' },
   sectionCard: {
     marginTop: 18,
     borderRadius: 18,
