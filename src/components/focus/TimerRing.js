@@ -20,13 +20,14 @@ export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
   const { theme, isDark } = useTheme();
 
   const size = 280;
-  const stroke = 16;
+  const stroke = 14;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
 
   const progress = useSharedValue(1);
   const pulse = useSharedValue(1);
-  const glow = useSharedValue(0.35);
+  const glow = useSharedValue(0);
+  const outerGlow = useSharedValue(0);
 
   useEffect(() => {
     progress.value = withTiming(timeLeft / totalSeconds, {
@@ -37,16 +38,30 @@ export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
 
   useEffect(() => {
     if (isRunning) {
-      pulse.value = withRepeat(withTiming(1.04, { duration: 1300, easing: Easing.inOut(Easing.ease) }), -1, true);
-      glow.value = withRepeat(withTiming(0.85, { duration: 1300, easing: Easing.inOut(Easing.ease) }), -1, true);
-      return;
+      pulse.value = withRepeat(
+        withTiming(1.035, { duration: 1400, easing: Easing.inOut(Easing.ease) }),
+        -1,
+        true
+      );
+      glow.value = withRepeat(
+        withTiming(1, { duration: 1400, easing: Easing.inOut(Easing.ease) }),
+        -1,
+        true
+      );
+      outerGlow.value = withRepeat(
+        withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
+        -1,
+        true
+      );
+    } else {
+      cancelAnimation(pulse);
+      cancelAnimation(glow);
+      cancelAnimation(outerGlow);
+      pulse.value = withTiming(1, { duration: 300 });
+      glow.value = withTiming(0, { duration: 300 });
+      outerGlow.value = withTiming(0, { duration: 300 });
     }
-
-    cancelAnimation(pulse);
-    cancelAnimation(glow);
-    pulse.value = withTiming(1, { duration: 250 });
-    glow.value = withTiming(0.35, { duration: 250 });
-  }, [glow, isRunning, pulse]);
+  }, [glow, isRunning, outerGlow, pulse]);
 
   const ringAnimatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * (1 - progress.value),
@@ -56,55 +71,80 @@ export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
     transform: [{ scale: pulse.value }],
   }));
 
-  const glowStyle = useAnimatedStyle(() => ({
-    shadowOpacity: interpolate(glow.value, [0.35, 0.85], [0.25, 0.55]),
-    elevation: interpolate(glow.value, [0.35, 0.85], [8, 16]),
-    opacity: glow.value,
+  const innerGlowStyle = useAnimatedStyle(() => ({
+    shadowOpacity: interpolate(glow.value, [0, 1], [0.2, 0.65]),
+    elevation: interpolate(glow.value, [0, 1], [6, 20]),
   }));
 
-  const minutes = Math.floor(timeLeft / 60)
-    .toString()
-    .padStart(2, '0');
+  const outerGlowStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(outerGlow.value, [0, 1], [0, 0.6]),
+    transform: [{ scale: interpolate(outerGlow.value, [0, 1], [1, 1.06]) }],
+  }));
+
+  const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
   const seconds = (timeLeft % 60).toString().padStart(2, '0');
+
+  const progressPercent = Math.round((1 - timeLeft / totalSeconds) * 100);
 
   return (
     <AnimatedView style={[styles.container, pulseStyle]}>
+      {/* Outer glow ring */}
       <AnimatedView
         style={[
-          styles.glow,
-          glowStyle,
+          styles.outerGlow,
+          outerGlowStyle,
           {
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            shadowColor: theme.glow,
-            backgroundColor: isDark ? 'rgba(56,189,248,0.10)' : 'rgba(59,130,246,0.10)',
+            width: size + 40,
+            height: size + 40,
+            borderRadius: (size + 40) / 2,
+            backgroundColor: isDark ? 'rgba(56,189,248,0.06)' : 'rgba(59,130,246,0.06)',
           },
         ]}
       />
-      <Svg width={size} height={size}>
+
+      {/* Mid glow */}
+      <AnimatedView
+        style={[
+          styles.outerGlow,
+          {
+            width: size + 16,
+            height: size + 16,
+            borderRadius: (size + 16) / 2,
+            backgroundColor: isDark ? 'rgba(56,189,248,0.08)' : 'rgba(59,130,246,0.08)',
+          },
+        ]}
+      />
+
+      <Svg width={size} height={size} style={styles.svg}>
         <Defs>
-          <SvgGradient id="ringGradient" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0%" stopColor="#7DD3FC" />
-            <Stop offset="45%" stopColor="#93C5FD" />
-            <Stop offset="100%" stopColor="#A78BFA" />
+          <SvgGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <Stop offset="0%" stopColor="#22D3EE" />
+            <Stop offset="40%" stopColor="#60A5FA" />
+            <Stop offset="80%" stopColor="#A78BFA" />
+            <Stop offset="100%" stopColor="#F472B6" />
+          </SvgGradient>
+          <SvgGradient id="trackGrad" x1="0" y1="0" x2="1" y2="1">
+            <Stop offset="0%" stopColor={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)'} />
+            <Stop offset="100%" stopColor={isDark ? 'rgba(255,255,255,0.03)' : 'rgba(15,23,42,0.03)'} />
           </SvgGradient>
         </Defs>
 
+        {/* Track ring */}
         <Circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={isDark ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.08)'}
+          stroke={isDark ? 'rgba(255,255,255,0.07)' : 'rgba(15,23,42,0.07)'}
           strokeWidth={stroke}
           fill="none"
         />
 
+        {/* Progress ring */}
         <AnimatedCircle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="url(#ringGradient)"
+          stroke="url(#ringGrad)"
           strokeWidth={stroke}
           strokeLinecap="round"
           fill="none"
@@ -116,9 +156,24 @@ export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
         />
       </Svg>
 
-      <View style={[styles.centerContent, { backgroundColor: isDark ? '#101A35' : '#FFFFFF' }]}>
-        <Text style={[styles.timeText, { color: theme.text }]}>{`${minutes}:${seconds}`}</Text>
-      </View>
+      {/* Center content */}
+      <AnimatedView
+        style={[
+          styles.centerContent,
+          innerGlowStyle,
+          {
+            backgroundColor: isDark ? '#070E1E' : '#FFFFFF',
+            shadowColor: '#38BDF8',
+          },
+        ]}
+      >
+        <Text style={[styles.timeText, { color: isDark ? '#E0F2FE' : '#0F172A' }]}>
+          {`${minutes}:${seconds}`}
+        </Text>
+        <Text style={[styles.progressLabel, { color: isDark ? '#334155' : '#94A3B8' }]}>
+          {isRunning ? `${progressPercent}% elapsed` : timeLeft === 0 ? 'Complete!' : 'Ready'}
+        </Text>
+      </AnimatedView>
     </AnimatedView>
   );
 }
@@ -127,24 +182,36 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: 280,
+    height: 280,
   },
-  glow: {
+  outerGlow: {
+    position: 'absolute',
+  },
+  svg: {
     position: 'absolute',
   },
   centerContent: {
-    position: 'absolute',
-    width: 180,
-    height: 180,
-    borderRadius: 90,
+    width: 184,
+    height: 184,
+    borderRadius: 92,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#38BDF8',
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 12,
   },
   timeText: {
-    fontSize: 46,
+    fontSize: 48,
     fontWeight: '800',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+    includeFontPadding: false,
+  },
+  progressLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 4,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
 });

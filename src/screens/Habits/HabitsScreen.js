@@ -1,172 +1,235 @@
-import React, { useRef, useState } from 'react';
-import { Animated as RNAnimated, View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { Animated as RNAnimated, View, Text, ScrollView, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { Swipeable } from 'react-native-gesture-handler';
-import { Plus, Pencil, Trash2 } from 'lucide-react-native';
-import AddHabitBottomSheet from './AddHabitBottomSheet';
+import { Plus, Bell, Check, TrendingUp } from 'lucide-react-native';
+import Animated, { FadeInDown, LinearTransition } from 'react-native-reanimated';
 import { useTheme } from '../../contexts/ThemeContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
+import AddHabitBottomSheet from './AddHabitBottomSheet';
 
-const SLOT_LABELS = ['Morning', 'Noon', 'Evening', 'Night'];
-const GRADIENTS = { orange: ['#FF9A8B', '#FF6A88'], blue: ['#5DAEFF', '#3A8DFF'], green: ['#6EE7B7', '#34D399'], purple: ['#A78BFA', '#7C3AED'], teal: ['#4FD1C5', '#2CB1BC'] };
-const MOODS = [{ emoji: '😌', label: 'Calm' }, { emoji: '🙂', label: 'Steady' }, { emoji: '🤩', label: 'Motivated' }, { emoji: '😮‍💨', label: 'Tired' }];
+const MOODS = [
+  { emoji: '😌', label: 'Calm', color: '#60A5FA' },
+  { emoji: '😐', label: 'Steady', color: '#A78BFA' },
+  { emoji: '🤩', label: 'Active', color: '#FBBF24' },
+  { emoji: '🥱', label: 'Tired', color: '#94A3B8' }
+];
 
 function CoinFly({ tick }) {
   const translate = useRef(new RNAnimated.ValueXY({ x: 0, y: 0 })).current;
   const opacity = useRef(new RNAnimated.Value(0)).current;
-  React.useEffect(() => {
+  useEffect(() => {
     if (!tick) return;
-    translate.setValue({ x: 0, y: 0 });
-    opacity.setValue(1);
+    translate.setValue({ x: 0, y: 0 }); opacity.setValue(1);
     RNAnimated.parallel([
       RNAnimated.timing(translate, { toValue: { x: 130, y: -480 }, duration: 900, useNativeDriver: true }),
       RNAnimated.timing(opacity, { toValue: 0, duration: 900, useNativeDriver: true }),
     ]).start();
-  }, [opacity, tick, translate]);
-  return <RNAnimated.View pointerEvents="none" style={[styles.coinFx, { opacity, transform: [{ translateX: translate.x }, { translateY: translate.y }] }]}><Text style={styles.coinFxText}>🪙✨</Text></RNAnimated.View>;
-}
-
-function HabitBubble({ done, isCurrent, onPress, colors }) {
-  const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
-  const handlePress = () => {
-    scale.value = withSpring(1.16, { damping: 11 }, () => {
-      scale.value = withSpring(1);
-    });
-    onPress();
-  };
+  }, [tick]);
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.85}>
-      <Animated.View style={[styles.bubbleCommon, !done && styles.bubbleOutline, isCurrent && styles.currentBubble, animatedStyle]}>
-        {done && <LinearGradient colors={colors} style={styles.bubbleFill} />}
-      </Animated.View>
-    </TouchableOpacity>
+    <RNAnimated.View pointerEvents="none" style={[styles.coinFx, { opacity, transform: translate.getTranslateTransform() }]}>
+      <Text style={styles.coinFxText}>🪙✨</Text>
+    </RNAnimated.View>
   );
 }
 
-function HabitCard({ habit, onToggleBubble, onDelete, theme }) {
-  const totalDone = habit.completions.filter(Boolean).length;
+function HabitCard({ habit, onToggle, onDelete, theme }) {
+  const doneCount = habit.completions.filter(Boolean).length;
+  // Use the habit's theme color for a very light background tint
+  const cardBgColor = habit.gradient[0] + '08'; // 5-8% opacity for a soft tint
+  const borderColor = habit.gradient[0] + '20'; // 12% opacity for border
+
   return (
-    <Swipeable overshootRight={false} renderRightActions={() => <View style={styles.swipeActions}><TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#E0E7FF' }]}><Pencil size={17} color="#4338CA" /></TouchableOpacity><TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#FEE2E2' }]} onPress={() => onDelete(habit.id)}><Trash2 size={17} color="#DC2626" /></TouchableOpacity></View>}>
-      <BlurView intensity={24} tint={theme.mode} style={[styles.habitCard, { borderColor: theme.border, backgroundColor: theme.card }]}>
-        <LinearGradient colors={habit.gradient} style={styles.titleStrip} />
-        <Text style={[styles.habitName, { color: theme.text }]}>{habit.name}</Text>
-        <View style={styles.slotRow}>
-          {habit.timeSlots.map((slot, index) => (
-            <View key={`${habit.id}-${slot}`} style={styles.slotCell}>
-              <Text style={[styles.slotLabel, { color: theme.textSecondary }]}>{slot}</Text>
-              <HabitBubble done={habit.completions[index]} isCurrent={index === habit.currentSlotIndex} onPress={() => onToggleBubble(habit.id, index)} colors={habit.gradient} />
+    <Animated.View entering={FadeInDown.duration(500)} layout={LinearTransition} style={[styles.card, { backgroundColor: cardBgColor, borderColor: borderColor }]}>
+      <TouchableOpacity onLongPress={() => onDelete(habit.id)} delayLongPress={800} activeOpacity={0.9}>
+        <View style={styles.cardHeader}>
+          <View>
+            <Text style={styles.habitTitle}>{habit.name}</Text>
+            <View style={styles.reminderRow}>
+              <Bell size={12} color="#64748B" />
+              <Text style={styles.reminderText}>{habit.reminder || 'Smart Reminder'}</Text>
+            </View>
+          </View>
+          <View style={[styles.badge, { backgroundColor: habit.gradient[0] + '20' }]}>
+            <Text style={[styles.badgeText, { color: habit.gradient[0] }]}>{doneCount}/{habit.timeSlots.length}</Text>
+          </View>
+        </View>
+        <View style={styles.bubblesRow}>
+          {habit.timeSlots.map((slot, i) => (
+            <View key={i} style={styles.bubbleCol}>
+              <Text style={styles.bubbleLabel}>{slot}</Text>
+              <TouchableOpacity 
+                onPress={() => onToggle(habit.id, i)}
+                style={[
+                  styles.bubble, 
+                  { borderColor: habit.gradient[0] }, 
+                  habit.completions[i] && { backgroundColor: habit.gradient[0] }, 
+                  i === habit.currentSlotIndex && styles.todayBubble
+                ]}
+              >
+                {habit.completions[i] && <Check size={i === habit.currentSlotIndex ? 22 : 16} color="white" strokeWidth={3} />}
+              </TouchableOpacity>
             </View>
           ))}
         </View>
-        <Text style={[styles.motivation, { color: theme.textSecondary }]}>{habit.motivationText}</Text>
-        <Text style={styles.progressText}>{totalDone}/{habit.timeSlots.length} done today</Text>
-      </BlurView>
-    </Swipeable>
+      </TouchableOpacity>
+    </Animated.View>
   );
 }
 
 export default function HabitsScreen() {
   const { theme, registerHabitCompletion } = useTheme();
   const bottomSheetRef = useRef(null);
-  const [selectedMood, setSelectedMood] = useState('Steady');
+  const [selectedMood, setSelectedMood] = useState(null);
   const [coinFxTick, setCoinFxTick] = useState(0);
-  const [habits, setHabits] = useState([
-    { id: '1', name: 'Wake up early', timeSlots: SLOT_LABELS, completions: [true, true, false, false], currentSlotIndex: 2, motivationText: 'Keep going!', gradient: GRADIENTS.orange },
-    { id: '2', name: 'Hydration check', timeSlots: SLOT_LABELS, completions: [true, true, true, false], currentSlotIndex: 3, motivationText: 'Almost there!', gradient: GRADIENTS.blue },
-    { id: '3', name: '10 minute tidy', timeSlots: SLOT_LABELS, completions: [false, false, true, false], currentSlotIndex: 1, motivationText: "You're doing great!", gradient: GRADIENTS.green },
-  ]);
+  const [habits, setHabits] = useState([]);
 
-  const addHabit = (newHabit) => {
-    const slots = (newHabit.timeSlots?.length ? newHabit.timeSlots : SLOT_LABELS).slice(0, newHabit.repeatCount);
-    setHabits((prev) => [...prev, { id: Date.now().toString(), name: newHabit.name, timeSlots: slots, completions: slots.map(() => false), currentSlotIndex: 0, motivationText: 'New habit unlocked ✨', gradient: GRADIENTS.purple }]);
-    bottomSheetRef.current?.close();
-  };
-
-  const toggleBubble = (habitId, bubbleIndex) => {
-    setHabits((prev) =>
-      prev.map((habit) => {
-        if (habit.id !== habitId) return habit;
-        const updated = [...habit.completions];
-        const next = !updated[bubbleIndex];
-        updated[bubbleIndex] = next;
-        if (next) {
-          registerHabitCompletion();
-          setCoinFxTick((x) => x + 1);
-        }
-        return { ...habit, completions: updated };
-      })
-    );
+  const handleToggle = (id, idx) => {
+    setHabits(prev => prev.map(h => {
+      if (h.id !== id) return h;
+      const updated = [...h.completions];
+      if (!updated[idx]) { setCoinFxTick(t => t + 1); registerHabitCompletion(); }
+      updated[idx] = !updated[idx];
+      return { ...h, completions: updated };
+    }));
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background[0] }]}> 
+    <SafeAreaView style={styles.container}>
       <CoinFly tick={coinFxTick} />
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
-          <Text style={[styles.heading, { color: theme.text }]}>Habits & Wellbeing</Text>
+          <Text style={styles.mainTitle}>Habits & Wellbeing</Text>
           <CoinBalancePill />
         </View>
-        <BlurView intensity={24} tint={theme.mode} style={[styles.moodCard, { borderColor: theme.border, backgroundColor: theme.card }]}>
-          <Text style={[styles.moodTitle, { color: theme.text }]}>How do you feel today?</Text>
+        
+        {/* Emotion Section with soft background tint */}
+        <View style={styles.feelingSection}>
+          <Text style={styles.sectionTitle}>How do you feel today?</Text>
           <View style={styles.moodRow}>
-            {MOODS.map((mood) => {
-              const active = selectedMood === mood.label;
-              return (
-                <TouchableOpacity key={mood.label} onPress={() => setSelectedMood(mood.label)} style={styles.moodButton}>
-                  <View style={[styles.moodGlow, active && styles.moodGlowActive]}><Text style={styles.moodEmoji}>{mood.emoji}</Text></View>
-                  <Text style={[styles.moodLabel, { color: theme.textSecondary }, active && styles.moodLabelActive]}>{mood.label}</Text>
-                </TouchableOpacity>
-              );
-            })}
+            {MOODS.map(m => (
+              <TouchableOpacity key={m.label} onPress={() => setSelectedMood(m.label)} style={styles.moodItem}>
+                <View style={[
+                  styles.moodCircle, 
+                  selectedMood === m.label ? { backgroundColor: m.color } : { backgroundColor: '#F1F5F9' },
+                  selectedMood === m.label && styles.moodCircleActive
+                ]}>
+                  <Text style={[styles.emoji, { opacity: selectedMood === m.label ? 1 : 0.2 }]}>{m.emoji}</Text>
+                </View>
+                <Text style={[styles.moodLabel, selectedMood === m.label && { color: m.color, fontWeight: '700' }]}>{m.label}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        </BlurView>
-        {habits.map((habit) => <HabitCard key={habit.id} habit={habit} onToggleBubble={toggleBubble} onDelete={(id) => setHabits((prev) => prev.filter((h) => h.id !== id))} theme={theme} />)}
+        </View>
+
+        <View style={styles.habitHeader}>
+          <Text style={styles.sectionTitle}>Daily Habits</Text>
+          <TrendingUp color="#94A3B8" size={20} />
+        </View>
+
+        {habits.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Tap the + to start a new habit!</Text>
+          </View>
+        ) : (
+          habits.map(h => (
+            <HabitCard 
+              key={h.id} 
+              habit={h} 
+              onToggle={handleToggle} 
+              onDelete={(id) => setHabits(p => p.filter(x => x.id !== id))} 
+            />
+          ))
+        )}
       </ScrollView>
 
       <TouchableOpacity style={styles.fab} onPress={() => bottomSheetRef.current?.expand()}>
-        <BlurView intensity={30} tint={theme.mode} style={styles.fabInner}>
-          <LinearGradient colors={GRADIENTS.teal} style={styles.fabGradient}><Plus color="#FFFFFF" size={24} /></LinearGradient>
-        </BlurView>
+        <LinearGradient colors={['#4FD1C5', '#2CB1BC']} style={styles.fabGradient}>
+          <Plus color="white" size={32} />
+        </LinearGradient>
       </TouchableOpacity>
-      <AddHabitBottomSheet ref={bottomSheetRef} onSubmit={addHabit} />
-    </View>
+      
+      <AddHabitBottomSheet ref={bottomSheetRef} onSubmit={(h) => setHabits(p => [...p, h])} />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  coinFx: { position: 'absolute', right: 34, bottom: 130, zIndex: 40 },
-  coinFxText: { fontSize: 24 },
-  content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 120 },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
-  heading: { fontSize: 30, fontWeight: '800' },
-  moodCard: { borderRadius: 22, borderWidth: 1, padding: 14, marginBottom: 14, overflow: 'hidden' },
-  moodTitle: { fontSize: 22, fontWeight: '700', marginBottom: 12 },
+  container: { flex: 1, backgroundColor: '#F0F4F8' }, // Slightly deeper grey-blue background
+  scrollContent: { padding: 20, paddingBottom: 100 },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+  mainTitle: { fontSize: 28, fontWeight: '800', color: '#1E293B' },
+  
+  feelingSection: { 
+    backgroundColor: '#FFFFFF', 
+    padding: 20, 
+    borderRadius: 28, 
+    marginBottom: 25, 
+    borderWidth: 1,
+    borderColor: 'rgba(167, 139, 250, 0.1)', // Very soft purple border
+    elevation: 3,
+    shadowColor: '#64748B',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  
+  sectionTitle: { fontSize: 18, fontWeight: '700', color: '#334155', marginBottom: 15 },
   moodRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  moodButton: { alignItems: 'center', width: '24%' },
-  moodGlow: { width: 54, height: 54, borderRadius: 27, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(148,163,184,0.3)', backgroundColor: 'rgba(255,255,255,0.85)' },
-  moodGlowActive: { borderColor: 'rgba(79,70,229,0.5)', shadowColor: '#7C3AED', shadowOpacity: 0.3, shadowRadius: 12, shadowOffset: { width: 0, height: 3 }, elevation: 5 },
-  moodEmoji: { fontSize: 24 },
-  moodLabel: { marginTop: 6, fontSize: 12, fontWeight: '600' },
-  moodLabelActive: { color: '#4F46E5' },
-  habitCard: { borderRadius: 22, borderWidth: 1, padding: 14, marginBottom: 12, overflow: 'hidden' },
-  titleStrip: { height: 4, borderRadius: 8, marginBottom: 10 },
-  habitName: { fontSize: 18, fontWeight: '800' },
-  slotRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
-  slotCell: { alignItems: 'center', minWidth: 62 },
-  slotLabel: { fontSize: 12, fontWeight: '600', marginBottom: 8 },
-  bubbleCommon: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  bubbleOutline: { borderWidth: 1.5, borderColor: 'rgba(148,163,184,0.5)', backgroundColor: 'rgba(255,255,255,0.4)' },
-  bubbleFill: { width: 24, height: 24, borderRadius: 12, shadowColor: '#4F46E5', shadowOpacity: 0.24, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
-  currentBubble: { width: 30, height: 30, borderRadius: 15 },
-  motivation: { marginTop: 12, fontSize: 13, fontWeight: '600' },
-  progressText: { marginTop: 4, fontSize: 12, color: '#94A3B8', fontWeight: '700' },
-  swipeActions: { flexDirection: 'row', alignItems: 'center', paddingLeft: 8, marginBottom: 12 },
-  actionBtn: { width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginLeft: 8 },
-  fab: { position: 'absolute', bottom: 28, right: 18, width: 62, height: 62, borderRadius: 31, overflow: 'hidden' },
-  fabInner: { flex: 1, padding: 4, borderWidth: 1, borderColor: 'rgba(148,163,184,0.3)', backgroundColor: 'rgba(255,255,255,0.72)' },
-  fabGradient: { flex: 1, borderRadius: 31, alignItems: 'center', justifyContent: 'center', shadowColor: '#2CB1BC', shadowOpacity: 0.28, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } },
+  moodItem: { alignItems: 'center', gap: 8 },
+  moodCircle: { width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center' },
+  moodCircleActive: {
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+  },
+  emoji: { fontSize: 26 },
+  moodLabel: { fontSize: 12, color: '#64748B', marginTop: 4 },
+  
+  habitHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+  
+  card: { 
+    padding: 20, 
+    borderRadius: 28, 
+    marginBottom: 16, 
+    borderWidth: 1.5,
+    elevation: 4,
+    shadowColor: '#64748B',
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+  },
+  
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 22 },
+  habitTitle: { fontSize: 20, fontWeight: '700', color: '#1E293B' },
+  reminderRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
+  reminderText: { fontSize: 13, color: '#64748B', fontWeight: '600' },
+  badge: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12 },
+  badgeText: { fontSize: 13, fontWeight: '700' },
+  
+  bubblesRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
+  bubbleCol: { alignItems: 'center', gap: 8 },
+  bubbleLabel: { fontSize: 11, color: '#94A3B8', fontWeight: '700', textTransform: 'uppercase' },
+  bubble: { width: 34, height: 34, borderRadius: 17, borderWidth: 2.5, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' },
+  todayBubble: { width: 50, height: 50, borderRadius: 25, borderWidth: 3.5 },
+  
+  emptyContainer: { alignItems: 'center', marginTop: 40 },
+  emptyText: { color: '#94A3B8', fontSize: 16, fontWeight: '500' },
+  
+  coinFx: { position: 'absolute', zIndex: 1000, top: '50%', left: '40%' },
+  coinFxText: { fontSize: 32 },
+  
+  fab: { 
+    position: 'absolute', 
+    bottom: 30, 
+    right: 30, 
+    width: 68, 
+    height: 68, 
+    borderRadius: 34, 
+    elevation: 10,
+    shadowColor: '#2CB1BC',
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+  },
+  fabGradient: { flex: 1, borderRadius: 34, justifyContent: 'center', alignItems: 'center' }
 });
