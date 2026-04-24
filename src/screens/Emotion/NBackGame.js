@@ -59,6 +59,9 @@ export default function NBackGame({ navigation }) {
   const progressStyle = useAnimatedStyle(() => ({
     width: progressWidth.value,
   }));
+  const flashAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: flashScale.value }],
+  }));
 
   return (
     <LinearGradient colors={['#0F172A', '#2E1065']} style={styles.container}>
@@ -79,7 +82,7 @@ export default function NBackGame({ navigation }) {
             {[...Array(TOTAL_CELLS)].map((_, i) => (
               <View key={i} style={styles.cell}>
                 {flashingIndex === i && (
-                  <Animated.View style={[styles.flash, { backgroundColor: '#A78BFA' }, useAnimatedStyle(() => ({ transform: [{ scale: flashScale.value }] } ))]} />
+                  <Animated.View style={[styles.flash, { backgroundColor: '#A78BFA' }, flashAnimatedStyle]} />
                 )}
               </View>
             ))}
