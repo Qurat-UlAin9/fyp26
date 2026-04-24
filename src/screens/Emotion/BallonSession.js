@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Easing } from 'react-native-reanimated';
 
-export default function BalloonSession({ onClose }) {
+export default function BalloonSession({ navigation, onClose }) {
   const [running, setRunning] = useState(false);
   const [phase, setPhase] = useState('Ready');
   const scale = useSharedValue(1);
