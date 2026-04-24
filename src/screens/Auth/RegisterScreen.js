@@ -10,6 +10,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Mail, Lock, User } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAppData } from '../../contexts/AppDataContext';
 import ADHDButton from '../../components/common/ADHDButton';
 
 export default function RegisterScreen({ navigation }) {
@@ -18,9 +19,10 @@ export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const { updateProfile } = useAppData();
 
   const handleRegister = () => {
-    // Dummy register
+    updateProfile({ name: name.trim() || 'Friend', email });
     navigation.replace('Onboarding');
   };
 

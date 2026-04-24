@@ -3,12 +3,14 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { LinearGradient } from 'expo-linear-gradient';
 import { User, Mail, Camera } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAppData } from '../../contexts/AppDataContext';
 import ADHDButton from '../../components/common/ADHDButton';
 
 export default function EditProfileScreen({ navigation }) {
   const { theme } = useTheme();
-  const [name, setName] = useState('Alex Johnson');
-  const [email, setEmail] = useState('alex@example.com');
+  const { profile, updateProfile } = useAppData();
+  const [name, setName] = useState(profile.name);
+  const [email, setEmail] = useState(profile.email);
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
@@ -46,7 +48,7 @@ export default function EditProfileScreen({ navigation }) {
           />
         </View>
 
-        <ADHDButton title="Save Changes" onPress={() => navigation.goBack()} style={styles.button} />
+        <ADHDButton title="Save Changes" onPress={() => { updateProfile({ name, email }); navigation.goBack(); }} style={styles.button} />
       </View>
     </LinearGradient>
   );
