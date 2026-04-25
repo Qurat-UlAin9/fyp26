@@ -26,6 +26,7 @@ import NBackGame from '../screens/Emotion/NBackGame';
 import StroopGame from '../screens/Emotion/StroopGame';
 import PatternRecallGame from '../screens/Emotion/PatternRecallGame';
 import SoundscapesScreen from '../screens/Emotion/SoundscapesScreen';
+import TaskHistoryScreen from '../screens/Tasks/TaskHistoryScreen';
 import ThemedBackButton from '../components/common/ThemedBackButton';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -70,6 +71,7 @@ export default function AppNavigator() {
       <Stack.Screen name="NBackGame" component={NBackGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="StroopGame" component={StroopGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="PatternRecallGame" component={PatternRecallGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+      <Stack.Screen name="TaskHistory" component={TaskHistoryScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Chatbot" component={ChatbotScreen} options={{ title: 'AI Coach' }} />
       <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} options={{ headerShown: false }} />
       <Stack.Screen name="AssessmentResult" component={AssessmentResultScreen} options={{ headerShown: false }} />

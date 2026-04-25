@@ -24,13 +24,19 @@ export default function RegisterScreen({ navigation }) {
   const { updateProfile } = useAppData();
   const [loading, setLoading] = useState(false);
 
+  const isStrongPassword = (value) => value.length >= 6 && /\d/.test(value);
+
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
-      Alert.alert('Missing fields', 'Please fill all required fields.');
+      Alert.alert('Let’s complete your profile', 'Please enter username, email, and password to continue.');
+      return;
+    }
+    if (!isStrongPassword(password.trim())) {
+      Alert.alert('Password requirements', 'Use at least 6 characters and include at least 1 digit.');
       return;
     }
     if (password !== confirm) {
-      Alert.alert('Password mismatch', 'Password and confirm password must match.');
+      Alert.alert('Passwords do not match', 'Please make sure both password fields are exactly the same.');
       return;
     }
 
@@ -38,6 +44,7 @@ export default function RegisterScreen({ navigation }) {
       setLoading(true);
       await registerUser({
         full_name: name.trim(),
+        username: name.trim(),
         email: email.trim(),
         password: password.trim(),
       });
@@ -58,7 +65,7 @@ export default function RegisterScreen({ navigation }) {
 
           <View style={styles.inputContainer}>
             <User color={theme.textSecondary} size={20} style={styles.icon} />
-            <TextInput placeholder="Full Name" placeholderTextColor={theme.textSecondary} style={[styles.input, { color: theme.text, borderColor: theme.border }]} value={name} onChangeText={setName} />
+            <TextInput placeholder="Username" placeholderTextColor={theme.textSecondary} style={[styles.input, { color: theme.text, borderColor: theme.border }]} value={name} onChangeText={setName} autoCapitalize="none" />
           </View>
           <View style={styles.inputContainer}>
             <Mail color={theme.textSecondary} size={20} style={styles.icon} />
@@ -66,7 +73,7 @@ export default function RegisterScreen({ navigation }) {
           </View>
           <View style={styles.inputContainer}>
             <Lock color={theme.textSecondary} size={20} style={styles.icon} />
-            <TextInput placeholder="Password" placeholderTextColor={theme.textSecondary} style={[styles.input, { color: theme.text, borderColor: theme.border }]} value={password} onChangeText={setPassword} secureTextEntry />
+            <TextInput placeholder="Password (min 6 + 1 digit)" placeholderTextColor={theme.textSecondary} style={[styles.input, { color: theme.text, borderColor: theme.border }]} value={password} onChangeText={setPassword} secureTextEntry />
           </View>
           <View style={styles.inputContainer}>
             <Lock color={theme.textSecondary} size={20} style={styles.icon} />

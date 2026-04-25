@@ -68,7 +68,7 @@ export default function OnboardingScreen({ navigation }) {
     <View style={[styles.container, { backgroundColor: isDark ? '#0F172A' : '#F8FAFC' }]}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={finish}>
-          <Text style={[styles.skipText, { color: theme.primary }]}>Skip</Text>
+          <Text style={[styles.skipText, { color: isDark ? '#E2E8F0' : '#334155' }]}>Skip</Text>
         </TouchableOpacity>
       </View>
 
@@ -120,11 +120,11 @@ export default function OnboardingScreen({ navigation }) {
           style={[styles.sideArrowBtn, styles.leftArrow, currentSlide === 0 && styles.disabled]}
           accessibilityRole="button"
         >
-          <ChevronLeft color={currentSlide === 0 ? '#94A3B8' : theme.primary} size={26} />
+          <ChevronLeft color={currentSlide === 0 ? '#94A3B8' : theme.accentGradient[0]} size={26} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={next} style={[styles.sideArrowBtn, styles.rightArrow]} accessibilityRole="button">
-          <ChevronRight color={theme.primary} size={26} />
+          <ChevronRight color={theme.accentGradient[0]} size={26} />
         </TouchableOpacity>
       </View>
     </View>

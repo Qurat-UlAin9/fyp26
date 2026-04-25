@@ -27,7 +27,7 @@ import {
   View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AddTaskBottomSheet from './AddTaskBottomSheet';
 
 // ── context hooks ──────────────────────────────────────────────────────────
@@ -193,6 +193,9 @@ function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onC
             <Text style={[styles.timeRange, { color: th.textLight, opacity: 0.75 }]}>
               ⏱ {task.startHour || '09'}:00 – {task.endHour || '11'}:00
             </Text>
+            <Text style={[styles.timeRange, { color: th.textLight, opacity: 0.85 }]}>
+              ⚡ Priority: {task.priority || 'Medium'}
+            </Text>
 
             {task.subtasks.map((sub) => (
               <TouchableOpacity
@@ -244,7 +247,7 @@ export default function TasksScreen() {
 
   // ── Pull from contexts (no more local useState for data) ──────────────────
   const { tasks, addTask, deleteTask, toggleSubtask, updateTask } = useAppData();
-  const { coins, registerSubtaskCompletion, registerTaskCompletion } = useTheme();
+  const { coins, registerSubtaskCompletion, registerTaskCompletion, theme, isDark } = useTheme();
 
   const addSheetRef  = useRef(null);
   const coinPillRef  = useRef(null);
@@ -302,12 +305,14 @@ export default function TasksScreen() {
   }, [navigation]);
 
   const openHistory = useCallback(() => {
-    navigation.dispatch(CommonActions.navigate({ name: 'History', params: { historyTasks: history } }));
+    const parentNav = navigation.getParent?.();
+    if (parentNav) parentNav.navigate('TaskHistory', { historyTasks: history });
+    else navigation.navigate('TaskHistory', { historyTasks: history });
   }, [navigation, history]);
 
   return (
     <View style={styles.screen}>
-      <LinearGradient colors={['#0F172A', '#1E293B']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={theme.background} style={StyleSheet.absoluteFill} />
 
       {/* Flying coins */}
       {coinFlies.map((cf) => (
@@ -317,8 +322,8 @@ export default function TasksScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>Tasks</Text>
-          <Text style={styles.headerSub}>{tasks.length} active · {history.length} done</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>Tasks</Text>
+          <Text style={[styles.headerSub, { color: theme.textSecondary }]}>{tasks.length} active · {history.length} done</Text>
         </View>
         <CoinPill ref={coinPillRef} coins={coins} onHistoryPress={openHistory} />
       </View>
@@ -342,7 +347,7 @@ export default function TasksScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={styles.emptyEmoji}>🌟</Text>
-            <Text style={styles.emptyText}>All done! Add a new task.</Text>
+            <Text style={[styles.emptyText, { color: theme.textSecondary }]}>All done! Add a new task.</Text>
           </View>
         }
       />

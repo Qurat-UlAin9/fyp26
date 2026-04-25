@@ -75,6 +75,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
   const [dueDate, setDueDate] = useState('');
   const [notifEnabled, setNotifEnabled] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState('coral');
+  const [priority, setPriority] = useState('Medium');
 
   const th = getTheme(selectedTheme);
 
@@ -83,6 +84,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
     setDueDate('');
     setNotifEnabled(false);
     setSelectedTheme('coral');
+    setPriority('Medium');
   };
 
   const handleClose = () => {
@@ -98,6 +100,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
       dueDate: dueDate || new Date().toISOString().split('T')[0],
       themeId: selectedTheme,
       notifEnabled,
+      priority,
       startHour: '09',
       endHour: '11',
       expanded: false,
@@ -174,6 +177,22 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit }, ref) => {
             trackColor={{ false: '#E2E8F0', true: th.accent }}
             thumbColor="#FFFFFF"
           />
+        </View>
+
+        <Text style={styles.label}>PRIORITY</Text>
+        <View style={styles.priorityRow}>
+          {['Low', 'Medium', 'High'].map((level) => {
+            const active = priority === level;
+            return (
+              <TouchableOpacity
+                key={level}
+                onPress={() => setPriority(level)}
+                style={[styles.priorityPill, active && { borderColor: th.accent, backgroundColor: `${th.accent}22` }]}
+              >
+                <Text style={[styles.priorityText, active && { color: th.accent }]}>{level}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* ── Theme Picker ── */}
@@ -364,6 +383,24 @@ const styles = StyleSheet.create({
     color: '#64748B',
     fontSize: 12,
     marginTop: 2,
+  },
+  priorityRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 18,
+  },
+  priorityPill: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.18)',
+    alignItems: 'center',
+  },
+  priorityText: {
+    color: '#CBD5E1',
+    fontWeight: '700',
+    fontSize: 13,
   },
 
   // Theme dots

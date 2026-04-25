@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -10,6 +10,9 @@ import Animated, {
   FadeOutUp
 } from 'react-native-reanimated';
 import { Eye, Hand, Ear, Flower2, ChefHat } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from '../../contexts/ThemeContext';
+import { ChevronLeft } from 'lucide-react-native';
 
 const SENSE_STEPS = [
   { key: 'see', count: 5, label: 'things you can See', icon: Eye, color: '#A5F3FC' },
@@ -20,6 +23,7 @@ const SENSE_STEPS = [
 ];
 
 export default function GroundingSession({ navigation, onClose }) {
+  const { theme } = useTheme();
   const [stepIndex, setStepIndex] = useState(0);
   const step = SENSE_STEPS[stepIndex];
   const Icon = step.icon;
@@ -49,7 +53,10 @@ export default function GroundingSession({ navigation, onClose }) {
   };
 
   return (
-    <View style={styles.sessionBody}>
+    <LinearGradient colors={theme.background} style={styles.sessionBody}>
+      <TouchableOpacity style={[styles.backBtn, { borderColor: theme.border }]} onPress={() => navigation.goBack()}>
+        <ChevronLeft color={theme.text} size={20} />
+      </TouchableOpacity>
       {/* Progress Bar */}
       <View style={styles.progressBarBg}>
         <Animated.View 
@@ -83,12 +90,13 @@ export default function GroundingSession({ navigation, onClose }) {
           {stepIndex === SENSE_STEPS.length - 1 ? 'Finish' : 'Next'}
         </Text>
       </Pressable>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   sessionBody: { flex: 1, alignItems: 'center', paddingHorizontal: 24, paddingTop: 20 },
+  backBtn: { alignSelf: 'flex-start', marginBottom: 12, width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   progressBarBg: { width: '100%', height: 4, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 2, marginBottom: 30 },
   progressBarFill: { height: '100%', backgroundColor: '#BAE6FD', borderRadius: 2 },
   sessionTitle: { color: '#F8FAFC', fontSize: 24, fontWeight: '600', opacity: 0.8 },

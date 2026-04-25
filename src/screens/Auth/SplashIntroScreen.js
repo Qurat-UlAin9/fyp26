@@ -13,7 +13,7 @@ export default function SplashIntroScreen({ navigation }) {
   }, [navigation]);
 
   return (
-    <LinearGradient colors={['#6366F1', '#4F46E5', '#312E81']} style={styles.container}>
+    <LinearGradient colors={['#0EA5E9', '#6366F1', '#A855F7']} style={styles.container}>
       <View style={styles.logoCircle}>
         <Brain size={58} color="#FFFFFF" />
       </View>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     width: 126,
     height: 126,
     borderRadius: 63,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 28,
