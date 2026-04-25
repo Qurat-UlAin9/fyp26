@@ -17,7 +17,7 @@ const THEME_PRESETS = {
     background: ['#E9F6FF', '#FFF4EA', '#FFFFFF'], card: 'rgba(255,255,255,0.78)',
     text: '#0F172A', textSecondary: '#475569', accentGradient: ['#8B5CF6', '#22D3EE'],
     border: 'rgba(99,102,241,0.22)', glow: '#8B5CF6', tabGradient: ['#FFFFFF', '#EEF2FF'],
-    quoteImage: 'https://images.unsplash.com/photo-1518552789033-8f20b0d8c5bf?auto=format&fit=crop&w=1400&q=80',
+    quoteImage: 'https://images.unsplash.com/photo-1493244040629-496f6d136cc3?auto=format&fit=crop&w=1400&q=80',
   },
   sereneBlueDark: {
     id: 'sereneBlueDark', name: 'Serene Blue Dark', mode: 'dark', cost: 0,
@@ -28,10 +28,10 @@ const THEME_PRESETS = {
   },
   auroraLight: {
     id: 'auroraLight', name: 'Aurora Light', mode: 'light', cost: 0,
-    background: ['#F4F7FF', '#FAF5FF', '#FFFFFF'], card: 'rgba(255,255,255,0.74)',
-    text: '#1E1B4B', textSecondary: '#5B5675', accentGradient: ['#A78BFA', '#60A5FA'],
-    border: 'rgba(139,92,246,0.24)', glow: '#A78BFA', tabGradient: ['#FFFFFF', '#F3E8FF'],
-    quoteImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80',
+    background: ['#EDFFF8', '#F1FAFF', '#FFF7ED'], card: 'rgba(255,255,255,0.82)',
+    text: '#123145', textSecondary: '#4B6776', accentGradient: ['#14B8A6', '#0EA5E9'],
+    border: 'rgba(14,165,233,0.24)', glow: '#14B8A6', tabGradient: ['#E6FFFB', '#E0F2FE'],
+    quoteImage: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1400&q=80',
   },
   forestLight: { id: 'forestLight', name: 'Forest Light', mode: 'light', cost: 120, background: ['#eef9ee', '#f9f5eb', '#ffffff'], card: 'rgba(238, 248, 236, 0.7)', text: '#1f3d24', textSecondary: '#3f5c43', accentGradient: ['#84cc16', '#22c55e'], border: 'rgba(74, 124, 89, 0.2)', glow: '#65a30d', tabGradient: ['#eff9ef', '#f8f3e7'], quoteImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=80' },
   galaxyDark: { id: 'galaxyDark', name: 'Galaxy Dark', mode: 'dark', cost: 140, background: ['#120026', '#1d0f45', '#08112f'], card: 'rgba(18, 22, 54, 0.58)', text: '#f8fafc', textSecondary: '#c4b5fd', accentGradient: ['#6366f1', '#22d3ee'], border: 'rgba(129,140,248,0.3)', glow: '#60a5fa', tabGradient: ['#11183b', '#1a1352'], quoteImage: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1400&q=80' },

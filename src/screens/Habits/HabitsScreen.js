@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, Bell, Check, TrendingUp } from 'lucide-react-native';
 import Animated, { FadeInDown, LinearTransition } from 'react-native-reanimated';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAppData } from '../../contexts/AppDataContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
 import AddHabitBottomSheet from './AddHabitBottomSheet';
 
@@ -78,19 +79,16 @@ function HabitCard({ habit, onToggle, onDelete, theme }) {
 
 export default function HabitsScreen() {
   const { theme, registerHabitCompletion } = useTheme();
+  const { habits, addHabit, toggleHabitSlot, deleteHabit } = useAppData();
   const bottomSheetRef = useRef(null);
   const [selectedMood, setSelectedMood] = useState(null);
   const [coinFxTick, setCoinFxTick] = useState(0);
-  const [habits, setHabits] = useState([]);
 
   const handleToggle = (id, idx) => {
-    setHabits(prev => prev.map(h => {
-      if (h.id !== id) return h;
-      const updated = [...h.completions];
-      if (!updated[idx]) { setCoinFxTick(t => t + 1); registerHabitCompletion(); }
-      updated[idx] = !updated[idx];
-      return { ...h, completions: updated };
-    }));
+    const habit = habits.find((h) => h.id === id);
+    if (!habit) return;
+    if (!habit.completions[idx]) { setCoinFxTick((t) => t + 1); registerHabitCompletion(); }
+    toggleHabitSlot(id, idx);
   };
 
   return (
@@ -136,7 +134,7 @@ export default function HabitsScreen() {
               key={h.id} 
               habit={h} 
               onToggle={handleToggle} 
-              onDelete={(id) => setHabits(p => p.filter(x => x.id !== id))} 
+              onDelete={deleteHabit} 
             />
           ))
         )}
@@ -148,7 +146,7 @@ export default function HabitsScreen() {
         </LinearGradient>
       </TouchableOpacity>
       
-      <AddHabitBottomSheet ref={bottomSheetRef} onSubmit={(h) => setHabits(p => [...p, h])} />
+      <AddHabitBottomSheet ref={bottomSheetRef} onSubmit={addHabit} />
     </SafeAreaView>
   );
 }
@@ -221,7 +219,7 @@ const styles = StyleSheet.create({
   
   fab: { 
     position: 'absolute', 
-    bottom: 30, 
+    bottom: 102, 
     right: 30, 
     width: 68, 
     height: 68, 

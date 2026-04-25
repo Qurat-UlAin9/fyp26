@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { X, Bell } from 'lucide-react-native';
 
@@ -50,7 +50,7 @@ const AddHabitBottomSheet = forwardRef(({ onSubmit }, ref) => {
         </View>
 
         <Text style={styles.label}>HABIT NAME</Text>
-        <BottomSheetTextInput 
+        <TextInput
           placeholder="e.g. Walk" 
           style={styles.input} 
           value={name} 

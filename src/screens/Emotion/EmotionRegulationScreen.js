@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAppData } from '../../contexts/AppDataContext';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ChevronLeft } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import Animated, {
@@ -31,7 +33,7 @@ const PORTALS = [
     title: 'Cognitive Power',
     subtitle: 'Training',
     glowColor: 'rgba(192, 132, 252, 0.95)',
-    style: { top: 328, left: 56 },
+    style: { top: 300, left: 18 },
     routeTitle: 'Cognitive Power',
   },
 ];
@@ -149,6 +151,7 @@ function Portal({ config, index, onPress }) {
 
 export default function EmotionRegulationScreen({ navigation }) {
   const { theme } = useTheme();
+  const { profile } = useAppData();
 
   return (
     <LinearGradient
@@ -161,7 +164,10 @@ export default function EmotionRegulationScreen({ navigation }) {
       <View style={styles.meshBlobTwo} />
       <View style={styles.meshBlobThree} />
 
-      <Text style={styles.header}>Explore your inner space, Ain</Text>
+      <TouchableOpacity style={[styles.backBtn, { borderColor: theme.border }]} onPress={() => navigation.goBack()}>
+        <ChevronLeft color={theme.text} size={20} />
+      </TouchableOpacity>
+      <Text style={[styles.header, { color: theme.text }]}>Explore your inner space, {profile.name || 'Friend'}</Text>
 
       <View style={styles.portalsStage}>
         {PORTALS.map((portal, index) => (
@@ -186,11 +192,19 @@ export default function EmotionRegulationScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 72,
+    paddingTop: 52,
     paddingHorizontal: 22,
   },
+  backBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
   header: {
-    color: '#EEF2FF',
     fontSize: 28,
     fontWeight: '700',
     letterSpacing: 0.2,
@@ -206,15 +220,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   portalTouchableArea: {
-    width: 176,
-    height: 176,
+    width: 160,
+    height: 160,
     alignItems: 'center',
     justifyContent: 'center',
   },
   portalGlass: {
-    width: 164,
-    height: 164,
-    borderRadius: 82,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.35)',
