@@ -16,7 +16,7 @@ import Animated, {
 import BackgroundOrb from '../../components/emotion/BackgroundOrb';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.42;
+const CARD_WIDTH = width * 0.4;
 
 const GAMES = [
   { id: 'nback', title: 'N-Back Challenge', icon: BrainCircuit, route: 'NBackGame' },

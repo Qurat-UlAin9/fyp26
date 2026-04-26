@@ -3,19 +3,17 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'r
 import { LinearGradient } from 'expo-linear-gradient';
 import { Send } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
-
-const baseStarter = [
-  { id: '1', role: 'ai', text: 'Hey Ain 🌿 I am here with calm ADHD-friendly support. What feels hardest right now?' },
-];
-
-const reframingStarter = [
-  { id: '1', role: 'ai', text: "Hey Ain, let's look at those thoughts together. What's on your mind?" },
-];
+import { useAppData } from '../../contexts/AppDataContext';
 
 export default function ChatbotScreen({ route }) {
   const { theme, isDark } = useTheme();
+  const { profile } = useAppData();
+  const displayName = profile?.name || 'Friend';
   const mode = route?.params?.context;
-  const [messages, setMessages] = useState(mode === 'reframing' ? reframingStarter : baseStarter);
+  const starter = mode === 'reframing'
+    ? [{ id: '1', role: 'ai', text: `Hey ${displayName}, let's look at those thoughts together. What's on your mind?` }]
+    : [{ id: '1', role: 'ai', text: `Hey ${displayName} 🌿 I am here with calm ADHD-friendly support. What feels hardest right now?` }];
+  const [messages, setMessages] = useState(starter);
   const [input, setInput] = useState('');
 
   const aiReplies = useMemo(

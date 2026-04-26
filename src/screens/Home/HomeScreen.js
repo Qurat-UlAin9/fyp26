@@ -11,13 +11,13 @@ import { useAppData } from '../../contexts/AppDataContext';
 
 export default function HomeScreen() {
   const { theme, isDark, stats } = useTheme();
-  const { profile, tasks, habits, focusSessions } = useAppData();
+  const { profile, tasks, habits, habitStats } = useAppData();
   const navigation = useNavigation();
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
   const [quoteImageFailed, setQuoteImageFailed] = useState(false);
-  const totalHabitSlots = useMemo(() => habits.reduce((acc, h) => acc + (h.timeSlots?.length || 0), 0), [habits]);
-  const completedHabitSlots = useMemo(() => habits.reduce((acc, h) => acc + (h.completions?.filter(Boolean).length || 0), 0), [habits]);
+  const totalHabitSlots = habitStats.dailyTarget;
+  const completedHabitSlots = habitStats.todayDone;
 
   const screenBackground = theme.background[0];
 
@@ -41,7 +41,7 @@ export default function HomeScreen() {
     {
       key: 'habits',
       title: 'Habits',
-      info: '3 day streak',
+      info: `${habitStats.streakDays} day streak`,
       icon: Leaf,
       colors: isDark ? ['#312E81', '#1E40AF'] : ['#6EE7B7', '#7DD3FC'],
       onPress: () => navigation.navigate('Habits'),
@@ -68,7 +68,13 @@ export default function HomeScreen() {
         </View>
 
         <View style={[styles.quoteOuter, { backgroundColor: isDark ? '#111A4A' : '#FFFFFF' }]}>
-          <ImageBackground source={quoteImageFailed ? require('../../../assets/images/onboarding1.png') : { uri: theme.quoteImage }} style={styles.quoteInner} imageStyle={styles.quoteImage} onError={() => setQuoteImageFailed(true)}>
+          <ImageBackground
+            source={quoteImageFailed || !theme.quoteImage ? require('../../../assets/images/onboarding1.png') : { uri: theme.quoteImage }}
+            style={styles.quoteInner}
+            imageStyle={styles.quoteImage}
+            defaultSource={require('../../../assets/images/onboarding1.png')}
+            onError={() => setQuoteImageFailed(true)}
+          >
             <View style={styles.quoteOverlay}>
               <Text style={styles.quoteText}>“Small steps every day lead to big changes.”</Text>
               <Text style={styles.quoteAuthor}>— Daily Motivation</Text>

@@ -41,6 +41,13 @@ export default function HarmonicRipples({ navigation }) {
     }
   };
 
+  const stopAll = async () => {
+    for (const sound of Object.values(soundsRef.current)) {
+      await sound?.pauseAsync();
+    }
+    setActiveIds([]);
+  };
+
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
@@ -51,6 +58,9 @@ export default function HarmonicRipples({ navigation }) {
           <Text style={[styles.title, { color: theme.text }]}>Harmonic Ripples</Text>
         </View>
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Tap a ring to start/stop sound and lights.</Text>
+        <Pressable style={[styles.stopBtn, { borderColor: theme.border, backgroundColor: theme.card }]} onPress={stopAll}>
+          <Text style={{ color: theme.text, fontWeight: '700' }}>Stop All</Text>
+        </Pressable>
 
         <View style={styles.centerWrap}>
           {[...LAYERS].reverse().map((layer) => {
@@ -87,6 +97,7 @@ const styles = StyleSheet.create({
   backButton: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   title: { fontSize: 28, fontWeight: '700' },
   subtitle: { marginTop: 12, fontSize: 14 },
+  stopBtn: { alignSelf: 'flex-start', marginTop: 10, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 16, borderWidth: 1 },
   centerWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   ring: {
     position: 'absolute',

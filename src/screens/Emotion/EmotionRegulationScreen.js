@@ -33,12 +33,12 @@ const PORTALS = [
     title: 'Cognitive Power',
     subtitle: 'Training',
     glowColor: 'rgba(192, 132, 252, 0.95)',
-    style: { top: 300, left: 18 },
+    style: { top: 282, left: 34 },
     routeTitle: 'Cognitive Power',
   },
 ];
 
-function Portal({ config, index, onPress }) {
+function Portal({ config, index, onPress, textColor, subtitleColor }) {
   const floatOffset = useSharedValue(0);
   const pulseScale = useSharedValue(1);
   const spin = useSharedValue(0);
@@ -139,8 +139,8 @@ function Portal({ config, index, onPress }) {
               end={{ x: 0.9, y: 0.9 }}
               style={styles.portalGradient}
             >
-              <Text style={styles.portalTitle}>{config.title}</Text>
-              <Text style={styles.portalSubtitle}>{config.subtitle}</Text>
+              <Text style={[styles.portalTitle, { color: textColor }]}>{config.title}</Text>
+              <Text style={[styles.portalSubtitle, { color: subtitleColor }]}>{config.subtitle}</Text>
             </LinearGradient>
           </BlurView>
         </View>
@@ -175,6 +175,8 @@ export default function EmotionRegulationScreen({ navigation }) {
             key={portal.title}
             config={portal}
             index={index}
+            textColor={theme.text}
+            subtitleColor={theme.textSecondary}
             onPress={() =>
               portal.title === 'Immediate Relief'
                 ? navigation.navigate('ImmediateRelief')

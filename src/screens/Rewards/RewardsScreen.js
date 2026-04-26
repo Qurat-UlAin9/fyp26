@@ -17,7 +17,7 @@ function TitleCard({ item, unlocked, theme }) {
   const glowStyle = useAnimatedStyle(() => ({ opacity: pulse.value }));
 
   return (
-    <View style={[styles.titleCard, !unlocked && styles.lockedCard]}>
+    <View style={[styles.titleCard, { backgroundColor: theme.card, borderColor: theme.border }, !unlocked && styles.lockedCard]}>
       {unlocked && <Animated.View style={[styles.titleGlow, glowStyle]} />}
       <Text style={styles.titleEmoji}>{item.icon}</Text>
       <Text style={[styles.titleName, { color: theme.text }]}>{item.name}</Text>

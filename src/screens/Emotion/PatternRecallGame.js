@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, SafeAreaView, Dimensions } from 'react-native';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withSequence, 
-  withTiming, 
-  withSpring,
-  FadeIn
-} from 'react-native-reanimated';
 import { ChevronLeft, Stars } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
-
-// Define fixed positions for the "stars" so they don't jump around
-const STAR_POSITIONS = [
-  { id: 0, top: '15%', left: '20%' },
-  { id: 1, top: '10%', right: '25%' },
-  { id: 2, top: '40%', left: '45%' },
-  { id: 3, top: '35%', right: '10%' },
-  { id: 4, top: '65%', left: '15%' },
-  { id: 5, top: '75%', right: '20%' },
-  { id: 6, top: '60%', right: '45%' },
+const BASE_POSITIONS = [
+  { x: 0.2, y: 0.18 }, { x: 0.75, y: 0.14 }, { x: 0.48, y: 0.4 }, { x: 0.86, y: 0.36 },
+  { x: 0.18, y: 0.66 }, { x: 0.74, y: 0.78 }, { x: 0.55, y: 0.62 }, { x: 0.34, y: 0.82 },
+  { x: 0.1, y: 0.42 }, { x: 0.9, y: 0.56 }, { x: 0.32, y: 0.1 }, { x: 0.62, y: 0.9 },
 ];
 
 export default function PatternRecallGame({ navigation }) {
@@ -30,13 +16,17 @@ export default function PatternRecallGame({ navigation }) {
   const [isWatching, setIsWatching] = useState(true);
   const [level, setLevel] = useState(1);
   const [activeStar, setActiveStar] = useState(null);
+  const [starPositions, setStarPositions] = useState(BASE_POSITIONS.slice(0, 7));
 
   const startLevel = (lvl) => {
     setIsWatching(true);
     setUserInput([]);
+    const starCount = Math.min(BASE_POSITIONS.length, 7 + Math.floor((lvl - 1) / 2));
+    const levelPositions = BASE_POSITIONS.slice(0, starCount).map((item, id) => ({ ...item, id }));
+    setStarPositions(levelPositions);
     // Generate a pattern of 'lvl + 2' stars
-    const newPattern = Array.from({ length: lvl + 2 }, () => 
-      Math.floor(Math.random() * STAR_POSITIONS.length)
+    const newPattern = Array.from({ length: Math.min(lvl + 2, starCount + 2) }, () =>
+      Math.floor(Math.random() * starCount)
     );
     setPattern(newPattern);
     playPattern(newPattern);
@@ -94,13 +84,33 @@ export default function PatternRecallGame({ navigation }) {
           </Text>
 
           <View style={styles.starsContainer}>
-            {STAR_POSITIONS.map((pos) => {
+            {userInput.slice(1).map((currentId, idx) => {
+              const prev = starPositions[userInput[idx]];
+              const curr = starPositions[currentId];
+              if (!prev || !curr) return null;
+              const x1 = prev.x * (width - 40);
+              const y1 = prev.y * 400;
+              const x2 = curr.x * (width - 40);
+              const y2 = curr.y * 400;
+              const length = Math.hypot(x2 - x1, y2 - y1);
+              const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+              return (
+                <View
+                  key={`line-${idx}`}
+                  style={[
+                    styles.pathLine,
+                    { width: length, left: x1, top: y1, transform: [{ rotate: `${angle}deg` }] },
+                  ]}
+                />
+              );
+            })}
+            {starPositions.map((pos) => {
               const isActive = activeStar === pos.id || userInput.includes(pos.id);
               return (
                 <Pressable
                   key={pos.id}
                   onPress={() => handleStarPress(pos.id)}
-                  style={[styles.starWrapper, { top: pos.top, left: pos.left, right: pos.right }]}
+                  style={[styles.starWrapper, { top: `${pos.y * 100}%`, left: `${pos.x * 100}%` }]}
                 >
                   <Animated.View 
                     style={[
@@ -135,6 +145,7 @@ const styles = StyleSheet.create({
   gameBoard: { flex: 1, marginTop: 40 },
   instruction: { color: '#DDD6FE', fontSize: 18, textAlign: 'center', fontWeight: '600', marginBottom: 20 },
   starsContainer: { flex: 1, position: 'relative' },
+  pathLine: { position: 'absolute', height: 2, backgroundColor: '#C4B5FD' },
   starWrapper: { position: 'absolute', width: 60, height: 60, justifyContent: 'center', alignItems: 'center' },
   star: {
     width: 14,

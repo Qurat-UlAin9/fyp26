@@ -31,6 +31,10 @@ export default function RegisterScreen({ navigation }) {
       Alert.alert('Let’s complete your profile', 'Please enter username, email, and password to continue.');
       return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      Alert.alert('Email looks invalid', 'Please enter a valid email format like name@example.com.');
+      return;
+    }
     if (!isStrongPassword(password.trim())) {
       Alert.alert('Password requirements', 'Use at least 6 characters and include at least 1 digit.');
       return;
@@ -51,7 +55,10 @@ export default function RegisterScreen({ navigation }) {
       updateProfile({ name: name.trim() || 'Friend', email: email.trim() });
       navigation.replace('Onboarding');
     } catch (error) {
-      Alert.alert('Registration failed', error.message);
+      Alert.alert(
+        'Registration failed',
+        `${error.message}\n\nGuidance:\n• Username must be unique\n• Email must be unique\n• Password must be 6+ chars with at least 1 digit`
+      );
     } finally {
       setLoading(false);
     }

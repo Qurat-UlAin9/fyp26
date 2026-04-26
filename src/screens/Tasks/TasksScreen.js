@@ -12,7 +12,6 @@ import React, {
   useRef,
   useState,
   useCallback,
-  useEffect,
 } from 'react';
 import {
   Animated as RNAnimated,
@@ -246,18 +245,13 @@ export default function TasksScreen() {
   const navigation = useNavigation();
 
   // ── Pull from contexts (no more local useState for data) ──────────────────
-  const { tasks, addTask, deleteTask, toggleSubtask, updateTask } = useAppData();
+  const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, addTaskToHistory } = useAppData();
   const { coins, registerSubtaskCompletion, registerTaskCompletion, theme, isDark } = useTheme();
 
   const addSheetRef  = useRef(null);
   const coinPillRef  = useRef(null);
   const [coinFlies, setCoinFlies] = useState([]);
-  const [history,   setHistory]   = useState([]);   // completed tasks shown in History screen
-
-  // Purge history older than 10 days
-  useEffect(() => {
-    setHistory((prev) => prev.filter((t) => daysSince(t.completedAt) <= 10));
-  }, []);
+  const history = taskHistory.filter((t) => daysSince(t.completedAt) <= 10);
 
   const fireCoins = useCallback(({ x, y }) => {
     const id = Date.now() + Math.random();
@@ -284,11 +278,11 @@ export default function TasksScreen() {
       registerTaskCompletion(); // +5 coins bonus
       const completed = { ...task, completedAt: new Date().toISOString(), completedRewarded: true };
       setTimeout(() => {
-        setHistory((h) => [completed, ...h]);
+        addTaskToHistory(completed);
         deleteTask(taskId); // removes from AppDataContext → also removes from timeline
       }, 600);
     }
-  }, [tasks, toggleSubtask, deleteTask, registerSubtaskCompletion, registerTaskCompletion]);
+  }, [tasks, toggleSubtask, deleteTask, addTaskToHistory, registerSubtaskCompletion, registerTaskCompletion]);
 
   const handleDelete = useCallback((taskId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -311,7 +305,7 @@ export default function TasksScreen() {
   }, [navigation, history]);
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background[0] }]}>
       <LinearGradient colors={theme.background} style={StyleSheet.absoluteFill} />
 
       {/* Flying coins */}

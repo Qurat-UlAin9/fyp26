@@ -79,7 +79,7 @@ function HabitCard({ habit, onToggle, onDelete, theme }) {
 
 export default function HabitsScreen() {
   const { theme, registerHabitCompletion } = useTheme();
-  const { habits, addHabit, toggleHabitSlot, deleteHabit } = useAppData();
+  const { habits, addHabit, toggleHabitSlot, deleteHabit, habitStats } = useAppData();
   const bottomSheetRef = useRef(null);
   const [selectedMood, setSelectedMood] = useState(null);
   const [coinFxTick, setCoinFxTick] = useState(0);
@@ -92,7 +92,7 @@ export default function HabitsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background[0] }]}>
       <CoinFly tick={coinFxTick} />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
@@ -120,9 +120,12 @@ export default function HabitsScreen() {
         </View>
 
         <View style={styles.habitHeader}>
-          <Text style={styles.sectionTitle}>Daily Habits</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Daily Habits</Text>
           <TrendingUp color="#94A3B8" size={20} />
         </View>
+        <Text style={[styles.emptyText, { marginTop: -6, marginBottom: 12 }]}>
+          {habitStats.rollingThreeDayDone}/{habitStats.rollingThreeDayTarget} over 3-day target
+        </Text>
 
         {habits.length === 0 ? (
           <View style={styles.emptyContainer}>
@@ -152,7 +155,7 @@ export default function HabitsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F4F8' }, // Slightly deeper grey-blue background
+  container: { flex: 1 },
   scrollContent: { padding: 20, paddingBottom: 100 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
   mainTitle: { fontSize: 28, fontWeight: '800', color: '#1E293B' },
@@ -219,7 +222,7 @@ const styles = StyleSheet.create({
   
   fab: { 
     position: 'absolute', 
-    bottom: 102, 
+    bottom: 120, 
     right: 30, 
     width: 68, 
     height: 68, 

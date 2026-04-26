@@ -28,9 +28,9 @@ const THEME_PRESETS = {
   },
   auroraLight: {
     id: 'auroraLight', name: 'Aurora Light', mode: 'light', cost: 0,
-    background: ['#EDFFF8', '#F1FAFF', '#FFF7ED'], card: 'rgba(255,255,255,0.82)',
-    text: '#123145', textSecondary: '#4B6776', accentGradient: ['#14B8A6', '#0EA5E9'],
-    border: 'rgba(14,165,233,0.24)', glow: '#14B8A6', tabGradient: ['#E6FFFB', '#E0F2FE'],
+    background: ['#F3FFFB', '#E6FFF4', '#ECFEFF'], card: 'rgba(243,255,251,0.92)',
+    text: '#0B3B33', textSecondary: '#2F6D61', accentGradient: ['#10B981', '#06B6D4'],
+    border: 'rgba(16,185,129,0.24)', glow: '#10B981', tabGradient: ['#D1FAE5', '#CFFAFE'],
     quoteImage: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1400&q=80',
   },
   forestLight: { id: 'forestLight', name: 'Forest Light', mode: 'light', cost: 120, background: ['#eef9ee', '#f9f5eb', '#ffffff'], card: 'rgba(238, 248, 236, 0.7)', text: '#1f3d24', textSecondary: '#3f5c43', accentGradient: ['#84cc16', '#22c55e'], border: 'rgba(74, 124, 89, 0.2)', glow: '#65a30d', tabGradient: ['#eff9ef', '#f8f3e7'], quoteImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=80' },
@@ -114,7 +114,7 @@ export const ThemeProvider = ({ children }) => {
 
   const registerTaskCompletion = useCallback(() => { earnCoins(5); setState((prev) => ({ ...prev, stats: { ...prev.stats, tasksCompleted: prev.stats.tasksCompleted + 1 } })); }, [earnCoins]);
   const registerSubtaskCompletion = useCallback(() => { earnCoins(1); setState((prev) => ({ ...prev, stats: { ...prev.stats, subtasksCompleted: prev.stats.subtasksCompleted + 1 } })); }, [earnCoins]);
-  const registerHabitCompletion = useCallback(() => { earnCoins(2); setState((prev) => ({ ...prev, stats: { ...prev.stats, habitCompletions: prev.stats.habitCompletions + 1, habitStreak: Math.min(prev.stats.habitStreak + 1, 30) } })); }, [earnCoins]);
+  const registerHabitCompletion = useCallback(() => { earnCoins(2); setState((prev) => ({ ...prev, stats: { ...prev.stats, habitCompletions: prev.stats.habitCompletions + 1, habitStreak: Math.min(prev.stats.habitStreak + 1, 3) } })); }, [earnCoins]);
   const addFocusMinutes = useCallback((minutes) => minutes && setState((prev) => ({ ...prev, stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes } })), []);
 
   const titles = useMemo(() => TITLES.map((item) => ({ ...item, unlocked: item.condition(state.stats) })), [state.stats]);

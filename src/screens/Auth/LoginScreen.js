@@ -18,14 +18,15 @@ import { useAppData } from '../../contexts/AppDataContext';
 
 export default function LoginScreen({ navigation }) {
   const { theme } = useTheme();
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { updateProfile } = useAppData();
 
   const handleLogin = async () => {
-    if (!username.trim() || !password.trim()) {
-      Alert.alert('Missing login details', 'Please enter your username and password.');
+    const loginValue = identifier.trim();
+    if (!loginValue || !password.trim()) {
+      Alert.alert('Missing login details', 'Enter your username or email and password to continue.');
       return;
     }
     if (password.trim().length < 6 || !/\d/.test(password.trim())) {
@@ -34,12 +35,15 @@ export default function LoginScreen({ navigation }) {
     }
     try {
       setLoading(true);
-      await loginUser({ username: username.trim(), email: username.trim(), password: password.trim() });
+      await loginUser({ username: loginValue, email: loginValue, password: password.trim() });
       const saved = await getCurrentUser();
-      if (saved) updateProfile({ name: saved.username || saved.full_name || username.trim(), email: saved.email || '' });
+      if (saved) updateProfile({ name: saved.username || saved.full_name || loginValue, email: saved.email || '' });
       navigation.replace('Onboarding');
     } catch (error) {
-      Alert.alert('Login failed', `We could not sign you in.\n\nTip: Register first if this is your first time.`);
+      Alert.alert(
+        'Login failed',
+        'We could not sign you in.\n\nGuidance:\n• Check username/email spelling\n• Check password (min 6 chars + 1 digit)\n• If this is your first time, register first'
+      );
     } finally {
       setLoading(false);
     }
@@ -54,11 +58,11 @@ export default function LoginScreen({ navigation }) {
           <View style={styles.inputContainer}>
             <User color={theme.textSecondary} size={20} style={styles.icon} />
             <TextInput
-              placeholder="Username"
+              placeholder="Username or Email"
               placeholderTextColor={theme.textSecondary}
               style={[styles.input, { color: theme.text, borderColor: theme.border }]}
-              value={username}
-              onChangeText={setUsername}
+              value={identifier}
+              onChangeText={setIdentifier}
               autoCapitalize="none"
             />
           </View>

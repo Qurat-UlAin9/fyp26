@@ -64,7 +64,7 @@ export default function GroundingSession({ navigation, onClose }) {
         />
       </View>
 
-      <Text style={styles.sessionTitle}>Grounding</Text>
+      <Text style={[styles.sessionTitle, { color: theme.text }]}>Grounding</Text>
       
       {/* Animated Content Wrapper */}
       <Animated.View 
@@ -80,13 +80,13 @@ export default function GroundingSession({ navigation, onClose }) {
           </View>
         </View>
 
-        <Text style={styles.countText}>{step.count}</Text>
-        <Text style={styles.instructionText}>{step.label}</Text>
-        <Text style={styles.subInstruction}>Take your time to notice each one...</Text>
+        <Text style={[styles.countText, { color: theme.text }]}>{step.count}</Text>
+        <Text style={[styles.instructionText, { color: theme.text }]}>{step.label}</Text>
+        <Text style={[styles.subInstruction, { color: theme.textSecondary }]}>Take your time to notice each one...</Text>
       </Animated.View>
 
-      <Pressable style={styles.actionButton} onPress={handleNext}>
-        <Text style={styles.actionText}>
+      <Pressable style={[styles.actionButton, { borderColor: theme.border, backgroundColor: theme.card }]} onPress={handleNext}>
+        <Text style={[styles.actionText, { color: theme.text }]}>
           {stepIndex === SENSE_STEPS.length - 1 ? 'Finish' : 'Next'}
         </Text>
       </Pressable>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   backBtn: { alignSelf: 'flex-start', marginBottom: 12, width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   progressBarBg: { width: '100%', height: 4, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 2, marginBottom: 30 },
   progressBarFill: { height: '100%', backgroundColor: '#BAE6FD', borderRadius: 2 },
-  sessionTitle: { color: '#F8FAFC', fontSize: 24, fontWeight: '600', opacity: 0.8 },
+  sessionTitle: { fontSize: 24, fontWeight: '600', opacity: 0.9 },
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%' },
   iconContainer: { alignItems: 'center', justifyContent: 'center', marginBottom: 40 },
   iconCircle: {
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
     height: 160,
     borderRadius: 80,
   },
-  countText: { color: '#F8FAFC', fontSize: 64, fontWeight: '800' },
-  instructionText: { color: '#F8FAFC', fontSize: 22, fontWeight: '500', textAlign: 'center' },
-  subInstruction: { color: 'rgba(226,232,240,0.6)', fontSize: 14, marginTop: 12, textAlign: 'center' },
+  countText: { fontSize: 64, fontWeight: '800' },
+  instructionText: { fontSize: 22, fontWeight: '500', textAlign: 'center' },
+  subInstruction: { fontSize: 14, marginTop: 12, textAlign: 'center' },
   actionButton: {
     marginBottom: 40,
     width: '100%',
@@ -131,5 +131,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  actionText: { color: '#F8FAFC', fontSize: 18, fontWeight: '700' },
+  actionText: { fontSize: 18, fontWeight: '700' },
 });

@@ -3,8 +3,10 @@ import { View, Text, StyleSheet, Pressable, SafeAreaView } from 'react-native';
 import { ChevronLeft, Play, Pause, RefreshCcw } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Easing } from 'react-native-reanimated';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function MeditationSession({ navigation }) {
+  const { theme } = useTheme();
   const [isPlaying, setIsPlaying] = useState(false);
   const [seconds, setSeconds] = useState(300); // 5 minutes
   const scale = useSharedValue(1);
@@ -26,14 +28,14 @@ export default function MeditationSession({ navigation }) {
   const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
   return (
-    <LinearGradient colors={['#0F172A', '#1E293B']} style={styles.container}>
+    <LinearGradient colors={theme.background} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
-            <ChevronLeft color="#FDE68A" size={28} />
+            <ChevronLeft color={theme.text} size={28} />
           </Pressable>
-          <Text style={styles.headerTitle}>Guided Meditation</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>Guided Meditation</Text>
           <View style={{ width: 28 }} />
         </View>
 
@@ -44,19 +46,19 @@ export default function MeditationSession({ navigation }) {
                 <Text style={{fontSize: 60}}>🪷</Text>
              </Animated.View>
           </View>
-          <Text style={styles.timerText}>{formatTime(seconds)}</Text>
-          <Text style={styles.instructionText}>
+          <Text style={[styles.timerText, { color: theme.accentGradient[0] }]}>{formatTime(seconds)}</Text>
+          <Text style={[styles.instructionText, { color: theme.textSecondary }]}>
             {isPlaying ? "Focus on your breath" : "Ready to begin?"}
           </Text>
         </View>
 
         {/* Controls */}
         <View style={styles.controls}>
-          <Pressable onPress={() => setSeconds(300)} style={styles.secondaryBtn}>
-            <RefreshCcw color="#FDE68A" size={24} />
+          <Pressable onPress={() => setSeconds(300)} style={[styles.secondaryBtn, { borderColor: theme.border }]}>
+            <RefreshCcw color={theme.accentGradient[0]} size={24} />
           </Pressable>
           
-          <Pressable onPress={() => setIsPlaying(!isPlaying)} style={styles.playBtn}>
+          <Pressable onPress={() => setIsPlaying(!isPlaying)} style={[styles.playBtn, { backgroundColor: theme.accentGradient[0] }]}>
             {isPlaying ? <Pause color="#0F172A" size={32} fill="#0F172A" /> : <Play color="#0F172A" size={32} fill="#0F172A" />}
           </Pressable>
 

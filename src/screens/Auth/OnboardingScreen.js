@@ -68,7 +68,7 @@ export default function OnboardingScreen({ navigation }) {
     <View style={[styles.container, { backgroundColor: isDark ? '#0F172A' : '#F8FAFC' }]}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={finish}>
-          <Text style={[styles.skipText, { color: isDark ? '#E2E8F0' : '#334155' }]}>Skip</Text>
+          <Text style={[styles.skipText, { color: theme.accentGradient[0] }]}>Skip</Text>
         </TouchableOpacity>
       </View>
 
@@ -102,7 +102,7 @@ export default function OnboardingScreen({ navigation }) {
               styles.dot,
               {
                 width: currentSlide === index ? 30 : 9,
-                backgroundColor: currentSlide === index ? theme.primary : theme.border,
+                backgroundColor: currentSlide === index ? theme.accentGradient[0] : theme.border,
               },
             ]}
           />
