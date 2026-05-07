@@ -14,6 +14,7 @@ function detectHostIp() {
 
 function getApiUrl() {
   const envUrl = process.env.EXPO_PUBLIC_API_URL;
+  
   if (envUrl) return envUrl;
 
   const hostIp = detectHostIp();

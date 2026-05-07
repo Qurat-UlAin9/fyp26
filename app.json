@@ -20,7 +20,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+       "package": "com.qura890.ADHDAPPNEW",
+      "usesCleartextTraffic": true,
+      "edgeToEdgeEnabled": true,
+      "package": "com.qura890.ADHDAPPNEW"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -28,6 +31,11 @@
     "plugins": [
       "expo-font",
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9e5a27cd-03c9-4c52-b8e9-ed9cfdda7eeb"
+      }
+    }
   }
 }

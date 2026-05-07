@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS titles (
   description   VARCHAR(255) NULL,
   trigger_type  ENUM(
     'streak','sessions_completed',
-    'coins_earned','tasks_completed',
-    'habits_completed','assessment'
+    'tasks_completed',
+    'habits_completed'
   ) NOT NULL,
   trigger_value INT NOT NULL                 -- e.g. 7 = 7 day streak
 );
