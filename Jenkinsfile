@@ -31,7 +31,7 @@ pipeline {
         stage('Backend Tests') {
             steps {
                 dir('backend') {
-                    bat 'venv\\Scripts\\python -m pytest'
+                    bat 'venv\\Scripts\\python -m pytest -v'
                 }
             }
         }

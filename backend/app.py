@@ -316,7 +316,9 @@ def predict():
         return jsonify({"error": f"Prediction failed: {str(error)}"}), 500
 
 
+bootstrap_database()
+train_or_load_model()
+
+
 if __name__ == "__main__":
-    bootstrap_database()
-    train_or_load_model()
     app.run(host="0.0.0.0", port=5000, debug=True)
