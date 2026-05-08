@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../contexts/ThemeContext';
+import { ChevronLeft } from 'lucide-react-native';
 
 const TOTAL_CYCLES = 3;
 const PHASE_MS = 4000;
 
-export default function BalloonSession() {
+export default function BalloonSession({ navigation }) {
   const { theme, isDark } = useTheme();
   const [running, setRunning] = useState(false);
   const [phase, setPhase] = useState('Ready');
@@ -67,6 +68,9 @@ export default function BalloonSession() {
 
   return (
     <LinearGradient colors={theme.background} style={styles.sessionBody}>
+      <TouchableOpacity style={[styles.backBtn, { borderColor: theme.border }]} onPress={() => navigation.goBack()}>
+        <ChevronLeft color={theme.text} size={20} />
+      </TouchableOpacity>
       <Text style={[styles.sessionTitle, { color: theme.text }]}>Balloon Breathing</Text>
       <Text style={[styles.cycleText, { color: theme.textSecondary }]}>Cycle {cycle}/{TOTAL_CYCLES}</Text>
       <View style={styles.balloonArea}>
@@ -87,6 +91,7 @@ export default function BalloonSession() {
 
 const styles = StyleSheet.create({
   sessionBody: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
+  backBtn: { position: 'absolute', top: 54, left: 20, width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   sessionTitle: { fontSize: 28, fontWeight: '700', marginBottom: 4 },
   cycleText: { fontSize: 14, fontWeight: '600', marginBottom: 18 },
   balloonArea: { height: 300, justifyContent: 'center', alignItems: 'center' },

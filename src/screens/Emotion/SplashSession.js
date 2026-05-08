@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -10,6 +10,9 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { Droplets } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from '../../contexts/ThemeContext';
+import { ChevronLeft } from 'lucide-react-native';
 
 const Ripple = ({ delay }) => {
   const progress = useSharedValue(0);
@@ -54,6 +57,7 @@ const FallingDrop = ({ delay, xPos }) => {
 };
 
 export default function SplashSession({ navigation, onClose }) {
+  const { theme } = useTheme();
   const [running, setRunning] = useState(false);
   const [timer, setTimer] = useState(30);
 
@@ -68,9 +72,12 @@ export default function SplashSession({ navigation, onClose }) {
   }, [running, timer]);
 
   return (
-    <View style={styles.sessionBody}>
-      <Text style={styles.sessionTitle}>Splash Relief</Text>
-      <Text style={styles.sessionSubtitle}>Cool water resets your nervous system.</Text>
+    <LinearGradient colors={theme.background} style={styles.sessionBody}>
+      <TouchableOpacity style={[styles.backBtn, { borderColor: theme.border }]} onPress={() => navigation.goBack()}>
+        <ChevronLeft color={theme.text} size={20} />
+      </TouchableOpacity>
+      <Text style={[styles.sessionTitle, { color: theme.text }]}>Splash Relief</Text>
+      <Text style={[styles.sessionSubtitle, { color: theme.textSecondary }]}>Cool water resets your nervous system.</Text>
 
       <View style={styles.splashContainer}>
         {/* Animated Ripples */}
@@ -93,24 +100,25 @@ export default function SplashSession({ navigation, onClose }) {
       </View>
 
       <View style={styles.timerBox}>
-        <Text style={styles.timerText}>{timer}s</Text>
+        <Text style={[styles.timerText, { color: theme.text }]}>{timer}s</Text>
         <Text style={styles.timerLabel}>Stay with the cool sensation</Text>
       </View>
 
       <Pressable 
-        style={[styles.actionButton, running && styles.actionButtonActive]} 
+        style={[styles.actionButton, { backgroundColor: theme.accentGradient[0] }, running && styles.actionButtonActive]} 
         onPress={() => setRunning(!running)}
       >
         <Text style={styles.actionText}>{running ? 'Pause' : 'Start Splash'}</Text>
       </Pressable>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   sessionBody: { flex: 1, alignItems: 'center', justifyContent: 'space-between', paddingVertical: 40 },
-  sessionTitle: { color: '#F8FAFC', fontSize: 28, fontWeight: '700' },
-  sessionSubtitle: { color: '#94A3B8', textAlign: 'center', paddingHorizontal: 40 },
+  backBtn: { alignSelf: 'flex-start', marginLeft: 20, marginTop: 10, width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  sessionTitle: { fontSize: 28, fontWeight: '700' },
+  sessionSubtitle: { textAlign: 'center', paddingHorizontal: 40 },
   splashContainer: { height: 300, width: '100%', justifyContent: 'center', alignItems: 'center' },
   iconCircle: {
     width: 140,
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
   },
   dropPart: { position: 'absolute', top: 0 },
   timerBox: { alignItems: 'center' },
-  timerText: { color: '#F8FAFC', fontSize: 48, fontWeight: '800' },
+  timerText: { fontSize: 48, fontWeight: '800' },
   timerLabel: { color: '#60A5FA', fontSize: 16, fontWeight: '500' },
   actionButton: {
     width: 200,

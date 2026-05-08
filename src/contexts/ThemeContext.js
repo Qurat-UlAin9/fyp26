@@ -17,7 +17,7 @@ const THEME_PRESETS = {
     background: ['#E9F6FF', '#FFF4EA', '#FFFFFF'], card: 'rgba(255,255,255,0.78)',
     text: '#0F172A', textSecondary: '#475569', accentGradient: ['#8B5CF6', '#22D3EE'],
     border: 'rgba(99,102,241,0.22)', glow: '#8B5CF6', tabGradient: ['#FFFFFF', '#EEF2FF'],
-    quoteImage: 'https://images.unsplash.com/photo-1518552789033-8f20b0d8c5bf?auto=format&fit=crop&w=1400&q=80',
+    quoteImage: 'https://images.unsplash.com/photo-1493244040629-496f6d136cc3?auto=format&fit=crop&w=1400&q=80',
   },
   sereneBlueDark: {
     id: 'sereneBlueDark', name: 'Serene Blue Dark', mode: 'dark', cost: 0,
@@ -28,10 +28,10 @@ const THEME_PRESETS = {
   },
   auroraLight: {
     id: 'auroraLight', name: 'Aurora Light', mode: 'light', cost: 0,
-    background: ['#F4F7FF', '#FAF5FF', '#FFFFFF'], card: 'rgba(255,255,255,0.74)',
-    text: '#1E1B4B', textSecondary: '#5B5675', accentGradient: ['#A78BFA', '#60A5FA'],
-    border: 'rgba(139,92,246,0.24)', glow: '#A78BFA', tabGradient: ['#FFFFFF', '#F3E8FF'],
-    quoteImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80',
+    background: ['#F3FFFB', '#E6FFF4', '#ECFEFF'], card: 'rgba(243,255,251,0.92)',
+    text: '#0B3B33', textSecondary: '#2F6D61', accentGradient: ['#10B981', '#06B6D4'],
+    border: 'rgba(16,185,129,0.24)', glow: '#10B981', tabGradient: ['#D1FAE5', '#CFFAFE'],
+    quoteImage: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1400&q=80',
   },
   forestLight: { id: 'forestLight', name: 'Forest Light', mode: 'light', cost: 120, background: ['#eef9ee', '#f9f5eb', '#ffffff'], card: 'rgba(238, 248, 236, 0.7)', text: '#1f3d24', textSecondary: '#3f5c43', accentGradient: ['#84cc16', '#22c55e'], border: 'rgba(74, 124, 89, 0.2)', glow: '#65a30d', tabGradient: ['#eff9ef', '#f8f3e7'], quoteImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=80' },
   galaxyDark: { id: 'galaxyDark', name: 'Galaxy Dark', mode: 'dark', cost: 140, background: ['#120026', '#1d0f45', '#08112f'], card: 'rgba(18, 22, 54, 0.58)', text: '#f8fafc', textSecondary: '#c4b5fd', accentGradient: ['#6366f1', '#22d3ee'], border: 'rgba(129,140,248,0.3)', glow: '#60a5fa', tabGradient: ['#11183b', '#1a1352'], quoteImage: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1400&q=80' },
@@ -114,7 +114,7 @@ export const ThemeProvider = ({ children }) => {
 
   const registerTaskCompletion = useCallback(() => { earnCoins(5); setState((prev) => ({ ...prev, stats: { ...prev.stats, tasksCompleted: prev.stats.tasksCompleted + 1 } })); }, [earnCoins]);
   const registerSubtaskCompletion = useCallback(() => { earnCoins(1); setState((prev) => ({ ...prev, stats: { ...prev.stats, subtasksCompleted: prev.stats.subtasksCompleted + 1 } })); }, [earnCoins]);
-  const registerHabitCompletion = useCallback(() => { earnCoins(2); setState((prev) => ({ ...prev, stats: { ...prev.stats, habitCompletions: prev.stats.habitCompletions + 1, habitStreak: Math.min(prev.stats.habitStreak + 1, 30) } })); }, [earnCoins]);
+  const registerHabitCompletion = useCallback(() => { earnCoins(2); setState((prev) => ({ ...prev, stats: { ...prev.stats, habitCompletions: prev.stats.habitCompletions + 1, habitStreak: Math.min(prev.stats.habitStreak + 1, 3) } })); }, [earnCoins]);
   const addFocusMinutes = useCallback((minutes) => minutes && setState((prev) => ({ ...prev, stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes } })), []);
 
   const titles = useMemo(() => TITLES.map((item) => ({ ...item, unlocked: item.condition(state.stats) })), [state.stats]);

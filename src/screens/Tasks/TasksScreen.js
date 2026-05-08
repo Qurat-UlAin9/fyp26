@@ -12,7 +12,6 @@ import React, {
   useRef,
   useState,
   useCallback,
-  useEffect,
 } from 'react';
 import {
   Animated as RNAnimated,
@@ -27,7 +26,7 @@ import {
   View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AddTaskBottomSheet from './AddTaskBottomSheet';
 
 // ── context hooks ──────────────────────────────────────────────────────────
@@ -193,6 +192,9 @@ function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onC
             <Text style={[styles.timeRange, { color: th.textLight, opacity: 0.75 }]}>
               ⏱ {task.startHour || '09'}:00 – {task.endHour || '11'}:00
             </Text>
+            <Text style={[styles.timeRange, { color: th.textLight, opacity: 0.85 }]}>
+              ⚡ Priority: {task.priority || 'Medium'}
+            </Text>
 
             {task.subtasks.map((sub) => (
               <TouchableOpacity
@@ -243,18 +245,13 @@ export default function TasksScreen() {
   const navigation = useNavigation();
 
   // ── Pull from contexts (no more local useState for data) ──────────────────
-  const { tasks, addTask, deleteTask, toggleSubtask, updateTask } = useAppData();
-  const { coins, registerSubtaskCompletion, registerTaskCompletion } = useTheme();
+  const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, addTaskToHistory } = useAppData();
+  const { coins, registerSubtaskCompletion, registerTaskCompletion, theme, isDark } = useTheme();
 
   const addSheetRef  = useRef(null);
   const coinPillRef  = useRef(null);
   const [coinFlies, setCoinFlies] = useState([]);
-  const [history,   setHistory]   = useState([]);   // completed tasks shown in History screen
-
-  // Purge history older than 10 days
-  useEffect(() => {
-    setHistory((prev) => prev.filter((t) => daysSince(t.completedAt) <= 10));
-  }, []);
+  const history = taskHistory.filter((t) => daysSince(t.completedAt) <= 10);
 
   const fireCoins = useCallback(({ x, y }) => {
     const id = Date.now() + Math.random();
@@ -281,11 +278,11 @@ export default function TasksScreen() {
       registerTaskCompletion(); // +5 coins bonus
       const completed = { ...task, completedAt: new Date().toISOString(), completedRewarded: true };
       setTimeout(() => {
-        setHistory((h) => [completed, ...h]);
+        addTaskToHistory(completed);
         deleteTask(taskId); // removes from AppDataContext → also removes from timeline
       }, 600);
     }
-  }, [tasks, toggleSubtask, deleteTask, registerSubtaskCompletion, registerTaskCompletion]);
+  }, [tasks, toggleSubtask, deleteTask, addTaskToHistory, registerSubtaskCompletion, registerTaskCompletion]);
 
   const handleDelete = useCallback((taskId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -302,12 +299,14 @@ export default function TasksScreen() {
   }, [navigation]);
 
   const openHistory = useCallback(() => {
-    navigation.dispatch(CommonActions.navigate({ name: 'History', params: { historyTasks: history } }));
+    const parentNav = navigation.getParent?.();
+    if (parentNav) parentNav.navigate('TaskHistory', { historyTasks: history });
+    else navigation.navigate('TaskHistory', { historyTasks: history });
   }, [navigation, history]);
 
   return (
-    <View style={styles.screen}>
-      <LinearGradient colors={['#0F172A', '#1E293B']} style={StyleSheet.absoluteFill} />
+    <View style={[styles.screen, { backgroundColor: theme.background[0] }]}>
+      <LinearGradient colors={theme.background} style={StyleSheet.absoluteFill} />
 
       {/* Flying coins */}
       {coinFlies.map((cf) => (
@@ -317,8 +316,8 @@ export default function TasksScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>Tasks</Text>
-          <Text style={styles.headerSub}>{tasks.length} active · {history.length} done</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>Tasks</Text>
+          <Text style={[styles.headerSub, { color: theme.textSecondary }]}>{tasks.length} active · {history.length} done</Text>
         </View>
         <CoinPill ref={coinPillRef} coins={coins} onHistoryPress={openHistory} />
       </View>
@@ -342,7 +341,7 @@ export default function TasksScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={styles.emptyEmoji}>🌟</Text>
-            <Text style={styles.emptyText}>All done! Add a new task.</Text>
+            <Text style={[styles.emptyText, { color: theme.textSecondary }]}>All done! Add a new task.</Text>
           </View>
         }
       />

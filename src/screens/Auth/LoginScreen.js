@@ -10,28 +10,40 @@ import {
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Mail, Lock } from 'lucide-react-native';
+import { User, Lock } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import ADHDButton from '../../components/common/ADHDButton';
-import { loginUser } from '../../services/api';
+import { getCurrentUser, loginUser } from '../../services/api';
+import { useAppData } from '../../contexts/AppDataContext';
 
 export default function LoginScreen({ navigation }) {
   const { theme } = useTheme();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { updateProfile } = useAppData();
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Missing fields', 'Please enter email and password.');
+    const loginValue = identifier.trim();
+    if (!loginValue || !password.trim()) {
+      Alert.alert('Missing login details', 'Enter your username or email and password to continue.');
+      return;
+    }
+    if (password.trim().length < 6 || !/\d/.test(password.trim())) {
+      Alert.alert('Password check', 'Password should be at least 6 characters and include at least 1 digit.');
       return;
     }
     try {
       setLoading(true);
-      await loginUser({ email: email.trim(), password: password.trim() });
+      await loginUser({ username: loginValue, email: loginValue, password: password.trim() });
+      const saved = await getCurrentUser();
+      if (saved) updateProfile({ name: saved.username || saved.full_name || loginValue, email: saved.email || '' });
       navigation.replace('Onboarding');
     } catch (error) {
-      Alert.alert('Login failed', error.message);
+      Alert.alert(
+        'Login failed',
+        'We could not sign you in.\n\nGuidance:\n• Check username/email spelling\n• Check password (min 6 chars + 1 digit)\n• If this is your first time, register first'
+      );
     } finally {
       setLoading(false);
     }
@@ -44,14 +56,13 @@ export default function LoginScreen({ navigation }) {
           <Text style={[styles.title, { color: theme.text }]}>Welcome Back</Text>
 
           <View style={styles.inputContainer}>
-            <Mail color={theme.textSecondary} size={20} style={styles.icon} />
+            <User color={theme.textSecondary} size={20} style={styles.icon} />
             <TextInput
-              placeholder="Email"
+              placeholder="Username or Email"
               placeholderTextColor={theme.textSecondary}
               style={[styles.input, { color: theme.text, borderColor: theme.border }]}
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
+              value={identifier}
+              onChangeText={setIdentifier}
               autoCapitalize="none"
             />
           </View>

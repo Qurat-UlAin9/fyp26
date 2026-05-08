@@ -16,6 +16,13 @@ const defaultProfile = {
   adhdScreening: 'Not completed yet',
   mood: 'Calm',
 };
+const defaultHabitStats = {
+  streakDays: 0,
+  dailyTarget: 0,
+  todayDone: 0,
+  rollingThreeDayTarget: 0,
+  rollingThreeDayDone: 0,
+};
 
 const AppDataContext = createContext(null);
 
@@ -23,6 +30,7 @@ export function AppDataProvider({ children }) {
   const [tasks, setTasks] = useState([]);
   const [habits, setHabits] = useState([]);
   const [focusSessions, setFocusSessions] = useState([]);
+  const [taskHistory, setTaskHistory] = useState([]);
   const [profile, setProfile] = useState(defaultProfile);
   const [hydrated, setHydrated] = useState(false);
 
@@ -35,6 +43,7 @@ export function AppDataProvider({ children }) {
         setTasks(Array.isArray(parsed.tasks) ? parsed.tasks : []);
         setHabits(Array.isArray(parsed.habits) ? parsed.habits : []);
         setFocusSessions(Array.isArray(parsed.focusSessions) ? parsed.focusSessions : []);
+        setTaskHistory(Array.isArray(parsed.taskHistory) ? parsed.taskHistory : []);
         setProfile({ ...defaultProfile, ...(parsed.profile || {}) });
       } catch (e) {
         console.warn('Failed to hydrate app data', e);
@@ -47,8 +56,8 @@ export function AppDataProvider({ children }) {
 
   useEffect(() => {
     if (!hydrated) return;
-    AsyncStorage.setItem(APP_DATA_KEY, JSON.stringify({ tasks, habits, focusSessions, profile })).catch(() => undefined);
-  }, [tasks, habits, focusSessions, profile, hydrated]);
+    AsyncStorage.setItem(APP_DATA_KEY, JSON.stringify({ tasks, habits, focusSessions, taskHistory, profile })).catch(() => undefined);
+  }, [tasks, habits, focusSessions, taskHistory, profile, hydrated]);
 
   const addTask = useCallback((taskObj) => {
     setTasks((prev) => [taskObj, ...prev]);
@@ -103,6 +112,9 @@ export function AppDataProvider({ children }) {
     setFocusSessions((prev) => [{ id: Date.now().toString(), startMin: 0, durationMins: 25, isoKey: todayISO(), ...session }, ...prev]);
   }, []);
   const deleteFocusSession = useCallback((sessionId) => setFocusSessions((prev) => prev.filter((s) => s.id !== sessionId)), []);
+  const addTaskToHistory = useCallback((task) => {
+    setTaskHistory((prev) => [{ ...task, completedAt: task.completedAt || new Date().toISOString() }, ...prev].slice(0, 100));
+  }, []);
 
   const updateProfile = useCallback((updates) => {
     setProfile((prev) => ({ ...prev, ...updates }));
@@ -165,6 +177,24 @@ export function AppDataProvider({ children }) {
     return events;
   }, [tasks, habits, focusSessions]);
 
+  const habitStats = useMemo(() => {
+    const today = todayISO();
+    const slotsPerDay = habits.reduce((acc, habit) => acc + (habit.timeSlots?.length || 0), 0);
+    const todayDone = habits.reduce((acc, habit) => acc + (habit.completions?.filter(Boolean).length || 0), 0);
+    const rollingThreeDayTarget = slotsPerDay * 3;
+    const rollingThreeDayDone = todayDone;
+    const streakDays = Math.min(3, Math.floor((todayDone / Math.max(1, slotsPerDay)) || 0));
+    return {
+      ...defaultHabitStats,
+      today,
+      streakDays,
+      dailyTarget: slotsPerDay,
+      todayDone,
+      rollingThreeDayTarget,
+      rollingThreeDayDone,
+    };
+  }, [habits]);
+
   const value = useMemo(
     () => ({
       tasks,
@@ -179,11 +209,14 @@ export function AppDataProvider({ children }) {
       focusSessions,
       addFocusSession,
       deleteFocusSession,
+      taskHistory,
+      addTaskToHistory,
       profile,
       updateProfile,
       timelineEvents,
+      habitStats,
     }),
-    [tasks, addTask, updateTask, deleteTask, toggleSubtask, habits, addHabit, toggleHabitSlot, deleteHabit, focusSessions, addFocusSession, deleteFocusSession, profile, updateProfile, timelineEvents]
+    [tasks, addTask, updateTask, deleteTask, toggleSubtask, habits, addHabit, toggleHabitSlot, deleteHabit, focusSessions, addFocusSession, deleteFocusSession, taskHistory, addTaskToHistory, profile, updateProfile, timelineEvents, habitStats]
   );
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;

@@ -7,7 +7,7 @@ import { Crown, Lock, Music, PauseCircle, PlayCircle, Sparkles } from 'lucide-re
 import { useTheme } from '../../contexts/ThemeContext';
 import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
 
-function TitleCard({ item, unlocked }) {
+function TitleCard({ item, unlocked, theme }) {
   const pulse = useSharedValue(0.8);
   React.useEffect(() => {
     if (!unlocked) return;
@@ -17,12 +17,12 @@ function TitleCard({ item, unlocked }) {
   const glowStyle = useAnimatedStyle(() => ({ opacity: pulse.value }));
 
   return (
-    <View style={[styles.titleCard, !unlocked && styles.lockedCard]}>
+    <View style={[styles.titleCard, { backgroundColor: theme.card, borderColor: theme.border }, !unlocked && styles.lockedCard]}>
       {unlocked && <Animated.View style={[styles.titleGlow, glowStyle]} />}
       <Text style={styles.titleEmoji}>{item.icon}</Text>
-      <Text style={styles.titleName}>{item.name}</Text>
-      <Text style={styles.titleStatus}>{unlocked ? 'Unlocked' : 'Locked'}</Text>
-      {!unlocked && <Lock size={16} color="#94a3b8" />}
+      <Text style={[styles.titleName, { color: theme.text }]}>{item.name}</Text>
+      <Text style={[styles.titleStatus, { color: theme.textSecondary }]}>{unlocked ? 'Unlocked' : 'Locked'}</Text>
+      {!unlocked && <Lock size={16} color={theme.textSecondary} />}
     </View>
   );
 }
@@ -84,7 +84,7 @@ export default function RewardsScreen() {
         <Text style={[styles.sectionTitle, { color: theme.text }]}>🏆 Titles (Achievements)</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalRow}>
           {titles.map((title) => (
-            <TitleCard key={title.id} item={title} unlocked={title.unlocked} />
+            <TitleCard key={title.id} item={title} unlocked={title.unlocked} theme={theme} />
           ))}
         </ScrollView>
 

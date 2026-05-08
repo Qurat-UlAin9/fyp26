@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { Award, Settings, MessageCircle, Timer, SmilePlus, Leaf, ListChecks, Clock3, Flame, UserCircle2 } from 'lucide-react-native';
+import { Award, MessageCircle, Timer, SmilePlus, Leaf, ListChecks, Clock3, Flame, UserCircle2 } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
 import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
@@ -11,10 +11,13 @@ import { useAppData } from '../../contexts/AppDataContext';
 
 export default function HomeScreen() {
   const { theme, isDark, stats } = useTheme();
-  const { profile, tasks, habits, focusSessions } = useAppData();
+  const { profile, tasks, habits, habitStats } = useAppData();
   const navigation = useNavigation();
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
+  const [quoteImageFailed, setQuoteImageFailed] = useState(false);
+  const totalHabitSlots = habitStats.dailyTarget;
+  const completedHabitSlots = habitStats.todayDone;
 
   const screenBackground = theme.background[0];
 
@@ -38,7 +41,7 @@ export default function HomeScreen() {
     {
       key: 'habits',
       title: 'Habits',
-      info: '5 day streak',
+      info: `${habitStats.streakDays} day streak`,
       icon: Leaf,
       colors: isDark ? ['#312E81', '#1E40AF'] : ['#6EE7B7', '#7DD3FC'],
       onPress: () => navigation.navigate('Habits'),
@@ -61,14 +64,17 @@ export default function HomeScreen() {
             <TouchableOpacity onPress={() => navigation.navigate('Rewards')} style={[styles.iconButton, { backgroundColor: isDark ? '#1E293B' : '#FFFFFF' }]}>
               <Award color={theme.accentGradient[0]} size={20} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={[styles.iconButton, { backgroundColor: isDark ? '#1E293B' : '#FFFFFF' }]}>
-              <Settings color={theme.accentGradient[0]} size={20} />
-            </TouchableOpacity>
           </View>
         </View>
 
         <View style={[styles.quoteOuter, { backgroundColor: isDark ? '#111A4A' : '#FFFFFF' }]}>
-          <ImageBackground source={{ uri: theme.quoteImage }} style={styles.quoteInner} imageStyle={styles.quoteImage}>
+          <ImageBackground
+            source={quoteImageFailed || !theme.quoteImage ? require('../../../assets/images/onboarding1.png') : { uri: theme.quoteImage }}
+            style={styles.quoteInner}
+            imageStyle={styles.quoteImage}
+            defaultSource={require('../../../assets/images/onboarding1.png')}
+            onError={() => setQuoteImageFailed(true)}
+          >
             <View style={styles.quoteOverlay}>
               <Text style={styles.quoteText}>“Small steps every day lead to big changes.”</Text>
               <Text style={styles.quoteAuthor}>— Daily Motivation</Text>
@@ -133,7 +139,7 @@ export default function HomeScreen() {
           <LinearGradient colors={isDark ? ['#1E3A8A', '#312E81'] : ['#D1FAE5', '#BAE6FD']} style={styles.snapshotCard}>
             <Flame color={isDark ? '#FDE68A' : '#EA580C'} size={18} />
             <Text style={[styles.snapshotTitle, { color: isDark ? '#BAE6FD' : '#0E7490' }]}>Habits</Text>
-            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#0C4A6E' }]}>{Math.max(stats.habitStreak, habits.length)} days</Text>
+            <Text style={[styles.snapshotValue, { color: isDark ? '#FFFFFF' : '#0C4A6E' }]}>{completedHabitSlots}/{totalHabitSlots || 0}</Text>
           </LinearGradient>
         </View>
       </ScrollView>

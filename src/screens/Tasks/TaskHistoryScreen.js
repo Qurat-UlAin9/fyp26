@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CheckCircle2, Clock, Trophy, Flame } from 'lucide-react-native';
+import { useAppData } from '../../contexts/AppDataContext';
 
 // ── Theme palette (must match TasksScreen & AddTaskBottomSheet) ───────────────
 const CARD_THEMES = {
@@ -146,8 +147,8 @@ function StatsBanner({ tasks }) {
 
 // ── Main Screen ───────────────────────────────────────────────────────────────
 export default function TaskHistoryScreen({ navigation, route }) {
-  // historyTasks is passed via navigation.navigate('History', { historyTasks })
-  const historyTasks = route?.params?.historyTasks || [];
+  const { taskHistory } = useAppData();
+  const historyTasks = route?.params?.historyTasks?.length ? route.params.historyTasks : taskHistory;
 
   // Filter to last 10 days only
   const recent = historyTasks.filter((t) => daysSince(t.completedAt) <= 10);
