@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "backend": "node backend/server.js",
+    "backend:check": "node -c backend/server.js"
   },
   "dependencies": {
     "@babel/core": "^7.26.0",
@@ -40,7 +42,11 @@
     "react-native-svg": "15.12.1",
     "react-native-vector-icons": "^10.3.0",
     "react-native-web": "^0.21.0",
-    "react-native-worklets": "^0.5.1"
+    "react-native-worklets": "^0.5.1",
+    "@supabase/supabase-js": "^2.76.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
   },
   "private": true,
   "devDependencies": {
