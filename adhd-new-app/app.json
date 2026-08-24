@@ -20,7 +20,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-       "package": "com.qura890.ADHDAPPNEW",
       "usesCleartextTraffic": true,
       "edgeToEdgeEnabled": true,
       "package": "com.qura890.ADHDAPPNEW"

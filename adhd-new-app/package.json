@@ -9,6 +9,8 @@
     "web": "expo start --web",
     "backend": "node backend/server.js",
     "backend:check": "node -c backend/server.js",
+    "backend:python": "backend/venv/bin/python backend/app.py",
+    "test:python": "backend/venv/bin/python -m pytest backend/tests backend/test_sample.py",
     "structure": "python structure.py"
   },
   "dependencies": {
