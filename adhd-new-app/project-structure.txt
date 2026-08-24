@@ -1,0 +1,210 @@
+adhd-new-app/
+├── .github/
+│   └── workflows/
+│       └── assignment_ci.yml
+├── assets/
+│   ├── animations/
+│   │   └── breathing.json
+│   ├── fonts/
+│   │   ├── Poppins-Bold.ttf
+│   │   ├── Poppins-Medium.ttf
+│   │   └── Poppins-Regular.ttf
+│   ├── icons/
+│   │   └── happy.png
+│   ├── images/
+│   │   └── onboarding1.png
+│   ├── sounds/
+│   │   ├── Classical/
+│   │   │   ├── et11lx-ripple-chinese-ancient-style-music-romantic-love-et11lx-155927 (1).mp3
+│   │   │   ├── guzheng-soundtrack-cinematic-fantasy-_-ancient-asia-film-score-7-471790.mp3
+│   │   │   ├── pojeng-epic-happy-love-guzheng-412659.mp3
+│   │   │   └── vprodmusic_asia_bgm-mystical-guzheng-journey-143598.mp3
+│   │   ├── Notes/
+│   │   │   ├── Ripple1.mp3
+│   │   │   ├── Ripple2.mp3
+│   │   │   ├── Ripple3.wav
+│   │   │   ├── Ripple4.wav
+│   │   │   ├── Ripple5.wav
+│   │   │   └── Ripple6.wav
+│   │   ├── analog-beats.mp3
+│   │   ├── forest.mp3
+│   │   ├── ocean.mp3
+│   │   └── rain.mp3
+│   ├── adaptive-icon.png
+│   ├── favicon.png
+│   ├── icon.png
+│   └── splash-icon.png
+├── backend/
+│   ├── config/
+│   │   └── supabase.js
+│   ├── data/
+│   │   ├── adhd.csv
+│   │   ├── adhd_cleaned.csv
+│   │   └── adhd_model_ready.csv
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── adhd_model.pkl
+│   │   ├── adhd_model_final.pkl
+│   │   ├── features.pkl
+│   │   ├── imputer.pkl
+│   │   ├── scaler.pkl
+│   │   ├── schemas.js
+│   │   └── shap_summary.png
+│   ├── routes/
+│   │   ├── ai.js
+│   │   ├── auth.js
+│   │   ├── exercises.js
+│   │   ├── focusSessions.js
+│   │   ├── habits.js
+│   │   ├── health.js
+│   │   ├── knowledge.js
+│   │   ├── notifications.js
+│   │   ├── profiles.js
+│   │   ├── statistics.js
+│   │   └── tasks.js
+│   ├── tests/
+│   │   ├── conftest.py
+│   │   ├── test_auth.py
+│   │   ├── test_health.py
+│   │   └── test_prediction.py
+│   ├── utils/
+│   │   └── crudRouteFactory.js
+│   ├── .env.example
+│   ├── app.js
+│   ├── app.py
+│   ├── Procfile
+│   ├── requirements.txt
+│   ├── schema.sql
+│   ├── server.js
+│   ├── test_sample.py
+│   └── train_model.py
+├── src/
+│   ├── assets/
+│   │   ├── animations/
+│   │   │   └── breathing.json
+│   │   ├── icons/
+│   │   │   └── happy.png
+│   │   └── images/
+│   │       └── onboarding1.png
+│   ├── components/
+│   │   ├── chatbot/
+│   │   │   └── MessageBubble.js
+│   │   ├── common/
+│   │   │   ├── ADHDButton.js
+│   │   │   ├── ADHDCard.js
+│   │   │   ├── AnimatedOrbsBackground.js
+│   │   │   ├── ButtonPrimary.js
+│   │   │   ├── CoinBalancePill.js
+│   │   │   ├── ErrorBoundary.js
+│   │   │   ├── GlassCard.js
+│   │   │   ├── HomeHeader.js
+│   │   │   ├── MainFeatureCard.js
+│   │   │   ├── QuickActionCard.js
+│   │   │   ├── QuoteCard.js
+│   │   │   ├── ThemedBackButton.js
+│   │   │   └── ThemeProvider.js
+│   │   ├── detection/
+│   │   │   ├── OptionCard.js
+│   │   │   └── QuestionCard.js
+│   │   ├── emotion/
+│   │   │   ├── BackgroundOrb.js
+│   │   │   └── MoodEmoji.js
+│   │   ├── focus/
+│   │   │   ├── ControlButtons.js
+│   │   │   ├── FocusSessionScheduler.js
+│   │   │   ├── SoundBottomSheet.js
+│   │   │   ├── SoundCard.js
+│   │   │   ├── StatsSection.js
+│   │   │   ├── TimerRing.js
+│   │   │   └── UnlockMusicCard.js
+│   │   ├── habits/
+│   │   │   ├── AddHabitBottomSheet.js
+│   │   │   └── StreakBar.js
+│   │   └── tasks/
+│   │       ├── AddTaskBottomSheet.js
+│   │       └── TaskCard.js
+│   ├── contexts/
+│   │   ├── AppDataContext.js
+│   │   ├── ProductivityContext.js
+│   │   └── ThemeContext.js
+│   ├── navigation/
+│   │   ├── AppNavigator.js
+│   │   └── TabNavigator.js
+│   ├── screens/
+│   │   ├── Auth/
+│   │   │   ├── LanguageThemeScreen.js
+│   │   │   ├── LoginScreen.js
+│   │   │   ├── OnboardingScreen.js
+│   │   │   ├── RegisterScreen.js
+│   │   │   ├── SplashIntroScreen.js
+│   │   │   └── WelcomeScreen.js
+│   │   ├── Chatbot/
+│   │   │   └── ChatbotScreen.js
+│   │   ├── Detection/
+│   │   │   ├── AssessmentResultScreen.js
+│   │   │   └── QuestionnaireScreen.js
+│   │   ├── Emotion/
+│   │   │   ├── BallonSession.js
+│   │   │   ├── CognitivePowerScreen.js
+│   │   │   ├── EmotionCategoryPlaceholderScreen.js
+│   │   │   ├── EmotionRegulationScreen.js
+│   │   │   ├── GroundingSession.js
+│   │   │   ├── HarmonicRipples.js
+│   │   │   ├── ImmediateReliefScreen.js
+│   │   │   ├── MeditationSession.js
+│   │   │   ├── MindfulGrowthScreen.js
+│   │   │   ├── NBackGame.js
+│   │   │   ├── PatternRecallGame.js
+│   │   │   ├── SoundscapesScreen.js
+│   │   │   ├── SplashSession.js
+│   │   │   └── StroopGame.js
+│   │   ├── Focus/
+│   │   │   ├── FocusScreen.js
+│   │   │   └── SessionSummaryScreen.js
+│   │   ├── Habits/
+│   │   │   ├── AddHabitBottomSheet.js
+│   │   │   └── HabitsScreen.js
+│   │   ├── Home/
+│   │   │   ├── HomeScreen.js
+│   │   │   ├── ProfileScreen.js
+│   │   │   └── SettingsScreen.js
+│   │   ├── Profile/
+│   │   │   ├── EditProfileScreen.js
+│   │   │   └── ProfileScreen.js
+│   │   ├── Reports/
+│   │   │   └── ReportsScreen.js
+│   │   ├── Rewards/
+│   │   │   ├── BadgesScreen.js
+│   │   │   └── RewardsScreen.js
+│   │   ├── Settings/
+│   │   │   └── SettingsScreen.js
+│   │   ├── Tasks/
+│   │   │   ├── AddTaskBottomSheet.js
+│   │   │   ├── CreateTaskScreen.js
+│   │   │   ├── TaskDetailsScreen.js
+│   │   │   ├── TaskHistoryScreen.js
+│   │   │   └── TasksScreen.js
+│   │   └── Timeline/
+│   │       └── TimelineScreen.js
+│   ├── services/
+│   │   ├── api.js
+│   │   └── notifications.js
+│   ├── theme/
+│   │   └── colors.js
+│   ├── utils/
+│   │   └── formatTime.js
+│   └── SplashScreen.js
+├── .gitignore
+├── App.js
+├── app.json
+├── babel.config.js
+├── eas.json
+├── index.js
+├── Jenkinsfile
+├── package-lock.json
+├── package.json
+├── project-structure.txt
+├── README.md
+├── setupStructure.js
+└── structure.py

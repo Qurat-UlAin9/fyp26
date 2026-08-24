@@ -26,6 +26,7 @@ function createUserCrudRouter({ table, allowedInsert = [], allowedUpdate = [], d
     const payload = { ...pick(req.body || {}, allowedInsert), user_id: req.user.id };
     const { data, error } = await supabaseAdmin.from(table).insert(payload).select('*').single();
     if (error) return res.status(400).json({ error: error.message });
+    req.app.get('io')?.to(`user:${req.user.id}`).emit(`${table}:created`, data);
     return res.status(201).json({ data });
   });
 
@@ -33,12 +34,14 @@ function createUserCrudRouter({ table, allowedInsert = [], allowedUpdate = [], d
     const payload = pick(req.body || {}, allowedUpdate);
     const { data, error } = await supabaseAdmin.from(table).update(payload).eq('id', req.params.id).eq('user_id', req.user.id).select('*').single();
     if (error) return res.status(400).json({ error: error.message });
+    req.app.get('io')?.to(`user:${req.user.id}`).emit(`${table}:updated`, data);
     return res.json({ data });
   });
 
   router.delete('/:id', async (req, res) => {
     const { error } = await supabaseAdmin.from(table).delete().eq('id', req.params.id).eq('user_id', req.user.id);
     if (error) return res.status(400).json({ error: error.message });
+    req.app.get('io')?.to(`user:${req.user.id}`).emit(`${table}:deleted`, { id: req.params.id });
     return res.status(204).send();
   });
 
