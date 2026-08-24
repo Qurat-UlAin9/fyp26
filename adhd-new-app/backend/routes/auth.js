@@ -18,9 +18,15 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body || {};
-  if (!email || !password) return res.status(400).json({ error: 'email and password are required' });
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { email, username, password } = req.body || {};
+  if (!(email || username) || !password) return res.status(400).json({ error: 'email/username and password are required' });
+  let loginEmail = email;
+  if (username && !String(username).includes('@')) {
+    const { data: profile, error: profileError } = await supabaseAdmin.from('profiles').select('email').eq('username', username).maybeSingle();
+    if (profileError || !profile?.email) return res.status(401).json({ error: 'Invalid email/username or password' });
+    loginEmail = profile.email;
+  }
+  const { data, error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
   if (error) return res.status(401).json({ error: error.message });
   return res.json({ user: data.user, session: data.session });
 });

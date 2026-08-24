@@ -1,5 +1,16 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  createHabit,
+  createTask,
+  deleteHabitRemote,
+  deleteTaskRemote,
+  getCurrentUser,
+  listHabits,
+  listTasks,
+  updateHabitRemote,
+  updateTaskRemote,
+} from '../services/api';
 
 const APP_DATA_KEY = 'adhd_app_data_v1';
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -25,6 +36,23 @@ const defaultHabitStats = {
 };
 
 const AppDataContext = createContext(null);
+
+const toTaskPayload = (task) => ({
+  title: task.title,
+  priority: String(task.priority || 'medium').toLowerCase(),
+  status: task.status || 'pending',
+  due_date: task.dueDate || null,
+  metadata: task,
+});
+const fromTaskPayload = (task) => ({ ...task.metadata, ...task, id: String(task.id), dueDate: task.due_date || task.metadata?.dueDate, themeId: task.metadata?.themeId || 'coral' });
+const toHabitPayload = (habit) => ({
+  title: habit.name,
+  frequency: 'daily',
+  active: true,
+  color: habit.gradient?.[0],
+  metadata: habit,
+});
+const fromHabitPayload = (habit) => ({ ...habit.metadata, ...habit, id: String(habit.id), name: habit.title, gradient: habit.metadata?.gradient || ['#FF9A8B', '#FF6A88'], timeSlots: habit.metadata?.timeSlots || ['Morning'], completions: habit.metadata?.completions || [false] });
 
 export function AppDataProvider({ children }) {
   const [tasks, setTasks] = useState([]);
@@ -54,13 +82,35 @@ export function AppDataProvider({ children }) {
     hydrate();
   }, []);
 
+  // The device cache keeps the UI usable offline. When a signed-in user opens the
+  // app, replace it with their server-owned tasks and habits.
+  useEffect(() => {
+    if (!hydrated) return;
+    getCurrentUser()
+      .then(async (user) => {
+        if (!user) return null;
+        const [taskResponse, habitResponse] = await Promise.all([listTasks(), listHabits()]);
+        setTasks((taskResponse.data || []).map(fromTaskPayload));
+        setHabits((habitResponse.data || []).map(fromHabitPayload));
+      })
+      .catch(() => undefined);
+  }, [hydrated]);
+
   useEffect(() => {
     if (!hydrated) return;
     AsyncStorage.setItem(APP_DATA_KEY, JSON.stringify({ tasks, habits, focusSessions, taskHistory, profile })).catch(() => undefined);
   }, [tasks, habits, focusSessions, taskHistory, profile, hydrated]);
 
-  const addTask = useCallback((taskObj) => {
+  const addTask = useCallback(async (taskObj) => {
     setTasks((prev) => [taskObj, ...prev]);
+
+    try {
+      const response = await createTask(toTaskPayload(taskObj));
+      const remoteTask = fromTaskPayload(response.data);
+      setTasks((prev) => prev.map((task) => (task.id === taskObj.id ? remoteTask : task)));
+    } catch (error) {
+      console.warn('Task was saved locally and will need syncing later.', error.message);
+    }
 
     const hour = Number.parseInt(taskObj.startHour, 10);
     if (!Number.isNaN(hour)) {
@@ -80,9 +130,17 @@ export function AppDataProvider({ children }) {
   }, []);
 
   const updateTask = useCallback((taskId, updater) => {
-    setTasks((prev) => prev.map((t) => (t.id === taskId ? updater(t) : t)));
+    setTasks((prev) => prev.map((t) => {
+      if (t.id !== taskId) return t;
+      const updated = updater(t);
+      updateTaskRemote(taskId, toTaskPayload(updated)).catch(() => undefined);
+      return updated;
+    }));
   }, []);
-  const deleteTask = useCallback((taskId) => setTasks((prev) => prev.filter((t) => t.id !== taskId)), []);
+  const deleteTask = useCallback((taskId) => {
+    setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    deleteTaskRemote(taskId).catch(() => undefined);
+  }, []);
 
   const toggleSubtask = useCallback((taskId, subtaskId) => {
     setTasks((prev) =>
@@ -95,18 +153,32 @@ export function AppDataProvider({ children }) {
     );
   }, []);
 
-  const addHabit = useCallback((habitObj) => setHabits((prev) => [...prev, habitObj]), []);
+  const addHabit = useCallback(async (habitObj) => {
+    setHabits((prev) => [...prev, habitObj]);
+    try {
+      const response = await createHabit(toHabitPayload(habitObj));
+      const remoteHabit = fromHabitPayload(response.data);
+      setHabits((prev) => prev.map((habit) => (habit.id === habitObj.id ? remoteHabit : habit)));
+    } catch (error) {
+      console.warn('Habit was saved locally and will need syncing later.', error.message);
+    }
+  }, []);
   const toggleHabitSlot = useCallback((habitId, slotIndex) => {
     setHabits((prev) =>
       prev.map((h) => {
         if (h.id !== habitId) return h;
         const updated = [...h.completions];
         updated[slotIndex] = !updated[slotIndex];
-        return { ...h, completions: updated };
+        const nextHabit = { ...h, completions: updated };
+        updateHabitRemote(habitId, toHabitPayload(nextHabit)).catch(() => undefined);
+        return nextHabit;
       })
     );
   }, []);
-  const deleteHabit = useCallback((habitId) => setHabits((prev) => prev.filter((h) => h.id !== habitId)), []);
+  const deleteHabit = useCallback((habitId) => {
+    setHabits((prev) => prev.filter((h) => h.id !== habitId));
+    deleteHabitRemote(habitId).catch(() => undefined);
+  }, []);
 
   const addFocusSession = useCallback((session) => {
     setFocusSessions((prev) => [{ id: Date.now().toString(), startMin: 0, durationMins: 25, isoKey: todayISO(), ...session }, ...prev]);
