@@ -1,83 +1,240 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+//compatibility layer
 
-const ProductivityContext = createContext(null);
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
-const initialTasks = [
-  {
-    id: 't1',
-    title: 'Complete assignment draft',
-    deadline: '2026-05-16',
-    dayKey: 'Mon',
-    startHour: 10,
-    duration: 2,
-    expanded: false,
-    subtasks: [
-      { id: '1-1', title: 'Create outline', done: true },
-      { id: '1-2', title: 'Write intro', done: false },
-      { id: '1-3', title: 'Add references', done: false },
-    ],
-  },
-  {
-    id: 't2',
-    title: 'Prepare presentation',
-    deadline: '2026-05-17',
-    dayKey: 'Tue',
-    startHour: 14,
-    duration: 1,
-    expanded: false,
-    subtasks: [
-      { id: '2-1', title: 'Gather slides', done: true },
-      { id: '2-2', title: 'Add speaker notes', done: true },
-      { id: '2-3', title: 'Practice once', done: false },
-    ],
-  },
-];
+import { useAppData } from './AppDataContext';
 
-export function ProductivityProvider({ children }) {
-  const [tasks, setTasks] = useState(initialTasks);
-  const [activeSessionTask, setActiveSessionTask] = useState(null);
-  const [profile] = useState({ firstName: 'Alex' });
-  const [mood, setMood] = useState('Steady');
+const ProductivityContext =
+  createContext(null);
 
-  const addTask = (task) => {
-    const dayKeys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const id = Date.now().toString();
-    setTasks((prev) => [
-      ...prev,
-      {
-        id,
-        title: task.title,
-        deadline: task.deadline || '2026-05-20',
-        dayKey: task.dayKey || dayKeys[new Date().getDay()],
-        startHour: Number(task.startHour) || 9,
-        duration: Number(task.duration) || 1,
-        expanded: false,
-        subtasks: task.subtasks || [],
+export function ProductivityProvider({
+  children,
+}) {
+  const {
+    tasks,
+    addTask: addBackendTask,
+    updateTask,
+    deleteTask,
+    focusSessions,
+    profile,
+  } = useAppData();
+
+  const [
+    activeSessionTask,
+    setActiveSessionTask,
+  ] = useState(null);
+
+  const [mood, setMood] =
+    useState('Steady');
+
+  /*
+   * Preserve the task shape expected by
+   * existing Productivity screens.
+   */
+  const productivityTasks =
+    useMemo(
+      () =>
+        tasks.map((task) => ({
+          ...task,
+
+          id: task.id,
+
+          title:
+            task.title || '',
+
+          deadline:
+            task.dueDate ||
+            task.due_date ||
+            null,
+
+          dayKey:
+            task.dueDate
+              ? new Date(
+                  task.dueDate
+                ).toLocaleDateString(
+                  'en-US',
+                  {
+                    weekday: 'short',
+                  }
+                )
+              : null,
+
+          startHour:
+            task.startHour || 9,
+
+          duration:
+            task.estimatedMinutes
+              ? Math.max(
+                  1,
+                  Math.ceil(
+                    task.estimatedMinutes /
+                      60
+                  )
+                )
+              : 1,
+
+          expanded:
+            Boolean(task.expanded),
+
+          subtasks:
+            Array.isArray(
+              task.subtasks
+            )
+              ? task.subtasks
+              : [],
+        })),
+      [tasks]
+    );
+
+  /*
+   * This function now creates the task
+   * in Supabase through the backend.
+   */
+  const addTask = async (task) => {
+    const payload = {
+      title: task.title,
+
+      description:
+        task.description ||
+        null,
+
+      notes:
+        task.notes ||
+        null,
+
+      status:
+        task.status ||
+        'Pending',
+
+      priority:
+        task.priority ||
+        'Medium',
+
+      difficulty:
+        task.difficulty ||
+        'Medium',
+
+      start_date:
+        task.start_date ||
+        null,
+
+      due_date:
+        task.due_date ||
+        task.deadline ||
+        null,
+
+      estimated_minutes:
+        task.estimated_minutes ||
+        (
+          task.duration
+            ? Number(task.duration) *
+              60
+            : null
+        ),
+
+      metadata: {
+        ...(task.metadata || {}),
+
+        dayKey:
+          task.dayKey ||
+          null,
+
+        startHour:
+          task.startHour ||
+          null,
+
+        subtasks:
+          task.subtasks ||
+          [],
       },
-    ]);
+    };
+
+    return addBackendTask(
+      payload
+    );
   };
 
   const value = useMemo(
     () => ({
-      tasks,
-      setTasks,
+      /*
+       * Backend-backed tasks
+       */
+      tasks:
+        productivityTasks,
+
+      /*
+       * Existing screen compatibility
+       */
+      setTasks: () => {
+        console.warn(
+          'setTasks is deprecated. Use addTask, updateTask or deleteTask so changes are synchronized with the backend.'
+        );
+      },
+
       addTask,
+
+      updateTask,
+
+      deleteTask,
+
+      /*
+       * Focus
+       */
+      focusSessions,
+
       activeSessionTask,
+
       setActiveSessionTask,
+
+      /*
+       * Profile
+       */
       profile,
+
+      /*
+       * Mood
+       */
       mood,
+
       setMood,
     }),
-    [tasks, activeSessionTask, profile, mood]
+    [
+      productivityTasks,
+      addTask,
+      updateTask,
+      deleteTask,
+      focusSessions,
+      activeSessionTask,
+      profile,
+      mood,
+    ]
   );
 
-  return <ProductivityContext.Provider value={value}>{children}</ProductivityContext.Provider>;
+  return (
+    <ProductivityContext.Provider
+      value={value}
+    >
+      {children}
+    </ProductivityContext.Provider>
+  );
 }
 
 export function useProductivity() {
-  const ctx = useContext(ProductivityContext);
+  const ctx =
+    useContext(
+      ProductivityContext
+    );
+
   if (!ctx) {
-    throw new Error('useProductivity must be used within ProductivityProvider');
+    throw new Error(
+      'useProductivity must be used within <ProductivityProvider>'
+    );
   }
+
   return ctx;
 }

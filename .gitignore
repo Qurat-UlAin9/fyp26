@@ -2,12 +2,19 @@
 
 # dependencies
 node_modules/
-backend/venv/
+.venv/
+
+.vscode
+
 # Expo
 .expo/
 dist/
 web-build/
 expo-env.d.ts
+
+# Datasets
+*.csv
+
 
 # Native
 .kotlin/
@@ -42,3 +49,5 @@ backend/.env
 /ios
 /android
 
+generate_structure.py
+setupStructure.js
