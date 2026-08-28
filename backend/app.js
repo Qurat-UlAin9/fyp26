@@ -22,6 +22,7 @@ app.use('/api/statistics', require('./routes/statistics'));
 app.use('/api/exercises', require('./routes/exercises'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/knowledge', require('./routes/knowledge'));
+app.use('/api/assessments', require('./routes/assessments'));
 
 app.use((req, res) => res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` }));
 app.use((err, _req, res, _next) => res.status(500).json({ error: err.message || 'Internal server error' }));

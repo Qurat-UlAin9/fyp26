@@ -20,17 +20,17 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-       "package": "com.qura890.ADHDAPPNEW",
+      "package": "com.qura890.ADHDAPPNEW",
       "usesCleartextTraffic": true,
-      "edgeToEdgeEnabled": true,
-      "package": "com.qura890.ADHDAPPNEW"
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font",
-      "expo-localization"
+      "expo-localization",
+      "expo-status-bar"
     ],
     "extra": {
       "eas": {

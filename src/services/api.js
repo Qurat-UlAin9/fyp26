@@ -638,20 +638,11 @@ export async function deleteAIConversation(id) {
    ADHD ASSESSMENT
 ========================================================= */
 
-/*
- * NOTE:
- * Your current app.js does NOT register a /detection route.
- *
- * Therefore this function is kept only for compatibility with
- * your old frontend code. It will NOT work until you add the
- * corresponding backend route.
- */
-export async function submitAssessment(answers, userId) {
-  return request('/detection/predict', {
+export async function submitAssessment(answers) {
+  return request('/api/assessments', {
     method: 'POST',
     body: JSON.stringify({
       answers,
-      user_id: userId,
     }),
   });
 }
