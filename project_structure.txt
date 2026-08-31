@@ -35,12 +35,16 @@ fyp26/
 │   ├── config/
 │   │   └── supabase.js
 │   ├── data/
+│   │   ├── executive_function/
+│   │   │   ├── ef_raw.sav
+│   │   │   └── ef_raw.xlsx
 │   │   ├── adhd.csv
 │   │   ├── adhd_cleaned.csv
 │   │   └── adhd_model_ready.csv
 │   ├── middleware/
 │   │   └── auth.js
 │   ├── models/
+│   │   ├── executive_function/
 │   │   ├── adhd_model.pkl
 │   │   ├── adhd_model_final.pkl
 │   │   ├── features.pkl
@@ -50,6 +54,7 @@ fyp26/
 │   │   └── shap_summary.png
 │   ├── routes/
 │   │   ├── ai.js
+│   │   ├── assessments.js
 │   │   ├── auth.js
 │   │   ├── exercises.js
 │   │   ├── focusSessions.js
@@ -60,6 +65,7 @@ fyp26/
 │   │   ├── profiles.js
 │   │   ├── statistics.js
 │   │   └── tasks.js
+│   ├── scripts/
 │   ├── tests/
 │   │   ├── conftest.py
 │   │   ├── test_auth.py
@@ -75,6 +81,15 @@ fyp26/
 │   ├── server.js
 │   ├── test_sample.py
 │   └── train_model.py
+├── rag/
+│   ├── output/
+│   │   ├── reddit_adhd_analysis_TEST.csv
+│   │   ├── reddit_adhd_cleaned_TEST.csv
+│   │   ├── reddit_adhd_cleaned_TEST.parquet
+│   │   └── reddit_adhd_cleaning_report_TEST.csv
+│   ├── raw/
+│   └── scripts/
+│       └── reddit_adhd_cleaning.py
 ├── src/
 │   ├── assets/
 │   │   ├── animations/
@@ -198,9 +213,11 @@ fyp26/
 ├── eas.json
 ├── generate_structure.py
 ├── index.js
+├── inspect_ef_dataset.py
 ├── Jenkinsfile
 ├── package-lock.json
 ├── package.json
-├── project-structure.txt
+├── project_structure.txt
 ├── README.md
-└── setupStructure.js
+├── setupStructure.js
+└── supabase_assessments.sql

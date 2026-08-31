@@ -20,26 +20,36 @@ function detectHostIp() {
 }
 
 function getApiUrl() {
-  // If EXPO_PUBLIC_API_URL exists, use it.
+  /*
+   * Optional:
+   * EXPO_PUBLIC_API_URL=http://192.168.x.x:5000
+   */
   const envUrl = process.env.EXPO_PUBLIC_API_URL;
 
   if (envUrl) {
     return envUrl.replace(/\/$/, '');
   }
 
-  // Physical device / Expo development
+  /*
+   * Expo development on a physical device.
+   * Automatically use the computer's LAN IP.
+   */
   const hostIp = detectHostIp();
 
   if (hostIp) {
     return `http://${hostIp}:5000`;
   }
 
-  // Android emulator
+  /*
+   * Android emulator -> host computer
+   */
   if (Platform.OS === 'android') {
     return 'http://10.0.2.2:5000';
   }
 
-  // Web / iOS simulator / fallback
+  /*
+   * Web / iOS simulator / fallback
+   */
   return 'http://127.0.0.1:5000';
 }
 
@@ -103,20 +113,20 @@ async function clearSession() {
 }
 
 /* =========================================================
-   GENERIC API REQUEST
+   GENERIC REQUEST
 ========================================================= */
 
 async function request(path, options = {}) {
   const token = await getAccessToken();
 
   const headers = {
+    Accept: 'application/json',
     'Content-Type': 'application/json',
     ...(options.headers || {}),
   };
 
   /*
-   * Protected backend routes use requireAuth middleware.
-   * Therefore send the Supabase access token.
+   * Protected backend routes use requireAuth.
    */
   if (token) {
     headers.Authorization = `Bearer ${token}`;
@@ -136,7 +146,8 @@ async function request(path, options = {}) {
     );
   }
 
-  const contentType = response.headers.get('content-type') || '';
+  const contentType =
+    response.headers.get('content-type') || '';
 
   let data;
 
@@ -148,6 +159,13 @@ async function request(path, options = {}) {
   }
 
   if (!response.ok) {
+    /*
+     * If token expired, remove local authentication.
+     */
+    if (response.status === 401) {
+      await clearSession();
+    }
+
     throw new Error(
       data?.error ||
       data?.message ||
@@ -170,20 +188,6 @@ export async function checkHealth() {
    AUTH
 ========================================================= */
 
-/*
- * Register
- *
- * Backend:
- * POST /api/auth/register
- *
- * Example:
- * {
- *   email,
- *   password,
- *   full_name,
- *   username
- * }
- */
 export async function registerUser(payload) {
   const data = await request('/api/auth/register', {
     method: 'POST',
@@ -194,6 +198,10 @@ export async function registerUser(payload) {
     await saveUser(data.user);
   }
 
+  /*
+   * Supabase may return null session when email confirmation
+   * is enabled. In that case the user must log in separately.
+   */
   if (data?.session) {
     await saveSession(data.session);
   }
@@ -201,12 +209,6 @@ export async function registerUser(payload) {
   return data;
 }
 
-/*
- * Login
- *
- * Backend:
- * POST /api/auth/login
- */
 export async function loginUser(payload) {
   const data = await request('/api/auth/login', {
     method: 'POST',
@@ -224,19 +226,10 @@ export async function loginUser(payload) {
   return data;
 }
 
-/*
- * Logout
- *
- * Your current backend does not have a logout route,
- * so we clear the locally stored user/session.
- */
 export async function logoutUser() {
   await clearSession();
 }
 
-/*
- * Get locally stored user.
- */
 export async function getCurrentUser() {
   const raw = await AsyncStorage.getItem(USER_STORAGE_KEY);
 
@@ -252,19 +245,10 @@ export async function getCurrentUser() {
   }
 }
 
-/*
- * Get locally stored session.
- */
 export async function getSession() {
   return getStoredSession();
 }
 
-/*
- * Verify token with backend.
- *
- * Backend:
- * GET /api/auth/me
- */
 export async function getMe() {
   return request('/api/auth/me');
 }
@@ -273,16 +257,10 @@ export async function getMe() {
    PROFILE
 ========================================================= */
 
-/*
- * GET /api/profile
- */
 export async function getProfile() {
   return request('/api/profile');
 }
 
-/*
- * PUT /api/profile
- */
 export async function updateProfile(payload) {
   return request('/api/profile', {
     method: 'PUT',
@@ -294,16 +272,10 @@ export async function updateProfile(payload) {
    ADHD PROFILE
 ========================================================= */
 
-/*
- * GET /api/profile/adhd
- */
 export async function getADHDProfile() {
   return request('/api/profile/adhd');
 }
 
-/*
- * PUT /api/profile/adhd
- */
 export async function updateADHDProfile(payload) {
   return request('/api/profile/adhd', {
     method: 'PUT',
@@ -315,16 +287,10 @@ export async function updateADHDProfile(payload) {
    USER PREFERENCES
 ========================================================= */
 
-/*
- * GET /api/profile/preferences
- */
 export async function getPreferences() {
   return request('/api/profile/preferences');
 }
 
-/*
- * PUT /api/profile/preferences
- */
 export async function updatePreferences(payload) {
   return request('/api/profile/preferences', {
     method: 'PUT',
@@ -336,23 +302,14 @@ export async function updatePreferences(payload) {
    TASKS
 ========================================================= */
 
-/*
- * GET /api/tasks
- */
 export async function getTasks() {
   return request('/api/tasks');
 }
 
-/*
- * GET /api/tasks/:id
- */
 export async function getTask(id) {
   return request(`/api/tasks/${id}`);
 }
 
-/*
- * POST /api/tasks
- */
 export async function createTask(payload) {
   return request('/api/tasks', {
     method: 'POST',
@@ -360,9 +317,6 @@ export async function createTask(payload) {
   });
 }
 
-/*
- * PATCH /api/tasks/:id
- */
 export async function updateTask(id, payload) {
   return request(`/api/tasks/${id}`, {
     method: 'PATCH',
@@ -370,9 +324,6 @@ export async function updateTask(id, payload) {
   });
 }
 
-/*
- * DELETE /api/tasks/:id
- */
 export async function deleteTask(id) {
   return request(`/api/tasks/${id}`, {
     method: 'DELETE',
@@ -383,23 +334,14 @@ export async function deleteTask(id) {
    HABITS
 ========================================================= */
 
-/*
- * GET /api/habits
- */
 export async function getHabits() {
   return request('/api/habits');
 }
 
-/*
- * GET /api/habits/:id
- */
 export async function getHabit(id) {
   return request(`/api/habits/${id}`);
 }
 
-/*
- * POST /api/habits
- */
 export async function createHabit(payload) {
   return request('/api/habits', {
     method: 'POST',
@@ -407,9 +349,6 @@ export async function createHabit(payload) {
   });
 }
 
-/*
- * PATCH /api/habits/:id
- */
 export async function updateHabit(id, payload) {
   return request(`/api/habits/${id}`, {
     method: 'PATCH',
@@ -417,9 +356,6 @@ export async function updateHabit(id, payload) {
   });
 }
 
-/*
- * DELETE /api/habits/:id
- */
 export async function deleteHabit(id) {
   return request(`/api/habits/${id}`, {
     method: 'DELETE',
@@ -430,23 +366,14 @@ export async function deleteHabit(id) {
    FOCUS SESSIONS
 ========================================================= */
 
-/*
- * GET /api/focus-sessions
- */
 export async function getFocusSessions() {
   return request('/api/focus-sessions');
 }
 
-/*
- * GET /api/focus-sessions/:id
- */
 export async function getFocusSession(id) {
   return request(`/api/focus-sessions/${id}`);
 }
 
-/*
- * POST /api/focus-sessions
- */
 export async function createFocusSession(payload) {
   return request('/api/focus-sessions', {
     method: 'POST',
@@ -454,9 +381,6 @@ export async function createFocusSession(payload) {
   });
 }
 
-/*
- * PATCH /api/focus-sessions/:id
- */
 export async function updateFocusSession(id, payload) {
   return request(`/api/focus-sessions/${id}`, {
     method: 'PATCH',
@@ -464,9 +388,6 @@ export async function updateFocusSession(id, payload) {
   });
 }
 
-/*
- * DELETE /api/focus-sessions/:id
- */
 export async function deleteFocusSession(id) {
   return request(`/api/focus-sessions/${id}`, {
     method: 'DELETE',
@@ -477,23 +398,14 @@ export async function deleteFocusSession(id) {
    NOTIFICATIONS
 ========================================================= */
 
-/*
- * GET /api/notifications
- */
 export async function getNotifications() {
   return request('/api/notifications');
 }
 
-/*
- * GET /api/notifications/:id
- */
 export async function getNotification(id) {
   return request(`/api/notifications/${id}`);
 }
 
-/*
- * POST /api/notifications
- */
 export async function createNotification(payload) {
   return request('/api/notifications', {
     method: 'POST',
@@ -501,9 +413,6 @@ export async function createNotification(payload) {
   });
 }
 
-/*
- * PATCH /api/notifications/:id
- */
 export async function updateNotification(id, payload) {
   return request(`/api/notifications/${id}`, {
     method: 'PATCH',
@@ -511,9 +420,6 @@ export async function updateNotification(id, payload) {
   });
 }
 
-/*
- * DELETE /api/notifications/:id
- */
 export async function deleteNotification(id) {
   return request(`/api/notifications/${id}`, {
     method: 'DELETE',
@@ -524,30 +430,18 @@ export async function deleteNotification(id) {
    STATISTICS
 ========================================================= */
 
-/*
- * GET /api/statistics/summary
- */
 export async function getStatisticsSummary() {
   return request('/api/statistics/summary');
 }
 
-/*
- * GET /api/statistics/daily
- */
 export async function getDailyStatistics() {
   return request('/api/statistics/daily');
 }
 
-/*
- * GET /api/statistics/weekly
- */
 export async function getWeeklyStatistics() {
   return request('/api/statistics/weekly');
 }
 
-/*
- * GET /api/statistics/monthly
- */
 export async function getMonthlyStatistics() {
   return request('/api/statistics/monthly');
 }
@@ -556,16 +450,10 @@ export async function getMonthlyStatistics() {
    EXERCISES
 ========================================================= */
 
-/*
- * GET /api/exercises/categories
- */
 export async function getExerciseCategories() {
   return request('/api/exercises/categories');
 }
 
-/*
- * GET /api/exercises
- */
 export async function getExercises() {
   return request('/api/exercises');
 }
@@ -575,39 +463,46 @@ export async function getExercises() {
 ========================================================= */
 
 /*
- * GET /api/knowledge/search?q=...
+ * IMPORTANT:
+ *
+ * The frontend does NOT communicate directly with Pinecone.
+ *
+ * Frontend
+ *    ↓
+ * Backend
+ *    ↓
+ * Pinecone / Supabase knowledge layer
+ *
+ * This endpoint currently represents the backend knowledge
+ * search endpoint. When your backend RAG endpoint is upgraded
+ * to Pinecone retrieval, this frontend function does not need
+ * to change as long as the API contract remains the same.
  */
-export async function searchKnowledge(query) {
-  const encodedQuery = encodeURIComponent(String(query || '').trim());
 
-  if (!encodedQuery) {
+export async function searchKnowledge(query) {
+  const value = String(query || '').trim();
+
+  if (!value) {
     throw new Error('Knowledge search query is required');
   }
 
-  return request(`/api/knowledge/search?q=${encodedQuery}`);
+  return request(
+    `/api/knowledge/search?q=${encodeURIComponent(value)}`
+  );
 }
 
 /* =========================================================
    AI CONVERSATIONS
 ========================================================= */
 
-/*
- * GET /api/ai
- */
 export async function getAIConversations() {
   return request('/api/ai');
 }
 
-/*
- * GET /api/ai/:id
- */
 export async function getAIConversation(id) {
   return request(`/api/ai/${id}`);
 }
 
-/*
- * POST /api/ai
- */
 export async function createAIConversation(payload) {
   return request('/api/ai', {
     method: 'POST',
@@ -615,9 +510,6 @@ export async function createAIConversation(payload) {
   });
 }
 
-/*
- * PATCH /api/ai/:id
- */
 export async function updateAIConversation(id, payload) {
   return request(`/api/ai/${id}`, {
     method: 'PATCH',
@@ -625,12 +517,17 @@ export async function updateAIConversation(id, payload) {
   });
 }
 
-/*
- * DELETE /api/ai/:id
- */
 export async function deleteAIConversation(id) {
   return request(`/api/ai/${id}`, {
     method: 'DELETE',
+  });
+}
+
+
+export async function sendChatMessage(conversationId, message) {
+  return request('/api/ai/chat', {
+    method: 'POST',
+    body: JSON.stringify({ conversationId, message }),
   });
 }
 
@@ -638,11 +535,22 @@ export async function deleteAIConversation(id) {
    ADHD ASSESSMENT
 ========================================================= */
 
-export async function submitAssessment(answers) {
-  return request('/api/assessments', {
+/*
+ * Your current backend app.js does NOT register:
+ *
+ * /detection/predict
+ *
+ * Therefore this remains a compatibility function only.
+ *
+ * Do not use it until the assessment backend route exists.
+ */
+
+export async function submitAssessment(answers, userId) {
+  return request('/detection/predict', {
     method: 'POST',
     body: JSON.stringify({
       answers,
+      user_id: userId,
     }),
   });
 }

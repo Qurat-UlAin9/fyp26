@@ -1,0 +1,3685 @@
+[PAGE 1]
+CLINICAL PRACTICE GUIDELINE
+Clinical Practice Guideline for the
+Diagnosis, Evaluation, and Treatment of
+Attention-Deﬁcit/Hyperactivity
+Disorder in Children and Adolescents
+Mark L. Wolraich, MD, FAAP,a Joseph F. Hagan, Jr, MD, FAAP,b,c Carla Allan, PhD,d,e Eugenia Chan, MD, MPH, FAAP,f,g
+Dale Davison, MSpEd, PCC,h,i Marian Earls, MD, MTS, FAAP,j,k Steven W. Evans, PhD,l,m Susan K. Flinn, MA,n
+Tanya Froehlich, MD, MS, FAAP,o,p Jennifer Frost, MD, FAAFP,q,r Joseph R. Holbrook, PhD, MPH,s
+Christoph Ulrich Lehmann, MD, FAAP,t Herschel Robert Lessin, MD, FAAP,u Kymika Okechukwu, MPA,v
+Karen L. Pierce, MD, DFAACAP,w,x Jonathan D. Winner, MD, FAAP,y William Zurhellen, MD, FAAP,z SUBCOMMITTEE ON CHILDREN AND
+ADOLESCENTS WITH ATTENTION-DEFICIT/HYPERACTIVE DISORDER
+abstract
+Attention-deﬁcit/hyperactivity disorder (ADHD) is one of the most common
+neurobehavioral disorders of childhood and can profoundly affect children’s
+academic achievement, well-being, and social interactions. The American Academy
+of Pediatrics ﬁrst published clinical recommendations for evaluation and
+diagnosis of pediatric ADHD in 2000; recommendations for treatment followed
+in 2001. The guidelines were revised in 2011 and published with an accompanying
+process of care algorithm (PoCA) providing discrete and manageable steps by
+which clinicians could fulﬁll the clinical guideline’s recommendations. Since the
+release of the 2011 guideline, the Diagnostic and Statistical Manual of Mental
+Disorders has been revised to the ﬁfth edition, and new ADHD-related research
+has been published. These publications do not support dramatic changes to
+the previous recommendations. Therefore, only incremental updates have been
+made in this guideline revision, including the addition of a key action statement
+related to diagnosis and treatment of comorbid conditions in children and
+adolescents with ADHD. The accompanying process of care algorithm has also
+been updated to assist in implementing the guideline recommendations.
+Throughout the process of revising the guideline and algorithm, numerous
+systemic barriers were identiﬁed that restrict and/or hamper pediatric clinicians’
+ability to adopt their recommendations. Therefore, the subcommittee created
+a companion article (available in the Supplemental Information) on systemic
+barriers to the care of children and adolescents with ADHD, which identiﬁes the
+major systemic-level barriers and presents recommendations to address those
+barriers; in this article, we support the recommendations of the clinical practice
+guideline and accompanying process of care algorithm.
+aSection of Developmental and Behavioral Pediatrics, University of
+Oklahoma, Oklahoma City, Oklahoma; bDepartment of Pediatrics, The
+Robert Larner, MD, College of Medicine, The University of Vermont,
+Burlington, Vermont; cHagan, Rinehart, and Connolly Pediatricians,
+PLLC, Burlington, Vermont; dDivision of Developmental and Behavioral
+Health, Department of Pediatrics, Children’s Mercy Kansas City, Kansas
+City, Missouri; eSchool of Medicine, University of Missouri-Kansas City,
+Kansas City, Missouri; fDivision of Developmental Medicine, Boston
+Children’s Hospital, Boston, Massachusetts; gHarvard Medical School,
+Harvard University, Boston, Massachusetts; hChildren and Adults with
+Attention-Deﬁcit/Hyperactivity Disorder, Lanham, Maryland; iDale
+Davison, LLC, Skokie, Illinois; jCommunity Care of North Carolina,
+Raleigh, North Carolina; kSchool of Medicine, University of North
+Carolina, Chapel Hill, North Carolina; lDepartment of Psychology, Ohio
+University, Athens, Ohio; mCenter for Intervention Research in Schools,
+Ohio University, Athens, Ohio; nAmerican Academy of Pediatrics,
+Alexandria, Virginia; oDepartment of Pediatrics, University of
+Cincinnati, Cincinnati, Ohio; pCincinnati Children’s Hospital Medical
+Center, Cincinnati, Ohio; qSwope Health Services, Kansas City, Kansas;
+rAmerican Academy of Family Physicians, Leawood, Kansas; sNational
+Center on Birth Defects and Developmental Disabilities, Centers for
+Disease Control and Prevention, Atlanta, Georgia; tDepartments of
+Biomedical Informatics and Pediatrics, Vanderbilt University, Nashville,
+Tennessee; uThe Children’s Medical Group, Poughkeepsie, New York;
+To cite: Wolraich ML, Hagan JF, Allan C, et al. AAP
+SUBCOMMITTEE ON CHILDREN AND ADOLESCENTS WITH
+ATTENTION-DEFICIT/HYPERACTIVE DISORDER. Clinical Practice
+Guideline for the Diagnosis, Evaluation, and Treatment of
+Attention-Deﬁcit/Hyperactivity Disorder in Children and
+Adolescents. Pediatrics. 2019;144(4):e20192528
+PEDIATRICS Volume 144, number 4, October 2019:e20192528
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 1]
+
+[PAGE 2]
+INTRODUCTION
+This article updates and replaces the
+2011 clinical practice guideline
+revision published by the American
+Academy of Pediatrics (AAP), “Clinical
+Practice Guideline: Diagnosis and
+Evaluation of the Child with
+Attention-Deﬁcit/Hyperactivity
+Disorder.”1 This guideline, like the
+previous document, addresses the
+evaluation, diagnosis, and treatment
+of attention-deﬁcit/hyperactivity
+disorder (ADHD) in children from age
+4 years to their 18th birthday, with
+special guidance provided for ADHD
+care for preschool-aged children and
+adolescents. (Note that for the
+purposes of this document,
+“preschool-aged” refers to children
+from age 4 years to the sixth
+birthday.) Pediatricians and other
+primary care clinicians (PCCs) may
+continue to provide care after
+18 years of age, but care beyond this
+age was not studied for this guideline.
+Since 2011, much research has
+occurred, and the Diagnostic and
+Statistical Manual of Mental Disorders,
+Fifth Edition (DSM-5), has been
+released. The new research and DSM-
+5 do not, however, support dramatic
+changes to the previous
+recommendations. Hence, this new
+guideline includes only incremental
+updates to the previous guideline.
+One such update is the addition of
+a key action statement (KAS) about
+the diagnosis and treatment of
+coexisting or comorbid conditions in
+children and adolescents with ADHD.
+The subcommittee uses the term
+“comorbid,” to be consistent with the
+DSM-5.
+Since 2011, the release of new
+research reﬂects an increased
+understanding and recognition of
+ADHD’s prevalence and
+epidemiology; the challenges it raises
+for children and families; the need for
+a comprehensive clinical resource for
+the evaluation, diagnosis, and
+treatment of pediatric ADHD; and the
+barriers that impede the
+implementation of such a resource. In
+response, this guideline is supported
+by 2 accompanying documents,
+available in the Supplemental
+Information: (1) a process of care
+algorithm (PoCA) for the diagnosis
+and treatment of children and
+adolescents with ADHD and (2) an
+article on systemic barriers to the
+care of children and adolescents with
+ADHD. These supplemental
+documents are designed to aid PCCs
+in implementing the formal
+recommendations for the evaluation,
+diagnosis, and treatment of children
+and adolescents with ADHD. Although
+this document is speciﬁc to children
+and adolescents in the United States
+in some of its recommendations,
+international stakeholders can modify
+speciﬁc content (ie, educational laws
+about accommodations, etc) as
+needed. (Prevention is addressed in
+the Mental Health Task Force
+recommendations.2)
+PoCA for the Diagnosis and
+Treatment of Children and
+Adolescents With ADHD
+In this revised guideline and
+accompanying PoCA, we recognize
+that evaluation, diagnosis, and
+treatment are a continuous process.
+The PoCA provides recommendations
+for implementing the guideline steps,
+although there is less evidence for the
+PoCA than for the guidelines. The
+section on evaluating and treating
+comorbidities has also been expanded
+in the PoCA document.
+Systems Barriers to the Care of
+Children and Adolescents With ADHD
+There are many system-level barriers
+that hamper the adoption of the best-
+practice recommendations contained
+in the clinical practice guideline and
+the PoCA. The procedures
+recommended in this guideline
+necessitate spending more time with
+patients and their families,
+developing a care management
+system of contacts with school and
+other community stakeholders, and
+providing continuous, coordinated
+care to the patient and his or her
+family. There is some evidence that
+African American and Latino children
+are less likely to have ADHD
+diagnosed and are less likely to be
+treated for ADHD. Special attention
+should be given to these populations
+when assessing comorbidities as they
+relate to ADHD and when treating for
+ADHD symptoms.3 Given the
+nationwide problem of limited access
+to mental health clinicians,4
+pediatricians and other PCCs are
+increasingly called on to provide
+services to patients with ADHD and to
+their families. In addition, the AAP
+holds that primary care pediatricians
+should be prepared to diagnose and
+manage mild-to-moderate ADHD,
+anxiety, depression, and problematic
+substance use, as well as co-manage
+patients who have more severe
+conditions with mental health
+professionals. Unfortunately, third-
+party payers seldom pay
+appropriately for these time-
+consuming services.5,6
+To assist pediatricians and other
+PCCs in overcoming such obstacles,
+the companion article on systemic
+barriers to the care of children and
+adolescents with ADHD reviews the
+barriers and makes recommendations
+to address them to enhance care for
+children and adolescents with ADHD.
+ADHD EPIDEMIOLOGY AND SCOPE
+Prevalence estimates of ADHD vary
+on the basis of differences in research
+methodologies, the various age
+groups being described, and changes
+in diagnostic criteria over time.7
+Authors of a recent meta-analysis
+calculated a pooled worldwide ADHD
+prevalence of 7.2% among children8;
+estimates from some community-
+based samples are somewhat higher,
+at 8.7% to 15.5%.9,10 National survey
+data from 2016 indicate that 9.4% of
+children in the United States 2 to
+17 years of age have ever had an
+ADHD diagnosis, including 2.4% of
+children 2 to 5 years of age.11 In that
+2
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 2]
+
+[PAGE 3]
+national survey, 8.4% of children 2 to
+17 years of age currently had ADHD,
+representing 5.4 million children.11
+Among children and adolescents with
+current ADHD, almost two-thirds
+were taking medication, and
+approximately half had received
+behavioral treatment of ADHD in the
+past year. Nearly one quarter had
+received neither type of treatment of
+ADHD.11
+Symptoms of ADHD occur in
+childhood, and most children with
+ADHD will continue to have
+symptoms and impairment through
+adolescence and into adulthood.
+According to a 2014 national survey,
+the median age of diagnosis was
+7 years; approximately one-third of
+children were diagnosed before
+6 years of age.12 More than half of
+these children were ﬁrst diagnosed
+by a PCC, often a pediatrician.12 As
+individuals with ADHD enter
+adolescence, their overt hyperactive
+and impulsive symptoms tend to
+decline, whereas their inattentive
+symptoms tend to persist.13,14
+Learning and language problems are
+common comorbid conditions with
+ADHD.15
+Boys are more than twice as likely as
+girls to receive a diagnosis of
+ADHD,9,11,16 possibly because
+hyperactive behaviors, which are
+easily observable and potentially
+disruptive, are seen more frequently
+in boys. The majority of both boys
+and girls with ADHD also meet
+diagnostic criteria for another mental
+disorder.17,18 Boys are more likely to
+exhibit externalizing conditions like
+oppositional deﬁant disorder or
+conduct disorder.17,19,20 Recent
+research has established that girls
+with ADHD are more likely than boys
+to have a comorbid internalizing
+condition like anxiety or
+depression.21
+Although there is a greater risk of
+receiving a diagnosis of ADHD for
+children who are the youngest in
+their class (who are therefore less
+developmentally capable of
+compensating for their weaknesses),
+for most children, retention is not
+beneﬁcial.22
+METHODOLOGY
+As with the original 2000 clinical
+practice guideline and the 2011
+revision, the AAP collaborated with
+several organizations to form
+a subcommittee on ADHD (the
+subcommittee) under the oversight of
+the AAP Council on Quality
+Improvement and Patient Safety.
+The subcommittee’s membership
+included representation of a wide
+range of primary care and
+subspecialty groups, including
+primary care pediatricians,
+developmental-behavioral
+pediatricians, an epidemiologist from
+the Centers for Disease Control and
+Prevention; and representatives from
+the American Academy of Child and
+Adolescent Psychiatry, the Society for
+Pediatric Psychology, the National
+Association of School Psychologists,
+the Society for Developmental and
+Behavioral Pediatrics (SDBP), the
+American Academy of Family
+Physicians, and Children and Adults
+with Attention-Deﬁcit/Hyperactivity
+Disorder (CHADD) to provide
+feedback on the patient/parent
+perspective.
+This subcommittee met over a 3.5-
+year period from 2015 to 2018 to
+review practice changes and newly
+identiﬁed issues that have arisen
+since the publication of the 2011
+guidelines. The subcommittee
+members’ potential conﬂicts were
+identiﬁed and taken into
+consideration in the group’s
+deliberations. No conﬂicts prevented
+subcommittee member participation
+on the guidelines.
+Research Questions
+The subcommittee developed a series
+of research questions to direct an
+evidence-based review sponsored by
+1 of the Evidence-based Practice
+Centers of the US Agency for
+Healthcare Research and Quality
+(AHRQ).23 These questions assessed
+4 diagnostic areas and 3 treatment
+areas on the basis of research
+published in 2011 through 2016.
+The AHRQ’s framework was guided
+by key clinical questions addressing
+diagnosis as well as treatment
+interventions for children and
+adolescents 4 to 18 years of age.
+The ﬁrst clinical questions pertaining
+to ADHD diagnosis were as follows:
+1. What is the comparative
+diagnostic accuracy of approaches
+that can be used in the primary
+care practice setting or by
+specialists to diagnose ADHD
+among children younger than
+7 years of age?
+2. What is the comparative
+diagnostic accuracy of EEG,
+imaging, or executive function
+approaches that can be used in the
+primary care practice setting or by
+specialists to diagnose ADHD
+among individuals aged 7 to their
+18th birthday?
+3. What are the adverse effects
+associated with being labeled
+correctly or incorrectly as having
+ADHD?
+4. Are there more formal
+neuropsychological, imaging, or
+genetic tests that improve the
+diagnostic process?
+The treatment questions were as
+follows:
+1. What are the comparative safety
+and effectiveness of pharmacologic
+and/or nonpharmacologic
+treatments of ADHD in improving
+outcomes associated with ADHD?
+2. What is the risk of diversion of
+pharmacologic treatment?
+3. What are the comparative safety
+and effectiveness of different
+monitoring strategies to evaluate
+the effectiveness of treatment or
+changes in ADHD status (eg,
+worsening or resolving
+symptoms)?
+PEDIATRICS Volume 144, number 4, October 2019
+3
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 3]
+
+[PAGE 4]
+In addition to this review of the
+research questions, the subcommittee
+considered information from a review
+of evidence-based psychosocial
+treatments for children and
+adolescents with ADHD24 (which, in
+some cases, affected the evidence
+grade) as well as updated information
+on prevalence from the Centers for
+Disease Control and Prevention.
+Evidence Review
+This article followed the latest
+version of the evidence base update
+format used to develop the previous 3
+clinical practice guidelines.24–26
+Under this format, studies were only
+included in the review when they met
+a variety of criteria designed to
+ensure the research was based on
+a strong methodology that yielded
+conﬁdence in its conclusions.
+The level of efﬁcacy for each
+treatment was deﬁned on the basis of
+child-focused outcomes related to
+both symptoms and impairment.
+Hence, improvements in behaviors on
+the part of parents or teachers, such
+as the use of communication or
+praise, were not considered in the
+review. Although these outcomes are
+important, they address how
+treatment reaches the child or
+adolescent with ADHD and are,
+therefore, secondary to changes in the
+child’s behavior. Focusing on
+improvements in the child or
+adolescent’s symptoms and
+impairment emphasizes the
+disorder’s characteristics and
+manifestations that affect children
+and their families.
+The treatment-related evidence relied
+on a recent review of literature from
+2011 through 2016 by the AHRQ of
+citations from Medline, Embase,
+PsycINFO, and the Cochrane Database
+of Systematic Reviews.
+The original methodology and report,
+including the evidence search and
+review, are available in their entirety
+and as an executive summary at
+https://effectivehealthcare.ahrq.gov/
+sites/default/ﬁles/pdf/cer-203-adhd-
+ﬁnal_0.pdf.
+The evidence is discussed in more
+detail in published reports and
+articles.25
+Guideline Recommendations and Key
+Action Statements
+The AAP policy statement,
+“Classifying Recommendations for
+Clinical Practice Guidelines,” was
+followed in designating aggregate
+evidence quality levels for the
+available evidence (see Fig 1).27 The
+AAP policy statement is consistent
+with the grading recommendations
+advanced by the University of
+Oxford Centre for Evidence Based
+Medicine.
+The subcommittee reached consensus
+on the evidence, which was then used
+to develop the clinical practice
+guideline’s KASs.
+When the scientiﬁc evidence was at
+least “good” in quality and
+demonstrated a preponderance of
+beneﬁts over harms, the KAS provides
+a “strong recommendation” or
+“recommendation.”27 Clinicians
+should follow a “strong
+recommendation” unless a clear and
+compelling rationale for an
+alternative approach is present;
+clinicians are prudent to follow
+a “recommendation” but are advised
+to remain alert to new information
+and be sensitive to patient
+preferences27 (see Fig 1).
+When the scientiﬁc evidence
+comprised lower-quality or limited
+data and expert consensus or high-
+quality evidence with a balance
+between beneﬁts and harms, the KAS
+provides an “option” level of
+recommendation. Options are clinical
+interventions that a reasonable
+health care provider might or might
+not wish to implement in the
+practice.27 Where the evidence
+was lacking, a combination of
+evidence and expert consensus
+FIGURE 1
+AAP rating of evidence and recommendations.
+4
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 4]
+
+[PAGE 5]
+would be used, although this
+did not occur in these
+guidelines, and all KASs
+achieved a “strong
+recommendation” level except
+for KAS 7, on comorbidities,
+which received a recommendation
+level (see Fig 1).
+As shown in Fig 1, integrating
+evidence quality appraisal with an
+assessment of the anticipated balance
+between beneﬁts and harms leads to
+a designation of a strong
+recommendation, recommendation,
+option, or no recommendation.
+Once the evidence level was
+determined, an evidence grade was
+assigned. AAP policy stipulates that
+the evidence supporting each KAS be
+prospectively identiﬁed, appraised,
+and summarized, and an explicit link
+between quality levels and the grade
+of recommendation must be deﬁned.
+Possible grades of recommendations
+range from “A” to “D,” with “A” being
+the highest:
+• grade A: consistent level A studies;
+• grade B: consistent level B or
+extrapolations from level A studies;
+• grade C: level C studies or
+extrapolations from level B or level
+C studies;
+• grade D: level D evidence or
+troublingly inconsistent or
+inconclusive studies of any level;
+and
+• level X: not an explicit level of
+evidence as outlined by the Centre
+for Evidence-Based Medicine. This
+level is reserved for interventions
+that are unethical or impossible to
+test in a controlled or scientiﬁc
+fashion and for which the
+preponderance of beneﬁt or harm
+is overwhelming, precluding
+rigorous investigation.
+Guided by the evidence quality and
+grade, the subcommittee developed 7
+KASs for the evaluation, diagnosis,
+and treatment of ADHD in children
+and adolescents (see Table 1).
+These KASs provide for consistent
+and high-quality care for children and
+adolescents who may have symptoms
+suggesting attention disorders or
+problems as well as for their families.
+In developing the 7 KASs, the
+subcommittee considered the
+requirements for establishing the
+diagnosis; the prevalence of ADHD;
+the effect of untreated ADHD; the
+efﬁcacy and adverse effects of
+treatment; various long-term
+outcomes; the importance of
+coordination between pediatric and
+mental health service providers; the
+value of the medical home; and the
+common occurrence of comorbid
+conditions, the importance of
+addressing them, and the effects of
+not treating them.
+The subcommittee members with the
+most epidemiological experience
+assessed the strength of each
+recommendation and the quality of
+evidence supporting each draft KAS.
+Peer Review
+The guidelines and PoCA underwent
+extensive peer review by more than
+30 internal stakeholders (eg, AAP
+committees, sections, councils, and
+task forces) and external stakeholder
+groups identiﬁed by the
+subcommittee. The resulting
+comments were compiled and
+reviewed by the chair and vice chair;
+relevant changes were incorporated
+into the draft, which was then
+reviewed by the full subcommittee.
+KASS FOR THE EVALUATION,
+DIAGNOSIS, TREATMENT, AND
+MONITORING OF CHILDREN AND
+ADOLESCENTS WITH ADHD
+KAS 1
+The pediatrician or other PCC should
+initiate an evaluation for ADHD for
+any child or adolescent age 4 years to
+the 18th birthday who presents with
+academic or behavioral problems and
+symptoms of inattention,
+hyperactivity, or impulsivity
+(Table 2). (Grade B: strong
+recommendation.)
+The basis for this recommendation is
+essentially unchanged from the
+previous guideline. As noted, ADHD is
+the most common neurobehavioral
+disorder of childhood, occurring in
+approximately 7% to 8% of children
+and youth.8,18,28,29 Hence, the number
+of children with this condition is far
+greater than can be managed by the
+mental health system.4 There is
+evidence that appropriate diagnosis
+can be accomplished in the primary
+care setting for children and
+adolescents.30,31 Note that there is
+insufﬁcient evidence to recommend
+diagnosis or treatment for children
+younger than 4 years (other than
+parent training in behavior
+management [PTBM], which does not
+require a diagnosis to be applied); in
+instances in which ADHD-like
+symptoms in children younger than
+4 years bring substantial impairment,
+PCCs can consider making a referral
+for PTBM.
+KAS 2
+To make a diagnosis of ADHD, the
+PCC should determine that DSM-5
+criteria have been met, including
+documentation of symptoms and
+impairment in more than 1 major
+setting (ie, social, academic, or
+occupational), with information
+obtained primarily from reports from
+parents or guardians, teachers, other
+school personnel, and mental health
+clinicians who are involved in the
+child or adolescent’s care. The PCC
+should also rule out any alternative
+cause (Table 3). (Grade B: strong
+recommendation.)
+The American Psychiatric Association
+developed the DSM-5 using expert
+consensus and an expanding research
+foundation.32 The DSM-5 system is
+used by professionals in psychiatry,
+psychology, health care systems, and
+primary care; it is also well
+established with third-party payers.
+PEDIATRICS Volume 144, number 4, October 2019
+5
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 5]
+
+[PAGE 6]
+The DSM-5 criteria deﬁne 4
+dimensions of ADHD:
+1. attention-deﬁcit/hyperactivity
+disorder primarily of the
+inattentive presentation (ADHD/I)
+(314.00 [F90.0]);
+2. attention-deﬁcit/hyperactivity
+disorder primarily of the
+hyperactive-impulsive
+presentation (ADHD/HI) (314.01
+[F90.1]);
+3. attention-deﬁcit/hyperactivity
+disorder combined presentation
+(ADHD/C) (314.01 [F90.2]); and
+4. ADHD other speciﬁed and
+unspeciﬁed ADHD (314.01
+[F90.8]).
+As with the previous guideline
+recommendations, the DSM-5
+classiﬁcation criteria are based on
+the best available evidence for
+ADHD diagnosis and are the
+standard most frequently used by
+clinicians and researchers to render
+the diagnosis and document its
+appropriateness for a given child.
+The use of neuropsychological
+testing has not been found to
+improve diagnostic accuracy in
+most cases, although it may have
+beneﬁt in clarifying the child
+or adolescent’s learning
+strengths and weaknesses. (See the
+TABLE 1 Summary of KASs for Diagnosing, Evaluating, and Treating ADHD in Children and Adolescents
+KASs
+Evidence Quality, Strength of Recommendation
+KAS 1: The pediatrician or other PCC should initiate an evaluation for ADHD for any child or
+adolescent age 4 years to the 18th birthday who presents with academic or behavioral
+problems and symptoms of inattention, hyperactivity, or impulsivity.
+Grade B, strong recommendation
+KAS 2: To make a diagnosis of ADHD, the PCC should determine that DSM-5 criteria have been
+met, including documentation of symptoms and impairment in more than 1 major setting
+(ie, social, academic, or occupational), with information obtained primarily from reports
+from parents or guardians, teachers, other school personnel, and mental health
+clinicians who are involved in the child or adolescent’s care. The PCC should also rule out
+any alternative cause.
+Grade B, strong recommendation
+KAS 3: In the evaluation of a child or adolescent for ADHD, the PCC should include a process
+to at least screen for comorbid conditions, including emotional or behavioral conditions
+(eg, anxiety, depression, oppositional deﬁant disorder, conduct disorders, substance use),
+developmental conditions (eg, learning and language disorders, autism spectrum
+disorders), and physical conditions (eg, tics, sleep apnea).
+Grade B, strong recommendation
+KAS 4: ADHD is a chronic condition; therefore, the PCC should manage children and
+adolescents with ADHD in the same manner that they would children and youth with
+special health care needs, following the principles of the chronic care model and the
+medical home.
+Grade B, strong recommendation
+KAS 5a: For preschool-aged children (age 4 years to the sixth birthday) with ADHD, the PCC
+should prescribe evidence-based PTBM and/or behavioral classroom interventions as the
+ﬁrst line of treatment, if available.
+Grade A, strong recommendation for PTBM
+Methylphenidate may be considered if these behavioral interventions do not provide
+signiﬁcant improvement and there is moderate-to-severe continued disturbance in the
+4- through 5-year-old child’s functioning. In areas in which evidence-based behavioral
+treatments are not available, the clinician needs to weigh the risks of starting
+medication before the age of 6 years against the harm of delaying treatment.
+Grade B, strong recommendation for methylphenidate
+KAS 5b. For elementary and middle school-aged children (age 6 years to the 12th birthday)
+with ADHD, the PCC should prescribe FDA-approved medications for ADHD, along with
+PTBM and/or behavioral classroom intervention (preferably both PTBM and behavioral
+classroom interventions). Educational interventions and individualized instructional
+supports, including school environment, class placement, instructional placement, and
+behavioral supports, are a necessary part of any treatment plan and often include an IEP
+or a rehabilitation plan (504 plan).
+Grade A, strong recommendation for medications
+Grade A, strong recommendation for training and behavioral
+treatments for ADHD with family and school
+KAS 5c. For adolescents (age 12 years to the 18th birthday) with ADHD, the PCC should
+prescribe FDA-approved medications for ADHD with the adolescent’s assent. The PCC is
+encouraged to prescribe evidence-based training interventions and/or behavioral
+interventions as treatment of ADHD, if available. Educational interventions and
+individualized instructional supports, including school environment, class placement,
+instructional placement, and behavioral supports, are a necessary part of any treatment
+plan and often include an IEP or a rehabilitation plan (504 plan).
+Grade A, strong recommendation for medications
+Grade A, strong recommendation for training and behavioral
+treatments for ADHD with the family and school
+KAS 6. The PCC should titrate doses of medication for ADHD to achieve maximum beneﬁt with
+tolerable side effects.
+Grade B, strong recommendation
+KAS 7. The PCC, if trained or experienced in diagnosing comorbid conditions, may initiate
+treatment of such conditions or make a referral to an appropriate subspecialist for
+treatment. After detecting possible comorbid conditions, if the PCC is not trained or
+experienced in making the diagnosis or initiating treatment, the patient should be
+referred to an appropriate subspecialist to make the diagnosis and initiate treatment.
+Grade C, recommendation
+6
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 6]
+
+[PAGE 7]
+PoCA for more information on
+implementing this KAS.)
+Special Circumstances: Preschool-Aged
+Children (Age 4 Years to the Sixth
+Birthday)
+There is evidence that the diagnostic
+criteria for ADHD can be applied to
+preschool-aged children.33–39 A
+review of the literature, including the
+multisite study of the efﬁcacy of
+methylphenidate in preschool-aged
+children, found that the DSM-5
+criteria could appropriately identify
+children with ADHD.25
+To make a diagnosis of ADHD in
+preschool-aged children, clinicians
+should conduct a clinical interview
+with parents, examine and observe
+the child, and obtain information
+from parents and teachers through
+DSM-based ADHD rating scales.40
+Normative data are available for the
+DSM-5–based rating scales for ages
+5 years to the 18th birthday.41 There
+are, however, minimal changes in the
+speciﬁc behaviors from the DSM-IV,
+on which all the other DSM-based
+ADHD rating scales obtained
+normative data. Both the ADHD
+Rating Scale-IV and the Conners
+Rating Scale have preschool-age
+normative data based on the DSM-IV.
+The speciﬁc behaviors in the DSM-5
+criteria for ADHD are the same for all
+children younger than 18 years (ie,
+preschool-aged children, elementary
+and middle school–aged children, and
+adolescents) and are only minimally
+different from the DSM-IV. Hence, if
+clinicians do not have the ADHD
+Rating Scale-5 or the ADHD Rating
+Scale-IV Preschool Version,42 any
+other DSM-based scale can be used to
+provide a systematic method for
+collecting information from parents
+and teachers, even in the absence of
+normative data.
+Pediatricians and other PCCs should
+be aware that determining the
+presence of key symptoms in this age
+group has its challenges, such as
+TABLE 2 KAS 1: The pediatrician or other PCC should initiate an evaluation for ADHD for any child or adolescent age 4 years to the 18th birthday who
+presents with academic or behavioral problems and symptoms of inattention, hyperactivity, or impulsivity. (Grade B: strong recommendation.)
+Aggregate evidence
+quality
+Grade B
+Beneﬁts
+ADHD goes undiagnosed in a considerable number of children and adolescents. Primary care clinicians’ more-rigorous identiﬁcation
+of children with these problems is likely to decrease the rate of undiagnosed and untreated ADHD in children and adolescents.
+Risks, harm, cost
+Children and adolescents in whom ADHD is inappropriately diagnosed may be labeled inappropriately, or another condition may be
+missed, and they may receive treatments that will not beneﬁt them.
+Beneﬁt-harm
+assessment
+The high prevalence of ADHD and limited mental health resources require primary care pediatricians and other PCCs to play
+a signiﬁcant role in the care of patients with ADHD and assist them to receive appropriate diagnosis and treatment. Treatments
+available have good evidence of efﬁcacy, and a lack of treatment has the risk of impaired outcomes.
+Intentional vagueness
+There are limits between what a PCC can address and what should be referred to a subspecialist because of varying degrees of skills
+and comfort levels present among the former.
+Role of patient
+preferences
+Success with treatment is dependent on patient and family preference, which need to be taken into account.
+Exclusions
+None.
+Strength
+Strong recommendation.
+Key references
+Wolraich et al31; Visser et al28; Thomas et al8; Egger et al30
+TABLE 3 KAS 2: To make a diagnosis of ADHD, the PCC should determine that DSM-5 criteria have been met, including documentation of symptoms and
+impairment in more than 1 major setting (ie, social, academic, or occupational), with information obtained primarily from reports from parents
+or guardians, teachers, other school personnel, and mental health clinicians who are involved in the child or adolescent’s care. The PCC should
+also rule out any alternative cause. (Grade B: strong recommendation.)
+Aggregate evidence
+quality
+Grade B
+Beneﬁts
+Use of the DSM-5 criteria has led to more uniform categorization of the condition across professional disciplines. The criteria are
+essentially unchanged from the Diagnostic and Statistical Manual of Mental Disorders, Fourth Edition (DSM-IV), for children up to
+their 18th birthday, except that DSM-IV required onset prior to age 7 for a diagnosis, while DSM-5 requires onset prior to age 12.
+Risks, harm, cost
+The DSM-5 does not speciﬁcally state that symptoms must be beyond expected levels for developmental (rather than chronologic) age
+to qualify for an ADHD diagnosis, which may lead to some misdiagnoses in children with developmental disorders.
+Beneﬁt-harm
+assessment
+The beneﬁts far outweigh the harm.
+Intentional vagueness
+None.
+Role of patient
+preferences
+Although there is some stigma associated with mental disorder diagnoses, resulting in some families preferring other diagnoses, the
+need for better clarity in diagnoses outweighs this preference.
+Exclusions
+None.
+Strength
+Strong recommendation.
+Key references
+Evans et al25; McGoey et al42; Young43; Sibley et al46
+PEDIATRICS Volume 144, number 4, October 2019
+7
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 7]
+
+[PAGE 8]
+observing symptoms across multiple
+settings as required by the DSM-5,
+particularly among children who do
+not attend a preschool or child care
+program. Here, too, focused checklists
+can be used to aid in the diagnostic
+evaluation.
+PTBM is the recommended primary
+intervention for preschool-aged
+children with ADHD as well as
+children with ADHD-like behaviors
+whose diagnosis is not yet veriﬁed.
+This type of training helps parents
+learn age-appropriate developmental
+expectations, behaviors that
+strengthen the parent-child
+relationship, and speciﬁc
+management skills for problem
+behaviors. Clinicians do not need to
+have made an ADHD diagnosis before
+recommending PTBM because PTBM
+has documented effectiveness with
+a wide variety of problem behaviors,
+regardless of etiology. In addition, the
+intervention’s results may inform the
+subsequent diagnostic evaluation.
+Clinicians are encouraged to
+recommend that parents complete
+PTBM, if available, before assigning
+an ADHD diagnosis.
+After behavioral parent training is
+implemented, the clinician can
+obtain information from parents and
+teachers through DSM-5–based
+ADHD rating scales. The clinician
+may obtain reports about the
+parents’ ability to manage their
+children and about the child’s core
+symptoms and impairments.
+Referral to an early intervention
+program or enrolling in a PTBM
+program can help provide
+information about the child’s
+behavior in other settings or with
+other observers. The evaluators for
+these programs and/or early
+childhood special education teachers
+may be useful observers, as well.
+Special Circumstances: Adolescents
+(Age 12 Years to the 18th Birthday)
+Obtaining teacher reports for
+adolescents is often more challenging
+than for younger children because
+many adolescents have multiple
+teachers. Likewise, an adolescent’s
+parents may have less opportunity to
+observe their child’s behaviors than
+they did when the child was younger.
+Furthermore, some problems
+experienced by children with ADHD
+are less obvious in adolescents than
+in younger children because
+adolescents are less likely to exhibit
+overt hyperactive behavior. Of note,
+adolescents’ reports of their own
+behaviors often differ from other
+observers because they tend to
+minimize their own problematic
+behaviors.43–45
+Despite these difﬁculties, clinicians
+need to try to obtain information
+from at least 2 teachers or other
+sources, such as coaches, school
+guidance counselors, or leaders of
+community activities in which the
+adolescent participates.46 For the
+evaluation to be successful, it is
+essential that adolescents agree with
+and participate in the evaluation.
+Variability in ratings is to be
+expected because adolescents’
+behavior often varies between
+different classrooms and with
+different teachers. Identifying
+reasons for any variability can
+provide valuable clinical insight into
+the adolescent’s problems.
+Note that, unless they previously
+received a diagnosis, to meet DSM-5
+criteria for ADHD, adolescents must
+have some reported or documented
+manifestations of inattention or
+hyperactivity/impulsivity before age
+12. Therefore, clinicians must
+establish that an adolescent had
+manifestations of ADHD before age
+12 and strongly consider whether
+a mimicking or comorbid condition,
+such as substance use, depression,
+and/or anxiety, is present.46
+In addition, the risks of mood and
+anxiety disorders and risky sexual
+behaviors increase during
+adolescence, as do the risks of
+intentional self-harm and suicidal
+behaviors.31 Clinicians should also
+be aware that adolescents are at
+greater risk for substance use than
+are younger children.44,45,47 Certain
+substances, such as marijuana, can
+have effects that mimic ADHD;
+adolescent patients may also attempt
+to obtain stimulant medication to
+enhance performance (ie, academic,
+athletic, etc) by feigning symptoms.48
+Trauma experiences, posttraumatic
+stress disorder, and toxic stress are
+additional comorbidities and risk
+factors of concern.
+Special Circumstances: Inattention or
+Hyperactivity/Impulsivity (Problem
+Level)
+Teachers, parents, and child health
+professionals typically encounter
+children who demonstrate behaviors
+relating to activity level, impulsivity,
+and inattention but who do not fully
+meet DSM-5 criteria. When assessing
+these children, diagnostic criteria
+should be closely reviewed, which
+may require obtaining more
+information from other settings and
+sources. Also consider that these
+symptoms may suggest other
+problems that mimic ADHD.
+Behavioral interventions, such
+as PTBM, are often beneﬁcial for
+children with hyperactive/impulsive
+behaviors who do not meet full
+diagnostic criteria for ADHD.
+As noted previously, these programs
+do not require a speciﬁc diagnosis
+to be beneﬁcial to the family. The
+previous guideline discussed
+the diagnosis of problem-level
+concerns on the basis of the
+Diagnostic and Statistical Manual for
+Primary Care (DSM-PC), Child and
+Adolescent Version,49 and made
+suggestions for treatment and care.
+The DSM-PC was published in 1995,
+however, and it has not been revised
+to be compatible with the DSM-5.
+Therefore, the DSM-PC cannot be
+used as a deﬁnitive source for
+diagnostic codes related to ADHD and
+comorbid conditions, although it can
+be used conceptually as a resource for
+8
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 8]
+
+[PAGE 9]
+enriching the understanding of
+problem-level manifestations.
+KAS 3
+In the evaluation of a child or
+adolescent for ADHD, the PCC should
+include a process to at least screen
+for comorbid conditions, including
+emotional or behavioral conditions
+(eg, anxiety, depression, oppositional
+deﬁant disorder, conduct disorders,
+substance use), developmental
+conditions (eg, learning and language
+disorders, autism spectrum
+disorders), and physical conditions
+(eg, tics, sleep apnea) (Table 4).
+(Grade B: strong recommendation.)
+The majority of both boys and girls
+with ADHD also meet diagnostic
+criteria for another mental
+disorder.17,18 A variety of other
+behavioral, developmental, and
+physical conditions can be comorbid
+in children and adolescents who are
+evaluated for ADHD, including
+emotional or behavioral conditions or
+a history of these problems. These
+include but are not limited to learning
+disabilities, language disorder,
+disruptive behavior, anxiety, mood
+disorders, tic disorders, seizures,
+autism spectrum disorder,
+developmental coordination disorder,
+and sleep disorders.50–66 In some
+cases, the presence of a comorbid
+condition will alter the treatment
+of ADHD.
+The SDBP is developing a clinical
+practice guideline to support
+clinicians in the diagnosis of
+treatment of “complex ADHD,” which
+includes ADHD with comorbid
+developmental and/or mental health
+conditions.67
+Special Circumstances: Adolescents
+(Age 12 Years to the 18th Birthday)
+At a minimum, clinicians should
+assess adolescent patients with newly
+diagnosed ADHD for symptoms and
+signs of substance use, anxiety,
+depression, and learning disabilities.
+As noted, all 4 are common comorbid
+conditions that affect the treatment
+approach. These comorbidities make
+it important for the clinician to
+consider sequencing psychosocial and
+medication treatments to maximize
+the impact on areas of greatest risk
+and impairment while monitoring for
+possible risks such as stimulant abuse
+or suicidal ideation.
+KAS 4
+ADHD is a chronic condition;
+therefore, the PCC should manage
+children and adolescents with ADHD
+in the same manner that they would
+children and youth with special
+health care needs, following the
+principles of the chronic care model
+and the medical home (Table 5).
+(Grade B: strong recommendation.)
+As in the 2 previous guidelines, this
+recommendation is based on the
+evidence that for many individuals,
+ADHD causes symptoms and
+dysfunction over long periods of time,
+even into adulthood. Available
+treatments address symptoms and
+function but are usually not curative.
+Although the chronic illness model
+has not been speciﬁcally studied in
+children and adolescents with ADHD,
+it has been effective for other chronic
+conditions, such as asthma.68 In
+addition, the medical home model has
+been accepted as the preferred
+standard of care for children with
+chronic conditions.69
+The medical home and chronic illness
+approach may be particularly
+beneﬁcial for parents who also have
+ADHD themselves. These parents can
+beneﬁt from extra support to help
+them follow a consistent schedule for
+medication and behavioral programs.
+Authors of longitudinal studies have
+found that ADHD treatments are
+frequently not maintained over
+time13 and impairments persist into
+adulthood.70 It is indicated in
+prospective studies that patients with
+ADHD, whether treated or not, are at
+increased risk for early death, suicide,
+and increased psychiatric
+TABLE 4 KAS 3: In the evaluation of a child or adolescent for ADHD, the PCC should include a process to at least screen for comorbid conditions, including
+emotional or behavioral conditions (eg, anxiety, depression, oppositional deﬁant disorder, conduct disorders, substance use), developmental
+conditions (eg, learning and language disorders, autism spectrum disorders), and physical conditions (eg, tics, sleep apnea). (Grade B: strong
+recommendation.)
+Aggregate evidence
+quality
+Grade B
+Beneﬁts
+Identifying comorbid conditions is important in developing the most appropriate treatment plan for the child or adolescent with
+ADHD.
+Risks, harm, cost
+The major risk is misdiagnosing the comorbid condition(s) and providing inappropriate care.
+Beneﬁt-harm
+assessment
+There is a preponderance of beneﬁts over harm.
+Intentional vagueness
+None.
+Role of patient
+preferences
+None.
+Exclusions
+None.
+Strength
+Strong recommendation.
+Key references
+Cuffe et al51; Pastor and Reuben52; Bieiderman et al53; Bieiderman et al54; Bieiderman et al72; Crabtree et al57; LeBourgeois et al58;
+Chan115; Newcorn et al60; Sung et al61; Larson et al66; Mahajan et al65; Antshel et al64; Rothenberger and Roessner63; Froehlich et al62
+PEDIATRICS Volume 144, number 4, October 2019
+9
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 9]
+
+[PAGE 10]
+comorbidity, particularly substance
+use disorders.71,72 They also have
+lower educational achievement than
+those without ADHD73,74 and
+increased rates of incarceration.75–77
+Treatment discontinuation also
+places individuals with ADHD at
+higher risk for catastrophic
+outcomes, such as motor vehicle
+crashes78,79; criminality, including
+drug-related crimes77 and violent
+reoffending76; depression71;
+interpersonal issues80; and other
+injuries.81,82
+To continue providing the best care, it
+is important for a treating
+pediatrician or other PCC to engage in
+bidirectional communication with
+teachers and other school personnel
+as well as mental health clinicians
+involved in the child or adolescent’s
+care. This communication can be
+difﬁcult to achieve and is discussed in
+both the PoCA and the section on
+systemic barriers to the care of
+children and adolescents with ADHD
+in the Supplemental Information, as is
+the medical home model.69
+Special Circumstances: Inattention
+or Hyperactivity/Impulsivity
+(Problem Level)
+Children with inattention or
+hyperactivity/impulsivity at the
+problem level, as well as their
+families, may also beneﬁt from the
+chronic illness and medical home
+principles.
+Recommendations for the Treatment
+of Children and Adolescents With
+ADHD: KAS 5a, 5b, and 5c
+Recommendations vary depending on
+the patient’s age and are presented
+for the following age ranges:
+a. preschool-aged children: age
+4 years to the sixth birthday;
+b. elementary and middle
+school–aged children: age 6 years
+to the 12th birthday; and
+c. adolescents: age 12 years to the
+18th birthday.
+The KASs are presented, followed by
+information on medication,
+psychosocial treatments, and special
+circumstances.
+KAS 5a
+For preschool-aged children (age
+4 years to the sixth birthday) with
+ADHD, the PCC should prescribe
+evidence-based behavioral PTBM
+and/or behavioral classroom
+interventions as the ﬁrst line of
+treatment, if available (grade A:
+strong recommendation).
+Methylphenidate may be considered
+if these behavioral interventions do
+not provide signiﬁcant improvement
+and there is moderate-to-severe
+continued disturbance in the 4-
+through 5-year-old child’s
+functioning. In areas in which
+evidence-based behavioral
+treatments are not available, the
+clinician needs to weigh the risks of
+starting medication before the age of
+6 years against the harm of delaying
+treatment (Table 6). (Grade B: strong
+recommendation.)
+A number of special circumstances
+support the recommendation to
+initiate PTBM as the ﬁrst treatment
+of preschool-aged children (age
+4 years to the sixth birthday) with
+ADHD.25,83 Although it was limited to
+children who had moderate-to-
+severe dysfunction, the largest
+multisite study of methylphenidate
+use in preschool-aged children
+revealed symptom improvements
+after PTBM alone.83 The overall
+evidence for PTBM among
+preschoolers is strong.
+PTBM programs for preschool-aged
+children are typically group programs
+and, although they are not always
+paid for by health insurance, they
+may be relatively low cost. One
+evidence-based PTBM, parent-child
+interaction therapy, is a dyadic
+therapy for parent and child. The
+PoCA contains criteria for the
+clinician’s use to assess the quality of
+PTBM programs. If the child attends
+preschool, behavioral classroom
+interventions are also recommended.
+In addition, preschool programs (such
+as Head Start) and ADHD-focused
+organizations (such as CHADD84) can
+also provide behavioral supports. The
+issues related to referral, payment,
+and communication are discussed in
+the section on systemic barriers in
+the Supplemental Information.
+TABLE 5 KAS 4: ADHD is a chronic condition; therefore, the PCC should manage children and adolescents with ADHD in the same manner that they would
+children and youth with special health care needs, following the principles of the chronic care model and the medical home. (Grade B: strong
+recommendation.)
+Aggregate evidence quality
+Grade B
+Beneﬁts
+The recommendation describes the coordinated services that are most appropriate to manage the condition.
+Risks, harm, cost
+Providing these services may be more costly.
+Beneﬁt-harm assessment
+There is a preponderance of beneﬁts over harm.
+Intentional vagueness
+None.
+Role of patient
+preferences
+Family preference in how these services are provided is an important consideration, because it can increase adherence.
+Exclusions
+None
+Strength
+Strong recommendation.
+Key references
+Brito et al69; Biederman et al72; Schefﬂer et al74; Barbaresi et al75; Chang et al71; Chang et al78; Lichtenstein et al77; Harstad and
+Levy80
+10
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 10]
+
+[PAGE 11]
+In areas in which evidence-based
+behavioral treatments are not
+available, the clinician needs to
+weigh the risks of starting
+methylphenidate before the age
+of 6 years against the harm of
+delaying diagnosis and treatment.
+Other stimulant or nonstimulant
+medications have not been
+adequately studied in children in
+this age group with ADHD.
+KAS 5b
+For elementary and middle
+school–aged children (age 6 years to
+the 12th birthday) with ADHD, the
+PCC should prescribe US Food and
+Drug Administration (FDA)–approved
+medications for ADHD, along with
+PTBM and/or behavioral classroom
+intervention (preferably both PTBM
+and behavioral classroom interven-
+tions). Educational interventions
+and individualized instructional
+supports, including school environment,
+class placement, instructional
+placement, and behavioral supports,
+are a necessary part of any
+treatment plan and often include an
+Individualized Education Program
+(IEP) or a rehabilitation plan (504
+plan) (Table 7). (Grade A: strong
+recommendation for medications;
+grade A: strong recommendation for
+PTBM training and behavioral
+treatments for ADHD implemented
+with the family and school.)
+The evidence is particularly strong for
+stimulant medications; it is sufﬁcient,
+but not as strong, for atomoxetine,
+extended-release guanfacine, and
+extended-release clonidine, in that
+order (see the Treatment section, and
+see the PoCA for more information on
+implementation).
+KAS 5c
+For adolescents (age 12 years to the
+18th birthday) with ADHD, the PCC
+should prescribe FDA-approved
+medications for ADHD with the
+adolescent’s assent (grade A: strong
+recommendation). The PCC is
+encouraged to prescribe evidence-
+based training interventions and/or
+behavioral interventions as treatment
+of ADHD, if available. Educational
+interventions and individualized
+instructional supports, including
+school environment, class
+placement, instructional placement,
+and behavioral supports, are
+a necessary part of any treatment
+plan and often include an IEP or
+a rehabilitation plan (504 plan)
+(Table 8). (Grade A: strong
+recommendation.)
+Transition to adult care is an
+important component of the chronic
+care model for ADHD. Planning for
+the transition to adult care is an
+ongoing process that may culminate
+after high school or, perhaps, after
+college. To foster a smooth transition,
+it is best to introduce components at
+the start of high school, at about
+14 years of age, and speciﬁcally focus
+during the 2 years preceding high
+school completion.
+Psychosocial Treatments
+Some psychosocial treatments for
+children and adolescents with ADHD
+have been demonstrated to be
+effective for the treatment of ADHD,
+including behavioral therapy and
+training interventions.24–26,85 The
+diversity of interventions and
+outcome measures makes it
+challenging to assess a meta-analysis
+of psychosocial treatment’s effects
+alone or in association with
+medication treatment. As with
+medication treatment, the long-term
+positive effects of psychosocial
+treatments have yet to be determined.
+Nonetheless, ongoing adherence
+to psychosocial treatment is
+a key contributor to its beneﬁcial
+effects, making implementation of
+a chronic care model for child health
+important to ensure sustained
+adherence.86
+Behavioral therapy involves training
+adults to inﬂuence the contingencies
+in an environment to improve the
+behavior of a child or adolescent in
+that setting. It can help parents and
+school personnel learn how to
+effectively prevent and respond to
+adolescent behaviors such as
+TABLE 6 KAS 5a: For preschool-aged children (age 4 years to the sixth birthday) with ADHD, the PCC should prescribe evidence-based behavioral PTBM
+and/or behavioral classroom interventions as the ﬁrst line of treatment, if available (grade A: strong recommendation). Methylphenidate may be
+considered if these behavioral interventions do not provide signiﬁcant improvement and there is moderate-to-severe continued disturbance in
+the 4- through 5-year-old child’s functioning. In areas in which evidence-based behavioral treatments are not available, the clinician needs to
+weigh the risks of starting medication before the age of 6 years against the harm of delaying treatment (grade B: strong recommendation).
+Aggregate evidence
+quality
+Grade A for PTBM; Grade B for methylphenidate
+Beneﬁts
+Given the risks of untreated ADHD, the beneﬁts outweigh the risks.
+Risks, harm, cost
+Both therapies increase the cost of care; PTBM requires a high level of family involvement, whereas methylphenidate has some
+potential adverse effects.
+Beneﬁt-harm
+assessment
+Both PTBM and methylphenidate have relatively low risks; initiating treatment at an early age, before children experience repeated
+failure, has additional beneﬁts. Thus, the beneﬁts outweigh the risks.
+Intentional vagueness
+None.
+Role of patient
+preferences
+Family preference is essential in determining the treatment plan.
+Exclusions
+None.
+Strength
+Strong recommendation.
+Key references
+Greenhill et al83; Evans et al25
+PEDIATRICS Volume 144, number 4, October 2019
+11
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 11]
+
+[PAGE 12]
+interrupting, aggression, not
+completing tasks, and not complying
+with requests. Behavioral parent and
+classroom training are well-
+established treatments with
+preadolescent children.25,87,88 Most
+studies comparing behavior therapy
+to stimulants indicate that stimulants
+have a stronger immediate effect on
+the 18 core symptoms of ADHD.
+Parents, however, were more satisﬁed
+with the effect of behavioral therapy,
+which addresses symptoms and
+functions in addition to ADHD’s core
+symptoms. The positive effects of
+behavioral therapies tend to persist,
+but the positive effects of medication
+cease when medication stops.
+Optimal care is likely to occur when
+both therapies are used, but the
+decision about therapies is heavily
+dependent on acceptability by, and
+feasibility for, the family.
+Training interventions target skill
+development and involve repeated
+practice with performance feedback
+over time, rather than modifying
+behavioral contingencies in a speciﬁc
+setting. Less research has been
+conducted on training interventions
+compared to behavioral treatments;
+nonetheless, training interventions
+are well-established treatments to
+target disorganization of materials
+and time that are exhibited by
+most youth with ADHD; it is likely
+that they will beneﬁt younger
+children, as well.25,89 Some training
+interventions, including social
+skills training, have not been shown
+to be effective for children with
+ADHD.25
+TABLE 7 KAS 5b: For elementary and middle school–aged children (age 6 years to the 12th birthday) with ADHD, the PCC should prescribe US Food and
+Drug Administration (FDA)–approved medications for ADHD, along with PTBM and/or behavioral classroom intervention (preferably both PTBM
+and behavioral classroom interventions). Educational interventions and individualized instructional supports, including school environment,
+class placement, instructional placement, and behavioral supports, are a necessary part of any treatment plan and often include an
+Individualized Education Program (IEP) or a rehabilitation plan (504 plan). (Grade A: strong recommendation for medications; grade A: strong
+recommendation for PTBM training and behavioral treatments for ADHD implemented with the family and school.)
+Aggregate evidence
+quality
+Grade A for Treatment with FDA-Approved Medications; Grade A for Training and Behavioral Treatments for ADHD With the Family and
+School.
+Beneﬁts
+Both behavioral therapy and FDA-approved medications have been shown to reduce behaviors associated with ADHD and to improve
+function.
+Risks, harm, cost
+Both therapies increase the cost of care. Psychosocial therapy requires a high level of family and/or school involvement and may lead
+to increased family conﬂict, especially if treatment is not successfully completed. FDA-approved medications may have some
+adverse effects and discontinuation of medication is common among adolescents.
+Beneﬁt-harm
+assessment
+Given the risks of untreated ADHD, the beneﬁts outweigh the risks.
+Intentional vagueness
+None.
+Role of patient
+preferences
+Family preference, including patient preference, is essential in determining the treatment plan and enhancing adherence.
+Exclusions
+None.
+Strength
+Strong recommendation.
+Key references
+Evans et al25; Barbaresi et al73; Jain et al103; Brown and Bishop104; Kambeitz et al105; Bruxel et al106; Kieling et al107; Froehlich et al108;
+Joensen et al109
+TABLE 8 KAS 5c: For adolescents (age 12 years to the 18th birthday) with ADHD, the PCC should prescribe FDA-approved medications for ADHD with the
+adolescent’s assent (grade A: strong recommendation). The PCC is encouraged to prescribe evidence-based training interventions and/or
+behavioral interventions as treatment of ADHD, if available. Educational interventions and individualized instructional supports, including school
+environment, class placement, instructional placement, and behavioral supports, are a necessary part of any treatment plan and often include
+an IEP or a rehabilitation plan (504 plan). (Grade A: strong recommendation.)
+Aggregate evidence
+quality
+Grade A for Medications; Grade A for Training and Behavioral Therapy
+Beneﬁts
+Training interventions, behavioral therapy, and FDA-approved medications have been demonstrated to reduce behaviors associated
+with ADHD and to improve function.
+Risks, harm, cost
+Both therapies increase the cost of care. Psychosocial therapy requires a high level of family and/or school involvement and may lead
+to unintended increased family conﬂict, especially if treatment is not successfully completed. FDA-approved medications may have
+some adverse effects, and discontinuation of medication is common among adolescents.
+Beneﬁt-harm
+assessment
+Given the risks of untreated ADHD, the beneﬁts outweigh the risks.
+Intentional vagueness
+None.
+Role of patient
+preferences
+Family preference, including patient preference, is likely to predict engagement and persistence with a treatment.
+Exclusions
+None.
+Strength
+Strong recommendation.
+Key references
+Evans et al25; Webster-Stratton et al87; Evans et al95; Fabiano et al93; Sibley and Graziano et al94; Langberg et al96; Schultz et al97; Brown
+and Bishop104; Kambeitz et al105; Bruxel et al106; Froehlich et al108; Joensen et al109
+12
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 12]
+
+[PAGE 13]
+Some nonmedication treatments for
+ADHD-related problems have either
+too little evidence to recommend them
+or have been found to have little or no
+beneﬁt. These include mindfulness,
+cognitive training, diet modiﬁcation,
+EEG biofeedback, and supportive
+counseling. The suggestion that
+cannabidiol oil has any effect on ADHD
+is anecdotal and has not been
+subjected to rigorous study. Although
+it is FDA approved, the efﬁcacy for
+external trigeminal nerve stimulation
+(eTNS) is documented by one 5-week
+randomized controlled trial with just
+30 participants receiving eTNS.90 To
+date, there is no long-term safety and
+efﬁcacy evidence for eTNS. Overall, the
+current evidence supporting
+treatment of ADHD with eTNS is
+sparse and in no way approaches the
+robust strength of evidence
+documented for established
+medication and behavioral treatments
+for ADHD; therefore, it cannot be
+recommended as a treatment of ADHD
+without considerably more extensive
+study on its efﬁcacy and safety.
+Special Circumstances: Adolescents
+Much less research has been
+published on psychosocial treatments
+with adolescents than with younger
+children. PTBM has been modiﬁed to
+include the parents and adolescents
+in sessions together to develop
+a behavioral contract and improve
+parent-adolescent communication
+and problem-solving (see above).91
+Some training programs also include
+motivational interviewing
+approaches. The evidence for this
+behavioral family approach is mixed
+and less strong than PTBM with pre-
+adolescent children.92–94 Adolescents’
+responses to behavioral contingencies
+are more varied than those of
+younger children because they can
+often effectively obstruct behavioral
+contracts, increasing parent-
+adolescent conﬂict.
+Training approaches that are focused
+on school functioning skills have
+consistently revealed beneﬁts for
+adolescents.95–97 The greatest
+beneﬁts from training interventions
+occur when treatment is continued
+over an extended period of time,
+performance feedback is constructive
+and frequent, and the target
+behaviors are directly applicable to
+the adolescent’s daily functioning.
+Overall, behavioral family approaches
+may be helpful to some adolescents
+and their families, and school-based
+training interventions are well
+established.25,94 Meaningful
+improvements in functioning have
+not been reported from cognitive
+behavioral approaches.
+Medication for ADHD
+Preschool-aged children may
+experience increased mood lability
+and dysphoria with stimulant
+medications.83 None of the
+nonstimulants have FDA approval for
+use in preschool-aged children. For
+elementary school–aged students, the
+evidence is particularly strong for
+stimulant medications and is
+sufﬁcient, but less strong, for
+atomoxetine, extended-release
+guanfacine, and extended-release
+clonidine (in that order). The effect
+size for stimulants is 1.0 and for
+nonstimulants is 0.7. An individual’s
+response to methylphenidate verses
+amphetamine is idiosyncratic, with
+approximately 40% responding to
+both and about 40% responding to
+only 1. The subtype of ADHD does not
+appear to be a predictor of response
+to a speciﬁc agent. For most
+adolescents, stimulant medications
+are highly effective in reducing
+ADHD’s core symptoms.73
+Stimulant medications have an effect
+size of around 1.0 (effect size =
+[treatment M 2 control M)/control
+SD]) for the treatment of ADHD.98
+Among nonstimulant medications, 1
+selective norepinephrine reuptake
+inhibitor, atomoxetine,99,100 and 2
+selective a-2 adrenergic agonists,
+extended-release guanfacine101,102
+and extended-release clonidine,103
+have also demonstrated efﬁcacy in
+reducing core symptoms among
+school-aged children and adolescents,
+although their effect sizes, —around
+0.7 for all 3, are less robust than that
+of stimulant medications.
+Norepinephrine reuptake inhibitors
+and a-2 adrenergic agonists are
+newer medications, so, in general, the
+evidence base supporting them is
+considerably less than that for
+stimulants, although it was adequate
+for FDA approval.
+A free list of the currently available,
+FDA-approved medications for ADHD
+is available online at www.
+ADHDMedicationGuide.com. Each
+medication’s characteristics are
+provided to help guide the clinician’s
+prescription choice. With the
+expanded list of medications, it is less
+likely that PCCs need to consider the
+off-label use of other medications.
+The section on systemic barriers in
+the Supplemental Information
+provides suggestions for fostering
+more realistic and effective payment
+and communication systems.
+Because of the large variability in
+patients’ response to ADHD
+medication, there is great interest in
+pharmacogenetic tools that can help
+clinicians predict the best medication
+and dose for each child or adolescent.
+At this time, however, the available
+scientiﬁc literature does not provide
+sufﬁcient evidence to support their
+clinical utility given that the genetic
+variants assayed by these tools have
+generally not been fully studied with
+respect to medication effects on
+ADHD-related symptoms and/or
+impairment, study ﬁndings are
+inconsistent, or effect sizes are not of
+sufﬁcient size to ensure clinical
+utility.104–109 For that reason, these
+pharmacogenetics tools are not
+recommended. In addition, these tests
+may cost thousands of dollars and are
+typically not covered by insurance.
+For a pharmacogenetics tool to be
+recommended for clinical use, studies
+would need to reveal (1) the genetic
+variants assayed have consistent,
+replicated associations with
+PEDIATRICS Volume 144, number 4, October 2019
+13
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 13]
+
+[PAGE 14]
+medication response; (2) knowledge
+about a patient’s genetic proﬁle
+would change clinical decision-
+making, improve outcomes and/or
+reduce costs or burden; and (3) the
+acceptability of the test’s operating
+characteristics has been
+demonstrated (eg, sensitivity,
+speciﬁcity, and reliability).
+Side Effects
+Stimulants’ most common short-term
+adverse effects are appetite loss,
+abdominal pain, headaches, and
+sleep disturbance. The Multimodal
+Treatment of Attention Deﬁcit
+Hyperactivity Disorder (MTA) study
+results identiﬁed stimulants as having
+a more persistent effect on decreasing
+growth velocity compared to most
+previous studies.110 Diminished
+growth was in the range of 1 to 2 cm
+from predicted adult height. The
+results of the MTA study were
+particularly noted among children
+who were on higher and more
+consistently administered doses of
+stimulants.110 The effects diminished
+by the third year of treatment, but no
+compensatory rebound growth was
+observed.110 An uncommon signiﬁcant
+adverse effect of stimulants is the
+occurrence of hallucinations and other
+psychotic symptoms.111
+Stimulant medications, on average,
+increase patient heart rate (HR) and
+blood pressure (BP) to a mild and
+clinically insigniﬁcant degree (average
+increases: 1–2 beats per minute for HR
+and 1–4 mm Hg for systolic and
+diastolic BP).112 However, because
+stimulants have been linked to more
+substantial increases in HR and BP in
+a subset of individuals (5%–15%),
+clinicians are encouraged to monitor
+these vital signs in patients receiving
+stimulant treatment.112 Although
+concerns have been raised about
+sudden cardiac death among children
+and adolescents using stimulant and
+medications,113 it is an extremely rare
+occurrence. In fact, stimulant
+medications have not been shown to
+increase the risk of sudden death
+beyond that observed in children who
+are not receiving stimulants.114–118
+Nevertheless, before initiating therapy
+with stimulant medications, it is
+important to obtain the child or
+adolescent’s history of speciﬁc cardiac
+symptoms in addition to the family
+history of sudden death,
+cardiovascular symptoms, Wolff-
+Parkinson-White syndrome,
+hypertrophic cardiomyopathy, and
+long QT syndrome. If any of these risk
+factors are present, clinicians should
+obtain additional evaluation to
+ascertain and address potential safety
+concerns of stimulant medication use
+by the child or adolescent.112,114
+Among nonstimulants, the risk of
+serious cardiovascular events is
+extremely low, as it is for stimulants.
+The 3 nonstimulant medications that
+are FDA approved to treat ADHD (ie,
+atomoxetine, guanfacine, and
+clonidine) may be associated with
+changes in cardiovascular parameters
+or other serious cardiovascular events.
+These events could include increased
+HR and BP for atomoxetine and
+decreased HR and BP for guanfacine
+and clonidine. Clinicians are
+recommended to not only obtain the
+personal and family cardiac history, as
+detailed above, but also to perform
+additional evaluation if risk factors are
+present before starting nonstimulant
+medications (ie, perform an
+electrocardiogram [ECG] and possibly
+refer to a pediatric cardiologist if the
+ECG is not normal).112
+Additional adverse effects of
+atomoxetine include initial
+somnolence and gastrointestinal tract
+symptoms, particularly if the dosage is
+increased too rapidly, and decreased
+appetite.119–122 Less commonly, an
+increase in suicidal thoughts has been
+found; this is noted by an FDA black
+box warning. Extremely rarely,
+hepatitis has been associated with
+atomoxetine. Atomoxetine has also
+been linked to growth delays
+compared to expected trajectories in
+the ﬁrst 1 to 2 years of treatment, with
+a return to expected measurements
+after 2 to 3 years of treatment, on
+average. Decreases were observed
+among those who were taller or
+heavier than average before
+treatment.123
+For extended-release guanfacine and
+extended-release clonidine, adverse
+effects include somnolence, dry
+mouth, dizziness, irritability,
+headache, bradycardia, hypotension,
+and abdominal pain.30,124,125 Because
+rebound hypertension after abrupt
+guanfacine and clonidine
+discontinuation has been
+observed,126 these medications
+should be tapered off rather than
+suddenly discontinued.
+Adjunctive Therapy
+Adjunctive therapies may be
+considered if stimulant therapy is not
+fully effective or limited by side
+effects. Only extended-release
+guanfacine and extended-release
+clonidine have evidence supporting
+their use as adjunctive therapy with
+stimulant medications sufﬁcient to
+have achieved FDA approval.127 Other
+medications have been used in
+combination on an off-label basis,
+with some limited evidence available
+to support the efﬁcacy and safety of
+using atomoxetine in combination
+with stimulant medications to
+augment treatment of ADHD.128
+Special Circumstances: Preschool-Aged
+Children (Age 4 Years to the Sixth
+Birthday)
+If children do not experience
+adequate symptom improvement
+with PTBM, medication can be
+prescribed for those with moderate-
+to-severe ADHD. Many young children
+with ADHD may require medication
+to achieve maximum improvement;
+methylphenidate is the recommended
+ﬁrst-line pharmacologic treatment of
+preschool children because of the lack
+of sufﬁcient rigorous study in the
+preschool-aged population for
+nonstimulant ADHD medications and
+dextroamphetamine. Although
+amphetamine is the only medication
+14
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 14]
+
+[PAGE 15]
+with FDA approval for use in children
+younger than 6 years, this authorization
+was issued at a time when approval
+criteria were less stringent than current
+requirements. Hence, the available
+evidence regarding dextroampheta-
+mine’s use in preschool-aged children
+with ADHD is not adequate to
+recommend it as an initial ADHD
+medication treatment at this time.80
+No nonstimulant medication has
+received sufﬁcient rigorous study in
+the preschool-aged population to be
+recommended for treatment of ADHD
+of children 4 through 5 years of age.
+Although methylphenidate is the
+ADHD medication with the strongest
+evidence for safety and efﬁcacy in
+preschool-aged children, it should be
+noted that the evidence has not yet
+met the level needed for FDA
+approval. Evidence for the use of
+methylphenidate consists of 1
+multisite study of 165 children83 and
+10 other smaller, single-site studies
+ranging from 11 to 59 children, for
+a total of 269 children.129 Seven of the
+10 single-site studies revealed efﬁcacy
+for methylphenidate in preschoolers.
+Therefore, although there is moderate
+evidence that methylphenidate is safe
+and effective in preschool-aged
+children, its use in this age group
+remains on an “off-label” basis.
+With these caveats in mind, before
+initiating treatment with medication,
+the clinician should assess the severity
+of the child’s ADHD. Given current
+data, only preschool-aged children
+with ADHD and moderate-to-severe
+dysfunction should be considered for
+medication. Severity criteria are
+symptoms that have persisted for at
+least 9 months; dysfunction that is
+manifested in both home and other
+settings, such as preschool or child
+care; and dysfunction that has not
+responded adequately to PTBM.83
+The decision to consider initiating
+medication at this age depends, in
+part, on the clinician’s assessment
+of the estimated developmental
+impairment, safety risks, and potential
+consequences if medications are not
+initiated. Other considerations affecting
+the treatment of preschool-aged
+children with stimulant medications
+include the lack of information and
+experience about their longer-term
+effects on growth and brain
+development, as well as the potential
+for other adverse effects in this
+population. It may be helpful to obtain
+consultation from a mental health
+specialist with speciﬁc experience with
+preschool-aged children, if possible.
+Evidence suggests that the rate of
+metabolizing methylphenidate is
+slower in children 4 through 5 years of
+age, so they should be given a low dose
+to start; the dose can be increased in
+smaller increments. Maximum doses
+have not been adequately studied in
+preschool-aged children.83
+Special Circumstances: Adolescents
+(Age 12 Years to the 18th Birthday)
+As noted, before beginning
+medication treatment of adolescents
+with newly diagnosed ADHD,
+clinicians should assess the patient
+for symptoms of substance use. If
+active substance use is identiﬁed, the
+clinician should refer the patient to
+a subspecialist for consultative
+support and guidance.2,1302134
+In addition, diversion of ADHD
+medication (ie, its use for something
+other than its intended medical
+purposes) is a special concern among
+adolescents.135 Clinicians should
+monitor the adolescent’s symptoms and
+prescription reﬁll requests for signs of
+misuse or diversion of ADHD
+medication, including by parents,
+classmates, or other acquaintances of
+the adolescent. The majority of states
+now require prescriber participation in
+prescription drug monitoring programs,
+which can be helpful in identifying and
+preventing diversion activities. They
+may consider prescribing nonstimulant
+medications that minimize abuse
+potential, such as atomoxetine and
+extended-release guanfacine or
+extended-release clonidine.
+Given the risks of driving for
+adolescents with ADHD, including
+crashes and motor vehicle violations,
+special concern should be taken to
+provide medication coverage for
+symptom control while
+driving.79,136,137 Longer-acting or late-
+afternoon, short-acting medications
+may be helpful in this regard.138
+Special Circumstances: Inattention
+or Hyperactivity/Impulsivity (Problem
+Level)
+Medication is not appropriate for
+children whose symptoms do not
+meet DSM-5 criteria for ADHD.
+Psychosocial treatments may be
+appropriate for these children and
+adolescents. As noted, psychosocial
+treatments do not require a speciﬁc
+diagnosis of ADHD, and many of the
+studies on the efﬁcacy of PTBM
+included children who did not have
+a speciﬁc psychiatric or ADHD
+diagnosis.
+Combination Treatments
+Studies indicate that behavioral
+therapy has positive effects when it is
+combined with medication for pre-
+adolescent children.139 (The
+combined effects of training
+interventions and medication have
+not been studied.)
+In the MTA study, researchers found
+that although the combination of
+behavioral therapy and stimulant
+medication was not signiﬁcantly more
+effective than treatment with
+medication alone for ADHD’s core
+symptoms, after correcting for
+multiple tests in the primary
+analysis,139 a secondary analysis of
+a combined measure of parent and
+teacher ratings of ADHD symptoms
+did ﬁnd a signiﬁcant advantage for
+the combination, with a small effect of
+d = 0.28.140 The combined treatment
+also offered greater improvements on
+academic and conduct measures,
+compared to medication alone, when
+the ADHD was comorbid with anxiety
+and the child or adolescent lived in
+a lower socioeconomic environment.
+PEDIATRICS Volume 144, number 4, October 2019
+15
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 15]
+
+[PAGE 16]
+In addition, parents and teachers of
+children who received combined
+therapy reported that they were
+signiﬁcantly more satisﬁed with the
+treatment plan. Finally, the combination
+of medication management and
+behavioral therapy allowed for the use
+of lower stimulant dosages, possibly
+reducing the risk of adverse effects.141
+School Programming and Supports
+Encouraging strong family-school
+partnerships helps the ADHD
+management process.142 Psychosocial
+treatments that include coordinating
+efforts at school and home may
+enhance the effects.
+Children and adolescents with ADHD
+may be eligible for services as part of
+a 504 Rehabilitation Act Plan (504
+plan) or special education IEP under
+the “other health impairment”
+designation in the Individuals with
+Disability Education Act (IDEA).143
+(ADHD qualiﬁes as a disability under
+a 504 plan. It does not qualify under
+an IEP unless its severity impairs the
+child’s ability to learn. See the PoCA
+for more details.) It is helpful for
+clinicians to be aware of the eligibility
+criteria in their states and school
+districts to advise families of their
+options. Eligibility decisions can vary
+considerably between school
+districts, and school professionals’
+independent determinations might
+not agree with the recommendations
+of outside clinicians.
+There are essentially 2 categories of
+school-based services for students
+with ADHD. The ﬁrst category
+includes interventions that are
+intended to help the student
+independently meet age-appropriate
+academic and behavioral
+expectations. Examples of these
+interventions include daily report
+cards, training interventions, point
+systems, and academic remediation of
+skills. If successful, the student’s
+impairment will resolve, and the
+student will no longer need services.
+The second category is intended to
+provide changes in the student’s
+program so his or her ADHD-related
+problems no longer result in failure and
+cause distress to parents, teachers, and
+the student.144 These services are
+referred to as “accommodations” and
+include extended time to complete tests
+and assignments, reduced homework
+demands, the ability to keep study
+materials in class, and provision of the
+teacher’s notes to the student. These
+services are intended to allow the
+student to accomplish his work
+successfully and communicate that the
+student’s impairment is acceptable.
+Accommodations make the student’s
+impairment acceptable and are separate
+from interventions aimed at improving
+the students’ skills or behaviors. In the
+absence of such interventions, long-
+term accommodations may lead to
+reduced expectations and can lead to
+the need for accommodations to be
+maintained throughout the student’s
+education.
+Encouraging strong family-school
+partnerships helps the ADHD
+management process, and addressing
+social determinants of health is
+essential to these partnerships.145,146
+Psychosocial treatments that include
+coordinating efforts at school and
+home may enhance the effects.
+KAS 6
+The PCC should titrate doses of
+medication for ADHD to achieve
+maximum beneﬁt with tolerable side
+effects (Table 9). (Grade B: strong
+recommendation.)
+The MTA study is the landmark study
+comparing effects of methylphenidate
+and behavioral treatments in children
+with ADHD. Investigators compared
+treatment effects in 4 groups of
+children who received optimal
+medication management, optimal
+behavioral management, combined
+medication and behavioral
+management, or community treatment.
+Children in the optimal medication
+management and combined medication
+and behavioral management groups
+underwent a systematic trial with 4
+different doses of methylphenidate, with
+results suggesting that when this full
+range of doses is administered, more
+than 70% of children and adolescents
+with ADHD are methylphenidate
+responders.140
+Authors of other reports suggest that
+more than 90% of patients will have
+a beneﬁcial response to 1 of the
+psychostimulants if a range of
+medications from both the
+methylphenidate and amphetamine
+and/or dextroamphetamine classes
+TABLE 9 KAS 6: The PCC should titrate doses of medication for ADHD to achieve maximum beneﬁt with tolerable side effects. (Grade B: strong
+recommendation.)
+Aggregate evidence
+quality
+Grade B
+Beneﬁts
+The optimal dose of medication is required to reduce core symptoms to, or close to, the levels of children without ADHD.
+Risks, harm, cost
+Higher levels of medication increase the chances of side effects.
+Beneﬁt-harm
+assessment
+The importance of adequately treating ADHD outweighs the risk of adverse effects.
+Intentional vagueness
+None.
+Role of patient
+preferences
+The families’ preferences and comfort need to be taken into consideration in developing a titration plan, as they are likely to predict
+engagement and persistence with a treatment.
+Exclusions
+None
+Strength
+Strong recommendation
+Key references
+Jensen et al140; Solanto147; Brinkman et al149
+16
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 16]
+
+[PAGE 17]
+are tried.147 Of note, children in the
+MTA study who received care in the
+community as usual, either from
+a clinician they chose or to whom
+their family had access, showed less
+beneﬁcial results compared with
+children who received optimal
+medication management. The
+explanation offered by the study
+investigators was that the community
+treatment group received lower
+medication doses and less frequent
+monitoring than the optimal
+medication management group.
+A child’s response to stimulants is
+variable and unpredictable. For this
+reason, it is recommended to titrate
+from a low dose to one that achieves
+a maximum, optimal effect in controlling
+symptoms without adverse effects.
+Calculating the dose on the basis of
+milligrams per kilogram has not usually
+been helpful because variations in dose
+have not been found to be related to
+height or weight. In addition, because
+stimulant medication effects are seen
+rapidly, titration can be accomplished in
+a relatively short time period. Stimulant
+medications can be effectively titrated
+on a 7-day basis, but in urgent
+situations, they may be effectively
+titrated in as few as 3 days.140
+Parent and child and adolescent
+education is an important component
+in the chronic illness model to ensure
+cooperation in efforts to achieve
+appropriate titration, remembering
+that the parents themselves may be
+signiﬁcantly challenged by
+ADHD.148,149 The PCC should alert
+parents and children that changing
+medication dose and occasionally
+changing a medication may be
+necessary for optimal medication
+management, may require a few
+months to achieve optimal success,
+and that medication efﬁcacy should
+be monitored at regular intervals.
+By the 3-year (ie, 36-month) follow-up
+to the MTA interventions, there were
+no differences among the 4 groups (ie,
+optimal medications management,
+optimal behavioral management,
+a combination of medication and
+behavioral management, and
+community treatment). This
+equivalence in poststudy outcomes
+may, however, have been attributable
+to convergence in ongoing treatments
+received for the 4 groups. After the
+initial 14-month intervention, the
+children no longer received the careful
+monthly monitoring provided by the
+study and went back to receiving care
+from their community providers;
+therefore, they all effectively received
+a level of ongoing care consistent with
+the “community treatment” study arm
+of the study. After leaving the MTA
+trial, medications and doses varied for
+the children who had been in the
+optimal medication management or
+combined medication and behavioral
+management groups, and a number
+stopped taking ADHD medication. On
+the other hand, some children who
+had been in the optimal behavioral
+management group started taking
+medication after leaving the trial. The
+results further emphasize the need to
+treat ADHD as a chronic illness and
+provide continuity of care and, where
+possible, provide a medical home.140
+See the PoCA for more on
+implementation of this KAS.
+KAS 7
+The PCC, if trained or experienced in
+diagnosing comorbid conditions, may
+initiate treatment of such conditions
+or make a referral to an appropriate
+subspecialist for treatment. After
+detecting possible comorbid
+conditions, if the PCC is not trained or
+experienced in making the diagnosis
+or initiating treatment, the patient
+should be referred to an appropriate
+subspecialist to make the diagnosis
+and initiate treatment (Table 10).
+(Grade C: recommendation.)
+The effect of comorbid conditions on
+ADHD treatment is variable. In some
+cases, treatment of the ADHD may
+resolve the comorbid condition. For
+example, treatment of ADHD may
+lead to improvement in coexisting
+aggression and/or oppositional
+deﬁant, depressive, or anxiety
+symptoms.150,151
+Sometimes, however, the comorbid
+condition may require treatment in
+addition to the ADHD treatment. If the
+PCC is conﬁdent of his or her ability to
+diagnose and treat certain comorbid
+conditions, the PCC may do so. The
+PCC may beneﬁt from additional
+consultative support and guidance
+from a mental health subspecialist or
+may need to refer a child with ADHD
+and comorbid conditions, such as
+severe mood or anxiety disorders, to
+subspecialists for assessment and
+management. The subspecialists could
+include child and adolescent
+psychiatrists, clinical child
+psychologists, developmental-
+behavioral pediatricians,
+neurodevelopmental disability
+physicians, child neurologists, or
+child- or school-based evaluation
+teams.
+IMPLEMENTATION: PREPARING THE
+PRACTICE
+It is generally the role of the primary
+care pediatrician to manage mild-to-
+moderate ADHD, anxiety, depression,
+and substance use. The AAP
+statement “The Future of Pediatrics:
+Mental Health Competencies for
+Pediatric Primary Care” describes the
+competencies needed in both
+pediatric primary and specialty care
+to address the social-emotional and
+mental health needs of children and
+families.152 Broadly, these include
+incorporating mental health content
+and tools into health promotion,
+prevention, and primary care
+intervention, becoming
+knowledgeable about use of
+evidence-based treatments, and
+participating as a team member and
+comanaging with pediatric and
+mental health specialists.
+The recommendations made in this
+guideline are intended to be integrated
+with the broader mental health
+algorithm developed as part of the AAP
+Mental Health Initiatives.2,133,153
+Pediatricians have unique opportunities
+PEDIATRICS Volume 144, number 4, October 2019
+17
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 17]
+
+[PAGE 18]
+to identify conditions, including ADHD,
+intervene early, and partner with both
+families and specialists for the beneﬁt
+of children’s health. A wealth of useful
+information is available at the AAP
+Mental Health Initiatives Web site
+(https://www.aap.org/en-us/advocacy-
+and-policy/aap-health-initiatives/
+Mental-Health/Pages/Tips-For-
+Pediatricians.aspx).
+It is also important for PCCs to be
+aware of health disparities and social
+determinants that may impact patient
+outcomes and strive to provide
+culturally appropriate care to all
+children and adolescents in their
+practice.145,146,154,155
+The accompanying PoCA provides
+supplemental information to support
+PCCs as they implement this
+guideline’s recommendations. In
+particular, the PoCA describes steps
+for preparing the practice that provide
+useful recommendations to clinicians.
+For example, the PoCA includes
+information about using standardized
+rating scales to diagnose ADHD,
+assessing for comorbid conditions,
+documenting all aspects of the
+diagnostic and treatment procedures
+in the patient’s records, monitoring
+the patient’s treatment and outcomes,
+and providing families with written
+management plans.
+The AAP acknowledges that some
+PCCs may not have the training,
+experience, or resources to diagnose
+and treat children and adolescents
+with ADHD, especially if severity or
+comorbid conditions make these
+patients complex to manage. In these
+situations, comanagement with
+specialty clinicians is recommended.
+The SDBP is developing a guideline to
+address such complex cases and aid
+pediatricians and other PCCs to
+manage these cases; the SDBP
+currently expects to publish this
+document in 2019.67
+AREAS FOR FUTURE RESEARCH
+There is a need to conduct research
+on topics pertinent to the diagnosis
+and treatment of ADHD,
+developmental variations, and
+problems in children and adolescents
+in primary care. These research
+opportunities include the following:
+• assessment of ADHD and its
+common comorbidities: anxiety,
+depression, learning disabilities,
+and autism spectrum disorder;
+• identiﬁcation and/or development
+of reliable instruments suitable for
+use in primary care to assess the
+nature or degree of functional
+impairment in children and
+adolescents with ADHD and to
+monitor improvement over time;
+• reﬁnement of developmentally
+informed assessment procedures
+for evaluating ADHD in
+preschoolers;
+• study of medications and other
+therapies used clinically but not
+FDA approved for ADHD;
+• determination of the optimal
+schedule for monitoring children
+and adolescents with ADHD,
+including factors for adjusting
+that schedule according to age,
+symptom severity, and progress
+reports;
+• evaluation of the effectiveness and
+adverse effects of medications used
+in combination, such as a stimulant
+with an a-adrenergic agent,
+selective serotonin reuptake
+inhibitor, or atomoxetine;
+• evaluation of processes of care to
+assist PCCs to identify and treat
+comorbid conditions;
+• evaluation of the effectiveness of
+various school-based interventions;
+• comparisons of medication use
+and effectiveness in different
+ages, including both harms and
+beneﬁts;
+• development of methods to involve
+parents, children, and adolescents
+in their own care and improve
+adherence to both psychosocial and
+medication treatments;
+• conducting research into
+psychosocial treatments, such as
+cognitive behavioral therapy and
+cognitive training, among others;
+TABLE 10 KAS 7: The PCC, if trained or experienced in diagnosing comorbid conditions, may initiate treatment of such conditions or make a referral to an
+appropriate subspecialist for treatment. After detecting possible comorbid conditions, if the PCC is not trained or experienced in making the
+diagnosis or initiating treatment, the patient should be referred to an appropriate subspecialist to make the diagnosis and initiate treatment.
+(Grade C: recommendation.)
+Aggregate evidence
+quality
+Grade C
+Beneﬁts
+Clinicians are most effective when they know the limits of their practice to diagnose comorbid conditions and are aware of resources
+in their community.
+Risks, harm, cost
+Under-identiﬁcation or inappropriate identiﬁcation of comorbidities can lead to inadequate or inappropriate treatments.
+Beneﬁt-harm
+assessment
+The importance of adequately identifying and addressing comorbidities outweighs the risk of inappropriate referrals or treatments.
+Intentional vagueness
+None.
+Role of patient
+preferences
+The families’ preferences and comfort need to be taken into consideration in identifying and treating or referring their patients with
+comorbidities, as they are likely to predict engagement and persistence with a treatment.
+Exclusions
+None.
+Strength
+Recommendation.
+Key references
+Pliszka et al150; Pringsheim et al151
+18
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 18]
+
+[PAGE 19]
+• development of standardized and
+documented tools to help primary
+care providers identify comorbid
+conditions;
+• development of effective electronic
+and Web-based systems to help
+gather information to diagnose and
+monitor children and adolescents
+with ADHD;
+• improvements to systems for
+communicating with schools,
+mental health professionals, and
+other community agencies to
+provide effective collaborative care;
+• development of more objective
+measures of performance to more
+objectively monitor aspects of
+severity, disability, or impairment;
+• assessment of long-term outcomes
+for children in whom ADHD was
+ﬁrst diagnosed at preschool ages;
+and
+• identiﬁcation and implementation
+of ideas to address the barriers
+that hamper the implementation
+of these guidelines and the
+PoCA.
+CONCLUSIONS
+Evidence is clear with regard to the
+legitimacy of the diagnosis of ADHD
+and the appropriate diagnostic
+criteria and procedures required to
+establish a diagnosis, identify
+comorbid conditions, and effectively
+treat with both psychosocial and
+pharmacologic interventions. The
+steps required to sustain appropriate
+treatments and achieve successful
+long-term outcomes remain
+challenging, however.
+As noted, this clinical practice
+guideline is supported by 2
+accompanying documents available in
+the Supplemental Information: the
+PoCA and the article on systemic
+barriers to the car of children and
+adolescents with ADHD. Full
+implementation of the guideline’s
+KASs, the PoCA, and the
+recommendations to address barriers
+to care may require changes in ofﬁce
+procedures and the identiﬁcation of
+community resources. Fully
+addressing systemic barriers requires
+identifying local, state, and national
+entities with which to partner to
+advance solutions and manifest
+change.156
+SUBCOMMITTEE ON CHILDREN AND
+ADOLESCENTS WITH ADHD (OVERSIGHT BY
+THE COUNCIL ON QUALITY IMPROVEMENT
+AND PATIENT SAFETY)
+Mark L. Wolraich, MD, FAAP, Chairperson,
+Section on Developmental Behavioral
+Pediatrics
+Joseph F. Hagan Jr, MD, FAAP, Vice
+Chairperson, Section on Developmental
+Behavioral Pediatrics
+Carla Allan, PhD, Society of Pediatric
+Psychology
+Eugenia Chan, MD, MPH, FAAP,
+Implementation Scientist
+Dale Davison, MSpEd, PCC, Parent Advocate,
+Children and Adolescents with Attention-
+Deﬁcit/Hyperactivity Disorder
+Marian Earls, MD, MTS, FAAP, Mental Health
+Leadership Work Group
+Steven W. Evans, PhD, Clinical Psychologist
+Tanya Froehlich, MD, FAAP, Section on
+Developmental Behavioral Pediatrics/Society
+for Developmental and Behavioral Pediatrics
+Jennifer Frost, MD, FAAFP, American
+Academy of Family Physicians
+Joseph R. Holbrook, PhD, MPH,
+Epidemiologist, Centers for Disease Control
+and Prevention
+Herschel Robert Lessin, MD, FAAP, Section
+on Administration and Practice Management
+Karen L. Pierce, MD, DFAACAP, American
+Academy of Child and Adolescent Psychiatry
+Christoph Ulrich Lehmann, MD, FAAP,
+Partnership for Policy Implementation
+Jonathan D. Winner, MD, FAAP, Committee
+on Practice and Ambulatory Medicine
+William Zurhellen, MD, FAAP, Section on
+Administration and Practice Management
+STAFF
+Kymika Okechukwu, MPA, Senior Manager,
+Evidence-Based Medicine Initiatives
+Jeremiah Salmon, MPH, Program Manager,
+Policy Dissemination and Implementation
+CONSULTANT
+Susan K. Flinn, MA, Medical Editor
+ABBREVIATIONS
+AAP: American Academy of Pediatrics
+ADHD: attention-deﬁcit/
+hyperactivity disorder
+ADHD/C: attention-deﬁcit/
+hyperactivity disorder
+combined presentation
+ADHD/HI: attention-deﬁcit/
+hyperactivity disorder
+primarily of the
+hyperactive-impulsive
+presentation
+ADHD/I: attention-deﬁcit/
+hyperactivity disorder
+primarily of the
+inattentive presentation
+AHRQ: Agency for Healthcare
+Research and Quality
+BP: blood pressure
+CHADD: Children and Adults with
+Attention-Deﬁcit/
+Hyperactivity Disorder
+DSM-5: Diagnostic and Statistical
+Manual of Mental Disorders,
+Fifth Edition
+DSM-IV: Diagnostic and Statistical
+Manual of Mental Disorders
+Fourth Edition
+DSM-PC: Diagnostic and Statistical
+Manual for Primary Care
+ECG: electrocardiogram
+eTNS: external trigeminal nerve
+stimulation
+FDA: US Food and Drug
+Administration
+HR: heart rate
+IDEA: Individuals with Disability
+Education Act
+IEP: Individualized Education
+Program
+KAS: key action statement
+MTA: The Multimodal Treatment
+of Attention Deﬁcit
+Hyperactivity Disorder
+PCC: primary care clinician
+PoCA: process of care algorithm
+PTBM: parent training in behavior
+management
+SDBP: Society for Developmental
+and Behavioral Pediatrics
+PEDIATRICS Volume 144, number 4, October 2019
+19
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 19]
+
+[PAGE 20]
+vAmerican Academy of Pediatrics, Itasca, Illinois; wAmerican Academy of Child and Adolescent Psychiatry, Washington, District of Columbia; xFeinberg School of
+Medicine, Northwestern University, Chicago, Illinois; yAtlanta, Georgia; and zHolderness, New Hampshire
+The guidance in this report does not indicate an exclusive course of treatment or serve as a standard of medical care. Variations, taking into account individual
+circumstances, may be appropriate.
+All clinical practice guidelines from the American Academy of Pediatrics automatically expire 5 years after publication unless reafﬁrmed, revised, or retired at or
+before that time.
+The ﬁndings and conclusions in this report are those of the authors and do not necessarily represent the ofﬁcial position of the Centers for Disease Control and
+Prevention. Dr Holbrook was not an author of the accompanying supplemental section on barriers to care.
+This document is copyrighted and is property of the American Academy of Pediatrics and its Board of Directors. All authors have ﬁled conﬂict of interest statements
+with the American Academy of Pediatrics. Any conﬂicts have been resolved through a process approved by the Board of Directors. The American Academy of
+Pediatrics has neither solicited nor accepted any commercial involvement in the development of the content of this publication.
+DOI: https://doi.org/10.1542/peds.2019-2528
+Address correspondence to Mark L. Wolraich, MD, FAAP. Email: mark-wolraich@ouhsc.edu
+PEDIATRICS (ISSN Numbers: Print, 0031-4005; Online, 1098-4275).
+Copyright © 2019 by the American Academy of Pediatrics
+FINANCIAL DISCLOSURE: The authors have indicated they have no ﬁnancial relationships relevant to this article to disclose.
+FUNDING: No external funding.
+POTENTIAL CONFLICT OF INTEREST: All authors have ﬁled conﬂict of interest statements with the American Academy of Pediatrics. Any conﬂicts have been resolved
+through a process approved by the American Academy of Pediatrics board of directors. Dr Allan reports a relationship with ADDitude Magazine; Dr Chan reports
+relationships with TriVox Health and Wolters Kluwer; Dr Lehmann reports relationships with International Medical Informatics Association, Springer Publishing, and
+Thieme Publishing Group; Dr Wolraich reports a Continuing Medical Education trainings relationship with the Resource for Advancing Children’s Health Institute; the
+other authors have indicated they have no potential conﬂicts of interest to disclose.
+REFERENCES
+1. American Academy of Pediatrics.
+Subcommittee on Attention-Deﬁcit/
+Hyperactivity Disorder, Steering
+Committee on Quality Improvement and
+Management. ADHD: Clinical guideline for
+the diagnosis, evaluation, and treatment
+of attention-deﬁcit/hyperactivity disorder
+in children and adolescents. Pediatrics.
+2011;128(5):1007–1022
+2. American Academy of Pediatrics Task
+Force on Mental Health. Addressing
+Mental Health Concerns in Primary
+Care: A Clinician’s Toolkit [CD-ROM]. Elk
+Grove Village, IL: American Academy of
+Pediatrics; 2010
+3. Pastor PN, Reuben CA. Racial and
+ethnic differences in ADHD and LD in
+young school-age children: parental
+reports in the National Health
+Interview Survey. Public Health Rep.
+2005;120(4):383–392
+4. US Department of Health and Human
+Services; Health Resources and
+Services Administration. Designated
+health professional shortage areas
+statistics: designated HPSA quarterly
+summary. Rockville, MD: Health
+Resources and Services
+Administration; 2018
+5. Pelech D, Hayford T. Medicare
+advantage and commercial prices for
+mental health services. Health Aff
+(Millwood). 2019;38(2):262–267
+6. Melek SP, Perlman D, Davenport S.
+Differential Reimbursement of
+Psychiatric Services by Psychiatrists
+and Other Medical Providers. Seattle,
+WA: Milliman;2017
+7. Holbrook JR, Bitsko RH, Danielson ML,
+Visser SN. Interpreting the prevalence
+of mental disorders in children:
+tribulation and triangulation. Health
+Promot Pract. 2017;18(1):5–7
+8. Thomas R, Sanders S, Doust J, Beller E,
+Glasziou P. Prevalence of attention-
+deﬁcit/hyperactivity disorder:
+a systematic review and meta-
+analysis. Pediatrics. 2015;135(4).
+Available at: www.pediatrics.org/cgi/
+content/full/135/4/e994
+9. Wolraich ML, McKeown RE, Visser SN,
+et al. The prevalence of ADHD: its
+diagnosis and treatment in four
+school districts across two states.
+J Atten Disord. 2014;18(7):563–575
+10. Rowland AS, Skipper BJ, Umbach DM,
+et al. The prevalence of ADHD in
+a population-based sample. J Atten
+Disord. 2015;19(9):741–754
+11. Danielson ML, Bitsko RH, Ghandour RM,
+Holbrook JR, Kogan MD, Blumberg SJ.
+Prevalence of parent-reported ADHD
+diagnosis and associated treatment
+among U.S. children and adolescents,
+2016. J Clin Child Adolesc Psychol. 2018;
+47(2):199–212
+12. Visser SN, Zablotsky B, Holbrook JR,
+et al. National Health Statistics Reports,
+No 81: Diagnostic Experiences of Children
+with Attention-Deﬁcit/Hyperactivity
+Disorder. Hyattsville, MD: National Center
+for Health Statistics; 2015
+13. Molina BS, Hinshaw SP, Swanson JM,
+et al; MTA Cooperative Group. The MTA
+at 8 years: prospective follow-up of
+children treated for combined-type ADHD
+in a multisite study. J Am Acad Child
+Adolesc Psychiatry. 2009;48(5):484–500
+14. Holbrook JR, Cuffe SP, Cai B, et al.
+Persistence of parent-reported ADHD
+symptoms from childhood through
+adolescence in a community sample.
+J Atten Disord. 2016;20(1):11–20
+20
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 20]
+
+[PAGE 21]
+15. Mueller KL, Tomblin JB. Examining the
+comorbidity of language disorders and
+ADHD. Top Lang Disord. 2012;32(3):
+228–246
+16. Pastor PN, Reuben CA, Duran CR,
+Hawkins LD. Association Between
+Diagnosed ADHD and Selected
+Characteristics Among Children Aged
+4–17 Years: United States, 2011–2013.
+NCHS Data Brief, No. 201. Hyattsville,
+MD: National Center for Health
+Statistics; 2015
+17. Elia J, Ambrosini P, Berrettini W. ADHD
+characteristics: I. Concurrent co-
+morbidity patterns in children &
+adolescents. Child Adolesc Psychiatry
+Ment Health. 2008;2(1):15
+18. Centers for Disease Control and
+Prevention (CDC). Mental health in the
+United States. Prevalence of diagnosis
+and medication treatment for attention-
+deﬁcit/hyperactivity disorder--United
+States, 2003. MMWR Morb Mortal Wkly
+Rep. 2005;54(34):842–847
+19. Cuffe SP, Visser SN, Holbrook JR, et al.
+ADHD and psychiatric comorbidity:
+functional outcomes in a school-based
+sample of children [published online
+ahead of print November 25, 2015].
+J Atten Disord. doi:10.1177/
+1087054715613437
+20. Gaub M, Carlson CL. Gender differences
+in ADHD: a meta-analysis and critical
+review. J Am Acad Child Adolesc
+Psychiatry. 1997;36(8):1036–1045
+21. Tung I, Li JJ, Meza JI, et al. Patterns of
+comorbidity among girls with ADHD:
+a meta-analysis. Pediatrics. 2016;138(4):
+e20160430
+22. Layton TJ, Barnett ML, Hicks TR, Jena
+AB. Attention deﬁcit-hyperactivity
+disorder and month of school
+enrollment. N Engl J Med. 2018;379(22):
+2122–2130
+23. Kemper AR, Maslow GR, Hill S, et al.
+Attention Deﬁcit Hyperactivity Disorder:
+Diagnosis and Treatment in Children
+and Adolescents. Comparative
+Effectiveness Reviews, No. 203.
+Rockville, MD: Agency for Healthcare
+Research and Quality; 2018
+24. Pelham WE Jr, Wheeler T, Chronis A.
+Empirically supported psychosocial
+treatments for attention deﬁcit
+hyperactivity disorder. J Clin Child
+Psychol. 1998;27(2):190–205
+25. Evans SW, Owens JS, Wymbs BT, Ray AR.
+Evidence-based psychosocial
+treatments for children and
+adolescents with attention deﬁcit/
+hyperactivity disorder. J Clin Child
+Adolesc Psychol. 2018;47(2):157–198
+26. Pelham WE Jr, Fabiano GA. Evidence-
+based psychosocial treatments for
+attention-deﬁcit/hyperactivity disorder.
+J Clin Child Adolesc Psychol. 2008;37(1):
+184–214
+27. American Academy of Pediatrics
+Steering Committee on Quality
+Improvement and Management.
+Classifying recommendations for
+clinical practice guidelines. Pediatrics.
+2004;114(3):874–877
+28. Visser SN, Lesesne CA, Perou R. National
+estimates and factors associated with
+medication treatment for childhood
+attention-deﬁcit/hyperactivity disorder.
+Pediatrics. 2007;119(suppl 1):S99–S106
+29. Centers for Disease Control and
+Prevention (CDC). Increasing
+prevalence of parent-reported
+attention-deﬁcit/hyperactivity disorder
+among children–United States, 2003
+and 2007. MMWR Morb Mortal Wkly
+Rep. 2010;59(44):1439–1443
+30. Egger HL, Kondo D, Angold A. The
+epidemiology and diagnostic issues in
+preschool attention-deﬁcit/hyperactivity
+disorder: a review. Infants Young Child.
+2006;19(2):109–122
+31. Wolraich ML, Wibbelsman CJ, Brown TE,
+et al. Attention-deﬁcit/hyperactivity
+disorder among adolescents: a review
+of the diagnosis, treatment, and clinical
+implications. Pediatrics. 2005;115(6):
+1734–1746
+32. American Psychiatric Association.
+Diagnostic and Statistical Manual of
+Mental Disorders (DSM-5). 5th ed.
+Arlington, VA: American Psychiatric
+Association; 2013
+33. Lahey BB, Pelham WE, Stein MA, et al.
+Validity of DSM-IV attention-deﬁcit/
+hyperactivity disorder for younger
+children. J Am Acad Child Adolesc
+Psychiatry. 1998;37(7):695–702
+34. Pavuluri MN, Luk SL, McGee R. Parent
+reported preschool attention deﬁcit
+hyperactivity: measurement and
+validity. Eur Child Adolesc Psychiatry.
+1999;8(2):126–133
+35. Harvey EA, Youngwirth SD, Thakar DA,
+Errazuriz PA. Predicting attention-
+deﬁcit/hyperactivity disorder and
+oppositional deﬁant disorder from
+preschool diagnostic assessments.
+J Consult Clin Psychol. 2009;77(2):
+349–354
+36. Keenan K, Wakschlag LS. More than the
+terrible twos: the nature and severity of
+behavior problems in clinic-referred
+preschool children. J Abnorm Child
+Psychol. 2000;28(1):33–46
+37. Gadow KD, Nolan EE, Litcher L, et al.
+Comparison of attention-deﬁcit/
+hyperactivity disorder symptom
+subtypes in Ukrainian schoolchildren.
+J Am Acad Child Adolesc Psychiatry.
+2000;39(12):1520–1527
+38. Sprafkin J, Volpe RJ, Gadow KD, Nolan
+EE, Kelly K. A DSM-IV-referenced
+screening instrument for preschool
+children: the Early Childhood Inventory-
+4. J Am Acad Child Adolesc Psychiatry.
+2002;41(5):604–612
+39. Poblano A, Romero E. ECI-4 screening of
+attention deﬁcit-hyperactivity disorder
+and co-morbidity in Mexican preschool
+children: preliminary results. Arq
+Neuropsiquiatr. 2006;64(4):932–936
+40. American Academy of Pediatrics.
+Mental Health Screening and
+Assessment Tools for Primary Care. Elk
+Grove Village, IL: American Academy of
+Pediatrics; 2012. Available at: https://
+www.aap.org/en-us/advocacy-and-
+policy/aap-health-initiatives/Mental-
+Health/Documents/MH_ScreeningChart.
+pdf. Accessed September 8, 2019
+41. DuPaul GJ, Power TJ, Anastopoulos AD,
+Reid R. ADHD Rating Scale – 5 for
+Children and Adolescents: Checklists,
+Norms, and Clinical Interpretation. 2nd
+ed. New York, NY: Guilford Press; 2016
+42. McGoey KE, DuPaul GJ, Haley E, Shelton
+TL. Parent and teacher ratings of
+attention-deﬁcit/hyperactivity disorder
+in preschool: the ADHD rating scale-IV
+preschool version. J Psychopathol
+Behav Assess. 2007;29(4):269–276
+43. Young J. Common comorbidities seen in
+adolescents with attention-deﬁcit/
+hyperactivity disorder. Adolesc Med
+State Art Rev. 2008;19(2):216–228, vii
+44. Freeman RD; Tourette Syndrome
+International Database Consortium. Tic
+disorders and ADHD: answers from
+PEDIATRICS Volume 144, number 4, October 2019
+21
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 21]
+
+[PAGE 22]
+a world-wide clinical dataset on
+Tourette syndrome. Eur Child Adolesc
+Psychiatry. 2007;16(suppl 1):15–23
+45. Riggs PD. Clinical approach to
+treatment of ADHD in adolescents with
+substance use disorders and conduct
+disorder. J Am Acad Child Adolesc
+Psychiatry. 1998;37(3):331–332
+46. Sibley MH, Pelham WE, Molina BSG,
+et al. Diagnosing ADHD in adolescence.
+J Consult Clin Psychol. 2012;80(1):
+139–150
+47. Kratochvil CJ, Vaughan BS, Stoner JA,
+et al. A double-blind, placebo-controlled
+study of atomoxetine in young children
+with ADHD. Pediatrics. 2011;127(4).
+Available at: www.pediatrics.org/cgi/
+content/full/127/4/e862
+48. Harrison AG, Edwards MJ, Parker KC.
+Identifying students faking ADHD:
+preliminary ﬁndings and strategies for
+detection. Arch Clin Neuropsychol. 2007;
+22(5):577–588
+49. Wolraich ML, Felice ME, Drotar DD. The
+Classiﬁcation of Child and Adolescent
+Mental Conditions in Primary Care:
+Diagnostic and Statistical Manual for
+Primary Care (DSM-PC), Child and
+Adolescent Version. Elk Grove Village, IL:
+American Academy of Pediatrics; 1996
+50. Rowland AS, Lesesne CA, Abramowitz
+AJ. The epidemiology of attention-
+deﬁcit/hyperactivity disorder (ADHD):
+a public health view. Ment Retard Dev
+Disabil Res Rev. 2002;8(3):162–170
+51. Cuffe SP, Moore CG, McKeown RE.
+Prevalence and correlates of ADHD
+symptoms in the national health
+interview survey. J Atten Disord. 2005;
+9(2):392–401
+52. Pastor PN, Reuben CA. Diagnosed
+attention deﬁcit hyperactivity disorder
+and learning disability: United States,
+2004-2006. Vital Health Stat 10. 2008;
+10(237):1–14
+53. Biederman J, Faraone SV, Wozniak J,
+Mick E, Kwon A, Aleardi M. Further
+evidence of unique developmental
+phenotypic correlates of pediatric
+bipolar disorder: ﬁndings from a large
+sample of clinically referred
+preadolescent children assessed over
+the last 7 years. J Affect Disord. 2004;
+82(suppl 1):S45–S58
+54. Biederman J, Kwon A, Aleardi M, et al.
+Absence of gender effects on attention
+deﬁcit hyperactivity disorder: ﬁndings
+in nonreferred subjects. Am
+J Psychiatry. 2005;162(6):1083–1089
+55. Biederman J, Ball SW, Monuteaux MC,
+et al. New insights into the comorbidity
+between ADHD and major depression in
+adolescent and young adult females.
+J Am Acad Child Adolesc Psychiatry.
+2008;47(4):426–434
+56. Biederman J, Melmed RD, Patel A,
+McBurnett K, Donahue J, Lyne A. Long-
+term, open-label extension study of
+guanfacine extended release in
+children and adolescents with ADHD.
+CNS Spectr. 2008;13(12):1047–1055
+57. Crabtree VM, Ivanenko A, Gozal D.
+Clinical and parental assessment of
+sleep in children with attention-deﬁcit/
+hyperactivity disorder referred to
+a pediatric sleep medicine center. Clin
+Pediatr (Phila). 2003;42(9):807–813
+58. LeBourgeois MK, Avis K, Mixon M, Olmi J,
+Harsh J. Snoring, sleep quality, and
+sleepiness across attention-deﬁcit/
+hyperactivity disorder subtypes. Sleep.
+2004;27(3):520–525
+59. Chan E, Zhan C, Homer CJ. Health care
+use and costs for children with
+attention-deﬁcit/hyperactivity disorder:
+national estimates from the Medical
+Expenditure Panel Survey. Arch Pediatr
+Adolesc Med. 2002;156(5):504–511
+60. Newcorn JH, Miller SR, Ivanova I, et al.
+Adolescent outcome of ADHD: impact of
+childhood conduct and anxiety
+disorders. CNS Spectr. 2004;9(9):
+668–678
+61. Sung V, Hiscock H, Sciberras E, Efron D.
+Sleep problems in children with
+attention-deﬁcit/hyperactivity disorder:
+prevalence and the effect on the child
+and family. Arch Pediatr Adolesc Med.
+2008;162(4):336–342
+62. Froehlich TE, Fogler J, Barbaresi WJ,
+Elsayed NA, Evans SW, Chan E. Using
+ADHD medications to treat coexisting
+ADHD and reading disorders:
+a systematic review. Clin Pharmacol
+Ther. 2018;104(4):619–637
+63. Rothenberger A, Roessner V. The
+phenomenology of attention-deﬁcit/
+hyperactivity disorder in tourette
+syndrome. In: Martino D, Leckman JF,
+eds. Tourette Syndrome. New York, NY:
+Oxford University Press; 2013:26–49
+64. Antshel KM, Zhang-James Y, Faraone SV.
+The comorbidity of ADHD and autism
+spectrum disorder. Expert Rev
+Neurother. 2013;13(10):1117–1128
+65. Mahajan R, Bernal MP, Panzer R, et al;
+Autism Speaks Autism Treatment
+Network Psychopharmacology
+Committee. Clinical practice pathways
+for evaluation and medication choice
+for attention-deﬁcit/hyperactivity
+disorder symptoms in autism spectrum
+disorders. Pediatrics. 2012;130(suppl
+2):S125–S138
+66. Larson K, Russ SA, Kahn RS, Halfon N.
+Patterns of comorbidity, functioning,
+and service use for US children with
+ADHD, 2007. Pediatrics. 2011;127(3):
+462–470
+67. Society for Developmental and
+Behavioral Pediatrics. ADHD special
+interest group. Available at: www.sdbp.
+org/committees/sig-adhd.cfm. Accessed
+September 8, 2019
+68. Medical Home Initiatives for Children
+With Special Needs Project Advisory
+Committee. American Academy of
+Pediatrics. The medical home.
+Pediatrics. 2002;110(1 pt 1):184–186
+69. Brito A, Grant R, Overholt S, et al. The
+enhanced medical home: the pediatric
+standard of care for medically
+underserved children. Adv Pediatr.
+2008;55:9–28
+70. Sibley MH, Swanson JM, Arnold LE, et al;
+MTA Cooperative Group. Deﬁning ADHD
+symptom persistence in adulthood:
+optimizing sensitivity and speciﬁcity.
+J Child Psychol Psychiatry. 2017;58(6):
+655–662
+71. Chang Z, D’Onofrio BM, Quinn PD,
+Lichtenstein P, Larsson H. Medication
+for attention-deﬁcit/hyperactivity
+disorder and risk for depression:
+a nationwide longitudinal cohort study.
+Biol Psychiatry. 2016;80(12):916–922
+72. Biederman J, Monuteaux MC, Spencer T,
+Wilens TE, Faraone SV. Do stimulants
+protect against psychiatric disorders in
+youth with ADHD? A 10-year follow-up
+study. Pediatrics. 2009;124(1):71–
+78
+73. Barbaresi WJ, Katusic SK, Colligan RC,
+Weaver AL, Jacobsen SJ. Modiﬁers of
+long-term school outcomes for children
+with attention-deﬁcit/hyperactivity
+disorder: does treatment with
+22
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 22]
+
+[PAGE 23]
+stimulant medication make
+a difference? Results from a population-
+based study. J Dev Behav Pediatr. 2007;
+28(4):274–287
+74. Schefﬂer RM, Brown TT, Fulton BD,
+Hinshaw SP, Levine P, Stone S. Positive
+association between attention-deﬁcit/
+hyperactivity disorder medication use
+and academic achievement during
+elementary school. Pediatrics. 2009;
+123(5):1273–1279
+75. Barbaresi WJ, Colligan RC, Weaver AL,
+Voigt RG, Killian JM, Katusic SK.
+Mortality, ADHD, and psychosocial
+adversity in adults with childhood
+ADHD: a prospective study. Pediatrics.
+2013;131(4):637–644
+76. Chang Z, Lichtenstein P, Långström N,
+Larsson H, Fazel S. Association between
+prescription of major psychotropic
+medications and violent reoffending
+after prison release. JAMA. 2016;
+316(17):1798–1807
+77. Lichtenstein P, Halldner L, Zetterqvist J,
+et al. Medication for attention deﬁcit-
+hyperactivity disorder and criminality.
+N Engl J Med. 2012;367(21):2006–2014
+78. Chang Z, Quinn PD, Hur K, et al.
+Association between medication use for
+attention-deﬁcit/hyperactivity disorder
+and risk of motor vehicle crashes.
+JAMA Psychiatry. 2017;74(6):597–603
+79. Chang Z, Lichtenstein P, D’Onofrio BM,
+Sjölander A, Larsson H. Serious
+transport accidents in adults with
+attention-deﬁcit/hyperactivity disorder
+and the effect of medication:
+a population-based study. JAMA
+Psychiatry. 2014;71(3):319–325
+80. Harstad E, Levy S; Committee on
+Substance Abuse. Attention-deﬁcit/
+hyperactivity disorder and substance
+abuse. Pediatrics. 2014;134(1). Available
+at: www.pediatrics.org/cgi/content/
+full/134/1/e293
+81. Dalsgaard S, Leckman JF, Mortensen
+PB, Nielsen HS, Simonsen M. Effect of
+drugs on the risk of injuries in children
+with attention deﬁcit hyperactivity
+disorder: a prospective cohort study.
+Lancet Psychiatry. 2015;2(8):702–709
+82. Raman SR, Marshall SW, Haynes K,
+Gaynes BN, Naftel AJ, Stürmer T.
+Stimulant treatment and injury among
+children with attention deﬁcit
+hyperactivity disorder: an application of
+the self-controlled case series study
+design. Inj Prev. 2013;19(3):164–170
+83. Greenhill L, Kollins S, Abikoff H, et al.
+Efﬁcacy and safety of immediate-
+release methylphenidate treatment for
+preschoolers with ADHD. J Am Acad
+Child Adolesc Psychiatry. 2006;45(11):
+1284–1293
+84. Children and Adults with Attention-
+Deﬁcit/Hyperactivity Disorder. CHADD.
+Available at: www.chadd.org. Accessed
+September 8, 2019
+85. Sonuga-Barke EJ, Daley D, Thompson M,
+Laver-Bradbury C, Weeks A. Parent-
+based therapies for preschool
+attention-deﬁcit/hyperactivity disorder:
+a randomized, controlled trial with
+a community sample. J Am Acad Child
+Adolesc Psychiatry. 2001;40(4):402–408
+86. Van Cleave J, Leslie LK. Approaching
+ADHD as a chronic condition:
+implications for long-term adherence.
+J Psychosoc Nurs Ment Health Serv.
+2008;46(8):28–37
+87. Webster-Stratton CH, Reid MJ,
+Beauchaine T. Combining parent and
+child training for young children with
+ADHD. J Clin Child Adolesc Psychol.
+2011;40(2):191–203
+88. Shepard SA, Dickstein S. Preventive
+intervention for early childhood
+behavioral problems: an ecological
+perspective. Child Adolesc Psychiatr
+Clin N Am. 2009;18(3):687–706
+89. Evans SW, Langberg JM, Egan T, Molitor
+SJ. Middle school-based and high
+school-based interventions for
+adolescents with ADHD. Child Adolesc
+Psychiatr Clin N Am. 2014;23(4):699–715
+90. McGough JJ, Sturm A, Cowen J, et al.
+Double-blind, sham-controlled, pilot
+study of trigeminal nerve stimulation
+for attention-deﬁcit/hyperactivity
+disorder. J Am Acad Child Adolesc
+Psychiatry. 2019;58(4):403–411.e3
+91. Robin AL, Foster SL. The Guilford Family
+Therapy Series. Negotiating
+Parent–Adolescent Conﬂict: A
+Behavioral–Family Systems Approach.
+New York, NY: Guilford Press; 1989
+92. Barkley RA, Guevremont DC,
+Anastopoulos AD, Fletcher KE. A
+comparison of three family therapy
+programs for treating family conﬂicts
+in adolescents with attention-deﬁcit
+hyperactivity disorder. J Consult Clin
+Psychol. 1992;60(3):450–462
+93. Fabiano GA, Schatz NK, Morris KL, et al.
+Efﬁcacy of a family-focused intervention
+for young drivers with attention-deﬁcit
+hyperactivity disorder. J Consult Clin
+Psychol. 2016;84(12):1078–1093
+94. Sibley MH, Graziano PA, Kuriyan AB,
+et al. Parent-teen behavior therapy 1
+motivational interviewing for
+adolescents with ADHD. J Consult Clin
+Psychol. 2016;84(8):699–712
+95. Evans SW, Langberg JM, Schultz BK,
+et al. Evaluation of a school-based
+treatment program for young
+adolescents with ADHD. J Consult Clin
+Psychol. 2016;84(1):15–30
+96. Langberg JM, Dvorsky MR, Molitor SJ,
+et al. Overcoming the research-to-
+practice gap: a randomized trial with
+two brief homework and organization
+interventions for students with ADHD as
+implemented by school mental health
+providers. J Consult Clin Psychol. 2018;
+86(1):39–55
+97. Schultz BK, Evans SW, Langberg JM,
+Schoemann AM. Outcomes for
+adolescents who comply with long-term
+psychosocial treatment for ADHD.
+J Consult Clin Psychol. 2017;85(3):
+250–261
+98. Newcorn JH, Kratochvil CJ, Allen AJ,
+et al; Atomoxetine/Methylphenidate
+Comparative Study Group. Atomoxetine
+and osmotically released
+methylphenidate for the treatment of
+attention deﬁcit hyperactivity disorder:
+acute comparison and differential
+response. Am J Psychiatry. 2008;165(6):
+721–730
+99. Cheng JY, Chen RY, Ko JS, Ng EM.
+Efﬁcacy and safety of atomoxetine for
+attention-deﬁcit/hyperactivity disorder
+in children and adolescents-meta-
+analysis and meta-regression analysis.
+Psychopharmacology (Berl). 2007;
+194(2):197–209
+100. Michelson D, Allen AJ, Busner J, et al.
+Once-daily atomoxetine treatment for
+children and adolescents with attention
+deﬁcit hyperactivity disorder:
+a randomized, placebo-controlled study.
+Am J Psychiatry. 2002;159(11):
+1896–1901
+101. Biederman J, Melmed RD, Patel A, et al;
+SPD503 Study Group. A randomized,
+PEDIATRICS Volume 144, number 4, October 2019
+23
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 23]
+
+[PAGE 24]
+double-blind, placebo-controlled study
+of guanfacine extended release in
+children and adolescents with
+attention-deﬁcit/hyperactivity disorder.
+Pediatrics. 2008;121(1). Available at:
+www.pediatrics.org/cgi/content/
+full/121/1/e73
+102. Sallee FR, Lyne A, Wigal T, McGough JJ.
+Long-term safety and efﬁcacy of
+guanfacine extended release in
+children and adolescents with
+attention-deﬁcit/hyperactivity disorder.
+J Child Adolesc Psychopharmacol. 2009;
+19(3):215–226
+103. Jain R, Segal S, Kollins SH, Khayrallah
+M. Clonidine extended-release tablets
+for pediatric patients with attention-
+deﬁcit/hyperactivity disorder. J Am
+Acad Child Adolesc Psychiatry. 2011;
+50(2):171–179
+104. Brown JT, Bishop JR. Atomoxetine
+pharmacogenetics: associations with
+pharmacokinetics, treatment response
+and tolerability. Pharmacogenomics.
+2015;16(13):1513–1520
+105. Kambeitz J, Romanos M, Ettinger U.
+Meta-analysis of the association
+between dopamine transporter
+genotype and response to
+methylphenidate treatment in ADHD.
+Pharmacogenomics J. 2014;14(1):77–84
+106. Bruxel EM, Akutagava-Martins GC,
+Salatino-Oliveira A, et al. ADHD
+pharmacogenetics across the life cycle:
+new ﬁndings and perspectives. Am
+J Med Genet B Neuropsychiatr Genet.
+2014;165B(4):263–282
+107. Kieling C, Genro JP, Hutz MH, Rohde LA.
+A current update on ADHD
+pharmacogenomics.
+Pharmacogenomics. 2010;11(3):
+407–419
+108. Froehlich TE, McGough JJ, Stein MA.
+Progress and promise of attention-
+deﬁcit hyperactivity disorder
+pharmacogenetics. CNS Drugs. 2010;
+24(2):99–117
+109. Joensen B, Meyer M, Aagaard L. Speciﬁc
+genes associated with adverse events
+of methylphenidate use in the pediatric
+population: a systematic literature
+review. J Res Pharm Pract. 2017;6(2):
+65–72
+110. Swanson JM, Elliott GR, Greenhill LL,
+et al. Effects of stimulant medication on
+growth rates across 3 years in the MTA
+follow-up. J Am Acad Child Adolesc
+Psychiatry. 2007;46(8):1015–1027
+111. Mosholder AD, Gelperin K, Hammad TA,
+Phelan K, Johann-Liang R.
+Hallucinations and other psychotic
+symptoms associated with the use of
+attention-deﬁcit/hyperactivity disorder
+drugs in children. Pediatrics. 2009;
+123(2):611–616
+112. Cortese S, Holtmann M, Banaschewski
+T, et al; European ADHD Guidelines
+Group. Practitioner review: current best
+practice in the management of adverse
+events during treatment with ADHD
+medications in children and
+adolescents. J Child Psychol Psychiatry.
+2013;54(3):227–246
+113. Avigan M. Review of AERS Data From
+Marketed Safety Experience During
+Stimulant Therapy: Death, Sudden
+Death, Cardiovascular SAEs (Including
+Stroke). Report No. D030403. Silver
+Spring, MD: Food and Drug
+Administration, Center for Drug
+Evaluation and Research; 2004
+114. Perrin JM, Friedman RA, Knilans TK;
+Black Box Working Group; Section on
+Cardiology and Cardiac Surgery.
+Cardiovascular monitoring and
+stimulant drugs for attention-deﬁcit/
+hyperactivity disorder. Pediatrics. 2008;
+122(2):451–453
+115. McCarthy S, Cranswick N, Potts L, Taylor
+E, Wong IC. Mortality associated with
+attention-deﬁcit hyperactivity disorder
+(ADHD) drug treatment: a retrospective
+cohort study of children, adolescents
+and young adults using the general
+practice research database. Drug Saf.
+2009;32(11):1089–1096
+116. Gould MS, Walsh BT, Munfakh JL, et al.
+Sudden death and use of stimulant
+medications in youths. Am J Psychiatry.
+2009;166(9):992–1001
+117. Cooper WO, Habel LA, Sox CM, et al.
+ADHD drugs and serious cardiovascular
+events in children and young adults.
+N Engl J Med. 2011;365(20):1896–1904
+118. Schelleman H, Bilker WB, Strom BL,
+et al. Cardiovascular events and death
+in children exposed and unexposed to
+ADHD agents. Pediatrics. 2011;127(6):
+1102–1110
+119. Garnock-Jones KP, Keating GM.
+Atomoxetine: a review of its use in
+attention-deﬁcit hyperactivity disorder
+in children and adolescents. Paediatr
+Drugs. 2009;11(3):203–226
+120. Reed VA, Buitelaar JK, Anand E, et al.
+The safety of atomoxetine for the
+treatment of children and adolescents
+with attention-deﬁcit/hyperactivity
+disorder: a comprehensive review of
+over a decade of research. CNS Drugs.
+2016;30(7):603–628
+121. Bangs ME, Tauscher-Wisniewski S,
+Polzer J, et al. Meta-analysis of suicide-
+related behavior events in patients
+treated with atomoxetine. J Am Acad
+Child Adolesc Psychiatry. 2008;47(2):
+209–218
+122. Bangs ME, Jin L, Zhang S, et al. Hepatic
+events associated with atomoxetine
+treatment for attention-deﬁcit
+hyperactivity disorder. Drug Saf. 2008;
+31(4):345–354
+123. Spencer TJ, Kratochvil CJ, Sangal RB,
+et al. Effects of atomoxetine on growth
+in children with attention-deﬁcit/
+hyperactivity disorder following up to
+ﬁve years of treatment. J Child Adolesc
+Psychopharmacol. 2007;17(5):689–700
+124. Elbe D, Reddy D. Focus on guanfacine
+extended-release: a review of its use in
+child and adolescent psychiatry. J Can
+Acad Child Adolesc Psychiatry. 2014;
+23(1):48–60
+125. Croxtall JD. Clonidine extended-release:
+in attention-deﬁcit hyperactivity
+disorder. Paediatr Drugs. 2011;13(5):
+329–336
+126. Vaughan B, Kratochvil CJ.
+Pharmacotherapy of pediatric
+attention-deﬁcit/hyperactivity disorder.
+Child Adolesc Psychiatr Clin N Am. 2012;
+21(4):941–955
+127. Hirota T, Schwartz S, Correll CU. Alpha-2
+agonists for attention-deﬁcit/
+hyperactivity disorder in youth:
+a systematic review and meta-analysis
+of monotherapy and add-on trials to
+stimulant therapy. J Am Acad Child
+Adolesc Psychiatry. 2014;53(2):153–173
+128. Treuer T, Gau SS, Méndez L, et al. A
+systematic review of combination
+therapy with stimulants and
+atomoxetine for attention-deﬁcit/
+hyperactivity disorder, including patient
+characteristics, treatment strategies,
+effectiveness, and tolerability. J Child
+Adolesc Psychopharmacol. 2013;23(3):
+179–193
+24
+FROM THE AMERICAN ACADEMY OF PEDIATRICS
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 24]
+
+[PAGE 25]
+129. Greenhill LL, Posner K, Vaughan BS,
+Kratochvil CJ. Attention deﬁcit
+hyperactivity disorder in preschool
+children. Child Adolesc Psychiatr Clin N
+Am. 2008;17(2):347–366, ix
+130. Wilens TE, Spencer TJ. Understanding
+attention-deﬁcit/hyperactivity disorder
+from childhood to adulthood. Postgrad
+Med. 2010;122(5):97–109
+131. Foy JM, ed. Psychotropic medications in
+primary care. In: Mental Health Care of
+Children and Adolescents: A Guide for
+Primary Care Clinicians. Itasca, IL:
+American Academy of Pediatrics; 2018:
+315–374
+132. Wilens TE, Adler LA, Adams J, et al.
+Misuse and diversion of stimulants
+prescribed for ADHD: a systematic
+review of the literature. J Am Acad
+Child Adolesc Psychiatry. 2008;47(1):
+21–31
+133. American Academy of Pediatrics.
+Mental health initiatives. Available at:
+https://www.aap.org/en-us/advocacy-
+and-policy/aap-health-initiatives/
+Mental-Health/Pages/default.aspx.
+Accessed September 8, 2019
+134. Levy S, Campbell MD, Shea CL, DuPont R.
+Trends in abstaining from substance
+use in adolescents: 1975-2014.
+Pediatrics. 2018;142(2):e20173498
+135. Graff Low K, Gendaszek AE. Illicit use of
+psychostimulants among college
+students: a preliminary study. Psychol
+Health Med. 2002;7(3):283–287
+136. Barkley RA, Cox D. A review of driving
+risks and impairments associated with
+attention-deﬁcit/hyperactivity disorder
+and the effects of stimulant medication
+on driving performance. J Safety Res.
+2007;38(1):113–128
+137. Jerome L, Habinski L, Segal A. Attention-
+deﬁcit/hyperactivity disorder (ADHD)
+and driving risk: a review of the
+literature and a methodological
+critique. Curr Psychiatry Rep. 2006;8(5):
+416–426
+138. Cox DJ, Merkel RL, Moore M, Thorndike
+F, Muller C, Kovatchev B. Relative
+beneﬁts of stimulant therapy with OROS
+methylphenidate versus mixed
+amphetamine salts extended release in
+improving the driving performance of
+adolescent drivers with attention-
+deﬁcit/hyperactivity disorder.
+Pediatrics. 2006;118(3). Available at:
+www.pediatrics.org/cgi/content/
+full/118/3/e704
+139. The MTA Cooperative Group; Multimodal
+Treatment Study of Children with ADHD.
+A 14-month randomized clinical trial of
+treatment strategies for attention-
+deﬁcit/hyperactivity disorder. Arch Gen
+Psychiatry. 1999;56(12):1073–1086
+140. Jensen PS, Hinshaw SP, Swanson JM,
+et al. Findings from the NIMH
+Multimodal Treatment Study of ADHD
+(MTA): implications and applications for
+primary care providers. J Dev Behav
+Pediatr. 2001;22(1):60–73
+141. Pelham WE Jr, Gnagy EM. Psychosocial
+and combined treatments for ADHD.
+Ment Retard Dev Disabil Res Rev. 1999;
+5(3):225–236
+142. Homer CJ, Klatka K, Romm D, et al. A
+review of the evidence for the medical
+home for children with special health
+care needs. Pediatrics. 2008;122(4).
+Available at: www.pediatrics.org/cgi/
+content/full/122/4/e922
+143. Davila RR, Williams ML, MacDonald JT.
+Memorandum on clariﬁcation of policy
+to address the needs of children with
+attention deﬁcit disorders within
+general and/or special education. In:
+Parker HC, ed. The ADD Hyperactivity
+Handbook for Schools. Plantation, FL:
+Impact Publications Inc; 1991:261–268
+144. Harrison JR, Bunford N, Evans SW,
+Owens JS. Educational accommodations
+for students with behavioral
+challenges: a systematic review of the
+literature. Rev Educ Res. 2013;83(4):
+551–597
+145. Committee on Pediatric Workforce.
+Enhancing pediatric workforce diversity
+and providing culturally effective
+pediatric care: implications for
+practice, education, and policy making.
+Pediatrics. 2013;132(4). Available at:
+www.pediatrics.org/cgi/content/
+full/132/4/e1105
+146. Berman RS, Patel MR, Belamarich PF,
+Gross RS. Screening for poverty and
+poverty-related social determinants of
+health. Pediatr Rev. 2018;39(5):235–246
+147. Solanto MV.
+Neuropsychopharmacological
+mechanisms of stimulant drug action in
+attention-deﬁcit hyperactivity disorder:
+a review and integration. Behav Brain
+Res. 1998;94(1):127–152
+148. Wagner E. Chronic disease
+management: what will it take to
+improve care for chronic illness? Effect
+Clin Pract. 1998;1(1):2–4
+149. Brinkman WB, Sucharew H, Majcher JH,
+Epstein JN. Predictors of medication
+continuity in children with ADHD.
+Pediatrics. 2018;141(6):e20172580
+150. Pliszka SR, Crismon ML, Hughes CW,
+et al; Texas Consensus Conference
+Panel on Pharmacotherapy of
+Childhood Attention Deﬁcit Hyperactivity
+Disorder. The Texas Children’s
+Medication Algorithm Project: revision
+of the algorithm for pharmacotherapy
+of attention-deﬁcit/hyperactivity
+disorder. J Am Acad Child Adolesc
+Psychiatry. 2006;45(6):642–657
+151. Pringsheim T, Hirsch L, Gardner D,
+Gorman DA. The pharmacological
+management of oppositional behaviour,
+conduct problems, and aggression in
+children and adolescents with
+attention-deﬁcit hyperactivity disorder,
+oppositional deﬁant disorder, and
+conduct disorder: a systematic review
+and meta-analysis. Part 1:
+psychostimulants, alpha-2 agonists, and
+atomoxetine. Can J Psychiatry. 2015;
+60(2):42–51
+152. Committee on Psychosocial Aspects of
+Child and Family Health and Task Force
+on Mental Health. Policy statement--The
+future of pediatrics: mental health
+competencies for pediatric primary
+care. Pediatrics. 2009;124(1):410–421
+153. Foy JM, ed. Algorithm: a process for
+integrating mental health care into
+pediatric practice. In: Mental Health
+Care of Children and Adolescents: A
+Guide for Primary Care Clinicians.
+Itasca, IL: American Academy of
+Pediatrics; 2018:815
+154. Cheng TL, Emmanuel MA, Levy DJ,
+Jenkins RR. Child health disparities:
+what can a clinician do? Pediatrics.
+2015;136(5):961–968
+155. Stein F, Remley K, Laraque-Arena D,
+Pursley DM. New resources and
+strategies to advance the AAP’s values
+of diversity, inclusion, and health equity.
+Pediatrics. 2018;141(4):e20180177
+156. American Academy of Pediatrics,
+Committee on Child Health Financing.
+Scope of health care beneﬁts for
+children from birth through age 26.
+Pediatrics. 2012;129(1):185–189
+PEDIATRICS Volume 144, number 4, October 2019
+25
+Downloaded from publications.​aap.​org/​pediatrics/​article-pdf/​144/​4/​e20192528/​1443490/​peds_20192528.​pdf
+by guest
+[/PAGE 25]

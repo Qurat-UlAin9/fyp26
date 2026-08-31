@@ -11,10 +11,12 @@
     "backend:check": "node -c backend/server.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.122.0",
     "@babel/core": "^7.26.0",
     "@babel/runtime": "^7.28.6",
     "@expo/vector-icons": "^15.1.1",
     "@gorhom/bottom-sheet": "^5.2.8",
+    "@pinecone-database/pinecone": "^8.2.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.15.2",
     "@react-navigation/native": "^7.1.28",

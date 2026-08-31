@@ -1,0 +1,2735 @@
+[PAGE 1]
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292  
+https://doi.org/10.1186/s12888-022-03898-z
+RESEARCH
+University students with attention deficit 
+hyperactivity disorder (ADHD): a consensus 
+statement from the UK Adult ADHD Network 
+(UKAAN)
+Jane A. Sedgwick‑Müller1*, Ulrich Müller‑Sedgwick2, Marios Adamou3, Marco Catani4, Rebecca Champ3, 
+Gísli Gudjónsson5, Dietmar Hank6, Mark Pitts7, Susan Young8 and Philip Asherson9 
+Abstract 
+Background:  Attention deficit hyperactivity disorder (ADHD) is associated with poor educational outcomes that 
+can have long-term negative effects on the mental health, wellbeing, and socio-economic outcomes of university 
+students. Mental health provision for university students with ADHD is often inadequate due to long waiting times for 
+access to diagnosis and treatment in specialist National Health Service (NHS) clinics. ADHD is a hidden and marginal‑
+ised disability, and within higher education in the UK, the categorisation of ADHD as a specific learning difference (or 
+difficulty) may be contributing to this.
+Aims:  This consensus aims to provide an informed understanding of the impact of ADHD on the educational 
+(or academic) outcomes of university students and highlight an urgent need for timely access to treatment and 
+management.
+Methods:  The UK Adult ADHD Network (UKAAN) convened a meeting of practitioners and experts from England, 
+Wales, and Scotland, to discuss issues that university students with ADHD can experience or present with during their 
+programme of studies and how best to address them. A report on the collective analysis, evaluation, and opinions 
+of the expert panel and published literature about the impact of ADHD on the educational outcomes of university 
+students is presented.
+Results:  A consensus was reached that offers expert advice, practical guidance, and recommendations to support 
+the medical, education, and disability practitioners working with university students with ADHD.
+Conclusions:  Practical advice, guidance, and recommendations based on expert consensus can inform the iden‑
+tification of ADHD in university students, personalised interventions, and educational support, as well as contribute 
+to existing research in this topic area. There is a need to move away from prevailing notions within higher education 
+about ADHD being a specific learning difference (or difficulty) and attend to the urgent need for university students 
+with ADHD to have timely access to treatment and support. A multimodal approach can be adapted to support 
+© The Author(s) 2022. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which 
+permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the 
+original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or 
+other third party material in this article are included in the article’s Creative Commons licence, unless indicated otherwise in a credit line 
+to the material. If material is not included in the article’s Creative Commons licence and your intended use is not permitted by statutory 
+regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this 
+licence, visithttp://​creat​iveco​mmons.​org/​licen​ses/​by/4.​0/. The Creative Commons Public Domain Dedication waiver (http://​creat​iveco​
+mmons.​org/​publi​cdoma​in/​zero/1.​0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data.
+Open Access
+*Correspondence:  j.sedgwick@health.gov.je
+1 Health and Community Services, Government of Jersey, St Helier, 
+Jersey. Social, Genetic & Developmental Psychiatry, Institute of Psychiatry, 
+Psychology & Neuroscience (IoPPN) & Florence Nightingale Faculty 
+of Nursing, Midwifery & Palliative Care (FNFNM), King’s College London, 
+London, UK
+Full list of author information is available at the end of the article
+[/PAGE 1]
+
+[PAGE 2]
+Page 2 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+Background
+Going to university can be an exciting experience, but it 
+is also a daunting and stressful experience for new and 
+returning students. The pressure to do well academically 
+and cope with an array of lifestyle changes, can impact on 
+the mental health and wellbeing of university students, 
+especially students with ADHD who are transition-
+ing from adolescence into adulthood [1]. This transi-
+tional phase defines a critical developmental stage in life 
+termed “emerging adulthood” [2]. Institutions of higher 
+education (HEIs or universities) are arguably designed 
+for the kind of identity exploration that defines emerging 
+adulthood. This includes leaving home to go to university, 
+and perhaps for the first time, being independent and 
+responsible for managing one’s own finances and dietary 
+needs, whilst at the same time being exposed to a mul-
+titude of different worldviews and new opportunities for 
+friendships, romances, partying and work [3]. Emerging 
+adulthood is also recognised as a peak period for experi-
+mentation with substance use or high-risk sexual and 
+other behaviours, and for the onset or exacerbation of 
+mental health problems including self-harm and suicide 
+[4]. The mental health and wellbeing of university stu-
+dents is a cause for concern [1, 5], and the experience of 
+the expert group is that emerging adults with ADHD may 
+be particularly vulnerable during and after transitioning 
+to university.
+ADHD is a neurodevelopmental disorder that begins in 
+childhood and frequently persists into adulthood. ADHD 
+is clinically defined by persisting symptoms of inatten-
+tion, hyperactivity and impulsivity that can cause func-
+tional impairments in multiple domains of daily life. In 
+the Diagnostic and Statistical Manual version 5 (DSM-5) 
+[6], and the International Classification of Diseases ver-
+sion 11 (ICD-11) [7], diagnostic requirements for ADHD 
+are broadly similar. For this reason, and since the ICD-11 
+officially comes into effect in January 2022, in this report, 
+reference is made to DSM-5 diagnostic requirements for 
+ADHD in adults. Table 1 lists some typical characteristics 
+and behaviours seen in adults with ADHD, including uni-
+versity students. It is also not uncommon for university 
+students with ADHD to present with co-occurring spe-
+cific learning differences (or difficulties) (SpLDs), devel-
+opmental co-ordination disorder (DCD) or dyspraxia 
+as the former term, autism spectrum disorder (ASD), 
+anxiety, depression, personality, eating, and substance 
+use disorders [8–14]. A significant majority of university 
+students with ADHD will experience academic difficul-
+ties to varying degrees of severity [15, 16]. Previous stud-
+ies refer to “educational or academic outcomes” in terms 
+of academic achievement (attainment of information 
+and skills learnt, grades obtained on continuous assess-
+ments such as standardised examinations or coursework) 
+and academic performance (completed years of schooling, 
+enrolment into university, final grades awarded, reten-
+tion, and progression) [17]. Evidence suggests ADHD will 
+impact on these different academic domains in a negative 
+way [18].
+Historical context
+The historical context matters a lot for understanding the 
+ways in which ADHD exists in society, including how it 
+is perceived, experienced, and managed. Within UK HEIs, 
+ADHD is perceived and/or conceptualised as a SpLD [22]. 
+In the special educational needs and disability (SEND) 
+code of practice (0 to 25 years), ADHD is conceptualised 
+as a social, emotional, and mental health difficulty [23], 
+and in the DSM-5 and ICD-11, ADHD is defined as “the 
+most common mental health disorder in childhood that 
+often persists in adulthood” [6, 7]. These conceptual dif-
+ferences reflect how the nomenclature, understanding 
+of functional impairments, and clinical characteristics of 
+ADHD within different professional contexts have evolved 
+over time. However for some authors, it was the inception 
+of compulsory education in the late nineteenth century, 
+rather than advances in the medical sciences, that trans-
+formed ADHD into a salient societal concern [24]. In the 
+UK, when compulsory education was first instituted, gov-
+ernment funding to schools including salaries for teach-
+ers, was based on the numbers of students that attended 
+school for at least 100 days per academic year and passed 
+standardised examinations in the 3Rs (reading, writing, 
+arithmetic) [25]. This system, known at the time as “pay-
+ment by results” [26], is said to have also motivated teach-
+ers to raise concerns about students who struggled to pass 
+the 3Rs examinations, and eventually these students were 
+deemed uneducable in mainstream schools [27, 28]. Some 
+of these students were described as “… hyperactive, dis-
+tractible, unruly and unmanageable in school … frequently 
+disturbing the whole class … quarrelsome and impulsive … 
+university students with ADHD. This approach would view timely access to treatment, including reasonable adjust‑
+ments and educational support, as having a positive impact on the academic performance and achievement of 
+university students with ADHD.
+Keywords:  Attention-deficit/hyperactivity disorder, ADHD, Academic performance, Academic achievement, 
+University students, Educational outcomes, University, College, Higher education
+[/PAGE 2]
+
+[PAGE 3]
+Page 3 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+often leaving the school building during class time without 
+permission” [29], p.15).
+The Egerton Royal Commission [30], was first to 
+examine the problem of uneducable students in main-
+stream schools. In its final report the umbrella term 
+“feeble-minded”, although pejorative today, was intro-
+duced to categorise students assessed and certified as 
+needing special education. Arguably, feeble-mindedness 
+is the antecedent for a variety of social, emotional, men-
+tal and physical health difficulties that can cause learn-
+ing problems for a sub-set of students. The early use of 
+the term in education also marked the medicalisation of 
+poor scholastic performance and failure [31]. Although 
+Still’s observation of a “moral defect without intellectual 
+impairment” in school children [32], was heralded as 
+an early descriptor of the contemporary medical con-
+cept of ADHD [33], the term feeble-minded categorised 
+all “children who could not be properly taught in ordi-
+nary elementary schools by ordinary methods,” and this 
+included the children who Still had described [34]. In the 
+early twentieth century, new research on the heritability 
+of intelligence roused a relentless eugenic enterprise to 
+eradicate feeble-mindedness by preventing its procrea-
+tion [35]. These events coincided with the development 
+of psychometric tests of intelligence [36–38], and their 
+use within education became the means by which stu-
+dents were differentiated as either feeble-minded or “sim-
+ply dull/backward”. The former group of students were 
+sent to newly established residential colonies for care 
+and management under the Mental Deficiency Act 1913, 
+whilst the dull/backward students continued to be edu-
+cated within mainstream schools [39].
+In 1913, Cyril Burt (1883–1971), the father of educa-
+tional psychology in the UK, was the first psychologist 
+to be appointed by the London County Council (LCC) 
+to assess students referred under the Mental Deficiency 
+Act. Burt administered psychometric tests with these 
+students, conducted extensive ground-breaking research 
+into educational backwardness, developed standardised 
+tests for use in schools and provided teachers with psy-
+chological advice on how best to manage emotional and 
+behavioural disorders in students [40]. Through his work, 
+Burt argued that intellectual ability was on a contin-
+uum, intelligence between boys and girls was the same, 
+Table 1  Typical characteristics of ADHD and associated behaviours in adults with ADHD Adapted from Asherson et al., [19], Nigg [20], 
+Sedgwick [21]
+Typical characteristics
+Associated behaviours
+Inattention (“attention deficit”)
+Quickly losing focus, shifting attention, absent-mindedness.
+Easily distracted by low-priority activities or activities that other people tend to ignore.
+Spontaneous mind-wandering, “zoning out” or daydreaming which makes it hard to 
+focus on reading, writing, or listening to others.
+Can overlook details, which leads to errors or incomplete work.
+Quietly getting bored, especially when the novelty has worn off.
+Hyper-attentiveness (or hyper-focus – a paradoxical symptom)
+May be a coping mechanism for distraction – tuning out and becoming totally 
+absorbed in self interesting, stimulating or rewarding tasks and activities.
+Disorganisation & forgetfulness
+Poor organizational skills (e.g., problems with planning, goal setting, decision making, 
+keeping track of tasks/responsibilities, problem solving).
+Procrastination, poor time management, forgetting commitments, appointments, or 
+deadlines.
+A habit of losing or misplacing things (keys, wallet, phone, documents).
+Hyperactivity, restlessness, fidgety or having lots of energy
+Feeling agitated, inner restlessness, always “on the go” as if driven by a motor, talking 
+excessively, trouble sitting still, or tapping.
+Getting quickly or easily bored, craving excitement or stimulation.
+Engaging in high intensity or extreme sports/activities that involve speed, height, a 
+high level of physical exertion and highly specialised gear.
+Impulsivity
+Interrupting others or talking over them; blurting out thoughts or saying things with‑
+out thinking.
+Engaging in reckless or risk behaviours without much concern for the consequences 
+(e.g., spontaneous sexual “hook-ups”, gambling, Internet overuse, binge drinking or 
+drug taking, driving too fast).
+Emotional lability (or emotional dysregulation)
+Regular feelings of irritability, inability to cope, short or explosive temper, being easily 
+flustered and/or stressed, hypersensitive to criticism.
+Low self-esteem, sense of underachievement, constantly worrying about making the 
+same mistakes, not meeting obligations, fatigue or burn-out, finding it hard to stay 
+motivated.
+[/PAGE 3]
+
+[PAGE 4]
+Page 4 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+academic performance and achievement was variable, 
+and that learning differences (or difficulties) observed in 
+students considered dull, backward, feeble-minded or 
+maladjusted, constituted a single problem [41–44]. Burt’s 
+seminal work on educational backwardness was insight-
+ful, in the sense that it not only associated causes of back-
+wardness in students with low scores on a psychometric 
+test or other environmental factors, but also with disor-
+ders of temperament and conduct. One category within 
+these disorders was the “excitable and unrepressed child” 
+[44], and descriptors of this disorder are clearly akin to 
+the characteristics of ADHD known today. Interestingly, 
+Burt published his work on the “backward child” in 1937, 
+the same year that Charles Bradley in the USA reported 
+on the positive effects of psychostimulant medication in 
+students who exhibited various behaviour disorders [45].
+The influence of Burt’s work on educational policy and 
+provisions for students with special educational needs 
+was profound [46]. It was reflected in the landmark 
+Warnock Report on special education [47]. The recom-
+mendations of Warnock Report compelled legislators to 
+enshrine the policy of inclusion within the Education Act 
+1981, and to introduce the broad concept of “special edu-
+cational needs” (SEN) to categorise students with a range 
+of learning difficulties and/or disabilities. Descriptors 
+of SEN have since transformed into those listed in the 
+current SEND code of practice (0 to 25 years) [23]. But 
+despite all this early work, ADHD has continued to be a 
+contentious and controversial medical diagnosis in UK, 
+with one study reporting that only “73 hyperactive chil-
+dren were seen at the Maudsley and Bethlem Royal Hos-
+pital in London between 1968 and 1980” [48], p.16–17). 
+Following the publication of a protocol for the treatment 
+of ADHD based on DSM-IV criteria [49], diagnostic rates 
+of ADHD increased in the UK and continued to do so 
+with subsequent publications of clinical guidance for the 
+diagnosis and management of ADHD in children, young 
+people, and adults [50]. There are still many challenges 
+with regards to timely access to diagnosis and treatment 
+for university students with ADHD, and support for prac-
+titioners and educators who have reported ADHD as one 
+of the most challenging disorders to deal with in univer-
+sity students [51]. These views echoed in the Institute for 
+Employment Studies (IES) report on support for disabled 
+students in higher education in England for the Office for 
+Students (OfS) [52]. This IES report noted that “… pro-
+viders [university disability services] were facing a num-
+ber of, often shared, challenges ...” (p.132), which included 
+dealing with a rising numbers of university students with 
+ADHD and complex mental health needs. One provider 
+quoted by the IES said that:
+“… the support provisions for disabled students is 
+understandably being affected by external factors. 
+How to manage that impact is a focus for the dis-
+ability and dyslexia team… this includes… the num-
+ber of students with ADHD which has grown dra-
+matically in recent years. This group of students are 
+very challenging to support for both the service and 
+for academic staff. The disability and dyslexia ser-
+vice need training and development to enable them 
+to both support these students and the academic 
+staff working with them ...” [52] p.134).
+Effects of ADHD within higher education
+In the UK, across Europe and worldwide, there is a pau-
+city of research about university students with ADHD. 
+Previous studies mostly seem to originate from North 
+America, where research activity in this topic area has 
+been ongoing since the 1990s, and the impact of ADHD 
+on the educational outcomes of college (or university) 
+students is more widely understood. A comprehensive 
+review of these studies was conducted by Sedgwick [21], 
+and a summary of the main findings  are presented in 
+Table 2.
+ADHD and intellectual giftedness
+The relevance of intellectual giftedness to university stu-
+dents with ADHD was considered by the expert group. 
+Intellectual giftedness is another contested concept 
+variously defined as exceptional intellectual ability, aca-
+demic talent, or high-potential learners, with concurrent 
+traits of creativity, curiosity, effort, and self-motivation 
+[53–56]. Intellectual giftedness is referenced in the 
+Canadian ADHD Practice Guidelines [57], but not in 
+the DSM-5 or ICD-11 [6, 7], or other clinical guidelines 
+[50]. Research suggests that intellectual giftedness can 
+either over-shadow or compensate for attention difficul-
+ties, or the behaviours associated with ADHD can over-
+shadow traits of intellectual giftedness, and that students 
+with both ADHD and intellectual giftedness can be dif-
+ficult to identify or assess using standardised measures 
+and observational checklists [58–62]. The co-existence 
+of ADHD in intellectually gifted individuals, including 
+university students, is controversial. The theories of posi-
+tive disintegration [63], and asynchronous development 
+[64], have both been used to understand various aspects 
+of intellectual giftedness in students with ADHD. Impor-
+tant areas of current research include the potential mis-
+diagnosis of intellectual giftedness as ADHD, and the 
+occurrence of ADHD and intellectual giftedness as a dual 
+diagnosis [65].
+Intellectual giftedness in students with ADHD is 
+thought to be under-identified by parents, educators, 
+psychologists, and physicians. Brown et al., for instance,
+[/PAGE 4]
+
+[PAGE 5]
+Page 5 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+reported that “adults with IQ scores in and above supe-
+rior range have often sought evaluation and treatment for 
+chronic difficulties with organizing their work, excessive 
+procrastination, inconsistent effort, excessive forgetfulness, 
+and lack of adequate focus for school and/or employment. 
+They question whether they might have an attention def-
+icit disorder, but often they have been told by educators 
+and clinicians that their superior intelligence precludes 
+having ADHD” [66], p.161).
+Intellectual giftedness does not preclude having 
+ADHD, and in some university students with ADHD it 
+could mitigate some deficits in executive function and 
+allow them to flourish academically or to go on and have 
+successful careers [67–69]. Some authors proposed that 
+a degree of autism (or savantism) could foster a special 
+talent in gifted individuals [70], including individuals 
+with ADHD [71, 72]. Other authors warn that intellec-
+tual giftedness may only be a protective factor for stu-
+dents with ADHD during their pre-18 school years [59, 
+73]. This may change when they transition into higher 
+education where self-directed learning becomes an 
+essential academic skill and when challenges such as liv-
+ing away from a structured home environment, or need-
+ing to be more organised, can precipitate a worsening of 
+ADHD symptoms and significant levels of impairment 
+start to emerge [74, 75]. These issues may become more 
+apparent in post-graduate students, who are selected 
+based on their undergraduate academic achievements 
+[56, 76, 77]. Empirical studies between 2000 and 2014 
+about the identification, misdiagnosis and dual diagno-
+sis of intellectual giftedness and ADHD were reviewed 
+by Mullet and Rinn, [65]. From this review, traits of 
+intellectual giftedness versus ADHD have been com-
+piled for the purposes of clarity. These are listed in 
+Table 3 below.
+In sum, this report presents a selective review of pre-
+viously published literature on ADHD in university stu-
+dents and consensus based on expert opinions. It aims to 
+critically examine and discuss the impact of ADHD on 
+educational outcomes of university students and provide 
+evidence-based, practical advice and guidance on how 
+best to support these students during their programme 
+of studies. Expert consensual advice and guidance in rela-
+tion to screening and diagnostic assessments for ADHD 
+in adults, specific interventions for university students 
+with ADHD, a potential model for service provision, staff 
+training and development, will contribute to existing 
+research in this topic area.
+Method
+The purpose of the expert consensus meeting was to 
+formulate practical advice, guidance, and recommen-
+dations for supporting medical, mental health, edu-
+cational and disability practitioners who work with 
+university students with ADHD. This report is based 
+on previously published literature that was identi-
+fied, selected, collated, and critically reviewed using a 
+framework for scoping studies [78], as well as the pro-
+fessional experience of the expert group. The consen-
+sus meeting was convened by the UK Adult ADHD 
+Network (www.​UKAAN.​org) in July 2017. UKAAN is 
+an organisation founded in 2009 by a group of mental 
+health specialists, responding to NICE guidelines [50], 
+and recommendations from the British Association for 
+Table 2  University students with ADHD – Summary of key findings (From Sedgwick [21]
+Theme
+Findings
+Academic, social & psychological functioning
+● Poor performance in time-limited exams and poor overall academic achievement.
+● Lower levels of social adjustment, social skills, and self-esteem in relationships.
+● A range of factors predicted academic success including better coping strategies, a positive 
+mental attitude/resilience and physical exercise.
+Giftedness
+● High intelligence quotient (IQ) does not preclude the possibility of having ADHD.
+● Students who get good grades but still report ADHD related symptoms are most at risk of 
+not getting diagnosed and treated.
+New media technologies (NMTech)
+● NMTech could precipitate or perpetuate ADHD-related behaviours.
+● Internet overuse (or addiction).
+● Important to ask about NMTech use during assessments for ADHD.
+Treatment
+● Paucity of research in university students with ADHD.
+● Academic performance and achievement improve with medical treatment.
+● Coaching is not defined as a psychological treatment, but it may be useful.
+Substance misuse & non-medical use of stimulants ● Likely to misuse tobacco, alcohol and other licit or illicit substances.
+● Prevalence rates for use of psychostimulants as “study drugs” is between 5 and 35% in North 
+American and 0.8–16% in Europe, but even lower in Ireland and the UK.
+Malingering
+● Concerns about students feigning ADHD to get a prescription for stimulant medication, but 
+detection depends on the knowledge, skills and expertise of the practitioner undertaking a 
+diagnostic assessment.
+[/PAGE 5]
+
+[PAGE 6]
+Page 6 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+Psychopharmacology (BAP) [79, 80], for the purpose of 
+providing support, research, education, and training to 
+professionals working with adults with ADHD. The aims 
+of the consensus meeting were to address the following 
+questions:
+1.	 Is ADHD a hidden disability within higher education 
+institutions (HEIs)?
+2.	 Is ADHD a specific learning (difficulty) or difference?
+•	What are the similarities and differences between 
+ADHD, specific learning (difficulties) or differences 
+& other mental health conditions?
+•	What is the impact of stigma?
+3.	 What constitutes best practice for supporting univer-
+sity students with ADHD?
+•	Service provision
+•	Screening & diagnostic testing
+•	Pharmacological & non-pharmacological interven-
+tions
+•	Staff training and development
+Meeting attendees included the authors and 48 other 
+mental health, neurodiversity, and disability practition-
+ers, learning assessors and 2 university students with 
+ADHD from England, Wales, and Scotland. The authors 
+who attended the meeting represented a multidiscipli-
+nary group of prescribing and non-prescribing clinicians, 
+practitioners, and academics, with extensive experi-
+ence and expertise in working with adults with ADHD, 
+including university students. Attendees engaged in con-
+versations throughout the day with the aim of achieving 
+consensus. The meeting was structured around presen-
+tations on relevant topics that are listed below, and the 
+personal accounts from the 2 university students with 
+ADHD, followed by questions, and answers (Q&As).
+The first author facilitated discussions among the 
+attendees to elicit verbal accounts of experience and to 
+reach a consensus position on the topic being discussed. 
+At the end of the meeting, the first author presented a 
+summary of the main points previously agreed (which 
+are listed in Table  4), and then asked the attendees to 
+raise a hand to indicate whether they agreed with each 
+point being raised. This is line with the phenomenologi-
+cal methodological framework that was used to gain an 
+emic or “insiders” perspective of the attendee’s experi-
+ences, knowledge, and expertise of working with uni-
+versity students with ADHD [81, 82]. The consensus 
+meeting started with an overview of the neurobiology of 
+ADHD to set the scene, then invited speakers presented 
+on the following topics:
+•	 The effectiveness of stimulant medication in treating 
+ADHD.
+•	 Academic coaching for university students with 
+ADHD.
+•	 The SpLD Assessment Standards Committee (SASC) 
+guidelines for the assessment of ADHD in university 
+students.
+•	 Tele-psychiatry: Internet based treatment services 
+for university student with ADHD.
+•	 The student experience: What is it like to be a univer-
+sity student with ADHD?
+The attendees and speakers consented to the presen-
+tations and discussions being audio recorded. After the 
+Table 3  Differentiating Giftedness and ADHD Compiled from Mullet and Rinn [65]
+Indicators of Intellectual giftedness
+Indicators of ADHD
+Boredom, daydreaming and attentional difficulties in unchallenging learn‑
+ing environments.
+Boredom, daydreaming and attentional difficulties in multiple domains.
+Low tolerance for tasks or activities that seem irrelevant.
+Low tolerance for tasks or activities that seem irrelevant.
+Extended periods of time spent on topics of self-interest.
+Extended periods of time spent on topics of self-interest.
+Discrepancies between intellectual, physical, emotional, and social devel‑
+opment.
+Discrepancies between intellectual, physical, emotional. and social devel‑
+opment.
+Emotional intensity may lead to power struggles with authorities.
+Emotional intensity may lead to power struggles with authorities.
+Questions or challenges rules, regulations, customs, and traditions.
+Poor impulsive control may cause difficulties adhering to rules, regulations, 
+customs, and traditions.
+High activity levels that is focused and directed, restlessness, may need 
+less sleep.
+High activity levels that is random rather than goal directed, restlessness, 
+problems with sleep.
+Tendency to answer correctly when responds impulsively to questions.
+Tendency to guess incorrect answers when responds impulsively to ques‑
+tions.
+Prone to social problems and struggles in social relationships.
+Difficulties regulating or inhibiting behaviour in social contexts, prone to 
+social problems and struggles in social relationships.
+[/PAGE 6]
+
+[PAGE 7]
+Page 7 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+meeting, the recording was transcribed verbatim with 
+care taken to remove all identifiable information. Author-
+ship of the manuscript was based on involvement dur-
+ing the meeting, a willingness to work on the manuscript 
+after the meeting, clinical and professional expertise in 
+the assessment and treatment of ADHD in university stu-
+dents. The first author (JSM) consolidated the presenta-
+tions, data from the transcripts and notes relevant to the 
+main points agreed in the meeting, into a manuscript that 
+was circulated amongst the authors for review, revision, 
+final agreement, and approval. This manuscript reflects 
+the clinical experience and expertise of the authors and is 
+supported by published literature.
+Results and consensus outcome
+The series of questions and summary of main points 
+addressed during the meeting were collated and are dis-
+cussed below. A summary of the main recommendations 
+is listed in Table 10.
+Is ADHD a hidden disability within higher education 
+institutions (HEIs)?
+Only one study was found that reported on the preva-
+lence of ADHD in UK university students. In this study 
+Pope et al. [83] used the Conners’ Adult ADHD Self-Rat-
+ing Scale to assess for symptoms of ADHD in 1185 under-
+graduate psychology students from four UK universities. 
+The findings revealed that about 7% of these students 
+self-reported above-threshold symptoms of ADHD. In a 
+study from the USA, DuPaul et al. [84] reported that at 
+least 25% of college students with disabilities were diag-
+nosed with ADHD. Among university students in China 
+(n = 343), and in the USA (n = 283), ADHD was reported 
+to be around 5% in the USA cohort and 8% in the Chi-
+nese cohort [85]. These data clearly depict variability, 
+with some reported rates suggesting a higher prevalence 
+of ADHD among university students, when compared to 
+the reported worldwide prevalence estimate of 2–3% for 
+ADHD in adults [10]. However the studies that reported 
+higher prevalence estimates (e.g., Norvilitis et al. [85] did 
+seem to have determined the presence of ADHD based 
+on a count of symptoms alone, and did not assess func-
+tional impairments to meet full diagnostic requirements 
+for ADHD. Perhaps if functional impairments had also 
+been considered, prevalence rates of ADHD in university 
+students may have been similar to the prevalence rates 
+reported for adults [86].
+University students with ADHD are part of a much 
+bigger group of disabled students that are represented 
+within the widening participation (WP) strategy that 
+forms a major component of higher education policy in 
+the UK [87]. The WP strategy requires HEIs in the UK 
+to collect, analyse, and respond to data on disabled stu-
+dents. To do so, HEIs utilise UCAS (Universities and 
+Colleges Admissions Service), codes and categories of 
+disability listed in Table 5. As shown, ADHD is listed “G 
+– Specific Learning Difference e.g., dyslexia, dyspraxia, or 
+ADHD.” The Higher Education Statistical Agency (HESA, 
+https://​www.​hesa.​ac.​uk) also collect, process, and publish 
+data about disabled students within higher education in 
+the UK. Figure 1 depicts percentages of the HESA Data 
+for “UK domiciled students’ enrolments by disability and 
+sex” based on a total number of 307,975 for the academic 
+years 2014/15–2018/19 [22]. From this data it is also not 
+possible to ascertain a prevalence estimate for ADHD 
+among university students or even to identify if ADHD 
+exists within higher education.
+Figure 2 depicts in percentages published data from 
+25 HEIs in Ireland, based on a total number of 12,630 
+university students who declared a disability  for the 
+academic year 2016/17 [88]. There are clear similari-
+ties between this data and the HESA data depicted in 
+Table 4  Summary of the main consensus points
+    i. ADHD is a hidden disability and should no longer be categorised as a specific learning difference/ difficulty (SpLD) in higher education.
+    ii. There is a need to overcome the stigma associated with having ADHD.
+    iii. There is a lack of access to assessment and treatment for university students with ADHD. Many of these students are assessed by a specialist 
+teacher assessor or educational psychologist and get a recommendation for reasonable adjustments and a referral to their GP to access specialist 
+medical treatment.
+    iv. There are long waiting lists to be seen by NHS specialist adult ADHD clinics.
+    v. There is a need to develop rapid access care pathways for the medical treatment of ADHD in university students.
+    vi. Some students with ADHD do not perform well at university, whereas other students performed very well, and what seemed to make the differ‑
+ence was the level of personalised support that they received.
+    vii. There is a need to develop training that includes psychoeducation, how to screen for (and diagnostically assess) ADHD and use recommended 
+strategies for supporting students with ADHD in higher education.
+    viii. Best practice for supporting university students with ADHD would entail joint/ collaborative working between university disability services and 
+NHS or private service providers.
+[/PAGE 7]
+
+[PAGE 8]
+Page 8 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+Fig. 1. But there are also differences in the numbers of 
+university students who declared a mental health con-
+dition (27% in the UK vs. 13.9% in Ireland), a specific 
+learning difference (UK 36% vs. Ireland 41.4%) and 
+autism spectrum disorder/ASD (UK 4% vs. Ireland 
+5.4%). In Ireland, data is also collected on university 
+students who declare a developmental co-ordination 
+disorder (DCD, or dyspraxia, 6.1%) and ADHD (5.2%), 
+but similar data is not collected in the UK. During 
+the consensus meeting there was unanimous agree-
+ment that ADHD should no longer be subsumed under 
+the category of a SpLD. The obvious consequence of 
+continuing to do so is that a prevalence estimate for 
+ADHD in UK university students will always be hard 
+to ascertain.
+Recommendation 1. The categorisation of ADHD
+The expert group recommends that ADHD should 
+no longer be subsumed under the category of a SpLD 
+in HESA data return categories or by university ser-
+vices and should be coded or categorised separately. 
+If ADHD continues to be coded or categorised as an 
+SpLD then no specific data about the numbers of uni-
+versity students who declare ADHD as a disability 
+within UK HEIs will be collected. ADHD is a mental 
+health condition and not a SpLD. ADHD has specific 
+diagnostic criteria within the DSM-5 [6], and ICD-
+11 [7], as well as efficacious treatments (medication 
+and psychosocial interventions) [89, 90]. A separate 
+code to categorise ADHD within UK HEIs could result 
+in greater recognition of the disorder and increase 
+Table 5  Current UCAS codes/categories and definitions of disability
+A
+No Disability
+B
+Social/communication impairment such as Asperger’s Syndrome/other Autistic Spectrum Disorder
+C
+Blind/serious visual impairment uncorrected by glasses
+D
+Deaf/serious hearing impairment
+E
+Long standing illness or health condition such as cancer, HIV, diabetes, chronic heart disease, or epilepsy
+F
+Mental Health Condition, such as depression, schizophrenia, or anxiety disorder
+G
+Specific Learning Difference e.g., dyslexia, dyspraxia, or ADHD
+H
+Physical Impairment or mobility issues
+I
+Disability, impairment, or medical condition not listed above
+J
+You have two or more impairments and/or disabling medical conditions
+Fig. 1  Disabled university students in the UK. Source: Table 15: UK-domiciled student enrolments by disability and sex, for the academic year 
+2018-19, (total number of disabled students 316,380) [22]. NB: There are high rates of overlap between ADHD and both SpLDs and mental health 
+conditions, but the prevalence of ADHD is unknown, because there is no separate category for it
+[/PAGE 8]
+
+[PAGE 9]
+Page 9 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+understanding about how it impacts on academic per-
+formance and achievement.
+What are the differences between ADHD and SpLDs?
+Dyslexia, dyscalculia, dysgraphia, and dyspraxia (or 
+DCD) and ADHD are all categorised as SpLDs within 
+UK HEIs. However, in the DSM-5, dyslexia, dyscalcu-
+lia, and dysgraphia are grouped together under a sin-
+gle diagnostic category of “specific learning disorder” 
+(SLD, or learning disorder), whilst DCD is classified 
+separately as a motor disorder and ADHD as a neu-
+rodevelopmental disorder [6]. SpLDs are not synony-
+mous with SLD, but a university student who has been 
+diagnosed with a SLD can also expect to meet criteria 
+for a SpLD, be registered as disabled and qualify for 
+reasonable adjustments under the Equality Act 2010. 
+Specifiers and characteristics of SLD and typical SpLD 
+terms used in higher education are listed in Table  6. 
+Unlike ADHD, there are no known medical treatments 
+for SLD (or SpLDs), therefore reasonable adjustments 
+(or accommodations) are required to limit their impact 
+within educational settings. Reading disorder (RD, 
+e.g., dyslexia) is the most prevalent SpLD reported to 
+account for up to 80% of all SpLDs [91]. Bidirectional 
+comorbidity between RD and ADHD which is esti-
+mated at 25–40%, is likely due to shared genetic risk 
+factors [92]. This may also explain why deficits in 
+executive function are seen in both ADHD and RD 
+Fig. 2  Disabled university students in Ireland. Source: Fig. 3 Breakdown of students by Category of Disability 2016/17 (total number of disabled 
+students 12,630) [88]
+Table 6  Specifiers and Characteristics of SLD [6], and typical SpLD terms [104–106]
+SLD with impairment in
+Characteristics
+Typical SpLDs
+Reading (reading disorder, RD)
+Deficits in decoding speech sounds of words (phonological weaknesses) and fluency (not 
+reading accurately with adequate speed)
+Dyslexia
+Mathematics (maths disorder, MD)
+Deficits in number sense, memorisation of arithmetic facts, accurate or fluent calculation or 
+math reasoning
+Dyscalculia
+Written expression (writing disorder, WD) Deficits in orthographic coding (e.g. spelling, grammar, punctuation, capitalisation) and 
+finger sequencing (the movement of muscles needed for writing)
+Dysgraphia
+[/PAGE 9]
+
+[PAGE 10]
+Page 10 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+[93, 94]. Executive functions (EF) are described as a 
+set of top-down mental skills essential for academic 
+performance. In Table  7, EFs are conceptualised in 
+terms of their organisational and regulatory func-
+tions. The three commonly described EFs are inhibi-
+tory control, working memory and cognitive flexibility 
+[95, 96]. Although research suggests that deficits in EF 
+can adversely impact academic functioning due to the 
+problems they can cause with sustaining attention, for-
+getfulness, procrastination, organisation skills, prior-
+itising, regulating alertness, emotional and behavioural 
+self-control, psychometric tests of EF are still not sen-
+sitive enough to assess for the core deficits of ADHD 
+[97–103].
+The Baddeley and Hitch [107] conceptual model of 
+working memory (WM) in Fig. 3, proposes that WM is 
+a core EF for storing and manipulating information, and 
+with a central role in attention, allocating data to its slave 
+systems (phonological loop and visuo-spatial sketchpad), 
+performing task switching, mental arithmetic, problem 
+solving and interfacing with long-term memory through 
+the episodic buffer. The episodic buffer acts as a tempo-
+rary store for the phonological loop, which processes 
+spoken and written information, whilst the visuo-spatial 
+sketchpad processes visual imagery. Although this model 
+can be used to understand the importance of WM in 
+academic tasks such as reading, comprehension, verbal 
+reasoning (phonological loop), navigation (visuo-spatial 
+processing) and problem-solving (central executive) 
+[107–111], the model can also be used to understand how 
+deficits in WM might occur in both ADHD and reading 
+disorder [93]. Reading disorder (e.g., dyslexia) is defined 
+by deficits in decoding the speech sounds of words and 
+structure of language (phonological weakness), fluency 
+(an inability to ready quickly with appropriate expres-
+sion) and processing speed [11, 91, 93, 102].
+Table 7  Examples of organisation and regulatory roles of executive functions [95]
+ORGANISATION (gathering information & structuring it for evaluation)
+REGULATION (Evaluating available information & 
+modulating environmental responses)
+Language/ rule acquisition
+Initiating & inhibiting context specific action/ behaviour
+Attention, staying focused
+Motivation
+Planning
+Self-control, self-monitoring
+Sequencing, prioritising
+Moral reasoning
+Problem-solving (fluid intelligence)
+Emotional regulation
+Thinking about 2 or more concepts simultaneously
+Decision-making
+Abstract thinking
+Selecting/ filtering relevant sensory information
+Fig. 3  Model of Working Memory (Adapted from Baddeley [111]
+[/PAGE 10]
+
+[PAGE 11]
+Page 11 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+Processing speed (PS) is not an EF per se, rather 
+it is said to be a cognitive ability that describes the 
+amount of time it takes to identify, understand, react, 
+or respond to information received, whether it be visual 
+(letters and numbers), auditory (language) or move-
+ment [112]. Since PS is surmised to impact on WM, 
+phonological loop and visuo-spatial sketchpad pro-
+cesses, and the fine motor co-ordination associated 
+with DCD, it’s impact on academic performance is 
+also said to be direct [113]. PS is an index score on the 
+WAIS (Wechsler Adult Intelligence Scale), measured by 
+rapid automatized naming of pictured objects, letters, 
+numbers, and colours [112]. Slow PS or PS deficits, 
+often identified by a low PS score on the WAIS, has 
+been associated with reading disorder [102], ASD and 
+ADHD [114]. This also means when a student is identi-
+fied with PS deficits on the WAIS for instance, certain 
+academic tasks, such as an examination which requires 
+“an ability to quickly come up with an answer and 
+retrieve information from memory”, may take longer 
+to complete, hence these students tend to be awarded 
+extra writing time for examinations as a reasonable 
+adjustment [115], p4). PS deficits are also implicated 
+in the comorbidity between ADHD and reading disor-
+der [116], the combined effect of which may produce 
+more severe learning problems than when each of these 
+disorders occurs on its own [11, 117, 118]. High rates 
+of comorbidity are also reported between ADHD and 
+other SpLDs (e.g., dyscalculia and dysgraphia), and 
+other disorders such as DCD and ASD, with similar 
+combined effects as those surmised between ADHD 
+and RD, but a paucity of research limits understanding 
+of the severity of cognitive deficits in these comorbidi-
+ties and their impact on academic functioning [8, 14, 
+70, 119–121].
+Recommendation 2. ADHD and SpLDs
+Comorbidity between ADHD and other neurodevelop-
+ment disorders, which include SpLDs, adversely impacts 
+on academic functioning. The expert group therefore 
+recommends screening for ADHD as part of routine 
+practice for university students who report learning diffi-
+culties that seem to be associated with dyslexia, dyscalcu-
+lia, dysgraphia, dyspraxia and/or ASD, not only because 
+these conditions are highly likely to co-occur [8, 11, 14], 
+but ADHD can be missed if a student is only screened 
+for SpLDs and/or ASD. For students that screen posi-
+tive for ADHD, a referral for treatment and management 
+by a suitably qualified mental health professional (e.g., 
+student health GP, psychiatrist, or mental health nurse/
+practitioner) is important. Although ADHD on its own 
+can provide an explanation for learning problems within 
+higher education, it can also add complexity to the learn-
+ing problems associated with SpLDs, DCD or ASD. These 
+complexities need to be considered when assessing for, 
+and/or awarding reasonable adjustments. Screening tools 
+that are used in routine practice are listed in Table 8.
+Table 8  Examples of screening questionnaire & diagnostic tools
+Screening tools
+Uses
+Adult ADHD Self-Report Scale (ASRS) (Kessler et al., [122]. Free at: https://​www.​hcp.​med.​harva​rd.​edu/​ncs/​ftpdir/​adhd/​ASRS-5_​
+Engli​sh.​pdf ASRS-5 screener at https://​www.​hcp.​med.​harva​rd.​edu/​ncs/​ftpdir/​adhd/​ASRS-5_​Engli​sh.​pdf) (accessed 7/2021).
+ADHD
+Autism-Spectrum Quotient (AQ-10) (Allison et al., [123]. Free at: http://​docs.​autis​mrese​archc​entre.​com/​tests/​AQ10.​pdf 
+(accessed 7/2021).
+ASD
+The Adult Dyslexia Checklist, British Dyslexia Association [124]. Free at: https://​cdn.​bdady​slexia.​org.​uk/​uploa​ds/​docum​ents/​
+Dysle​xia/​Adult-​Check​list-1.​pdf?v=​15549​31003. (accessed 07/2021).
+Dyslexia
+Kessler Psychological Distress Scale (K10) (Kessler et al., [125].
+Anxiety & depression
+Penn State Worry Questionnaire (PSWQ) (Meyer et al., [126].
+Pathologic worry
+The Simple Screening Instrument for Substance Abuse (SSI-SA) (Center for Substance Abuse Treatment [127].
+Substance misuse
+The Improving Access to Psychological Therapies Manual [128], Appendices and helpful resources, at: https://​www.​engla​nd.​
+nhs.​uk/​publi​cation/​the-​impro​ving-​access-​to-​psych​ologi​cal-​thera​pies-​manual/ (accessed 7/2021). Useful tools in appendices 
+section:
+    • Page 33: Generalised Anxiety Disorder Scale (GAD-2)
+    • Page 36: Generalised Anxiety Disorder Scale (GAD-7)
+    • Page 35: Patient Health Questionnaire (PHQ-9)
+    • Page 42: Panic Disorder Severity Scale
+Anxiety, depression & 
+panic disorder
+These and other online tools are also available at: https://​psych​ology-​tools.​com/
+Various
+Diagnostic tools
+Uses
+DIVA Foundation [129], The Diagnostic Interview for ADHD in Adults (DIVA-5) at: https://​www.​divac​enter.​eu/​DIVA.​aspx?​id=​523
+ADHD
+ACE+ [130], at: https://​www.​psych​ology-​servi​ces.​uk.​com/​adhd
+ADHD
+Weiss Functional Impairment Rating Scale–Self Report (WFRIS-S) [131]. Free at: https://​www.​caddra.​ca/​wp-​conte​nt/​uploa​ds/​
+WFIRS-S.​pdf (accessed 7/2021).
+Functional impairment
+[/PAGE 11]
+
+[PAGE 12]
+Page 12 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+What are the differences between ADHD and other mental 
+health conditions?
+It is equally important to differentiate ADHD from other 
+mental health conditions and to consider the impact of 
+these conditions on university students with ADHD 
+when they do co-occur. Year-on-year increases in the 
+number of students declaring a mental health condition 
+at university have been observed, with current preva-
+lence estimates of 27% amongst university students 
+who declare a mental health disability before or dur-
+ing their programme of studies (see Fig. 1). A study by 
+Anastopoulos et al. [16] examined rates and patterns of 
+co-occurring disorders in 443 university students with 
+ADHD. The findings of this study revealed that 55% of 
+these students had at least one comorbidity whilst 32% 
+had two or more, and that commonly reported comor-
+bidities with ADHD were depressive and anxiety disor-
+ders. These elevated rates differ from rates reported in 
+an epidemiological study conducted in 20 high, medium, 
+and low-income countries involving 26,774 adults with 
+ADHD. This study found that 23% of these adults with 
+ADHD had at least one mental health comorbidity, while 
+14% had two or three comorbidities, and that commonly 
+reported comorbidities with ADHD were also anxiety 
+disorders (34%), mood disorders (22%), as well as behav-
+ioural disorders (15%) and substance use disorders (11%) 
+[10]. Similar findings were reported in qualitative studies, 
+although the participants in these studies, also reported 
+positive aspects of ADHD such as high levels of energy 
+and drive, creativity, hyper-focus, agreeableness, empa-
+thy, self-acceptance, and a willingness to assist others 
+[132, 133].
+During the consensus meeting the discussion mostly 
+focused on university students who frequently reported 
+anxiety and depression. Different types of anxiety (e.g., 
+generalised anxiety disorder, social anxiety, specific pho-
+bias, agoraphobia, panic disorder, substance/medication 
+induced anxiety), or depressive disorders (e.g., mood dys-
+regulation disorder, major depressive disorder, dysthymia, 
+premenstrual dysphoria, substance/medication induced 
+depression), were discussed in relation to ADHD. Major 
+depressive disorder (MDD) does show some overlap with 
+ADHD symptoms such as poor concentration and work-
+ing memory performance, but in MDD these character-
+istics are episodic and only arise during periods of low 
+mood, anhedonia (loss of interest/enjoyment in ordinary 
+experiences), or when there are ruminations dominated 
+by negative content, and appetite disturbances, which 
+are not characteristic of ADHD [134]. In contrast, peo-
+ple with ADHD usually present with attention regulation 
+problems. This means they may be able to focus during 
+highly stimulating or interesting tasks and activities, but 
+problems with concentration will remain regardless of 
+mood state [19]. Poor concentration and restlessness are 
+also symptoms that are shared between anxiety disor-
+ders and ADHD. Anxiety disorders are characterised by 
+fluctuations in pathologic worry, fear, and somatic symp-
+toms, which drive concentration problems, whereas in 
+ADHD, problems with attention and restlessness, drive 
+concentration problems and reflect persistent traits that 
+are independent of anxiety [134].
+University students with ADHD can present to medi-
+cal, counselling, and disability services with problems 
+related to anxiety and/or depression, because challenges 
+of university life can also play an important role in 
+affected mental health. Both anxiety and depression are 
+frequently co-occurring conditions in adults with ADHD 
+[10], as well as in university students with ADHD [16]. 
+However, it is still important to be aware that symp-
+toms of ADHD can mimic both anxiety and depression 
+[19], and that anxiety and depression can in turn affect 
+attention, concentration, processing speed, and motiva-
+tion, giving rise to poor performance on reading, writ-
+ing, attending classes and group work [135]. University 
+students with ADHD can also be prone to “test anxi-
+ety” and experience disabling levels of worry, emotional 
+and somatic symptoms, that exacerbates their ability to 
+focus and perform during evaluative assessments such 
+as examinations. This may further increase the risk that 
+they achieve poor grades, or delay completing their pro-
+gramme of studies [136, 137]. More generally, symptoms 
+of ADHD can be misdiagnosed for anxiety, mood, or per-
+sonality disorders. This may be an issue for females with 
+ADHD whose symptoms are more likely to reflect inter-
+nalising symptoms and emotional dysregulation [138].
+Emotional dysregulation is a prominent feature in 
+ADHD and is listed in the DSM-5 as a characteristic that 
+supports the diagnosis of ADHD [6]. Research suggests 
+that up to 80% or more adults with ADHD report sig-
+nificant levels of emotional dysregulation/lability marked 
+by irritability, volatility, a hot temper, low frustration 
+tolerance and sensitivity to criticism [139–141]. These 
+attributes do reflect a part of the normal range of mood 
+symptoms for people with ADHD, but if severe, then they 
+can also be misconstrued for MDD, bipolar disorder or 
+a personality disorder. Emotional lability (EL) in adults 
+with ADHD tends to manifest as short-lived emotional 
+outbursts, or feelings of irritability, frustration, or anger 
+that is often (but not always) in response to daily events 
+[140]. Studies on EL in adults with ADHD also suggest 
+that it is more closely linked to the development of low 
+self-esteem and poor self-concept, when compared to the 
+other core features of ADHD [140, 142]. University stu-
+dents with ADHD who have problems with EL are more 
+likely to encounter additional challenges with making 
+and maintaining academic and social relationships [143],
+[/PAGE 12]
+
+[PAGE 13]
+Page 13 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+or with participating in group work, team sports, socie-
+ties, or other activities at university, especially if they 
+frequently express anger, sadness, or anxiety when with 
+others [144].
+University students with ADHD who do not cope well 
+with anger or sadness may also use tobacco, alcohol, can-
+nabis, or other drugs; sex, gambling, or gaming as cop-
+ing strategies [145–147]. Some students with ADHD may 
+not be able to control their alcohol intake for instance, 
+and binge drink often or report more drinking-induced 
+blackouts, loss of friends or romantic partners as a result 
+of their drinking habits [147]. In the study by Rooney 
+et al., [148], although students with ADHD did not report 
+higher levels of alcohol use, they did report more dan-
+gerous/hazardous use. In another study when univer-
+sity students with ADHD escalated their substance use, 
+they increasingly skipped classes and reductions in their 
+academic grades were observed [149]. Although similar 
+problems are seen in clinical practice with other drugs 
+of abuse such as cocaine [150], some drugs are used to 
+control symptoms of ADHD. For example, cannabis 
+may help reduce some ADHD related problems such as 
+restlessness, EL and problems getting to sleep [151]. In 
+contrast to poor mental health, emotional wellbeing is 
+increasingly being viewed as important for enhancing 
+a student’s motivation to learn, academic performance 
+and interpersonal skills. Studies have shown that reduc-
+ing stress, and increasing enthusiasm, contentment, joy, 
+hope, pride, exuberance, and elatedness are linked to 
+improvements in academic self-efficacy, interest, effort, 
+engagement, performance, and achievement [152–156]. 
+There are also positive aspects of ADHD that can be use-
+ful at university [133].
+Recommendation 3. ADHD and mental health conditions
+The expert group recommends that university students 
+who present with enduring anxiety and depression, and 
+report persistent problems with learning or studying, 
+should be screened for ADHD. ADHD can mimic these 
+conditions, and likewise, anxiety and depression can 
+mimic ADHD. Anxiety and depression may also reflect a 
+normal stress response to the educational and psychoso-
+cial impairments of ADHD. Screening for ADHD should 
+therefore be conducted in all students diagnosed with, or 
+frequently complaining about, anxiety or depression (or 
+other chronic mental health problems), particularly when 
+they are taking medication and there is no or only limited 
+improvements in their mental state. For students that 
+screen positive for ADHD, a referral for treatment and 
+management by a suitably qualified mental health pro-
+fessional (e.g., student health GP, psychiatrist, or mental 
+health nurse/practitioner), is important.
+What is the impact of stigma on university students 
+with ADHD?
+Stigmata are the beliefs, attitudes and structures that 
+interact at an individual, group, or institutional level, 
+to discriminate against a person based on a perceiv-
+able social characteristic that sets them aside from oth-
+ers [157]. ADHD, a diagnostic label, is a perceivable 
+social characteristic that can be stigmatised as laziness, 
+bad behaviour, or as having “special needs” [158, 159]. 
+There are lingering myths, misconceptions, negative ste-
+reotypes, and labels associated with ADHD [160]. Some 
+medical professionals in the UK, Europe, and Australia, 
+have expressed doubts about whether ADHD is real, 
+over-emphasising the aetiological role of parenting, or 
+questioning the role of stimulant medication in its treat-
+ment [161]. In one study a group of university students 
+were asked to rate the likelihood of interacting with, 
+collaborating on a group project with, getting to know, 
+becoming friends with, living with, working with, or dat-
+ing a peer with either ADHD, a general medical condi-
+tion, or an ambiguous flaw such as perfectionism. Peers 
+with ADHD were rated as less socially desirable than 
+peers in the other two groups [162]. In young people 
+with ADHD, although self-stigma can present as a sense 
+of feeling different from same age peers or by negative 
+self-evaluations, some young people have also challenged 
+ADHD related stigma by openly disclosing and talking 
+about their diagnosis [163].
+Some professionals may fear treating a “fake disease” 
+or causing a drug dependency by prescribing stimulant 
+medication, even though there is no empirical evidence 
+to support these views [50, 158, 164]. Missing or failing to 
+identify ADHD is more likely to happen in university stu-
+dents who are intellectually gifted, getting good grades, 
+or in those, particularly females, who may be misdiag-
+nosed with anxiety, depression, eating or personality dis-
+orders [50, 138, 158]. Some studies from the USA suggest 
+that university students without ADHD can malinger for 
+the purposes of obtaining a prescription for stimulant 
+medication for use as “study drugs” [165, 166]. Malinger-
+ing with ADHD for this purpose may be a phenomenon 
+more often observed in the USA, where ADHD is more 
+commonly diagnosed and treated in primary care. This 
+is not the same as in the UK and Europe more generally, 
+where ADHD in adults is an under-diagnosed and under-
+treated condition and suitably qualified and trained 
+medical or non-medical prescribers (e.g. mental health 
+nurses or pharmacists) treat ADHD [19]. From the per-
+spective of the expert group, concerns about malingering 
+can further stigmatise university students with ADHD 
+in the UK, as well as discourage disclosure, bias the 
+way a screening or diagnostic assessment is conducted 
+and result in a failure to recognise a legitimate disorder
+[/PAGE 13]
+
+[PAGE 14]
+Page 14 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+with an effective treatment. The experience of the expert 
+group is that malingering with ADHD is not common 
+(even unusual) for university students in the UK. Instead, 
+they tend to work exceptionally hard to overcome their 
+deficits associated with ADHD and still experience aca-
+demic outcomes that fall below that expected from their 
+general intellectual ability. The need to tackle the stigma 
+associated with ADHD was discussed during the con-
+sensus meeting, in terms of how it deterred disclosure, 
+seeking a formal diagnosis, taking medication, or seeking 
+additional support. Concerns about disclosing ADHD (or 
+other mental health conditions) were also noted in the 
+Institute for Employment Studies report to the Office for 
+Students [52].
+Recommendation 4. ADHD and stigma
+The expert group recommends that targeted programmes 
+of training for university student support staff should 
+include psychoeducation, how to screen for ADHD and 
+use recommended strategies for supporting university 
+students with ADHD. This training can also be used to 
+raise awareness about the potential stigma associated 
+with ADHD, its consequences and potential impact on 
+the screening and diagnostic process, willingness to dis-
+close ADHD at university and accept treatment.
+What is best practice for supporting university students 
+with ADHD?
+In the UK, clinical guidance recommends that the medi-
+cal diagnosis of ADHD must be done by a suitably quali-
+fied practitioner, and with primary care staff providing 
+support through shared care protocols [50]. The expert 
+group is aware that at present, waiting times for access to 
+treatment via specialist NHS adult ADHD clinics can be 
+anything of up to two years or longer in some areas of the 
+country. Given the high cost of tuition fees for university 
+and living expenses, plus added pressures to complete a 
+university degree on time, students with ADHD simply 
+cannot afford to wait two or more years to access treat-
+ment in specialist NHS services, without risking poor 
+academic performance, failure, drop-out or increased 
+burden of illness. For some of these students the misuse 
+of caffeine products, cannabis, alcohol, or stimulants 
+(licit or illicit) may seem like attractive options for self-
+medication. Seeking an educational diagnosis of a SpLD, 
+funded through the university disability service, maybe 
+an attractive option that can enable access to educational 
+support. But if the core symptoms of ADHD remain 
+untreated, students with ADHD can continue to experi-
+ence learning (and possibly other) problems during their 
+time at university.
+In one systematic review of 176 studies about the long-
+term educational outcomes of untreated versus treated 
+ADHD, academic outcomes were found to be worse in 
+students with untreated ADHD when compared to their 
+non-ADHD peers, after controlling for IQ [18]. Another 
+finding was that academic outcomes improved signifi-
+cantly when multimodal treatment was used, in compari-
+son to when pharmacological or non-pharmacological 
+treatments were used alone [18]. The provision of rapid 
+access to treatment for university students with ADHD 
+maybe challenging for clinicians working in specialist 
+NHS services. But the expert group has found that some 
+HEIs are using funds from their disability services budget 
+to fund private diagnostic assessments for their students, 
+and are commissioning medical treatment (e.g., bespoke 
+services through the NHS or privately). These HEIs in 
+turn note these initiatives in their “access and participa-
+tion plans” (APPs) for the OfS, to demonstrate how they 
+are improving equality of opportunity for students with 
+ADHD, who traditionally experience poor educational 
+access, achievement, and attainment [21].
+Recommendation 5. Service provision
+The expert group recommends that a rapid access path-
+way of care for university students with ADHD be devel-
+oped collaboratively between university central support 
+services, and NHS primary and secondary care, or private 
+providers. University disability services currently fund 
+diagnostic assessments for SpLDs. This budget could also 
+be made available to university students with ADHD to 
+enable them to at least obtain a diagnostic assessment 
+and reasonable adjustments. The expert group provides 
+an example of a potential support pathway for university 
+students with ADHD, which is presented in Fig. 4.
+Which screening tools and diagnostic assessments are 
+useful?
+Screening tools are used to indicate if symptoms of 
+ADHD and/or any other co-occurring conditions that are 
+likely to complicate the learning problems that univer-
+sity students with ADHD are present or not. Screening 
+for ADHD and other potential comorbidities is done rou-
+tinely in clinical practice, because it’s important to differ-
+entiate the conditions underlying the student’s presenting 
+symptoms and consider whether they may or may not 
+require additional reasonable adjustments or support 
+from other services (e.g., GP, mental health, or counsel-
+ling). A widely used screening tool for ADHD based on 
+DSM-5 diagnostic criteria, is the World Health Organi-
+sation Adult ADHD Self-Report Scale (ASRSv1.1) [122], 
+now updated to an online DSM-5 version (see Table  8 
+for further details and weblinks). The 18-item ASRS con-
+sists of all the diagnostic symptoms of ADHD and is use-
+ful as a screener for gathering information about ADHD 
+symptoms that can be examined more in-depth during a
+[/PAGE 14]
+
+[PAGE 15]
+Page 15 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+diagnostic assessment. If the ASRS screener is positive 
+for ADHD, and there are indications of sustained diffi-
+culties with attention, motor restlessness/overactivity or 
+impulsive behaviour, then it must trigger a full diagnostic 
+assessment by a suitably qualified practitioner.
+The SpLD Assessment and Standards Committee 
+(SASC) guidance for the assessment of ADHD, also states 
+that “practitioner psychologists and specialist teacher 
+assessors who have relevant training can identify spe-
+cific learning difficulties and patterns of behaviour that 
+together would strongly suggest a student has ADHD; 
+and in this situation they can make relevant recommen-
+dations for support at Further and or Higher Educa-
+tion institutions. Such diagnostic assessments should be 
+accepted by SFE in support of an application for Disa-
+bled Students’ Allowance” [167], p.2). This means uni-
+versity students can have indicators of ADHD identified 
+as part of a SpLD diagnostic assessment and then use 
+their diagnostic report to apply for reasonable adjust-
+ments and DSA (Disabled Student Allowance). However, 
+even with additional educational support in place (e.g., 
+DSA, reasonable adjustments, or sessions of study skills), 
+ADHD can continue to impair academic functioning if it 
+remains untreated [18]. In a few cases it can be hard to 
+tell if ADHD with or without co-occurring learning dis-
+orders or mental health symptoms, including intellectual 
+giftedness, are different facets of the same condition or 
+reflect separate disorders [168]. For instance, a student 
+with undiagnosed ADHD who keeps performing badly 
+academically, despite studying extra hard, may start to 
+worry excessively or feel like a failure and then become 
+depressed. This student may seek help because they are 
+feeling anxious or depressed, but in fact the underlying 
+condition is ADHD.
+There are effective screening tools for anxiety, depres-
+sion and substance misuse that can be used with 
+Fig. 4  Potential Support pathway for university students with ADHD
+[/PAGE 15]
+
+[PAGE 16]
+Page 16 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+university students with ADHD. The 10-item Kessler Psy-
+chological Distress Scale (K10) can be used to screen for 
+anxiety and depression [125], or the 16-item Penn State 
+Worry Questionnaire (PSWQ) can be used to screen for 
+pathological worry, which is a dominant feature in gener-
+alised anxiety disorder [126]. There are useful screening 
+tools in the appendices of the Improving Access to Psy-
+chological Therapies (IAPT) manual, including the Gen-
+eralised Anxiety Disorder scale (GAD-2, GAD-7), Panic 
+Disorders Severity Scale (PDSS), and the Patient Health 
+Questionnaire (PHQ-9, for depression) [128]. The Sim-
+ple Screening Instrument for Substance Abuse (SSI-SA) 
+(Center for Substance Abuse Treatment, 1994) is widely 
+used as a brief screen by practitioners and assessors with 
+little experience of substance misuse [127]. NICE clinical 
+guidance [CG123] also offers very clear advice and guid-
+ance for screening common mental health disorders, and 
+recommends that if a practitioner conducting the screen 
+identifies a possible anxiety disorder or depression, and 
+they are not competent to perform a full mental health 
+assessment, then they must refer the student to an appro-
+priate healthcare professional [169].
+Some students may have additional problems related 
+to a SpLD (e.g., dyslexia) or ASD. Useful screeners for 
+these conditions are the Adult Dyslexia Checklist which 
+is available for free from the British Dyslexia Association 
+website [124], and the Autism-Spectrum Quotient (AQ-
+10), is also available for free download [123]. If a student 
+with ADHD screens positive for a SpLD or ASD, then a 
+shared decision with the student can be made about the 
+usefulness or value of a referral for a diagnostic assess-
+ment of these comorbid conditions. It might be for 
+example, that a positive screen of either condition and 
+careful questioning about functional impairments, will 
+be enough to assess their impact on studying and how 
+best to mitigate them with additional support (e.g., coun-
+selling, specialist mentoring, academic coaching, extra 
+writing time for examinations). There is also evidence 
+which suggests that once the core symptoms of ADHD 
+are treated, problems related to co-occurring SpLDs, 
+ASD traits, anxiety or depression may in turn improve 
+[9, 158, 170]. During the shared decision-making process, 
+an agreement with the student can be also reached about 
+whether to include results of a positive screen for a SpLD 
+and/or ASD in their diagnostic report, which can include 
+a write-up about the potential complexities these condi-
+tions might add to a student’s ability to study effectively. 
+Further details and weblinks for the screening tools are 
+provided in Table 8.
+At present there are no neuroimaging, genetic, neu-
+rochemical, or neuropsychological diagnostic tests for 
+ADHD that are sufficiently sensitive or specific. Neu-
+ropsychological tests such as Stop Signal Reaction Time, 
+IQ, or various computerised tests of executive functions 
+(e.g., CANTAB) or QB-Test, can however, complement 
+a diagnostic assessment for ADHD and provide addi-
+tional information about cognitive performance [171]. 
+Some authors (e.g., Brown [98], conceptualise ADHD as 
+a disorder of executive function (EF), and many learning 
+problems that university students with ADHD experi-
+ence may be due to deficits in EF (e.g., poor organisation, 
+planning and time management skills, inattention, or 
+emotional lability) [172]. Although these EF deficits are 
+not well reflected in cognitive performance tests [173], an 
+assessment of EF behaviours such as those captured by 
+the BRIEF questionnaire are strongly related to ADHD 
+and associated functional impairments [174]. The rec-
+ommendation of the expert group (and all national/
+international guidelines) is that a diagnostic assessment 
+for adults with ADHD should be based on self-reported 
+symptoms, which are best obtained by using a semi-
+structured in-depth diagnostic interview. An exam-
+ple of such a tool is the “Diagnostic Interview for Adult 
+ADHD” (DIVA-5), which is based on the symptom and 
+impairment criteria of the DSM-5 [129]. The ACE+ is 
+another diagnostic tool that can be useful, and it has the 
+option to use either DSM-5 or ICD-11 diagnostic crite-
+ria [130]. The DIVA-5 is available for a one-off fee of 10 
+Euro whereas the ACE+ is free to download, with digital 
+versions in English and other languages (see Table 8 for 
+further details and weblinks). Collateral information can 
+also be obtained from informants such as close friends or 
+relatives, and school records, especially for the evaluation 
+of age of onset.
+ADHD in adults is diagnosed when 5 or more symp-
+toms of inattention and/or hyperactivity-impulsivity 
+are present, and with several of them being present 
+before 12 years old. These core symptoms must have 
+persisted for at least 6 months, and in clinical practice 
+the expectation is of a chronic trait-like course from 
+the age of onset during childhood or early adolescence. 
+The symptoms of ADHD should be to a degree that is 
+inconsistent with the developmental level for that indi-
+vidual and must cause functional impairments in 2 
+or more settings (e.g., at home, university, work, with 
+friends or relative, or in other activities) [6]. During the 
+diagnostic process conducting a detailed evaluation of 
+how the student’s presenting symptoms impact on their 
+academic productivity is essential. Potential education-
+related impairments due to ADHD are listed in Table 9. 
+Individually assessing and writing about education-
+related problems in the student’s diagnostic report will 
+help practitioners working in student disability services 
+to devise personalised support, as well as allow for the 
+effectiveness of this support to be evaluated. The Weiss 
+Functional Impairment Rating Scale – Self Report
+[/PAGE 16]
+
+[PAGE 17]
+Page 17 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+(WFRIS-S), is a useful tool for assessing and monitor-
+ing changes in functional impairments associated with 
+ADHD in different domains [131].
+Practitioners and assessors need to be aware that 
+ADHD symptoms and functional impairments present 
+differently in each student and their impact can also 
+change over the course of their programme of stud-
+ies [19]. The experience of the expert group is that 
+some students meeting diagnostic criteria for ADHD 
+may not want to take prescribed medication in the 
+first instance. But as their programme of studies pro-
+gresses this may change, and the student may want 
+and require medication to reduce core symptoms of 
+the disorder. While psychoeducation, and environ-
+mental modifications (including reasonable adjust-
+ments) can help support university students with 
+ADHD (and may be sufficient in some cases), only 
+medication has been found to reduce core symptoms 
+[89]. It is the experience of the expert group that uni-
+versity students with ADHD often have well devel-
+oped compensatory strategies such as being overly 
+organised, almost in an obsessive manner, or studying 
+extra hard for long periods of time to ensure adequate 
+performance. They may also have lost the usual struc-
+tured support of parents and school when they were 
+younger, so that impairments can increasingly accrue 
+as their course develops. During diagnostic assess-
+ments, some students can find it hard to remember 
+what their ADHD symptoms and impairments may 
+have been like during childhood. When this happens, 
+it is best to focus on their presenting symptoms and 
+establish whether at least 5 or more of them are cur-
+rently present and cause impairment, then track back 
+in time to establish as far as possible an age at which 
+current symptoms started.
+In most cases of ADHD an individual is unable to iden-
+tify a clear age of onset and they have the perception that 
+the symptoms were always present. A typical response 
+is that the symptoms have been present for as long as 
+they can recall. Remembering symptomatic behaviours 
+in childhood is especially hard when the student’s par-
+ents or other care givers have given them a lot of sup-
+port during their academic career, or provided them with 
+structure and routine, or when the student, had predomi-
+nantly inattentive symptoms in childhood, that were not 
+noticed either by their parents or teachers. This is more 
+likely in females (and some men) with ADHD, who tend 
+to present with predominantly inattentive symptoms 
+and few hyperactive-impulsive symptoms or less disrup-
+tive behaviour [50, 138, 175]. The gender bias in ADHD 
+seems to become less skewed in adulthood when women 
+with ADHD may be diagnosed, often for the first time 
+[138]. Practitioners and assessors conducting a diagnos-
+tic assessment need to be aware that female students can 
+present with study related problems due to ADHD for 
+the first time whilst at university. These students may 
+or may not have a previous diagnosis of another mental 
+health condition, which will need to be reviewed if they 
+are diagnosed with ADHD [138].
+During face-to-face diagnostic assessments, compen-
+satory strategies can be minimised. For instance, the 
+student may not recognise that sustaining attention or 
+organisation is problematic for them, when a more objec-
+tive appraisal suggests that this is a persistence problem. 
+This can occur because symptoms of ADHD reflect life-
+long traits, or because the student has well developed 
+Table 9  Potential education related problems and reasonable adjustments
+Potential education related problems due to
+Potential reasonable adjustment
+Mind wandering (daydreaming, intrusive task-unrelated thoughts)
+25–50% extra writing time in examinations
+Poor working memory (may need more time more time to process informa-
+tion and/or to understand complex conceptual ideas)
+25–50% extra writing time in examinations, separate room for writing 
+examinations
+Disorganisation and inefficiency
+Academic coaching, being invigilated in an examination by a support 
+worker familiar with ADHD
+Difficulties with planning ahead, misjudging how long tasks take to per‑
+form (different conception of time)
+25–50% extra writing time in examinations, flexible start times for an 
+examination
+Procrastination/ waiting until the “last minute” to submit work, “pulling all-
+nighters” (may need more time to complete tasks)
+Academic coaching/ specialist mentoring, 10 to 20 min of a rest break 
+during examinations
+Forgetfulness (losing things needed for university e.g., student ID card, missing 
+lectures, classes, or appointments)
+Having the ability to negotiate extensions to deadlines for assignments/ 
+course work
+Difficulty sustaining attention (especially when bored, not engaged, or not 
+stimulated)
+Academic coaching/ specialist mentoring, the ability to study part-time or 
+to defer examinations
+Difficulties following long explanations, note taking, or reading a lot
+Academic coaching/ specialist one-to-one study skills support or subject 
+specific support
+Hyper-focus on topics of self-interest to the detriment of other topics and 
+tasks
+Academic coaching/ specialist one-to-one study skills support, subject 
+specific support
+[/PAGE 17]
+
+[PAGE 18]
+Page 18 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+compensatory strategies. When this happens, it’s best to 
+assess the degree of effort that the student needs to put 
+into maintaining a compensatory strategy (for example, if 
+the student did not put in extra effort to be organised then 
+what would happen?). Students with severe ADHD may 
+be easier to screen and diagnostically assess, but if these 
+students have developed good compensatory strategies 
+(as discussed in the section on intellectual giftedness), 
+it can be hard to determine how severe and impairing 
+their ADHD symptoms are in other functional domains 
+(e.g., social relationships). It may also be at a time when 
+compensatory strategies are sufficient to mitigate ADHD 
+related impairments, but this may not always be the case 
+as their programme of studies progresses. Some students 
+may present with “subthreshold symptoms” of ADHD 
+(i.e., symptoms just below the threshold for a diagnosis 
+of ADHD to be made), yet they appear to be significantly 
+impaired by these symptoms and therefore need addi-
+tional support, and perhaps treatment. The experience of 
+the expert group is that impairments are also informed 
+by co-morbidities and that several sub-threshold comor-
+bidities (particularly of neurodevelopmental disorders) 
+can be more impactful than a single disorder above the 
+diagnostic threshold [176].
+Recommendation 6. Screening tools and diagnostic 
+assessments
+The expert group recommends that practitioners and 
+assessors be given training in how to screen for and 
+diagnostically assess ADHD using robust and evidence-
+based rating scales, screening tools, and standardised 
+clinical interviews. This training should include how to 
+conduct a detailed evaluation of education related func-
+tional impairments, write up a diagnostic report with 
+recommendations for reasonable adjustments and make 
+a direct referral for medical treatment if requested, to a 
+suitably qualified practitioner with expertise in the man-
+agement and treatment of ADHD in adults (e.g., a psy-
+chiatrist or mental health nurse/pharmacist non-medical 
+prescriber). A list of standardised screening and diagnos-
+tic tools are presented in Table 8 below.
+What pharmacological and non‑pharmacological 
+interventions are useful?
+Following initial psychoeducation about ADHD and 
+its impact, NICE guidance [50] recommends making 
+“environmental modifications”. In the context of univer-
+sity students with ADHD environmental modifications 
+can take the form of “reasonable adjustments” to pro-
+grammes of study under the Equality Act 2010. Potential 
+learning problems associated with ADHD and potential 
+reasonable adjustments are listed in Table 9. Adjustments 
+can also be made to study environments (e.g., making 
+available a quiet study room in the library, recommend 
+taking frequent breaks when studying, breaking down 
+daily targets, using digital diaries and reminders, regular 
+forms of exercise) [172]. If these adjustments/ modifica-
+tions have been applied and functional impairments con-
+tinue in at least one domain (e.g. academic performance, 
+or studying/learning difficulties), then medication should 
+be considered.
+Medication
+NICE guidance [50] recommends psychostimulant medi-
+cation (i.e., methylphenidate or lisdexamphetamine) as 
+first-line medical treatment for ADHD in adults. Psy-
+chostimulant medications are among the most effec-
+tive medications in use within adult mental health [89], 
+and among the most efficacious of all common medical 
+drugs [177]. Stimulant medications often produce a sub-
+stantial reduction in ADHD symptoms and associated 
+impairments. However, stimulant medications can also 
+have adverse effects, which in most cases are either dose-
+related, mild, or transient such as headache, reduced 
+appetite, nausea, palpitations, difficulty falling asleep 
+and dry mouth [89]. In a few cases, these adverse effects 
+may be undesirable, and an individual may decide to stop 
+using stimulant medication. Stimulant medications can 
+also increase blood pressure and heart rate, therefore 
+people who take these medications are assessed at base-
+line and monitored during their treatment [50]. Empirical 
+research about the efficacy of treating university students 
+with ADHD is rare and the extent to which prescribers 
+consider the unique demands of university life when pre-
+scribing medication to students is unknown [178].
+The first randomised controlled trial of lisdexampheta-
+mine with a sample of 24 university students diagnosed 
+with ADHD was conducted by DuPaul et  al., [179]. In 
+this study, lisdexamphetamine was administered over 
+a 5-week period and large reductions in the students 
+ADHD symptoms were observed, alongside improve-
+ments in their task management, planning, organisation, 
+use of study skills and working memory. Although the 
+short duration of this study precluded an assessment of 
+academic functioning over the long-term, in other stud-
+ies, university students with ADHD who took medica-
+tion did report improvements in their note taking, scores 
+on tests, writing output and completion of course work 
+[180]. In a pharmaco-epidemiological study from Swe-
+den young people with ADHD taking medication were 
+also found to have better scores in standardised univer-
+sity entrance examinations when compared to peers with 
+ADHD not taking medication [181]. It is noted, however, 
+that a substantial number of university students with 
+ADHD do not take their medication as prescribed [182]. 
+Some university students with ADHD may use their
+[/PAGE 18]
+
+[PAGE 19]
+Page 19 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+medication flexibly, with optimum dosing during times 
+of writing assignments or studying for examinations and 
+then no medication on days without academic work, e.g., 
+at weekends or during holidays [183]. When treating uni-
+versity students with ADHD, prescribing practitioners 
+therefore need to be open to discussing the benefits and 
+drawbacks of flexible dosing with students and be willing 
+to offer appropriate guidance and advice [184, 185].
+Non‑pharmacological interventions
+The view of the expert group is that non-pharmacological 
+interventions are particularly important for university 
+students who want or need to learn how to best manage 
+their ADHD and overcome the learning difficulties that 
+they experience. Medication alone maybe sufficient for a 
+subgroup of university students, but persistent difficul-
+ties are more often seen, and additional support maybe 
+required. Non-pharmacological interventions begin with 
+psychoeducation. The experience of the expert group is 
+that newly diagnosed students are keen to have a con-
+versation about their diagnosis, including whether or not 
+to disclose it to academic staff or future employers, the 
+benefits, and drawbacks of taking medication, including 
+flexible dosing, “drug holidays”, effects of medication on 
+alcohol or other drugs, the positive attributes of ADHD 
+(e.g., creativity), psychological interventions and reasona-
+ble adjustments. Research about the effectiveness of non-
+pharmacological interventions for adults with ADHD is 
+mixed and inconclusive, but positive effects have been 
+reported for mindfulness on core symptoms of ADHD 
+including mind wandering [186], dialectical behaviour 
+therapy (DBT) and cognitive behavioural therapy (CBT) 
+[187–189].
+Although research about non-pharmacological inter-
+ventions for university students with ADHD is limited, 
+new studies have been published. For instance, Anas-
+topoulos et  al. [190] and Eddy et  al. [191] reported on 
+the findings of a randomised controlled trial (RCT) 
+that examined the efficacy of a CBT based program 
+called ACCESS (Accessing Campus Connections and 
+Empowering Student Success) for university students 
+with ADHD. During the ACCESS program - psychoe-
+ducation, cognitive and behavioural strategies target-
+ing executive function (EF) and patterns of maladaptive 
+thinking, were delivered. Participants, who met DSM-5 
+diagnostic criteria for ADHD and were taking medica-
+tion, were recruited from two large public universities in 
+the USA and randomly assigned to either the ACCESS 
+program group (n = 119) or a Delayed Treatment Con-
+trol (DTC) group (n  = 131). The findings revealed that 
+the ACCESS program group participants self-reported 
+significant improvements in their knowledge of ADHD, 
+symptoms of inattention, EF, utilisation of disability 
+accommodations (or reasonable adjustments), as well 
+as a moderate decline in maladaptive thinking, when 
+compared to DTC group participants. However, neither 
+ACCESS program and DTC group participants reported 
+significant improvements in their interpersonal function-
+ing and educational outcomes (grade point average/GPA 
+and course grade completion). The authors concluded 
+that the ACCESS program made a large difference to the 
+participants core symptoms of ADHD and EF.
+Indeed, as noted previously, EF deficits have been 
+shown to mediate the association between ADHD and 
+impairments in academic functioning [100]. The finding 
+that the ACCESS program positively impacted on the 
+participants EF is therefore encouraging. It also supports 
+the findings of an earlier pilot study about a CBT based 
+group intervention to enhance EF functioning in univer-
+sity students with ADHD [172], and strengthens a more 
+recent finding about how steep temporal discounting may 
+play a key role in the daily life challenges that university 
+students with ADHD encounter. Temporal discounting 
+(TD) describes how the subjective value of a reward sig-
+nificantly declines when the said reward is delayed [192]. 
+In a pilot study by Scheres and Solanto [193], steep TD 
+was not only associated with combined type ADHD, spe-
+cifically the hyperactivity-impulsivity symptom domain, 
+but also with poor utilisation of learning and/or study 
+skills. TD was therefore postulated to be an important 
+target for EF interventions for university students with or 
+without ADHD [193], more so for interventions that were 
+designed to activate and sustain motivation to pursue a 
+long-term goal for a reward, such as pursuing and com-
+pleting a university degree [194]. Findings like this could 
+be useful for enhancing the effectiveness of CBT based 
+interventions for university students with ADHD like the 
+ACCESS program, by for example, tailoring EF interven-
+tions to also target TD. Maybe this could improve edu-
+cational outcomes and perhaps interpersonal functioning 
+of university students with ADHD, which in the study 
+reported by Anastopoulos et al. [190] showed no signifi-
+cant improvements.
+The report that the ACCESS program made a large dif-
+ference to the students’ core symptoms of ADHD, seems 
+to contradict what the World Federation of ADHD inter-
+national consensus statement acknowledged about good 
+treatments for ADHD being available, but even the best 
+treatments are only partially effective [164]. Overall, 
+there is only low-quality evidence that CBT interventions 
+might be beneficial for treating core symptoms of ADHD 
+in adults, in the short-term, or for improving co-occur-
+ring symptoms of anxiety and depression [164, 195]. It 
+was noted by Anastopoulos et al., [190], that participants 
+in both study groups increased their use of ADHD medi-
+cations over the course of the study. Perhaps this was
+[/PAGE 19]
+
+[PAGE 20]
+Page 20 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+the real reason that the participants core symptoms of 
+ADHD improved. After all, this is what ADHD medica-
+tions are designed to do and treatments for ADHD usu-
+ally become more effective when medication is combined 
+with a CBT intervention [195], or when multimodal 
+interventions are used [196].
+Hence academic coaching, which tends to be a deriva-
+tive of CBT, could be another useful intervention for 
+optimising coping strategies in university students with 
+ADHD. For instance, coaching has been used to help 
+identify study goals, develop study plans and strate-
+gies for achieving these plans, monitoring their progress 
+towards attaining them and to foster self-determination 
+[197]. In one study, academic coaches helped university 
+students with ADHD to develop better time manage-
+ment, organisational skills, pay more attention in classes 
+and to take good notes, and improvements in these skills 
+were observed after 8 weeks [198]. In another study, uni-
+versity students with ADHD reported that academic 
+coaching had helped to enhance their self-discipline, self-
+efficacy, study skills, ability to formulate realistic goals 
+and to think more about long-term goals and maintain 
+motivation to achieve them [199]. Additional benefits 
+of coaching can be in helping university students with 
+ADHD feel more in control of their emotions and behav-
+iours in the face of external demands [200]. Academic 
+coaching (or specialist mentoring, or specialist one-to-
+one study skills support), can also be funded via DSA as 
+specialist access and learning facilitators (Band 4). Aca-
+demic coaching, supportive counselling and/or CBT, 
+whether delivered face-to-face or online can be effective 
+non-pharmacological interventions for university stu-
+dents with ADHD [188, 189, 201], and the potential of 
+these interventions to improve academic performance 
+is evident in the promising results of recent studies e.g. 
+[172, 190].
+Recommendation 7. Multimodal interventions
+The expert group recommends multimodal interventions 
+for university students with ADHD, that comprise a vari-
+ety of interventions including environmental modifica-
+tions, psychoeducation, medication, academic coaching, 
+DBT, CBT, counselling and/or mindfulness-based inter-
+ventions. University counselling and disability services 
+do tend to offer a range of psychosocial interventions for 
+students, whether delivered online, face-to-face or in a 
+group.
+What are the staff training and developmental needs?
+In the Institute for Employment Studies report to the 
+Office for Students, practitioners working in univer-
+sity disability services identified a need for training and 
+development to enable them to both support university 
+students with ADHD and the academic staff working 
+with them [52]. The SpLD Assessments and Standards 
+Committee (SASC) [167], also recommended that prac-
+titioner psychologists and specialist teacher assessors 
+require appropriate training to identify “specific learning 
+difficulties and patterns of behaviour that together would 
+strongly suggest that a student has ADHD” (p.11). The 
+need for staff training and development was discussed 
+during the consensus meeting, and it included training 
+in how to liaise with and refer university students with 
+ADHD to a suitably qualified practitioner for a diagnos-
+tic assessment (e.g., a psychiatrist, mental health nurse/ 
+pharmacist non-medical prescriber). Practitioners and 
+assessors seemed keen to receive “certified training” as a 
+way to achieve the SASC recommendations for “appro-
+priate training”. A certified educational programme about 
+ADHD at university level 6 or 7, could be developed and 
+delivered for example online, as a post-qualification pro-
+fessional training or continuous professional develop-
+ment (CPD). But at present, no such course/programme 
+exists in the UK. UKAAN offers training for healthcare 
+professionals and can deliver bespoke training to practi-
+tioners and assessors who work with university students, 
+and some disability services have already done so. Dur-
+ing the consensus meeting some practitioners and asses-
+sors said they often gained relevant experience by having 
+previously worked, or currently working, with university 
+students with ADHD or through their own personal lived 
+experiences, and that they made use of these experiences 
+in their role.
+Recommendation 8. Training and development
+The expert group recommends that staff training, and 
+development be prioritised under the inclusive practice 
+agenda in higher education. This training should include 
+psychoeducation, procedures for screening and assessing 
+for ADHD, and useful strategies for supporting university 
+students with ADHD. This will enhance the knowledge 
+and skills of practitioners and assessors who work with 
+and/or support university students with ADHD.
+Discussion & conclusion
+This was a report of the UKAAN expert consensus 
+meeting about university students with ADHD, which 
+was held before the COVID-19 pandemic. Since then, 
+the pandemic has altered higher education in a monu-
+mental way. When lockdown was first imposed in the 
+UK, university campuses were suddenly closed. Stu-
+dents and staff had to quickly adapt to online deliv-
+ery of lectures and classes, and there was uncertainty 
+about being able to access digital technologies and 
+quite places to study or work at home. There was also 
+confusion among students about study expectations,
+[/PAGE 20]
+
+[PAGE 21]
+Page 21 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+assessments, workloads, retention, and completion 
+[202–204]. Undoubtedly the pandemic has caused 
+much suffering, frustration, fear, loss and other nega-
+tive thoughts, emotions, and experiences for many peo-
+ple, including university students with ADHD [205]. 
+However, findings about the impact of the pandemic 
+on university students has been mixed. Frampton and 
+Smithies [206], reported on a Students Minds survey 
+about life during the pandemic involving 1100 univer-
+sity students. The findings of this survey revealed that 
+74% of respondents reported that the pandemic had 
+a negative impact on their mental health and wellbe-
+ing, whilst only 10% of respondents reported positive 
+effects. In this survey, disabled and non-disabled stu-
+dents were also asked whether they agreed or disagreed 
+with the statement “online learning has allowed me to 
+engage with my course more positively”, and the find-
+ings revealed that 59% of disabled students compared 
+with 55% of non-disabled students disagreed with the 
+statement. This also suggests that just under-half of 
+these students agreed with the statement. In another 
+study, 79 university students in one Faculty of Life Sci-
+ences were surveyed and participated in focus groups 
+about how they experienced the sudden shift to online 
+learning during the lockdown [207]. This study found 
+that 75% of the students who participated in the study, 
+reported that their life had become more difficult and 
+50% reported that learning outcomes would be hard 
+to achieve, but after 12 weeks into the lockdown, cor-
+responding rates changed to 57 and 71% respectively 
+[207].
+The findings of existing studies do suggest that during 
+the COVID-19 lockdown, virtual learning for some uni-
+versity students may have had benefits such as enabling 
+greater attendance, engagement, and participation in 
+teaching sessions, especially for students who previously 
+felt anxious about asking questions in front of others or 
+some disabled students [202]. Students who were used to 
+spending time online – on the Internet including social 
+media platforms for example, seemed to exhibit strong 
+motivation for eLearning, and reported lower levels of 
+distress during the pandemic [208]. However, there are 
+also concerning reports about ADHD being a risk factor 
+for COVID-19 infection [209, 210]. These reports are per-
+haps pertinent for university students with ADHD who 
+may have participated in demonstrations during the pan-
+demic such as Black Lives Matter (BLM), living arrange-
+ments in student halls of residence, sexual harassment, 
+assault and “rape culture” in UK universities [206, 211], 
+or illegal COVID raves [212], or the COVID anti-vaccine 
+and lockdown protests [213]. It can be argued that the 
+pandemic may have longer-term negative consequences 
+on current and future career prospects for university 
+students with ADHD, but outside of this, no firm conclu-
+sions from the existing research can be drawn.
+Evidence is stronger for poor education (or academic) 
+performance and achievement having a long-term nega-
+tive impact on mental health, wellbeing, and socio-eco-
+nomic outcomes [214]. Even though there is a paucity 
+of research about university students with ADHD in 
+the UK and rest of Europe, the importance of attend-
+ing to the mental health of university students in the UK 
+has been recognised. The Royal College of Psychiatrists 
+recently published a college report on the mental health 
+of higher education students, and Sedgwick-Müller et al., 
+contributed a section on ADHD in this report [1]. The 
+expert group is also aware that ADHD is a hidden dis-
+ability within UK HEIs and its categorisation as a SpLD 
+may be contributing to this, therefore university students 
+with ADHD continue to be at risk of marginalisation 
+and disadvantage. The expert group recommends that 
+ADHD should be catered for under a separate category 
+within UK HEIs, as this may enable greater recognition 
+of ADHD and for its impact on learning within higher 
+education to be adequately assessed and mitigated. With 
+aspirations towards widening participation and inclusive 
+practices in higher education [52], understanding exactly 
+“what works” best for university students with ADHD is 
+imperative. The four key stages in a student’s lifecycle are 
+access to higher education (the extent to which students 
+can gain entrance to different types of HEIs), retention 
+(the likelihood of continuing or withdrawing from a pro-
+gramme of studies), attainment (the extent to which uni-
+versity students are enabled to achieve their full academic 
+potential), and progression (successful transitions within 
+a programme of studies and afterwards into employment 
+or further study)” [215], p.5). Each of these 4 key stages 
+in a student’s lifecycle can be adversely affected by either 
+having and/or not recognising ADHD, and by delaying 
+access to a screening, diagnostic assessment, treatment, 
+and educational support. Interventions in a student’s first 
+year at university, according to Clery and Topper, should 
+focus on enhancing their academic achievement because 
+retention, attainment, and progression tends to be more 
+favourable for university students who perform well aca-
+demically in their first year [216].
+In summary, UKAAN convened an expert consensus 
+meeting to provide an informed understanding about the 
+impact of ADHD on the educational (or academic) out-
+comes of university students and to highlight an urgent 
+need for timely access to treatment and management. 
+An overview of key issues, as well as expert advice and 
+guidance has been offered. In Table 10 below, the main 
+recommendations of the expert group are summarised. 
+There is little doubt that university students with ADHD 
+are struggling with long delays in accessing a diagnostic
+[/PAGE 21]
+
+[PAGE 22]
+Page 22 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+assessment, treatment, and personalised educational 
+support. The provision of rapid access treatment and 
+care pathways can be challenging for clinicians working 
+in specialist NHS ADHD clinics, but examples of good 
+practice are also beginning to emerge, with some univer-
+sity disability services drawing on their own budgets to 
+support their students. Further work is needed to develop 
+and evaluate efficient and cost-effective treatment and 
+care pathways for university students with ADHD (for 
+example see Fig.  4), and to adopt models of best prac-
+tice across the sector. University students, including 
+those with ADHD, are at a crucial transitioning stage in 
+life and their success at university is likely to determine 
+their success in highly competitive employment markets. 
+This strengthens the argument to support all university 
+students in an inclusive manner. Methods for inclusive 
+teaching and learning are also likely to cater to disabled 
+students, including university students with ADHD.
+Abbreviations
+ACE: ADHD Child Evaluation; AHEAD: Association for Higher Access & Disabil‑
+ity; ADHD: Attention Deficit Hyperactivity Disorder; APA: American Psychiatric 
+Association; AQ-10: Autism-Spectrum Quotient; ASD: Autism Spectrum Dis‑
+order; ASRS: Adult ADHD Self-report Rating Scale; CADDRA: Canadian ADHD 
+Practice Guidelines; CBT: Cognitive Behavioural Therapy; DIVA-5: Diagnostic 
+Interview for ADHD in adults; DBT: Dialectical Behavioural Therapy; DSA: 
+Disabled Students Allowance; DCD: Developmental co-ordination disorder; 
+DSM-5: Diagnostic and Statistical Manual of Mental Disorders version 5; EL: 
+Emotional lability; EF: Executive Functions; HEIs: Institutions of Higher Educa‑
+tion; HESA: The Higher Education Statistical Authority; IAPT: Improving Access 
+to Psychological Therapies; IES: Institute of Employment Studies; MDD: Major 
+Depressive Disorder; MD: Math Disability; NHS: National Health Service; NICE: 
+National Institute for Health and Care Excellence; OfS: Office for Students; 
+PDSS: Panic Disorders Severity Scale; PHQ-9: Patient Health Questionnaire; PS: 
+Processing Speed; PSWQ: Penn State Worry Questionnaire; QbTest: Quantified 
+Behavior Test; RD: Reding Disability; SEND: Special Educational Needs and 
+Disabilities; SEN: Special Educational Needs; SLD: Specific Learning Disorders; 
+SASC: SpLD Assessment and Standards Committee; SpLDs: Specific learning 
+differences; SSI-SA: The Simple Screening Instrument for Substance Abuse; 
+UKAAN: UK Adult ADHD Network; UK: United Kingdom of Great Britain and 
+Northern Ireland; WAIS: Wechsler Adult Intelligence Scale; WFRIS-S: Weiss Func‑
+tional Impairment Rating Scale – Self Report; WHO: World Health Organisation; 
+WM: Working Memory; WD: Writing Disability.
+Acknowledgements
+We acknowledge JSM for facilitating the consensus meeting and preparing 
+this manuscript, PA, UMS, for assistance in reviewing and editing drafts of this 
+manuscript. We are grateful to Ms. Sue Curtis for recording the meeting and 
+preparing the transcripts from the meeting.
+Authors’ contributions
+JSM conceived the work; PA, MC, RC were keynote speakers during the meet‑
+ing; JSM, PA and UMS were involved in drafting the manuscript and critically 
+revising it. A final draft was circulated by JSM to UMS, MA, MC, RC, GG, DH, MP, 
+SY and PA, who endorsed the consensus and approved the manuscript.
+Funding
+This research did not receive any funding from public, private, or not-for-profit 
+organisations or agencies.
+Availability of data and materials
+Data sharing is not applicable to this article as no data sets were generated or 
+analysed during the study.
+Declarations
+Ethics approval and consent to participate
+All methods were carried out in accordance with relevant guidelines and 
+regulations.
+Consent for publication
+Not Applicable.
+Competing interests
+YES, “JSM, USM, MP, SY, PA have received honoraria and pharmaceutical fund‑
+ing for consultation, research awards, educational talks, study days and/or 
+conference support. JSM is in receipt of an educational grant from the Royal 
+College of Nursing (RCN) Foundation towards PhD tuition fees and received 
+the 2020 RCN Muriel Fleet Award for outstanding professional development 
+Table 10  Summary of the main recommendations from the expert group
+1. ADHD can cause problems learning, but it should not be subsumed under the category of a specific learning (disability) or difference (SpLD) 
+within HEIs. A separate category for ADHD will enable a prevalence estimate among university students to be established. It may also lead to greater 
+recognition of ADHD within higher education, personalised packages of support and further research to examine the impact of ADHD on educational 
+outcomes.
+2. University students who present to disability services with complaints of learning problems that seem related to SpLDs, DCD or ASD should also be 
+screened for ADHD.
+3. University students with anxiety and depression who report persisting learning problems should also be screened for ADHD.
+4. Programmes of staff training and development about ADHD, should include psychoeducation and raise awareness about the potential stigma that 
+university students or others may perceive, including its consequences and potential impact on disclosure, the screening and diagnostic process, 
+treatment, and support.
+5. Rapid access treatment and care pathways for university students with ADHD should be developed collaboratively between central support 
+services (e.g. disability services), NHS primary and secondary care, or private providers. The university disability services fund for SpLD diagnostic 
+assessments should also become available to students who require a diagnostic assessment for ADHD.
+6. Practitioners and assessors in higher education should be trained in how to screen and diagnostically assess ADHD, conduct a detailed evaluation 
+of education related functional impairments, write up a diagnostic report with recommendations for reasonable adjustments and make a direct refer‑
+ral to a suitably qualified practitioner with expertise in assessing comorbidities and treating ADHD.
+7. Multimodal interventions comprising psychoeducation, environmental modifications (e.g. reasonable adjustments, disabled students’ allowance, 
+DSA), medication, academic coaching, DBT and/or CBT, counselling, mindfulness, are useful for university students with ADHD.
+8. Staff training, and development should be prioritised under the inclusive practice agenda in higher education. This training is likely to enhance 
+knowledge about how best to support university students with ADHD and up-skill practitioners and assessors who work with these students.
+[/PAGE 22]
+
+[PAGE 23]
+Page 23 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+and 2020 Genius Within Award for Neurodiverse Research of the Year and all 
+other authors have no other competing interests to disclose.”
+Author details
+1 Health and Community Services, Government of Jersey, St Helier, Jersey. 
+Social, Genetic & Developmental Psychiatry, Institute of Psychiatry, Psychology 
+& Neuroscience (IoPPN) & Florence Nightingale Faculty of Nursing, Mid‑
+wifery & Palliative Care (FNFNM), King’s College London, London, UK. 2 Adult 
+Neurodevelopmental Service, Health and Community Services, Government 
+of Jersey, St Helier, Jersey. Department of Psychiatry, University of Cambridge, 
+Cambridge, UK. 3 School of Human and Health Sciences, University of Hud‑
+dersfield, Huddersfield, UK. 4 Natbrainlab, Forensic and Neurodevelopmental 
+Sciences, Institute of Psychiatry, Psychology & Neuroscience (IoPPN), King’s 
+College London, London, UK. 5 Psychology Department, Institute of Psychia‑
+try, Psychology & Neuroscience (IoPPN), King’s College London, London, UK. 
+6 Adult ADHD Service, Avon and Wiltshire Mental Health Partnership NHS Trust, 
+Bristol, UK. 7 Adult ADHD and Autism Outpatient Service, South London & 
+Maudsley NHS Foundation Trust, London, UK. 8 Psychology Services Limited, 
+Department of Psychology, Reykjavik University, Reykjavik, Iceland. 9 Social, 
+Genetic & Developmental Psychiatry, Institute of Psychiatry, Psychology & 
+Neuroscience (IoPPN), King’s College London, London, UK. 
+Received: 29 September 2021   Accepted: 15 March 2022
+References
+	
+1.	 The Royal College of Psychiatrists: Mental Health of Higher Education 
+Students [College Report CR23]. London.
+	
+2.	 Arnett J. Emerging adulthood: the winding road from the late teens 
+through the twenties. New York, NY: Oxford University Press; 2014.
+	
+3.	 Arnett J. College students as emerging adults: the develop‑
+mental implications of the college context. Emerg Adulthood. 
+2015;4(3):219–22.
+	
+4.	 MacLeod KB, Brownlie EB. Mental health and transitions from adoles‑
+cence to emerging adulthood: developmental and diversity considera‑
+tions. Can J Community Ment Health. 2014;33(1):77–86.
+	
+5.	 Universities-UK. Minding our future: starting a conversation about the 
+support of student mental health. London; 2018.
+	
+6.	 American Psychiatric Association. Diagnostic and statistical manual of 
+mental disorders (DSM). 5th ed; 2013.
+	
+7.	 World Health Organisation (WHO). International classification of dis‑
+eases (ICD). 11th ed. Geneva; 2019.
+	
+8.	 Czamara D, Tiesler CM, Kohlböck G, Berdel D, Hoffmann B, Bauer C-P, 
+et al. Children with ADHD symptoms have a higher risk for reading, 
+spelling and math difficulties in the GINIplus and LISAplus cohort stud‑
+ies. PLoS One. 2013;8(5):e63859.
+	
+9.	 Davis NO, Kollins SH. Treatment for co-occurring attention deficit/
+hyperactivity disorder and autism spectrum disorder. Neurotherapeu‑
+tics. 2012;9(3):518–30.
+	 10.	 Fayyad J, Sampson NA, Hwang I, Adamowski T, Aguilar-Gaxiola S, Al-
+Hamzawi A, et al. The descriptive epidemiology of DSM-IV adult ADHD 
+in the World Health Organization world mental health surveys. Atten 
+Defic Hyperact Disord. 2017;9(1):47–65.
+	 11.	 Germanò E, Gagliano A, Curatolo P. Comorbidity of ADHD and dyslexia. 
+Dev Neuropsychol. 2010;35(5):475–93.
+	 12.	 Kessler RC, Adler L, Barkley R, Biederman J, Conners CK, Demler O, et al. 
+The prevalence and correlates of adult ADHD in the United States: 
+results from the National Comorbidity Survey Replication. Am J Psychi‑
+atr. 2006;163(4):716–23.
+	 13.	 Wadsworth SJ, DeFries JC, Willcutt EG, Pennington BF, Olson RK. Genetic 
+etiologies of comorbidity and stability for Reading difficulties and 
+ADHD: a replication study. Twin Res Hum Genet. 2016;19(6):647–51.
+	 14.	 Yoshimasu K, Barbaresi WJ, Colligan RC, Killian JM, Voigt RG, Weaver 
+AL, et al. Written-language disorder among children with and 
+without ADHD in a population-based birth cohort. Pediatrics. 
+2011;128(3):e605–12.
+	 15.	 Langberg JM, Becker SP. ADHD treatment and long-term academic 
+outcomes: response to Arnold and Colleagues. J Atten Disord. 
+2015;24(5):819–20.
+	 16.	 Anastopoulos A, DuPaul G, Weyandt L, Morrissey-Kane E, Som‑
+mer J, Rhoads L, et al. Rates and patterns of comorbidity among 
+first-year college students with ADHD. J Clin Child Adolesc Psychol. 
+2018;47(2):236–47.
+	 17.	 Langberg JM, Molina BSG, Arnold LE, Epstein JN, Altaye M, Hinshaw SP, 
+et al. Patterns and predictors of adolescent academic achievement and 
+performance in a sample of children with attention-deficit/hyperactiv‑
+ity disorder. J Clin Child Adolesc Psychol. 2011;40(4):519–31.
+	 18.	 Arnold L, Hodgkins P, Kahle J, Madhoo M. G K: long-term outcomes 
+of ADHD: academic achievement and performance. J Atten Disord. 
+2015;24(1):73–85.
+	 19.	 Asherson P, Buitelaar J, Faraone S, Rohde L. Adult attention-deficit 
+hyperactivity disorder: key conceptual issues. Lancet Psychiatry. 
+2016;3(6):568–78.
+	 20.	 Nigg JT. Attention-deficit/hyperactivity disorder and adverse health 
+outcomes. Clin Psychol Rev. 2013;33(2):215–28.
+	 21.	 Sedgwick J. University students with attention deficit hyperactivity dis‑
+order (ADHD): a literature review. Ir J Psychol Med. 2018;35(3):221–35.
+	 22.	 Higher Education Statistical Agency (HESA), UK-domiciled student 
+enrolments by disability and sex: For the academic years 2014/15–
+2018/19 at: https://​www.​hesa.​ac.​uk/​data-​and-​analy​sis/​stude​nts/​table-​
+15. Accessed 31 July 2021.
+	 23.	 Department for Education Department of Health. The special educa‑
+tional needs and disability (SEND) code of practice 0–25 years. London: 
+HMSO; 2015.
+	 24.	 Hinshaw S, Scheffler R. The ADHD explosion: myths, medication, 
+money, and Today’s push for performance vol. 67. New York: Oxford 
+University Press; 2014.
+	 25.	 Midgley H. Payment by results in nineteenth-century British education: 
+a study in how priorities change. J Policy Hist. 2016;28(4):680–706.
+	 26.	 Newcastle, Duke of. [The Newcastle Commission]. Report of the Royal 
+Commissioners appointed to inquire into the state of popular educa‑
+tion in England, vol. 1. London: HMSO; 1861.
+	 27.	 Potts P. Medicine, morals and mental deficiency: the contribution of 
+doctors to the development of special education in England. Oxf Rev 
+Educ. 1983;9(3):181–96.
+	 28.	 Copeland IC. The establishment of models of education for disabled 
+children. Br J Educ Stud. 1995;43(2):179–200.
+	 29.	 Ross D, Ross S. Hyperactivity: research, theory, and action. New York: 
+Wiley; 1976.
+	 30.	 The Egerton Royal Commission. Report of the Royal Commission on 
+the blind, the deaf and dumb & c., of the United Kingdom. London: 
+HMSO; 1889.
+	 31.	 Petrina S. The medicalization of education: a Historiographic synthesis. 
+Hist Educ Q. 2006;46(4):503–31.
+	 32.	 Still G. The Goulstonian lectures ON SOME ABNORMAL PSYCHICAL 
+CONDITIONS IN CHILDREN. Lancet. 1902;159(4102):1008–13.
+	 33.	 Lange KW, Reichl S, Lange KM, Tucha L, Tucha O. The history of 
+attention deficit hyperactivity disorder. Atten Defic Hyperact Disord. 
+2010;2(4):241–55.
+	 34.	 British Medical Journal. Report of the Departmental Committee on 
+Defective and Epileptic Children. 1940;1898(1):651–2.
+	 35.	 Woodhouse J. Eugenics and the feeble-minded: the parliamentary 
+debates of 1912-14. Hist Educ. 1982;11(2):127–37.
+	 36.	 Binet A, Simon T. Méthodes nouvelles pour diagnostiquer l’idiotie, 
+l’imbécillité et la débilité mentale [New methods for the diagnosis of 
+the intellectual level of abnormal children to diagnose the idiocy, the 
+imbecility, and the mental deficiency]. Atti del V congresso internazion‑
+ale di psicologia tenuto in Roma dal 26 al 30 Aprile; 1905.
+	 37.	 Binet A, Simon T. Le développement de l’intelligence chez les enfants. 
+L’année Psychol. 1907;14(1):1–94.
+	 38.	 Spearman C. "general intelligence," objectively determined and meas‑
+ured. Am J Psychol. 1904;15(2):201.
+	 39.	 Radnor Report. Report of the Royal Commission on the care and con‑
+trol of the feeble-minded, VIII, cd 4202. London: HMSO; 1908.
+	 40.	 Hearnshaw L. Cyril Burt: psychologist. Ithaca: Cornell University Press; 
+1979.
+	 41.	 Burt C. Mental and scholastic tests (London County council). London: 
+P.S. King and Son; 1922.
+	 42.	 Burt C. The causal factors of juvenile crime. Br J Med Psychol. 
+1923;3(1):9–33.
+[/PAGE 23]
+
+[PAGE 24]
+Page 24 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	 43.	 Burt C. The Young delinquent, First edn. London: University of London 
+Press; 1925.
+	 44.	 Burt C. The backward child. London: University of London Press; 1937.
+	 45.	 Bradley C. The behavior of children receiving benzedrine. Am J Psychi‑
+atr. 1937;94(3):577–85.
+	 46.	 Lindsay G, Miller A. Psychological Services for Primary Schools. Harlow, 
+Essex: UK; 1991.
+	 47.	 Warnock H. Warnock Report of the Committee of Enquiry into the 
+education of handicapped children and Young people. London; 1978.
+	 48.	 Thorley G. Hyperkinetic syndrome of childhood: clinical characteristics. 
+Br J Psychiatry. 1984;144(1):16–24.
+	 49.	 Hill P, Taylor E. An auditable protocol for treating attention deficit/
+hyperactivity disorder. Arch Dis Child. 2001;84(5):404–9.
+	 50.	 NICE (National Institute for Health and Care Excellence). Attention 
+deficit hyperactivity disorder: diagnosis and management, vol. 2018. 
+London; 2008.
+	 51.	 Ewe LP. ADHD symptoms and the teacher–student relationship: a 
+systematic literature review. Emot Behav Diffic. 2019;24(2):136–55.
+	 52.	 Williams M, Pollard E, Takala H, Houghton A-M. Review of Support for 
+Disabled Students in Higher Education in England. Brighton: Office for 
+Students; 2019.
+	 53.	 Reis SM, Renzulli JS. Intellectual Giftedness. In: Stenberg RJ, editor. The 
+Cambridge Handbook of Intelligence: Cambridge University Press; 
+2020. p. 291–316.
+	 54.	 Sternberg RJ. The Augmented Theory of Successful Intelligence. In: 
+Sternberg RJ, editor. The Cambridge Handbook of Intelligence: Cam‑
+bridge University Press; 2020. p. 679–708.
+	 55.	 Sternberg R, Davidson J. Conceptions of giftedness, vol. 2005. Cam‑
+bridge: Cambridge University Press; 1986.
+	 56.	 von Stumm S, Hell B, Chamorro-Premuzic T. The hungry mind. Perspect 
+Psychol Sci. 2011;6(6):574–88.
+	 57.	 Canadian ADHD. Resource Alliance (CADDRA): Canadian ADHD practice 
+guidelines., 4th edn. Canada.
+	 58.	 Antshel K, Faraone S, Stallone K, Nave A, Kaufmann F, Doyle A, et al. Is 
+attention deficit hyperactivity disorder a valid diagnosis in the presence 
+of high IQ? Results from the MGH longitudinal family studies of ADHD. J 
+Child Psychol Psychiatry. 2007;48(7):687–94.
+	 59.	 Antshel K. Attention-deficit hyperactivity disorder in the context 
+of a high intellectual quotient/giftedness. Dev Disabil Res Rev. 
+2008;14(4):293–9.
+	 60.	 Barkley R, Poillion M. Attention deficit hyperactivity disorder: a hand‑
+book for diagnosis and treatment. New York: The Guildford Press; 1990.
+	 61.	 Beljan P, Webb J, Amend E, Web N, Goerss J, Olenchak F. Misdiagno‑
+sis and dual diagnoses of gifted children and adults: ADHD, bipolar, 
+OCD, Asperger’s, depression, and other disorders. Gifted Talented Int. 
+2006;21(2):83–6.
+	 62.	 Rinn AN, Reynolds MJ. Overexcitabilities and ADHD in the gifted: an 
+examination. Roeper Rev. 2012;34(1):38–45.
+	 63.	 Dabrowski K. Positive Disintegration. Boston: Little, Brown; 1964.
+	 64.	 Silverman LK. The construct of asynchronous development. Peabody J 
+Educ. 1997;72(3):36–58.
+	 65.	 Mullet DR, Rinn AN. Giftedness and ADHD: identification, misdiagnosis, 
+and dual diagnosis. Roeper Rev. 2015;37(4):195–207.
+	 66.	 Brown T, Reichel P, Quinlan D. Executive function impairments in high 
+IQ adults with ADHD. J Atten Disord. 2009;13(2):161–7.
+	 67.	 Minahim D, Rohde LA. Attention deficit hyperactivity disorder and intel‑
+lectual giftedness: a study of symptom frequency and minor physical 
+anomalies. Rev Bras Psiquiatr. 2015;37(4):289–95.
+	 68.	 Milioni ALV, Chaim TM, Cavallet M, de Oliveira NM, Annes M, dos Santos 
+B, et al. High IQ may “mask” the diagnosis of ADHD by compensating for 
+deficits in executive functions in treatment-Naïve adults with ADHD. J 
+Atten Disord. 2016;21(6):455–64.
+	 69.	 Gomez R, Stavropoulos V, Vance A, Griffiths MD. Gifted children with 
+ADHD: how are they different from non-gifted children with ADHD? Int 
+J Ment Heal Addict. 2019;18(6):1467–81.
+	 70.	 Baron-Cohen S, Ashwin E, Ashwin C, Tavassoli T, Chakrabrati B. 
+Talent in autism: hyper-systemizing, hyper-attention to detail and 
+sensory hypersensitivity. Philos Trans R Soc Lond Ser B Biol Sci. 
+2009;364(1522):1377–83.
+	 71.	 Ruthsatz J, Urbach JB. Child prodigy: a novel cognitive profile 
+places elevated general intelligence, exceptional working memory 
+and attention to detail at the root of prodigiousness. Intelligence. 
+2012;40(5):419–26.
+	 72.	 Lee KM, Olenchak FR. Individuals with a gifted/attention deficit/hyper‑
+activity disorder diagnosis. Gift Educ Int. 2014;31(3):185–99.
+	 73.	 Antshel K, Faraone S, Maglione K, Doyle A, Fried R, Seidman L, et al. 
+Executive functioning in high-IQ adults with ADHD. Psychol Med. 
+2010;40(11):1909–18.
+	 74.	 Rommelse N, Antshel K, Smeets S, Greven C, Hoogeveen L, Faraone SV, 
+et al. High intelligence and the risk of ADHD and other psychopathol‑
+ogy. Br J Psychiatry. 2017;211(6):359–64.
+	 75.	 Young S, Adamou M, Asherson P, Coghill D, Colley B, Gudjonsson G, 
+et al. Recommendations for the transition of patients with ADHD from 
+child to adult healthcare services: a consensus statement from the UK 
+adult ADHD network. BMC Psychiatry. 2016;16(1):301.
+	 76.	 Jensen M. Personality traits, learning and academic achievements. J 
+Educ Learn. 2015;4(4):91.
+	 77.	 Rimfeld K, Ayorech Z, Dale PS, Kovas Y, Plomin R. Genetics affects 
+choice of academic subjects as well as achievement. Sci Rep. 
+2016;6:26373.
+	 78.	 Arksey H, O’Malley L. Scoping studies: towards a methodological frame‑
+work. Int J Soc Res Methodol. 2005;8(1):19–32.
+	 79.	 Nutt DJ, Fone K, Asherson P, Bramble D, Hill P, Matthews K, et al. 
+Evidence-based guidelines for management of attention-deficit/hyper‑
+activity disorder in adolescents in transition to adult services and in 
+adults: recommendations from the British Association for Psychophar‑
+macology. J Psychopharmacol. 2006;21(1):10–41.
+	 80.	 Bolea-Alamañac B, Nutt DJ, Adamou M, Asherson P, Bazire S, Coghill D, 
+et al. Evidence-based guidelines for the pharmacological management 
+of attention deficit hyperactivity disorder: update on recommendations 
+from the British Association for Psychopharmacology. J Psychopharma‑
+col (Oxford, England). 2014;28(3):179–203.
+	 81.	 Husserl E. Ideas pertaining to a pure phenomenology and to a phe‑
+nomenological philosophy. Netherlands: Springer; 1982.
+	 82.	 Giorgi A. The theory, practice, and evaluation of the phenomenological 
+method as a qualitative research procedure. J Phenomenol Psychol. 
+1997;28(2):235–60.
+	 83.	 Pope D, Whiteley H, Smith C, Lever R, Wakelin D, Dudiak H, et al. 
+Relationships between ADHD and dyslexia screening scores and 
+academic performance in undergraduate psychology students: impli‑
+cations for teaching, learning and assessment. Psychol Learn Teach. 
+2007;6(2):114–20.
+	 84.	 DuPaul GJ, Weyandt LL, O’Dell SM, Varejao M. College students 
+with ADHD: current status and future directions. J Atten Disord. 
+2009;13(3):234–50.
+	 85.	 Norvilitis JM, Ingersoll T, Jie Z, Shuhua J. Self-reported symptoms of 
+ADHD among college students in China and the United States. J Atten 
+Disord. 2007;11(5):558–67.
+	 86.	 Du Rietz E, Cheung CHM, McLoughlin G, Brandeis D, Banaschewski 
+T, Asherson P, et al. Self-report of ADHD shows limited agreement 
+with objective markers of persistence and remittance. J Psychiatr Res. 
+2016;82:91–9.
+	 87.	 Connell-Smith A, Hubble S. Widening participation strategy in higher 
+education in England. London: House of Commons Library; 2018.
+	 88.	 Association for Higher Education Access and Disability (AHEAD). 
+Numbers of Students with Disabilities Studying in Higher Education in 
+Ireland 2017/18. Dublin: AHEAD Educational Press; 2019.
+	 89.	 Cortese S, Adamo N, Del Giovane C, Mohr-Jensen C, Hayes AJ, Carucci S, 
+et al. Comparative efficacy and tolerability of medications for attention-
+deficit hyperactivity disorder in children, adolescents, and adults: 
+a systematic review and network meta-analysis. Lancet Psychiatry. 
+2018;5(9):727–38.
+	 90.	 Fullen T, Jones SL, Emerson LM, Adamou M. Psychological treatments 
+in adult ADHD: a systematic review. J Psychopathol Behav Assess. 
+2020;42(3):500–18.
+	 91.	 Snowling MJ, Hulme C. Annual research review: the nature and clas‑
+sification of reading disorders--a commentary on proposals for DSM-5. J 
+Child Psychol Psychiatry. 2012;53(5):593–607.
+	 92.	 Gialluisi A, Andlauer TFM, Mirza-Schreiber N, Moll K, Hoffmann P, 
+Ludwig KU, et al. Genome wide association scan identifies new variants 
+associated with a cognitive predictor of dyslexia. Transl Psychiatry. 
+2018;9(77):1–15.
+[/PAGE 24]
+
+[PAGE 25]
+Page 25 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+	 93.	 Dighe A, Kettles G. Developmental dyspraxia an overview. In: Reid 
+G, editor. Dimensions of Dsylexia: assessment, teaching and the cur‑
+riculum, vol. 2. Edinburgh, Scotland: Moray House School of Education; 
+1996.
+	 94.	 Hosenbocus S, Chahal R. A review of executive function deficits and 
+pharmacological management in children and adolescents. J Can Acad 
+Child Adolesc Psychiatry. 2012;21(3):223–9.
+	 95.	 Diamond A. Executive functions. Annu Rev Psychol. 2013;64:135–68.
+	 96.	 Friedman NP, Miyake A. Unity and diversity of executive functions: 
+individual differences as a window on cognitive structure. Cortex. 
+2017;86:186–204.
+	 97.	 Barkley R. Differential diagnosis of adults with ADHD: the role of execu‑
+tive function and self-regulation. J Clin Psychiatry. 2010;71(07):e17.
+	 98.	 Brown T. Executive functions and attention deficit hyperactivity 
+disorder: implications of two conflicting views. Int J Disabil Dev Educ. 
+2006;53(1):35–46.
+	 99.	 Brown T. ADD/ADHD and impaired executive function in clinical prac‑
+tice. Curr Psychiatry Rep. 2008;10(5):407–11.
+	100.	 Dvorsky MR, Langberg JM. Predicting impairment in college stu‑
+dents with ADHD: the role of executive functions. J Atten Disord. 
+2014;23(13):1624–36.
+	101.	 Hervey AS, Epstein JN, Curry JF. Neuropsychology of adults with 
+attention-deficit/hyperactivity disorder: a Meta-analytic review. Neu‑
+ropsychology. 2004;18(3):485–503.
+	102.	 Shanahan MA, Pennington BF, Yerys BE, Scott A, Boada R, Willcutt EG, 
+et al. Processing speed deficits in attention deficit/hyperactivity disor‑
+der and Reading disability. J Abnorm Child Psychol. 2006;34(5):584–601.
+	103.	 Willcutt EG, Pennington BF, Olson RK, Chhabildas N, Hulslander J. Neu‑
+ropsychological Analyses of Comorbidity Between Reading Disability 
+and Attention Deficit Hyperactivity Disorder: In Search of the Common 
+Deficit. Dev Neuropsychol. 2005;27(1):35–78.
+	104.	 Rose J. Identifying and teaching children and Young people with 
+dyslexia and literacy difficulties: an independent Report. London: 
+Department for Children, Schools and Families (DCSF); 2009.
+	105.	 Schwenk C, Sasanguie D, Kuhn J-T, Kempe S, Doebler P, Holling H. (non-)
+symbolic magnitude processing in children with mathematical difficul‑
+ties: a meta-analysis. Res Dev Disabil. 2017;64:152–67.
+	106.	 Harrowell I, Hollén L, Lingam R, Emond A. The impact of developmen‑
+tal coordination disorder on educational achievement in secondary 
+school. Res Dev Disabil. 2018;72:13–22.
+	107.	 Baddeley A, Hitch G. Working Memory. In: Bower G, editor. Psychology 
+of Learning and Motivation, vol. 8. New York: Academic; 1974. p. 47–89.
+	108.	 Baddeley A. Exploring the central executive. Q J Exp Psychol A. 
+1996;49(1):5–28.
+	109.	 Baddeley A. The episodic buffer: a new component of working 
+memory? Trends Cogn Sci. 2000;4(11):417–23.
+	110.	 Baddeley A. Working memory, thought, and action: Oxford University 
+Press; 2007.
+	111.	 Baddeley A. Working memory: theories, models, and controversies. 
+Annu Rev Psychol. 2012;63(1):1–29.
+	112.	 Schubert A-L, Hagemann D, Löffler C, Frischkorn GT. Disentangling the 
+effects of processing speed on the association between age differences 
+and fluid intelligence. J Intell. 2019;8(1):1.
+	113.	 Jensen A. Clocking the mind: mental chronometry and individual differ‑
+ences. 1st ed. Amsterdam: Elsevier Science Ltd; 2006.
+	114.	 Mayes SD, Calhoun SL. Learning, attention, writing, and processing 
+speed in typical children and children with ADHD, autism, anxiety, 
+depression, and oppositional-defiant disorder. Child Neuropsychol. 
+2007;13(6):469–93.
+	115.	 Braaten E, Wiloughby B. Bright kids who can’t keep up. New York: The 
+Guilford Press; 2014.
+	116.	 McGrath LM, Pennington BF, Shanahan MA, Santerre-Lemmon LE, 
+Barnard HD, Willcutt EG, et al. A multiple deficit model of reading dis‑
+ability and attention-deficit/hyperactivity disorder: searching for shared 
+cognitive deficits. J Child Psychol Psychiatry. 2011;52(5):547–57.
+	117.	 Boada R, Willcutt E, Pennington B. Understanding the comorbidity 
+between dyslexia and attention-deficit/hyperactivity disorder. Top Lang 
+Disord. 2012;32(3):264–84.
+	118.	 DuPaul GJ, Gormley MJ, Laracy SD. Comorbidity of LD and ADHD: 
+implications of DSM-5 for assessment and treatment. J Learn Disabil. 
+2012;46(1):43–51.
+	119.	 Lane SJ, Reynolds S. Sensory over-Responsivity as an added dimension 
+in ADHD. Front Integr Neurosci. 2019;13:40.
+	120.	 Marco EJ, Hinkley LBN, Hill SS, Nagarajan SS. Sensory processing in 
+autism: a review of neurophysiologic findings. Pediatr Res. 2011;69(5 Pt 
+2):48R–54R.
+	121.	 Stray LL, Kristensen Ø, Lomeland M, Skorstad M, Stray T, Tønnessen FE. 
+Motor regulation problems and pain in adults diagnosed with ADHD. 
+Behav Brain Funct. 2013;9(18):1–10.
+	122.	 Kessler RC, Adler L, Ames M, Demler O, Faraone S, Hiripi EVA, et al. 
+The World Health Organization adult ADHD self-report scale (ASRS): a 
+short screening scale for use in the general population. Psychol Med. 
+2005;35(2):245–56.
+	123.	 Allison C, Auyeung B, Baron-Cohen S. Toward brief “red flags” for autism 
+screening: the short autism Spectrum quotient and the short quan‑
+titative checklist in 1,000 cases and 3,000 controls. J Am Acad Child 
+Adolesc Psychiatry. 2012;51(2):202–212.e207.
+	124.	 British Dyslexia Association (BDA): The Adult Dyslexia Checklist, at: 
+https://​www.​bdady​slexia.​org.​uk/​dysle​xia/​how-​is-​dysle​xia-​diagn​osed/​
+dysle​xia-​check​lists, Accessed 31 July 2021.
+	125.	 Kessler RC, Andrews G, Colpe LJ, Hiripi E, Mroczek DK, Normand 
+SLT, et al. Short screening scales to monitor population prevalences 
+and trends in non-specific psychological distress. Psychol Med. 
+2002;32(6):959–76.
+	126.	 Meyer TJ, Miller ML, Metzger RL, Borkovec TD. Development and 
+validation of the penn state worry questionnaire. Behav Res Ther. 
+1990;28(6):487–95.
+	127.	 Centre for Substance Abuse Treatment. Substance Abuse Treatment for 
+Persons with Co-occurring Disorders, Treatment Improvement Protocol 
+(TIP) Series 42, Appendix H: Screening Instruments. Rockville: Substance 
+Abuse and Mental Health Services Administration; 1994.
+	128.	 The National Collaborating Centre for Mental Health: The Improving 
+Access to Psychological Therapies Manual, Updated August 2021, at: 
+https://​www.​engla​nd.​nhs.​uk/​publi​cation/​the-​impro​ving-​access-​to-​
+psych​ologi​cal-​thera​pies-​manual/. London, UK; 2018.
+	129.	 DIVA Foundation: The Diagnostic Interview for ADHD in Adults (DIVA-5), 
+at: https://​www.​divac​enter.​eu/​DIVA.​aspx?​id=​523; 2019.
+	130.	 Young S, Gudjonsson GH. Growing out of ADHD. J Atten Disord. 
+2007;12(2):162–9.
+	131.	 Weiss MD. Weiss functional impairment rating scale (WFIRS) self-Report. 
+Vancouver: University of British Columbia; 2000.
+	132.	 Mahdi S, Viljoen M, Massuti R, Selb M, Almodayfer O, Karande S, 
+et al. An international qualitative study of ability and disability in 
+ADHD using the WHO-ICF framework. Eur Child Adolesc Psychiatry. 
+2017;26(10):1219–31.
+	133.	 Sedgwick JA, Merwood A, Asherson P. The positive aspects of attention 
+deficit hyperactivity disorder: a qualitative investigation of success‑
+ful adults with ADHD. ADHD Atten Deficit Hyperactivity Disord. 
+2019;11(3):241–53.
+	134.	 Moss SB, Nair R, Vallarino A, Wang S. Attention deficit/hyperactivity 
+disorder in adults. Prim Care. 2007;34(3):445–73.
+	135.	 Eysenck MW, Derakshan N, Santos R, Calvo MG. Anxiety and cognitive 
+performance: Attentional control theory. Emotion. 2007;7(2):336–53.
+	136.	 Sparfeldt JR, Rost DH, Baumeister UM, Christ O. Test anxiety in written 
+and oral examinations. Learn Individ Differ. 2013;24:198–203.
+	137.	 Zeidner M. Test anxiety: the state of the art. Boston: Springer; 1998.
+	138.	 Young S, Adamo N, Ásgeirsdóttir BB, Branney P, Beckett M, Colley W, 
+et al. Females with ADHD: an expert consensus statement taking a lifes‑
+pan approach providing guidance for the identification and treatment 
+of attention-deficit/ hyperactivity disorder in girls and women. BMC 
+Psychiatry. 2020;20(1):404.
+	139.	 Skirrow C, McLoughlin G, Kuntsi J, Asherson P. Behavioral, neu‑
+rocognitive and treatment overlap between attention-deficit/
+hyperactivity disorder and mood instability. Expert Rev Neurother. 
+2009;9(4):489–503.
+	140.	 Skirrow C, Asherson P. Emotional lability, comorbidity and impairment 
+in adults with attention-deficit hyperactivity disorder. J Affect Disord. 
+2013;147(1–3):80–6.
+	141.	 Vidal R, Valero S, Nogueira M, Palomar G, Corrales M, Richarte V, 
+et al. Emotional lability: the discriminative value in the diagnosis of 
+attention deficit/hyperactivity disorder in adults. Compr Psychiatry. 
+2014;55(7):1712–9.
+[/PAGE 25]
+
+[PAGE 26]
+Page 26 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	142.	 Riley AW, Lyman LM, Spiel G, Döpfner M, Lorenzo MJ, Ralston** SJ: The 
+family strain index (FSI). Reliability, validity, and factor structure of a brief 
+questionnaire for families of children with ADHD. Eur Child Adolesc 
+Psychiatry 2006, 15(S1):i72-i78.
+	143.	 Dougherty L. Children’s emotionality and social status: a Meta-analytic 
+review. Soc Dev. 2006;15(3):394–417.
+	144.	 Davidson RJ, Jackson DC, Kalin NH. Emotion, plasticity, context, and 
+regulation: perspectives from affective neuroscience. Psychol Bull. 
+2000;126(6):890–909.
+	145.	 Yen J-Y, Ko C-H, Yen C-F, Wu H-Y, Yang M-J. The comorbid psychiatric 
+symptoms of internet addiction: attention deficit and hyperactivity dis‑
+order (ADHD), depression, social phobia, and hostility. J Adolesc Health. 
+2007;41(1):93–8.
+	146.	 Breyer J, Botzet A, Winters K, Stinchfield R, August G, Realmuto G. Young 
+adult gambling behaviors and their relationship with the persistence of 
+ADHD. J Gambl Stud. 2009;25(2):227–38.
+	147.	 Baker L, Prevatt F, Proctor B. Drug and alcohol use in college students 
+with and without ADHD. J Atten Disord. 2011;16(3):255–63.
+	148.	 Rooney M, Chronis-Tuscano A, Yoon Y. Substance use in college stu‑
+dents with ADHD. J Atten Disord. 2011;16(3):221–34.
+	149.	 Arria A, Garnier-Dykstra L, Caldeira K, Vincent K, Winick E, O’Grady K. 
+Drug use patterns and continuous enrollment in college: results from a 
+longitudinal study. J Stud Alcohol Drugs. 2013;74(1):71–83.
+	150.	 Spera V, Pallucchini A, Carli M, Maiello M, Maremmani AGI, Perugi G, 
+et al. Does Cannabis, cocaine and alcohol use impact differently on 
+adult attention deficit/hyperactivity disorder clinical picture? J Clin 
+Med. 2021;10(7):1481.
+	151.	 Cooper RE, Williams E, Seegobin S, Tye C, Kuntsi J, Asherson P. Can‑
+nabinoids in attention-deficit/hyperactivity disorder: a randomised-
+controlled trial. Eur Neuropsychopharmacol. 2017;27(8):795–808.
+	152.	 Carmona-Halty M, Schaufeli WB, Salanova M. Good relationships, good 
+performance: the mediating role of psychological capital - a three-wave 
+study among students. Front Psychol. 2019;10(306):1–5.
+	153.	 Dennis M, Francis DJ, Cirino PT, Schachar R, Barnes MA, Fletcher JM. 
+Why IQ is not a covariate in cognitive studies of neurodevelopmental 
+disorders. J Int Neuropsychol Soc. 2009;15(3):331–43.
+	154.	 Geertshuis SA. Slaves to our emotions: examining the predictive rela‑
+tionship between emotional well-being and academic outcomes. Act 
+Learn High Educ. 2018;20(2):153–66.
+	155.	 Lewis M, Vance A, Maruff P, Wilson P, Cairney S. Differences in motor 
+imagery between children with developmental coordination disorder 
+with and without the combined type of ADHD. Dev Med Child Neurol. 
+2008;50(8):608–12.
+	156.	 Pekrun R, Goetz T, Perry RP, Kramer K, Hochstadt M, Molfenter S. Beyond 
+test anxiety: development and validation of the test emotions ques‑
+tionnaire (TEQ). Anxiety Stress Coping. 2004;17(3):287–316.
+	157.	 Thornicroft G. Stigma and discrimination limit access to mental health 
+care. Epidemiol Psichiatria Soc. 2008;17(1):14–9.
+	158.	 Kooij J, Bijlenga D, Salerno L, Jaeschke R, Bitter I, Balázs J, et al. Updated 
+European consensus statement on diagnosis and treatment of adult 
+ADHD. Eur Psychiatry. 2019;56(1):14–34.
+	159.	 Pescosolido BA, Martin JK, Lang A, Olafsdottir S. Rethinking theoretical 
+approaches to stigma: a framework integrating normative influences 
+on stigma (FINIS). Soc Sci Med. 2008;67(3):431–40.
+	160.	 Lebowitz MS. Stigmatization of ADHD. J Atten Disord. 
+2013;20(3):199–205.
+	161.	 Tatlow-Golden M, Prihodova L, Gavin B, Cullen W, McNicholas F. What 
+do general practitioners know about ADHD? Attitudes and knowledge 
+among first-contact gatekeepers: systematic narrative review. BMC Fam 
+Pract. 2016;17(1):1–15.
+	162.	 Canu WH, Newman ML, Morrow TL, Pope DLW. Social appraisal of adult 
+ADHD. J Atten Disord. 2007;11(6):700–10.
+	163.	 McKeague L, Hennessy E, O’Driscoll C, Heary C. Retrospective accounts 
+of self-stigma experienced by young people with attention-deficit/
+hyperactivity disorder (ADHD) or depression. Psychiatr Rehabil J. 
+2015;38(2):158–63.
+	164.	 Faraone SV, Banaschewski T, Coghill D, Zheng Y, Biederman J, Bellgrove 
+MA, et al. The world federation of ADHD international consensus state‑
+ment: 208 evidence-based conclusions about the disorder. Neurosci 
+Biobehav Rev. 2021;128:789–818.
+	165.	 Harrison A, Edwards M, Parker K. Identifying students faking ADHD: pre‑
+liminary findings and strategies for detection. Arch Clin Neuropsychol. 
+2007;22(5):577–88.
+	166.	 Musso MW, Gouvier WD. “Why is this so hard?” a review of detec‑
+tion of malingered ADHD in college students. J Atten Disord. 
+2012;18(3):186–201.
+	167.	 SpLD Assessment and Standards Committee (SASC). Suitable tests for 
+the assessment of specific learning difficulties in higher education, at: 
+http://​www.​sasc.​org.​uk/​(S(fre2z​i45ou​2m12v​cc1nx​43q0))/​SASCD​ocume​
+nts/​REVIS​ED%​20gui​delin​es-​March%​202016.​pdf. Accessed 31 July 2021. 
+London; 2016.
+	168.	 Adler L, Spencer T, Levine L, Ramsey J, Tamura R, Kelsey D, et al. 
+Diagnosing and treating adult ADHD and comorbid conditions. J Clin 
+Psychiatry. 2008;69(11):e31.
+	169.	 NICE (National Institute for Health and Care Excellence). Common 
+mental health problems: identification and pathways to care. London; 
+2011.
+	170.	 Denton CA, Tamm L, Schatschneider C, Epstein JN. The effects of ADHD 
+treatment and Reading intervention on the fluency and comprehen‑
+sion of children with ADHD and word Reading difficulties: a rand‑
+omized clinical trial. Sci Stud Read. 2020;24(1):72–89.
+	171.	 McLean A, Dowson J, Toone B, Young S, Bazanis E, Robbins TW, et al. 
+Characteristic neurocognitive profile associated with adult attention-
+deficit/hyperactivity disorder. Psychol Med. 2004;34(4):681–92.
+	172.	 Solanto MV, Scheres A. Feasibility, acceptability, and effectiveness of a 
+new cognitive-behavioral intervention for college students with ADHD. 
+J Atten Disord. 2020;25(14):2068–82.
+	173.	 Barkley R. Neuropsychological testing is not useful in the diagnosis of 
+ADHD: stop it (or prove it)! ADHD Rep. 2019;27(2):1–8.
+	174.	 Gioia GA, Isquith PK, Guy SC, Kenworthy L. Test review: behavior rating 
+inventory of executive function. Child Neuropsychol. 2000;6(3):235–8.
+	175.	 Mowlem F, Agnew-Blais J, Taylor E, Asherson P. Do different factors 
+influence whether girls versus boys meet ADHD diagnostic criteria? Sex 
+differences among children with high ADHD symptoms. Psychiatry Res. 
+2019;272:765–73.
+	176.	 Faraone S, Kunwar A, Adamson J, Biederman J. Personality traits among 
+ADHD adults: implications of late-onset and subthreshold diagnoses. 
+Psychol Med. 2009;39(4):685–93.
+	177.	 Leucht S, Hierl S, Kissling W, Dold M, Davis JM. Putting the efficacy of 
+psychiatric and general medicine medication into perspective: review 
+of meta-analyses. Br J Psychiatry. 2012;200(2):97–106.
+	178.	 Rabiner DL, Anastopoulos AD, Costello EJ, Hoyle RH, McCabe SE, 
+Swartzwelder HS. Motives and perceived consequences of non‑
+medical ADHD medication use by college students. J Atten Disord. 
+2008;13(3):259–70.
+	179.	 DuPaul GJ, Weyandt LL, Rossi JS, Vilardo BA, O’Dell SM, Carson KM, et al. 
+Double-blind, placebo-controlled, crossover study of the efficacy and 
+safety of Lisdexamfetamine Dimesylate in college students with ADHD. 
+J Atten Disord. 2012;16(3):202–20.
+	180.	 Advokat C, Lane S, Luo C. College students with and without ADHD. J 
+Atten Disord. 2010;15(8):656–66.
+	181.	 Lu Y, Sjölander A, Cederlöf M, D’Onofrio BM, Almqvist C, Larsson H, et al. 
+Association between medication use and performance on higher edu‑
+cation entrance tests in individuals with attention-deficit/hyperactivity 
+disorder. JAMA Psychiatry. 2017;74(8):815–22.
+	182.	 Rabiner DL, Anastopoulos AD, Costello EJ, Hoyle RH, Esteban 
+McCabe S, Swartzwelder HS. The misuse and diversion of pre‑
+scribed ADHD medications by college students. J Atten Disord. 
+2009;13(2):144–53.
+	183.	 DeSantis AD, Webb EM, Noar SM. Illicit use of prescription ADHD medi‑
+cations on a college campus: a multimethodological approach. J Am 
+Coll Heal. 2008;57(3):315–24.
+	184.	 Caisley H, Müller U. Adherence to medication in adults with attention 
+deficit hyperactivity disorder and pro re nata dosing of psychostimu‑
+lants: a systematic review. Eur Psychiatry. 2012;27(5):343–9.
+	185.	 Müller-Sedgwick U, Sedgwick-Müller JA. Drugs to treat attention deficit 
+hyperactivity disorder (ADHD). In: Seminars in clinical psychopharma‑
+cology: Cambridge University Press; 2020. p. 392–432.
+	186.	 Cairncross M, Miller C. The effectiveness of mindfulness-based therapies 
+for ADHD: a Meta-analytic review. J Atten Disord. 2016;24(5):627–43.
+[/PAGE 26]
+
+[PAGE 27]
+Page 27 of 27
+Sedgwick‑Müller et al. BMC Psychiatry          (2022) 22:292 
+	
+•
+ 
+fast, convenient online submission
+ 
+•
+  
+thorough peer review by experienced researchers in your ﬁeld
+• 
+ 
+rapid publication on acceptance
+• 
+ 
+support for research data, including large and complex data types
+•
+  
+gold Open Access which fosters wider collaboration and increased citations 
+ 
+maximum visibility for your research: over 100M website views per year 
+•
+  
+At BMC, research is always in progress.
+Learn more biomedcentral.com/submissions
+Ready to submit your research
+Ready to submit your research ?  Choose BMC and benefit from: 
+?  Choose BMC and benefit from: 
+	187.	 De Crescenzo F, Cortese S, Adamo N, Janiri L. Pharmacological and non-
+pharmacological treatment of adults with ADHD: a meta-review. Evid 
+Based Ment Health. 2016;20(1):4–11.
+	188.	 Jensen CM, Amdisen BL, Jørgensen KJ, Arnfred SMH. Cognitive behav‑
+ioural therapy for ADHD in adults: systematic review and meta-analyses. 
+ADHD Atten Deficit Hyperactivity Disord. 2016;8(1):3–11.
+	189.	 Ramsay JR, Rostain AL. Cognitive-behavioral therapy for adult ADHD: 
+Routledge; 2012.
+	190.	 Anastopoulos A, Langberg J, Eddy L, Silvia P, Labban J. A randomized 
+controlled trial examining CBT for college students with ADHD. J Con‑
+sult Clin Psychol. 2021;89(1):21–33.
+	191.	 Eddy LD, Anastopoulos AD, Dvorsky MR, Silvia PJ, Labban JD, Langberg 
+JM. An RCT of a CBT intervention for emerging adults with ADHD 
+attending college: functional outcomes. J Clin Child Adolesc Psychol. 
+2021;50(6):844–57.
+	192.	 Critchfield T, Kollins S. Temporal discounting: basic research and 
+the analysis of socially important behavior. J Appl Behav Anal. 
+2001;34(1):101–22.
+	193.	 Scheres A, Solanto MV. Do ADHD symptoms, executive function, and 
+study strategies predict temporal reward discounting in college stu‑
+dents with varying levels of ADHD symptoms? A pilot study. Brain Sci. 
+2021;11(2):181.
+	194.	 Solanto MV. Cognitive behavioral therapy for adult ADHD: targeting 
+executive dysfunction. New York: The Guildford Press; 2011.
+	195.	 Lopez PL, Torrente FM, Ciapponi A, Lischinsky AG, Cetkovich-Bakmas M, 
+Rojas JI, et al. Cognitive-behavioural interventions for attention deficit 
+hyperactivity disorder (ADHD) in adults. Cochrane Database Syst Rev. 
+2013;3(3):CD010840. https://​doi.​org/​10.​1002/​14651​858.​CD010​840.​
+pub2.
+	196.	 Hinshaw SP, Arnold LE. ADHD, multimodal treatment, and longitudinal 
+outcome: evidence, paradox, and challenge. Cogn Sci. 2015;6(1):39–52.
+	197.	 Prevatt F, Lampropoulos GK, Bowles V, Garrett L. The use of between 
+session assignments in ADHD coaching with college students. J Atten 
+Disord. 2011;15(1):18–27.
+	198.	 Swartz SL, Prevatt F, Proctor BE. A coaching intervention for college 
+students with attention deficit/hyperactivity disorder. Psychol Sch. 
+2005;42(6):647–56.
+	199.	 Parker DR, Hoffman SF, Sawilowsky S, Rolands L. Self-control in postsec‑
+ondary settings. J Atten Disord. 2013;17(3):215–32.
+	200.	 Parker D, Hoffman S, Sawilowsky S, Rolands L. An examination of the 
+effects of ADHD coaching on university students executive functioning. 
+J Postsecondary Educ Disabil. 2011;24:115–32.
+	201.	 Young S, Bramham J. Cognitive-Behavioural therapy for ADHD in ado‑
+lescents and adults: Wiley-Blackwell; 2012.
+	202.	 Burns D, Danall N, Holt M. Assessing the impact of the COVID-19 
+pandemic on student wellbeing at universities in the United Kingdom: 
+a conceptual analysis. Front Educ. 2020;5:582882. https://​doi.​org/​10.​
+3389/​feduc.​2020.​582882.
+	203.	 Stathopoulou T, Mouriki A, Papliou O. Student well-being during the 
+COVID-19 pandemic in Greece. Athens: National Centre for Social 
+Research; 2020.
+	204.	 Van De Velde S, Buffel V, Bracke P, Van Hal G, Wouters E. The COVID-
+19 international student well-being study. Eur J Pub Health. 
+2021;31(Supplement_3).
+	205.	 Plakhotnik MS, Volkova NV, Jiang C, Yahiaoui D, Pheiffer G, McKay K, 
+et al. The perceived impact of COVID-19 on student well-being and 
+the mediating role of the university support: evidence from France, 
+Germany, Russia, and the UK. Front Psychol. 2021;12:642689.
+	206.	 Frampton N, Smithies D. University Mental Health: Life in the Pandemic 
+2020/2021. Leeds: Student Minds; 2021.
+	207.	 Almendingen K, Morseth M, Gjølstad E, Brevik A, Tørris C. Student’s 
+experiences with online teaching following COVID-19 lockdown: a 
+mixed methods explorative study. PLoS One. 2021;16(8):e0250378.
+	208.	 Al-Tammemi A, Akour A, Alfalah L. Is it just about physical health? 
+An online cross-sectional study exploring the psychological distress 
+Among University students in Jordan in the midst of COVID-19 pan‑
+demic. Front Psychol. 2020;11:562213.
+	209.	 Merzon E, Weiss MD, Cortese S, Rotem A, Schneider T, Craig SG, et al. 
+The association between ADHD and the severity of COVID-19 infection. 
+J Atten Disord. 2022;26(4):491–501. https://​doi.​org/​10.​1177/​10870​
+54721​10036​59.
+	210.	 Pollak Y, Shoham R, Dayan H, Gabrieli-Seri O, Berger I. Symptoms of 
+ADHD predict lower adaptation to the COVID-19 outbreak: finan‑
+cial decline, low adherence to preventive measures, psychological 
+distress, and illness-related negative perceptions. J Atten Disord. 
+2021:108705472110279.
+	211.	 Blackall M, Mistlin A. "Broken and Defeated": UK university students on 
+the impact of COVID rules, The Guardian, at: https://​www.​thegu​ardian.​
+com/​educa​tion/​2021/​jan/​11/​broken-​and-​defea​ted-​uk-​unive​rsity-​stude​
+nts-​on-​the-​impact-​of-​covid-​rules. 11 Jan 2021.
+	212.	 BBC News, Coronavirus: Inside the secret Covid rave scene: at: https://​
+www.​bbc.​co.​uk/​news/​av/​uk-​53283​351. 4 July, 2020.
+	213.	 Reuters, Scuffles and arrests as anti-lockdown protesters march through 
+London: at: https://​www.​reute​rs.​com/​artic​le/​uk-​brita​in-​prote​sts-​idUSK​
+BN2BC​092, 20 March, 2021.
+	214.	 Raghupathi V, Raghupathi W. The influence of education on health: an 
+empirical assessment of OECD countries for the period 1995-2015. Arch 
+Public Health. 2020;78:20.
+	215.	 Webb O, Wyness L, Cotton D. Enhancing Access, Retention, Attainment 
+and Progression in Higher Education: A Review of the Literature Show‑
+ing Demonstrable Impact, vol. 132. York: Higher Education Academy; 
+2017.
+	216.	 Clery S, Topper A. Grade point average and student outcomes. Data 
+Notes. 2010;5(1):1–5.
+Publisher’s Note
+Springer Nature remains neutral with regard to jurisdictional claims in pub‑
+lished maps and institutional affiliations.
+[/PAGE 27]

@@ -32,3 +32,7 @@ typing_extensions==4.15.0
 tzdata==2026.2
 Werkzeug==3.1.8
 pyarrow
+pyreadstat
+openpyxl 
+
+# npm install @pinecone-database/pinecone @anthropic-ai/sdk

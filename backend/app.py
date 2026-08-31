@@ -11,6 +11,7 @@ from mysql.connector import Error, connect
 from dotenv import load_dotenv
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+from sentence_transformers import SentenceTransformer  # ADDED
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, "models")
@@ -58,6 +59,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 model = None
 feature_names = ASRS_FEATURES.copy()
 explainer = None
+_embedding_model = None  # ADDED
 
 
 def db_connection():
@@ -145,6 +147,13 @@ def train_or_load_model():
     explainer = shap.TreeExplainer(model)
 
 
+# ADDED: loads the same embedding model used by rag/scripts/config.py,
+# once at startup, so /embed requests are fast (no per-request model load).
+def load_embedding_model():
+    global _embedding_model
+    _embedding_model = SentenceTransformer("BAAI/bge-base-en-v1.5")
+
+
 def top_shap_factors(input_df):
     values = explainer.shap_values(input_df)
     if isinstance(values, list):
@@ -180,8 +189,29 @@ def health():
             "status": "ok",
             "model_loaded": model is not None,
             "db_connected": db_connection() is not None,
+            "embedding_model_loaded": _embedding_model is not None,  # ADDED
         }
     )
+
+
+# ADDED: embedding endpoint used by backend/services/ai/rag/embeddings.js
+@app.post("/embed")
+def embed():
+    body = request.get_json(silent=True) or {}
+    text = body.get("text")
+
+    if not text or not isinstance(text, str):
+        return jsonify({"error": "'text' (string) is required"}), 400
+
+    if _embedding_model is None:
+        return jsonify({"error": "Embedding model is not loaded"}), 503
+
+    vector = _embedding_model.encode(
+        text,
+        normalize_embeddings=True,  # must match rag/scripts/embed_and_upsert.py
+    )
+
+    return jsonify({"embedding": vector.tolist()})
 
 
 @app.post("/auth/register")
@@ -318,8 +348,9 @@ def predict():
 
 bootstrap_database()
 train_or_load_model()
+load_embedding_model()  # ADDED
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5001))
-    app.run(host="0.0.0.0", port=port)
+    # Force port 5001 and ignore the .env file's PORT variable
+    app.run(host="0.0.0.0", port=5001)

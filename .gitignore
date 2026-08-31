@@ -3,7 +3,7 @@
 # dependencies
 node_modules/
 .venv/
-
+.venv-backend/
 .vscode
 
 # Expo
@@ -41,6 +41,7 @@ yarn-error.*
 .env*.local
 .env
 backend/.env
+rag/.env.example
 
 # typescript
 *.tsbuildinfo
