@@ -14,7 +14,7 @@
 // actual app.py port from Procfile/config)
 
 const PYTHON_SERVICE_URL =
-  process.env.PYTHON_SERVICE_URL || 'http://localhost:8000';
+  process.env.PYTHON_SERVICE_URL || 'http://localhost:5001';
 
 // BGE wants this instruction prefix on the QUERY side only — must match
 // BGE_QUERY_INSTRUCTION in rag/scripts/config.py exactly.
