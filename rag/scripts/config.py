@@ -103,6 +103,25 @@ DOCUMENT_REGISTRY = {
         "source_type": "dissertation",
         "recommended_tool": "task_tool",
     },
+    "habit_formation_dbci_review": {
+        "title": "Digital Behavior Change Intervention Designs for Habit Formation: "
+                  "Systematic Review (Zhu et al., 2024, J Med Internet Res)",
+        "tier": 3,
+        "trust_score": 0.75,
+        "category": "habit_formation",
+        "source_type": "systematic_review",
+        "recommended_tool": "habit_tool",
+    },
+    "emotion_dysregulation_interventions_review": {
+        "title": "A Narrative Review of the Efficacy of Interventions for Emotional "
+                  "Dysregulation, and Underlying Bio-Psycho-Social Factors "
+                  "(Easdale-Cheele et al., 2024, Brain Sciences)",
+        "tier": 3,
+        "trust_score": 0.75,
+        "category": "emotion_regulation",
+        "source_type": "narrative_review",
+        "recommended_tool": "emotion_tool",
+    },
 }
 
 for d in (EXTRACTED_DIR, CHUNKS_DIR):
