@@ -79,6 +79,7 @@ def main(stem: str):
                     "trust_score": chunk["trust_score"],
                     "category": chunk["category"],
                     "source_type": chunk["source_type"],
+                    "recommended_tool": chunk.get("recommended_tool") or "",
                     "page_start": chunk["page_start"],
                     "page_end": chunk["page_end"],
                     "text": chunk["text"],

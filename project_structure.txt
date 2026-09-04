@@ -32,10 +32,33 @@ fyp26/
 │   ├── icon.png
 │   └── splash-icon.png
 ├── backend/
+│   ├── .venv-backend/
+│   │   ├── share/
+│   │   │   └── man/
+│   │   │       └── man1/
+│   │   │           └── isympy.1
+│   │   └── pyvenv.cfg
 │   ├── config/
 │   │   └── supabase.js
 │   ├── data/
 │   │   ├── executive_function/
+│   │   │   ├── cleaned/
+│   │   │   │   ├── cleaning_report.json
+│   │   │   │   └── executive_function_clean.csv
+│   │   │   ├── inspection/
+│   │   │   │   ├── sav_data_preview.csv
+│   │   │   │   ├── sav_missing_values.csv
+│   │   │   │   ├── sav_numeric_statistics.csv
+│   │   │   │   ├── sav_value_frequencies.csv
+│   │   │   │   ├── sav_value_labels.csv
+│   │   │   │   ├── sav_variable_labels.csv
+│   │   │   │   ├── sav_xlsx_comparison.csv
+│   │   │   │   ├── xlsx_Data_EF_Ecuador_and_Chile_numeric_statistics.csv
+│   │   │   │   ├── xlsx_Data_EF_Ecuador_and_Chile_preview.csv
+│   │   │   │   └── xlsx_Data_EF_Ecuador_and_Chile_value_frequencies.csv
+│   │   │   ├── metadata_inspection/
+│   │   │   │   ├── sav_value_labels.csv
+│   │   │   │   └── sav_variable_metadata.csv
 │   │   │   ├── ef_raw.sav
 │   │   │   └── ef_raw.xlsx
 │   │   ├── adhd.csv
@@ -65,7 +88,28 @@ fyp26/
 │   │   ├── profiles.js
 │   │   ├── statistics.js
 │   │   └── tasks.js
-│   ├── scripts/
+│   ├── scoring/
+│   │   └── executive_function_scoring.py
+│   ├── services/
+│   │   └── ai/
+│   │       ├── memory/
+│   │       │   ├── memoryRetrieval.js
+│   │       │   └── memoryStore.js
+│   │       ├── rag/
+│   │       │   ├── embeddings.js
+│   │       │   ├── pineconeClient.js
+│   │       │   └── retriever.js
+│   │       ├── tools/
+│   │       │   ├── emotionTool.js
+│   │       │   ├── exerciseTool.js
+│   │       │   ├── focusTool.js
+│   │       │   ├── habitTool.js
+│   │       │   ├── knowledgeTool.js
+│   │       │   ├── memoryTool.js
+│   │       │   └── taskTool.js
+│   │       ├── agent.js
+│   │       ├── llmClient.js
+│   │       └── promptBuilder.js
 │   ├── tests/
 │   │   ├── conftest.py
 │   │   ├── test_auth.py
@@ -83,13 +127,42 @@ fyp26/
 │   └── train_model.py
 ├── rag/
 │   ├── output/
-│   │   ├── reddit_adhd_analysis_TEST.csv
-│   │   ├── reddit_adhd_cleaned_TEST.csv
-│   │   ├── reddit_adhd_cleaned_TEST.parquet
-│   │   └── reddit_adhd_cleaning_report_TEST.csv
+│   │   ├── chunks/
+│   │   │   ├── ef_interventions_systematic_review_chunks.json
+│   │   │   ├── exercise_open_closed_skill_ef_chunks.json
+│   │   │   ├── peds_20192528_chunks.json
+│   │   │   ├── practice_standards_adhd_chunks.json
+│   │   │   ├── ukaan_university_students_chunks.json
+│   │   │   └── wfadhd_school_psychologists_chunks.json
+│   │   └── extracted/
+│   │       ├── ef_interventions_systematic_review.txt
+│   │       ├── exercise_open_closed_skill_ef.txt
+│   │       ├── peds_20192528.txt
+│   │       ├── practice_standards_adhd.txt
+│   │       ├── ukaan_university_students.txt
+│   │       └── wfadhd_school_psychologists.txt
 │   ├── raw/
+│   │   ├── tier1_clinical/
+│   │   │   └── peds_20192528.pdf
+│   │   ├── tier2_consensus/
+│   │   │   ├── practice_standards_adhd.pdf
+│   │   │   └── ukaan_university_students.pdf
+│   │   ├── tier2_evidence/
+│   │   │   └── exercise_open_closed_skill_ef.pdf
+│   │   ├── tier3_research/
+│   │   │   ├── ef_interventions_systematic_review.pdf
+│   │   │   └── habit_formation_dbci_review.pdf
+│   │   └── tier4_applied/
+│   │       └── wfadhd_school_psychologists.pdf
 │   └── scripts/
-│       └── reddit_adhd_cleaning.py
+│       ├── chunk_documents.py
+│       ├── config.py
+│       ├── create_pinecone_index.py
+│       ├── embed_and_upsert.py
+│       ├── extract_text.py
+│       ├── query_test.py
+│       ├── reddit_adhd_cleaning.py
+│       └── requirements.txt
 ├── src/
 │   ├── assets/
 │   │   ├── animations/
@@ -211,13 +284,16 @@ fyp26/
 ├── app.json
 ├── babel.config.js
 ├── eas.json
+├── ef_raw.sav
 ├── generate_structure.py
 ├── index.js
 ├── inspect_ef_dataset.py
+├── inspect_ef_metadata.py
 ├── Jenkinsfile
 ├── package-lock.json
 ├── package.json
 ├── project_structure.txt
 ├── README.md
+├── recover_ef_scoring.py
 ├── setupStructure.js
 └── supabase_assessments.sql

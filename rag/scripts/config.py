@@ -40,6 +40,12 @@ PINECONE_REGION = "us-east-1"   # change if your Pinecone project uses a differe
 
 # ---- source tiering (extend this as you add more papers) ----
 # key = filename stem (without .pdf), value = metadata applied to every chunk from that doc
+#
+# recommended_tool: maps this source's content to one of your agent's tools
+# (task_tool, habit_tool, focus_tool, emotion_tool, exercise_tool) so
+# knowledge_chunks.recommended_tool can be populated automatically instead
+# of left null. Use None for general/diagnostic knowledge that isn't tied
+# to a specific in-app action.
 DOCUMENT_REGISTRY = {
     "peds_20192528": {
         "title": "AAP Clinical Practice Guideline for the Diagnosis, Evaluation, "
@@ -48,6 +54,7 @@ DOCUMENT_REGISTRY = {
         "trust_score": 0.95,
         "category": "diagnosis_treatment_guideline",
         "source_type": "clinical_guideline",
+        "recommended_tool": None,
     },
     "practice_standards_adhd": {
         "title": "Practice Standards for the Assessment of ADHD: A Synthesis of "
@@ -56,6 +63,7 @@ DOCUMENT_REGISTRY = {
         "trust_score": 0.85,
         "category": "diagnostic_practice_synthesis",
         "source_type": "guideline_synthesis",
+        "recommended_tool": None,
     },
     "ukaan_university_students": {
         "title": "University Students with ADHD: A Consensus Statement from the "
@@ -64,6 +72,7 @@ DOCUMENT_REGISTRY = {
         "trust_score": 0.85,
         "category": "college_student_consensus",
         "source_type": "expert_consensus_statement",
+        "recommended_tool": None,
     },
     "wfadhd_school_psychologists": {
         "title": "The World Federation of ADHD International Consensus Statement: "
@@ -72,6 +81,27 @@ DOCUMENT_REGISTRY = {
         "trust_score": 0.65,
         "category": "misinformation_correction_school_practice",
         "source_type": "applied_practitioner_commentary",
+        "recommended_tool": None,
+    },
+    "exercise_open_closed_skill_ef": {
+        "title": "Effects of Practicing Closed- vs. Open-Skill Exercises on Executive "
+                  "Functions in Individuals with ADHD: A Meta-Analysis and Systematic "
+                  "Review (Qiu, Zhai & Chen, 2024, Behavioral Sciences)",
+        "tier": 2,
+        "trust_score": 0.85,
+        "category": "exercise",
+        "source_type": "meta_analysis",
+        "recommended_tool": "exercise_tool",
+    },
+    "ef_interventions_systematic_review": {
+        "title": "Executive Functioning Interventions for Individuals with ADHD: "
+                  "A Systematic Review (Thompson, 2023, University of Rhode Island "
+                  "PhD Dissertation)",
+        "tier": 3,
+        "trust_score": 0.75,
+        "category": "executive_function_interventions",
+        "source_type": "dissertation",
+        "recommended_tool": "task_tool",
     },
 }
 

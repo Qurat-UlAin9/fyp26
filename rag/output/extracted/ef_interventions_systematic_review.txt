@@ -1,0 +1,5258 @@
+[PAGE 1]
+University of Rhode Island 
+University of Rhode Island 
+DigitalCommons@URI 
+DigitalCommons@URI 
+Open Access Dissertations 
+2023 
+EXECUTIVE FUNCTIONING INTERVENTIONS FOR INDIVIDUALS 
+EXECUTIVE FUNCTIONING INTERVENTIONS FOR INDIVIDUALS 
+WITH ADHD: A SYSTEMATIC REVIEW 
+WITH ADHD: A SYSTEMATIC REVIEW 
+Lauren Thompson 
+University of Rhode Island, lauren-thompson@uri.edu 
+Follow this and additional works at: https://digitalcommons.uri.edu/oa_diss 
+Recommended Citation 
+Recommended Citation 
+Thompson, Lauren, "EXECUTIVE FUNCTIONING INTERVENTIONS FOR INDIVIDUALS WITH ADHD: A 
+SYSTEMATIC REVIEW" (2023). Open Access Dissertations. Paper 1579. 
+https://digitalcommons.uri.edu/oa_diss/1579 
+This Dissertation is brought to you by the University of Rhode Island. It has been accepted for inclusion in Open 
+Access Dissertations by an authorized administrator of DigitalCommons@URI. For more information, please 
+contact digitalcommons-group@uri.edu. For permission to reuse copyrighted content, contact the author directly.
+[/PAGE 1]
+
+[PAGE 2]
+EXECUTIVE FUNCTIONING INTERVENTIONS FOR 
+INDIVIDUALS WITH ADHD: A SYSTEMATIC REVIEW 
+BY 
+LAUREN THOMPSON 
+ 
+ 
+ 
+ 
+A DISSERTATION SUBMITTED IN PARTIAL FULFILLMENT OF THE 
+REQUIREMENTS FOR THE DEGREE OF 
+DOCTOR OF PHILOSOPHY 
+IN 
+INTERDISCIPLINARY NEUROSCIENCE 
+ 
+ 
+ 
+ 
+ 
+UNIVERSITY OF RHODE ISLAND 
+2023
+[/PAGE 2]
+
+[PAGE 3]
+DOCTOR OF PHILOSOPHY DISSERTATION 
+ 
+OF 
+ 
+LAUREN THOMPSON 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+APPROVED:  
+ 
+Dissertation Committee: 
+ 
+Major Professor 
+Lisa Weyandt 
+ 
+ 
+ 
+ 
+Mark Hartman 
+ 
+ 
+ 
+ 
+Aaron Piepmeier 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Hans Saint-Eloi Cadely 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Brenton DeBoef 
+  DEAN OF THE GRADUATE SCHOOL 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+UNIVERSITY OF RHODE ISLAND 
+2023
+[/PAGE 3]
+
+[PAGE 4]
+ABSTRACT 
+Ongoing research regarding interventions for executive functions (EFs), the top-
+down cognitive processes that guide planning and decision-making behaviors, aims to 
+determine whether intervention programs result in significant improvements in EFs 
+for both neurotypical and neurodivergent populations (Diamond & Ling, 2016). EFs 
+are critical because they predict performance in other daily living domains, including 
+physical health, quality of life, and job performance (Cristofori et al., 2019; Diamond, 
+2013). Research has found that individuals with a variety of mental health disorders 
+as well as neurodegenerative disease often perform poorly on EF tasks. Particular 
+attention has been devoted to the study of EF deficits in attention-
+deficit/hyperactivity disorder (ADHD), as many, but not all, individuals with this 
+disorder display EF deficits (Weyandt, 2009). Cognitive training (i.e., EF 
+interventions) has been suggested as a mechanism to help to improve EFs and other 
+symptoms among individuals diagnosed with ADHD. Previous reviews suggest that 
+some EF interventions are efficacious for individuals diagnosed with ADHD but have 
+focused on a specific intervention modality or age group (Lambez et al., 2020; Liang 
+et al., 2021; Poissant et al., 2019). The purpose of the current systematic review was to 
+examine whether non-pharmacological interventions result in significant 
+improvement in EFs for individuals with ADHD, and whether intervention efficacy 
+differs with regard to: a) intervention modality, and b) age of participants. Results 
+demonstrated that non-pharmacological interventions are efficacious for improving 
+EFs in individuals with ADHD. Interventions were found to be efficacious across 
+modalities and age groups, with small to large effect sizes.
+[/PAGE 4]
+
+[PAGE 5]
+iii 
+ 
+ACKNOWLEDGMENTS 
+Many people need to be acknowledged for their contributions to this work and 
+my graduate school career. First, my mentor, Dr. Lisa Weyandt. Thank you for all of 
+your guidance and advice over the years; it has made me a more capable researcher, 
+student, and person. Words cannot capture the depth of my appreciation. Thank you 
+also to my committee members, Drs. Aaron Piepmeier, Mark Hartman, and Hans 
+Saint-Eloi Cadely, for the enthusiasm and expertise you have brought to every 
+milestone and committee meeting. Thank you to Emily, Avery, and Janis for your help 
+on this and other projects. Thank you to the professors and students of the INP who 
+have made my time at URI memorable and educational, particularly Jen, Brittany, 
+and Dr. John Robinson. Thank you for everything you taught me. Last but never least, 
+thank you to my family and friends (Mom, Dad, James, Caitlin, Henry, Bailey, and the 
+game night group) for your support every step of the way. I could not have made it 
+this far on my own. The work got done.
+[/PAGE 5]
+
+[PAGE 6]
+iv 
+ 
+PREFACE 
+This work is presented in manuscript format.
+[/PAGE 6]
+
+[PAGE 7]
+v 
+ 
+TABLE OF CONTENTS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ABSTRACT ............................................................................................................ ii 
+ACKNOWLEDGMENTS ...................................................................................... iii 
+PREFACE ............................................................................................................. iv 
+TABLE OF CONTENTS ........................................................................................ v 
+LIST OF TABLES ................................................................................................. vi 
+LIST OF FIGURES .............................................................................................. vii 
+PUBLICATION STATUS........................................................................................1 
+INTRODUCTION .................................................................................................. 2 
+METHODS ............................................................................................................ 9 
+RESULTS ............................................................................................................. 13 
+DISCUSSION ...................................................................................................... 24 
+CONCLUSION .................................................................................................... 31 
+APPENDIX A. FIGURES .................................................................................... 32 
+APPENDIX B. TABLES....................................................................................... 33 
+BIBLIOGRAPHY ................................................................................................. 70
+[/PAGE 7]
+
+[PAGE 8]
+vi 
+ 
+LIST OF TABLES 
+ 
+TABLE  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+        PAGE 
+Table 1. Summary of Demographic Information Provided......................................... 33 
+Table 2. Summary of Exercise Studies  ....................................................................... 38 
+Table 3. Summary of Mindfulness Studies .................................................................. 41 
+Table 4. Summary of Computer-Based Studies .......................................................... 44 
+Table 5. Summary of Hybridized and Miscellaneous Studies .................................... 49 
+Table 6. Summary of Child/Adolescent Studies ......................................................... 59 
+Table 7. Summary of Adult Studies ............................................................................. 65 
+Table 8. Abbreviations Used in Tables and Corresponding Measure Names ............ 67
+[/PAGE 8]
+
+[PAGE 9]
+vii 
+ 
+LIST OF FIGURES 
+ 
+FIGURE 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+        PAGE 
+Figure 1. PRISMA Flowchart ...................................................................................... 32
+[/PAGE 9]
+
+[PAGE 10]
+1 
+ 
+PUBLICATION STATUS 
+ 
+The present review is being prepared for submission to Neuropsychology.
+[/PAGE 10]
+
+[PAGE 11]
+2 
+ 
+INTRODUCTION 
+ 
+Executive Functioning 
+Theoretical models for executive functions (EFs) typically consider these abilities 
+to be a collection of higher cognitive processes (Cristofori et al., 2019; Diamond, 
+2013). While several models of EF are found in the literature, one of the most 
+commonly used is Miyake and colleagues’ model (2000) of three core EFs. The first 
+core EF domain is set shifting, which consists of the ability to easily switch between 
+different paradigms or tasks. Next, inhibition consists of the ability to suppress 
+automatic or inappropriate responses in favor of a more desirable response. Lastly, 
+updating (i.e., working memory) consists of the ability to mentally hold and 
+manipulate information in the mind even when the stimulus for that information is 
+no longer present (Diamond, 2013; Miyake et al., 2000). Miyake et al. (2000) propose 
+that complex EFs are expansions of these core domains. The Miyake model is often 
+used in EF studies, as EF tasks or surveys may be utilized as global measures of EF or 
+matched to individual domains (i.e., set shifting, inhibition, and updating/working 
+memory) by researchers (Diamond, 2013). 
+Because EFs are involved in everyday behavior and decision-making, EF 
+impairments may result in poorer functioning in several areas of life (Cristofori et al., 
+2019; Diamond, 2013). In children and adolescents, impaired EFs have been linked to 
+poorer academic performance, while adults with declining or impaired EFs often 
+display poorer job performance or burnout (Bailey, 2007; Borella et al., 2010; 
+Deligkaris et al., 2014; Duncan et al., 2007). Impaired EFs are also related to deficits 
+or problems in health-related and affective domains. Crescioni et al.  (2011) found 
+that adult individuals with worse self-control (i.e., the ability to control or change 
+responses to meet a given standard, similar to Miyake and colleagues’ domain of
+[/PAGE 11]
+
+[PAGE 12]
+3 
+ 
+inhibition) ate more calories and lost less weight than their counterparts with better 
+self-control. In a study of adolescents, Junger and van Kampen (2010) similarly found 
+that individuals who scored higher on a cognitive ability task also reported having 
+healthier diets and engaging in exercise more frequently than their peers. Self-control 
+and self-regulation may also play a role in decreasing aggressive behaviors. Results 
+from Denson et al. (2011) showed that bolstering individuals’ self-regulatory 
+resources after provocation and rumination improved their performance on a 
+measure of inhibitory control. Better EFs, including self-regulatory mechanisms or 
+inhibitory control, may be related to better social functioning and fewer social 
+problems (Cristofori et al., 2019; Diamond, 2013). 
+As noted previously, EF impairments, while present among the broader 
+population, are often present among individuals with ADHD (Kofler et al., 2019; 
+Weyandt, 2009). Several studies have examined the relationship between EFs and 
+other areas of life within the population, with results upholding the same general 
+trend seen in non-clinical populations; EF impairments are related to deficits or 
+worse performance in academic, health-related, or affective life domains. For 
+example, a study of college students conducted by Weyandt et al. (2013) found that 
+students diagnosed with ADHD reported lower grades and worse overall EFs than 
+their peers without ADHD. Additionally, a study of health-related quality of life 
+(HRQOL) in adults with ADHD being treated with stimulant medication found that 
+improvements in EF between the start of the study and the endpoint correlated with 
+reported improvement in HRQOL across study duration (Brown & Landgraf, 2010). 
+Lastly, married adults with ADHD reported poorer marital adjustment and greater 
+family dysfunction than their peers without ADHD (Eakin et al., 2004). It is 
+important to note, however, that EF deficits are not characteristic of all individuals 
+with ADHD, are not sufficient for a diagnosis of ADHD, and are often present in other
+[/PAGE 12]
+
+[PAGE 13]
+4 
+ 
+psychological and neurodegenerative disorders (Diamond, 2013; Snyder, 2013; Stein 
+et al., 2019; Weyandt, 2009). However, given that EF deficits are often found in 
+individuals with ADHD (Diamond, 2013; Weyandt, 2009), it is particularly important 
+to develop efficacious options for improving EF in this population. 
+Attention-Deficit/Hyperactivity Disorder 
+According to the Diagnostic and Statistical Manual of Mental Disorders Fifth 
+Edition (DSM-5), ADHD is characterized by symptoms of inattention, hyperactivity, 
+and/or impulsivity that result in impaired functioning across multiple settings 
+(American Psychiatric Association, 2013). Additionally, ADHD symptoms must have 
+been present before 12 years of age to meet diagnostic criteria, although diagnosis can 
+occur later in life and symptoms may persist into adulthood for many individuals 
+diagnosed in childhood (up to 50% of individuals) (Adler et al., 2017; American 
+Psychiatric Association, 2013; Kessler et al., 2005). ADHD diagnoses can be further 
+categorized into presentations (i.e., subtypes): predominantly inattentive, if an 
+individual meets criteria for symptoms of inattention but not 
+hyperactivity/impulsivity; predominantly hyperactive/impulsive, if an individual 
+meets criteria for symptoms of hyperactivity/impulsivity but not inattention; and 
+combined presentation, if an individual meets criteria for symptoms of both 
+inattention and hyperactivity/impulsivity (American Psychiatric Association, 2013).  
+Because ADHD is a neurodevelopmental disorder with diagnostic criteria tied to 
+onset during childhood, a higher prevalence of ADHD diagnoses is seen in children 
+than in adults. A review by Sayal et al. (2018) found that community prevalence of 
+ADHD in children ranged from 2-7% and averaged approximately 5% globally. Within 
+the United States, approximately 6.1 million children (9.4%) aged 2-17 years had 
+received an ADHD diagnosis in their lifetime, with an estimated 5.4 million children 
+(8.4%) experiencing current ADHD at the time of data collection based on parent-
+[/PAGE 13]
+
+[PAGE 14]
+5 
+ 
+report data from the 2016 National Survey of Children’s Health (NSCH) (Danielson et 
+al., 2018). The overall trend across available NSCH data from 2003-2016 is one of 
+growth and increasing numbers of children diagnosed with ADHD (Danielson et al., 
+2018; Visser et al., 2014). 
+While ADHD is less prevalent in the adult population than among children, it 
+remains a common disorder throughout the lifespan. The DSM-5 estimates the 
+prevalence of ADHD in most cultures at 5% of children and 2.5% of adults. Data from 
+the National Comorbidity Survey Replication (NCS-R), representative of the U.S. 
+population, resulted in an estimated prevalence of 4.4% of current ADHD in a 
+subsample of 18-44-year-old respondents (Kessler et al., 2006). These data are 
+consistent with the estimate that up to half of individuals diagnosed with ADHD in 
+childhood continue to experience symptoms as adults (Kessler, Wai, et al., 2005; 
+Weyandt & DuPaul, 2013). A recent systematic review of the literature investigated 
+the global prevalence of persistent and symptomatic adult ADHD (Song et al., 2021). 
+The authors operationally defined persistent adult ADHD as ADHD that required 
+both a childhood onset and adult symptoms; they found a global prevalence of 2.58%, 
+in line with previous estimates. Prevalence was higher when only adult symptoms 
+(without childhood onset) were considered; 6.76% global prevalence was reported for 
+individuals with symptomatic adult ADHD (Song et al., 2021). 
+In summary, ADHD is a highly prevalent mental health disorder that affects 
+millions of individuals globally. Although it is typically regarded as a disorder of 
+childhood, ADHD affects individuals across the lifespan, from childhood through 
+adulthood. 
+The Relationship between ADHD and EFs 
+Although EF impairments are not necessary or sufficient for the diagnosis of 
+ADHD, individuals diagnosed with ADHD are likely to report EF difficulties or
+[/PAGE 14]
+
+[PAGE 15]
+6 
+ 
+perform worse in laboratory tasks of executive functioning compared to typically 
+developing peers (Weyandt, 2009). However, the extent of EF impairment 
+experienced by individuals with ADHD may vary across EF domains and across the 
+lifespan (Adler et al., 2017; Barkley et al., 2008; Kofler et al., 2019; Weyandt, 2009). 
+For example, a review by Weyandt (2009) found that children and adolescents with 
+ADHD do not experience impairments in all EF domains, but rather differing levels of 
+impairment across domains. However, Weyandt noted there was disagreement in the 
+literature as to which EF domains were impaired and the degree of inter- and 
+intravariability in individuals with ADHD. The review by Weyandt (2009) also upheld 
+that the presence of EF impairments is not necessary for a diagnosis of ADHD to be 
+made, as some individuals with ADHD did not experience impairments or perform 
+significantly different on EF measures than their peers without ADHD (Weyandt, 
+1991). Kofler et al. (2019) also found heterogenous EFs in children with ADHD. Using 
+laboratory tasks that corresponded to Miyake and colleagues’ core EF domains of set 
+shifting, working memory, and inhibition, Kofler et al. (2019) found that 89% of 
+children with ADHD in their sample met the threshold for impairment in at least one 
+domain (Miyake et al., 2000). Working memory was the most commonly impaired 
+domain in this study (62% of children met criteria for impairment), followed by set 
+shifting (38%) and inhibition (27%). 
+Like their younger counterparts, variability in EF abilities can also be seen in 
+adults with ADHD. Barkley et al. (2008) reported that adults with ADHD were most 
+likely to perform significantly worse than their control group peers in measures of 
+inattention, inhibition, non-verbal and verbal working memory, and design fluency. 
+Adults with ADHD did not perform significant differently in measures of set shifting. 
+As suggested by Adler et al. (2017), EF deficits in adults with ADHD may appear in 
+differing and more diverse patterns than those seen in children with ADHD. While
+[/PAGE 15]
+
+[PAGE 16]
+7 
+ 
+some adults with ADHD do not present EF deficits (Barkley et al., 2008), Adler et al. 
+(2017) suggest that executive dysfunction is an important component to the structure 
+of adult ADHD, as central to the structure as DSM-5 symptoms of ADHD. 
+Previous Reviews and Purpose of the Current Review 
+Because of the importance of EFs to many aspects of daily life, research into EF 
+interventions is ongoing, and some researchers have begun to investigate types of 
+training approaches that may be effective or the populations that are likely to benefit 
+from these interventions. For example, a prior review of EF interventions suggests 
+that individuals with the poorest EFs have the most to gain from EF training 
+(Diamond & Ling, 2016). This general trend occurred across the different types of 
+interventions evaluated, including physical activity, computer-based interventions, 
+and mindfulness interventions. Based on this finding, it seems plausible that 
+individuals diagnosed with ADHD are likely to benefit from EF training. This 
+relationship has been upheld in recent reviews of interventions for individuals 
+diagnosed with ADHD. For example, Poissant et al. (2019) reviewed studies that 
+utilized mindfulness-based training as a principal or partial intervention in adults 
+with ADHD and found that the training was effective at reducing ADHD symptoms 
+and some facets of EFs/cognitive functioning. In addition, Lambez et al. (2020) 
+reviewed studies that utilized non-pharmacological intervention modalities (alone or 
+in conjunction with medication) in children, adolescents, and adults with ADHD, and 
+found that all the intervention modalities evaluated provided some benefit to 
+cognitive symptoms, with physical exercise being the most effective modality and 
+inhibition and flexibility being the cognitive domains that saw the most improvement. 
+However, Lambez et al. (2020) did not examine differences between age groups. 
+Lastly, Liang et al. (2021) reviewed exercise interventions for children and 
+adolescents with ADHD. Liang and colleagues found that exercise interventions had a
+[/PAGE 16]
+
+[PAGE 17]
+8 
+ 
+positive effect on overall EF ability for children and adolescents with ADHD. Overall, 
+these reviews demonstrated cognitive improvements in both children and adults with 
+ADHD, and that different intervention modalities may be related to significant 
+improvement in cognitive functioning. Reviews of interventions for individuals with 
+ADHD that currently are or have been treated with stimulant medications also 
+indicate that interventions may be useful for those who do not tolerate or only 
+partially respond to medication (Poissant et al., 2019). Given these findings, 
+interventions to improve EFs may serve as an important treatment option that should 
+be further investigated. 
+In summary, the current literature supports that EF deficits are often 
+characteristic of ADHD and that interventions targeting EFs can possibly result in EF 
+improvement. However, a dearth of information exists concerning the efficacy of EF 
+interventions across age and modality. Hence, the present systematic review aims to 
+build on the extant literature by examining whether interventions result in significant 
+improvement in EFs for individuals with ADHD, and whether intervention efficacy 
+differs with regard to: a) intervention modality (e.g., intervention type or method of 
+delivery), and b) age of participants.
+[/PAGE 17]
+
+[PAGE 18]
+9 
+ 
+METHODS 
+ 
+A systematic review of the literature was conducted according to the Preferred 
+Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines 
+(Page et al., 2021). Three databases (CINAHL, PubMed, and PsycINFO) were 
+reviewed using the following search term: (attention deficit hyperactivity disorder 
+OR ADHD) AND (executive funct* OR cognitive funct* OR cognition OR set shifting 
+OR cognitive flexibility OR working memory OR updating OR inhibition OR 
+planning OR self-regulation OR verbal fluency) AND (intervention OR training OR 
+program OR exercise OR physical activity OR mindful* OR computer-based).  
+Study abstracts were examined to determine if they met eligibility criteria. 
+Abstracts that violated criteria were excluded from further review; abstracts that did 
+not appear to violate eligibility criteria proceeded to full-text review. Articles that met 
+all eligibility criteria during full-text review were included in the current systematic 
+review. Eligibility criteria included: 
+A. The study was published in a scientific journal or dissertation database. 
+B. The study was published between January 2012 – December 2022. 
+C. The study was originally published in English. 
+D. Participant sample size was greater than one; case studies were excluded. 
+E. The study used an original or secondary dataset; reviews and meta-analyses 
+were excluded. 
+F. The study utilized self-report, parent- or teacher-report, or laboratory task EF 
+measure(s). 
+G. Some or all participants meet diagnostic criteria for ADHD; if the study 
+contains additional non-ADHD groups (e.g., healthy controls), only data 
+concerning the ADHD group will be included.
+[/PAGE 18]
+
+[PAGE 19]
+10 
+ 
+H. Executive function(s)/functioning/dysfunction was a primary or secondary 
+outcome of the study. 
+I. The study utilized a non-pharmacological or hybridized (combining 
+pharmacological and non-pharmacological elements) intervention. 
+J. The study intervention was provided to the same population that outcome 
+measures were drawn from (e.g., studies of parenting interventions in which 
+child outcomes were measured were excluded). 
+In addition to database searches, relevant studies were also sourced from 
+previously published reviews in accordance with the eligibility criteria. All articles 
+were scored according to a 27-item checklist to determine study quality and 
+availability of information; the checklist includes items regarding methods of data 
+reporting, validity, bias, independence of sample, and statistical power (Downs & 
+Black, 1998). The checklist demonstrates high internal consistency and test-retest 
+reliability, and good inter-rater reliability. Using the Downs & Black checklist, items 
+were scored individually; in the case of discrepancies in item scoring, reviewers met to 
+resolve the issue and mutually decide on a score. An overall quality index score (QIS) 
+was determined by calculating the average of the criteria scores, with higher scores 
+indicative of higher overall quality. 
+Database reviews were conducted by the primary investigator. Full-text and 
+quality reviews were conducted independently by the primary investigator and an 
+additional student researcher; all reviewers were trained according to the study 
+protocol prior to article review. In the case of discrepancies in article inclusion or 
+exclusion, reviewers met to resolve the issue and mutually decide on an article’s 
+inclusion in the current review.  
+After full-text review, available participant demographics and descriptive 
+statistics, including means, standard deviations, and sample sizes were extracted from
+[/PAGE 19]
+
+[PAGE 20]
+11 
+ 
+relevant studies. Reported p-values were used to confirm that study results were 
+statistically significant. To assess study results and availability of information, the 
+percentages of studies that included power and effect size were reported, along with 
+the range of power and effect sizes achieved across studies, and the mean power and 
+effect size of relevant studies. Reported effect size and effect direction were used to 
+examine intervention efficacy trends across studies according to the aims of the 
+current review: 
+A. General trends across studies regarding demographic information (e.g., 
+availability of information or homogeneity of participant samples) were 
+reported, as the demographic diversity of studies, or lack thereof, may 
+influence the generalizability of the results (Clark et al., 2019; DuPaul et al., 
+2021; Shea et al., 2022). Additional findings were also reported, such as 
+significant efficacy differences regarding reported demographic variables 
+(e.g., sex, race and/or ethnicity, socioeconomic status (SES), medication 
+status, or comorbid disorders). 
+B. To address whether there were efficacy differences regarding intervention 
+modality, studies were sorted into categories by intervention type, and effect 
+size and effect direction were examined within and between categories. Effect 
+sizes were examined according to numerical value and associated qualitative 
+magnitude (small, medium/moderate, or large). Common EF intervention 
+formats include physical activity/exercise, mindfulness training, and/or 
+computerized training programs (Diamond & Ling, 2016). EF interventions 
+range from one modality to multiple modalities (e.g., hybridized 
+interventions). For the purposes of this review, interventions were sorted into 
+four categories: a) exercise programs; b) mindfulness training; c) computer-
+based training; and d) hybridized/miscellaneous training.
+[/PAGE 20]
+
+[PAGE 21]
+12 
+ 
+C. To address whether efficacy differences emerged regarding age of 
+participants, effect size and effect direction were examined between groups. 
+Effect sizes were examined according to numerical value and associated 
+qualitative magnitude (small, medium/moderate, or large). Studies were 
+divided into two categories: a) a child/adolescent age group (participants 
+aged 2-19 years old; children and adolescents are included in one category as 
+there may be overlap between these age groups); and b) an adult age group 
+(participants aged 17 years or older in order to include the age groups of 
+college students and emerging adults) (American Psychological Association, 
+n.d.-a , n.d.-b, n.d.-c; Anastopoulos & King, 2015; Arnett, 2014).  
+Study authors were contacted for additional information if effect size was not 
+reported in the published article. When reported, the qualitative magnitude of effect 
+sizes provided by study authors was used. When study authors did not report 
+qualitative magnitude, effect size magnitude was interpreted based on established 
+guidelines. For Cohen’s d, effect sizes were interpreted as small (0.2), medium (0.5), 
+and large (0.8) (Harlow, 2014; Lakens, 2013). For eta squared (η2) and partial eta 
+squared (ηp2), effect sizes were interpreted as small (0.01), medium (0.06), and large 
+(0.14) (Cohen, 1988).
+[/PAGE 21]
+
+[PAGE 22]
+13 
+ 
+RESULTS 
+ 
+Reported demographic information and intervention outcomes were reviewed to 
+determine whether interventions resulted in significant improvement in EFs for 
+individuals with ADHD. Descriptive analyses were performed to determine whether 
+intervention efficacy differs with regard to a) intervention modality (e.g., intervention 
+type or method of delivery), and b) age of participants. Results of this review are 
+presented below.  
+Search Results 
+A total of 10,501 records were returned using the search terms in CINAHL, 
+PubMed, and PsycINFO. After systematic reviews, meta-analyses, articles not 
+published in English, and articles published outside of the review timeframe (2012-
+present) were excluded, 2,245 records remained. After undergoing abstract review, 
+222 records remained for full-text review. Following full-text review, 73 articles and 
+five dissertations remained that met all review criteria as determined by the 
+procedure previously described (pp. 17-20). A flowchart of the review process is 
+shown in Figure 1 of Appendix A. An additional three articles were sourced from 
+previously published reviews. 
+Duplicate articles were excluded during abstract and full-text review. Items were 
+considered duplicates if a) the same article or dissertation was returned multiple 
+times (either within the same database or across databases), b) a dissertation and a 
+corresponding published journal article were returned (either within the same 
+database or across databases) or c) an article or dissertation used the same dataset as 
+a previously published article but did not provide additional or unique information 
+about participants’ EF ability post-intervention.  
+In studies consisting of participants with and without diagnosed ADHD, only 
+results pertaining to the ADHD group were reported in the present review. If the
+[/PAGE 22]
+
+[PAGE 23]
+14 
+ 
+study did not separate participants with diagnosed ADHD from participants with 
+subthreshold ADHD or without ADHD, the study was excluded. 
+Quality Scores 
+Quality Index Scores ranged from 0.37 to 0.89 (Mean = 0.65, Median = 0.67). 
+Scores in the reporting domain ranged from 0.55 to 1 (Mean = 0.80, Median = 0.82). 
+In the external validity domain, scores ranged from 0 to 0.67 (Mean = 0.23, Median = 
+0.33). Bias scores ranged from 0.43 to 1 (Mean = 0.72, Median = 0.71), while scores in 
+the confounding domain ranged from 0 to 1 (Mean = 0.46, Median = 0.5). All scores 
+are reported on a scale from 0 to 1. Twenty-four of the 81 studies included 
+information about statistical power.  
+Demographic Information Availability and Trends 
+Demographic Information 
+Studies in the current review represent research from 18 countries. The amount 
+of participant demographic information reported differed by variable and study (see 
+Table 1 in Appendix B). All studies reported age of participants and either gender or 
+sex of participants. While gender and sex have different definitions, they are 
+sometimes treated as interchangeable terms by researchers (Gentile, 1993; Madsen et 
+al., 2017; Torgrimson & Minson, 2005). All studies included in this review treated 
+gender or sex as a binary variable, reporting on the number or percentage of male and 
+female participants. Other demographic variables were less frequently reported.  
+Twenty-eight studies (34.6%) provided some information regarding participants’ 
+race or ethnicity, either a partial report (listing the most commonly endorsed identity) 
+or a full report. Thirty-four studies (42.0%) provided some information regarding 
+participants’ socioeconomic status (SES). The American Psychological Association 
+(APA) considers SES to be determined by “a combination of social and economic 
+factors such as income, amount and kind of education, type and prestige of
+[/PAGE 23]
+
+[PAGE 24]
+15 
+ 
+occupation, place of residence, and—in some societies or parts of society—ethnic 
+origin or religious background” (American Psychological Association, n.d.-e). For the 
+purposes of this review, studies were considered to have provided information on 
+participants’ SES if they provided an SES rating or information regarding 
+participants’ employment, income, or education. In child and adolescent studies, 
+provision of parental employment, income, or education was considered. See Table 1 
+for a list of participant information reported by study. 
+No studies investigated intervention efficacy related to race, ethnicity, or SES. No 
+studies investigated intervention efficacy related to sex as a primary outcome, but one 
+study (LaCount et al., 2022) conducted a post hoc analysis to investigate possible sex 
+differences in EF measure performance. The results showed that effects were 
+approximately similar across men and women on the measure of inhibition, larger for 
+men and smaller for women on the measure of sustained attention, and smaller for 
+men and larger for women on the measures of processing speed and response 
+variability. Significance of the post hoc analyses was not reported.   
+ADHD Subtype and Medication Status 
+Studies differed in the amount of information provided on participant 
+medication status and ADHD subtype. Fifty-two studies (64.2%) provided 
+information on participants’ ADHD subtype, either a partial report (listing the most 
+commonly diagnosed subtype) or a full report. Of the studies that reported subtype 
+information, six studies (Bigorra et al., 2016; Dentz et al., 2020; Dovis et al., 2015; 
+Lan et al., 2020; Miranda et al., 2013; Passarotti et al., 2020) included only the 
+combined subtype of ADHD, and one study (Cardoso-Moreno et al., 2015) included 
+only the predominantly hyperactive/impulsive subtype of ADHD. The remaining 
+studies included two or more subtypes of ADHD in their participant samples. No 
+studies investigated intervention efficacy related to ADHD subtype as a primary
+[/PAGE 24]
+
+[PAGE 25]
+16 
+ 
+outcome, but one study (Bikic et al., 2018) conducted a post hoc analysis examining 
+the relationship between intervention results and ADHD subtype. Results revealed 
+that participants with the predominantly inattentive subtype made the greatest gains 
+on a number of outcomes compared to the controls, although significance and effect 
+size were not reported. 
+Seventy-seven studies (95.1%) provided some information on participants’ 
+medication status. Of the studies that reported medication information, 21 studies 
+(27.3%) excluded medication or used a sample of participants that were not receiving 
+pharmacological treatment for ADHD. Most studies (64.9%) allowed pharmacological 
+treatment for participants regardless of group assignment, and some (but not all) 
+participants were treated with ADHD medication. Four studies (Carboni, 2012; Dentz 
+et al., 2020; Gerber et al., 2012; Pan et al., 2022) included a sample in which all 
+participants were treated with ADHD medication or pharmacological treatment was 
+required. Two studies (Azami et al., 2016; Farias et al., 2017) established group 
+assignment based on medication status, including pharmacologically treated and 
+untreated groups. Azami et al. (2016) found that the experimental group receiving a 
+computer-assisted cognitive rehabilitation program performed significantly better 
+than the medication group on some EF measures post-intervention (with large effect 
+sizes, d = 1.112 – 1.743), but that they did not perform significantly differently at 
+follow-up. Farias et al. (2017) provided all participants with computerized cognitive 
+training and tested their EF abilities pre- and post-intervention. Both the medicated 
+and unmedicated groups improved significantly on several EF measures, with similar 
+patterns of improvement, except for the Rey-Osterrieth Complex Figure test.  
+Comorbidity 
+Forty-seven studies (58.0%) did not report information concerning comorbid 
+disorders or diagnoses in their participant samples. These studies varied in their
+[/PAGE 25]
+
+[PAGE 26]
+17 
+ 
+exclusion criteria, so that some participants may have had comorbid disorders that 
+went unreported, while other studies did not allow individuals to participate if they 
+had any diagnosed disorder other than ADHD. Thirty-four studies (42.0%) provided 
+partial or full information on the comorbid disorders or diagnoses present in their 
+participant samples. Of those, seven studies (Becker et al., 2022; Chimiklis, 2019; 
+Dentz et al., 2020; Farias et al., 2017; Heishman, 2015; Horowitz-Kraus, 2015; 
+Horowitz-Kraus et al., 2019) required the presence of ADHD and a comorbid disorder 
+in their inclusion criteria for one or more groups. All but one study (Dentz et al., 
+2020) found that interventions significantly improved EFs in individuals with ADHD 
+even in the presence of a comorbid disorder. For example, Becker et al. (2022) found 
+that a behavioral sleep intervention did significantly improve reported EFs in 
+adolescents with ADHD and co-occurring sleep problems. Chimiklis (2019) 
+investigated the use of a computerized training program (ACTIVATE) in children with 
+ADHD and with or without co-occurring reading difficulties. Results revealed that 
+both groups significantly improved some EF domains after training, with few 
+differences between groups. Horowitz-Kraus (2015) and Horowitz-Kraus et al. (2019) 
+also investigated the effects of computerized training on children with ADHD and 
+comorbid reading difficulties. Horowitz-Kraus (2015) included children with ADHD 
+with or without comorbid reading difficulties in their study; results revealed that both 
+groups improved with training, but there was some divergence in the measures on 
+which they improved. Horowitz-Kraus et al. (2019) included children with reading 
+difficulties with or without ADHD in their study. Results showed that individuals with 
+ADHD and reading difficulties improved on some EF measures relative to the non-
+ADHD groups.  
+Farias et al. (2017) and Heishman (2015) also investigated the use of 
+computerized programs in children with ADHD and a comorbid condition. Farias et
+[/PAGE 26]
+
+[PAGE 27]
+18 
+ 
+al. (2017) examined the use of a computerized cognitive training program (Captain’s 
+Log) in children with ADHD and a comorbid learning disorder. Results revealed that 
+the intervention significantly improved performance in several EF domains. 
+Heishman (2015) investigated the efficacy of Cogmed Working Memory Training 
+(CWMT) in a sample of children with ADHD and math difficulties. Results 
+demonstrated that the participants significantly improved in several EF domains. 
+In contrast, Dentz et al. (2020) investigated the use of a computerized training 
+program (CWMT) in youth with ADHD and a comorbid learning disability (LD), 
+Tourette syndrome (TS), or oppositional defiant disorder (ODD). Results did not 
+produce a significant improvement in EFs with training, but the authors noted that 
+the use of medication in this study may have normalized participants’ performance 
+and limited the detection of intervention effects.  
+Trends Across Intervention Categories 
+Exercise Programs 
+Thirteen studies (16.0%) were assigned to the exercise program category. The 
+majority of studies in this category (92.3%) found a significant improvement in some 
+aspect of EF as a result of an exercise intervention. Effects were mostly large in size; 
+of the studies that found a significant improvement in EF, one study found an effect 
+size below threshold, one study’s effect size range included small effect sizes, three 
+studies’ effect size range included medium effect sizes, and 10 studies’ effect size 
+range included large effect sizes (see Table 2 in Appendix B). Within this category, 
+76.9% of studies report effect size and 30.8% of studies provided some information 
+regarding statistical power. Studies were split almost evenly on the duration of the 
+exercise intervention applied. Seven studies (53.8%) utilized an acute intervention, in 
+which individuals participated in a single bout of exercise ranging from 5-40 minutes 
+in total (including warm-up and cool-down periods). The remaining six studies
+[/PAGE 27]
+
+[PAGE 28]
+19 
+ 
+(46.2%) employed a long-term intervention, with individuals participating in repeated 
+exercise sessions for 8-12 weeks. The majority of studies in this category (76.9%) 
+investigated exercise interventions for children and adolescents with ADHD; only 
+three studies (23.1%) investigated exercise interventions using adult participants. 
+Almost all studies (92.3%) used performance-based measures to evaluate EF abilities. 
+Types of exercise varied, with interventions including walking or standing, aerobic 
+exercise, high intensity interval training (HIIT), and sports training; see Table 2 in 
+Appendix B for a brief overview of studies in this category. 
+Mindfulness Training 
+Eleven studies (13.6%) were assigned to the mindfulness training category. The 
+majority of studies in this category (90.9%) found a significant improvement in some 
+aspect of EF as a result of a mindfulness intervention. Effects were mostly large in 
+size; of the studies that found a significant improvement in EF, two studies found 
+small effect sizes, three studies’ effect size range included medium/moderate effect 
+sizes, four studies’ effect size range included large effect sizes, and one study’s effect 
+size range included very large effect sizes (see Table 3 in Appendix B). Within this 
+category, 81.8% of studies report effect size and 27.3% of studies provided some 
+information regarding statistical power. MYmind was the most commonly applied 
+mindfulness training program, with 27.3% of articles investigating its efficacy. Other 
+studies examined training in tranquil abiding (TTA), mindfulness-oriented 
+meditation (MOM), mindfulness-based cognitive therapy (MBCT) or another form of 
+mindfulness practice. Most interventions combined group mindfulness training with 
+individual practice at home; only one study (Carboni, 2012) investigated individual 
+mindfulness training in a school-based setting. The mindfulness training category had 
+the highest percentage of adult studies, with 45.5% of articles investigating
+[/PAGE 28]
+
+[PAGE 29]
+20 
+ 
+mindfulness training programs in adults. See Table 3 in Appendix B for a brief 
+overview of studies in this category. 
+Computer-Based Training 
+Fifteen studies (18.5%) were assigned to the computerized intervention category. 
+The majority of studies in this category (73.3%) found a significant improvement in 
+some aspect of EF as a result of a computerized intervention. Effects were mostly 
+medium and large in size; of the studies that found a significant improvement in EF, 
+two studies’ effect size range included small/modest effect sizes, four studies’ effect 
+size range included medium/moderate effect sizes, and five studies’ effect size range 
+included large effect sizes (see Table 4 in Appendix B). Within this category, 73.3% of 
+studies report effect size and 40.0% of studies provided some information regarding 
+statistical power. Cogmed Working Memory Training (CWMT) was the most 
+frequently studied intervention, utilized in six studies (40.0%). Other interventions in 
+this category included Computer-Assisted Cognitive Rehabilitation (CACR), 
+ACTIVATE, Braingame Brian (BGB), Cognifit, AttenFocus, Captain’s Log, and a 
+computer-based Reading Acceleration Program (RAP). Most studies (93.3%) 
+investigated the efficacy of computerized interventions for children and adolescents 
+with ADHD; only one study (Stern et al., 2016) investigated the efficacy of computer-
+based interventions using a sample of adults with ADHD. The majority of studies 
+(86.7%) included a control or comparison group or condition, with six studies 
+(40.0%) utilizing a non-adaptive or partially-active control. Three studies (Chimiklis, 
+2019; Horowitz-Kraus, 2015; Horowitz-Kraus et al., 2019) investigated computerized 
+training programs  for children with comorbid ADHD and reading difficulties. In 
+contrast, one study (Farias et al., 2017) investigated computerized training programs 
+for children with comorbid ADHD and learning disorders. An additional study 
+(Passarotti et al., 2020) investigated computerized training programs in two pediatric
+[/PAGE 29]
+
+[PAGE 30]
+21 
+ 
+samples: children with ADHD, and children with pediatric bipolar disorder (PBD). 
+See Table 4 for a brief overview of studies in this category. 
+Hybridized/Miscellaneous Interventions 
+The hybridized or miscellaneous category was the largest intervention modality 
+category in the current review, with 42 articles (51.9%) included. Within this category, 
+81.0% of studies report effect size and 26.2% of studies provided some information 
+regarding statistical power. The majority of studies in this category (92.9%) found a 
+significant improvement in some aspect of EF as a result of a hybridized or 
+miscellaneous intervention. Effects were mostly medium in size; of the studies that 
+found a significant improvement in EF, eight studies’ effect size range included 
+minimum practically significant/small effect sizes, 21 studies’ effect size range 
+included medium/moderate effect sizes, and 15 studies’ effect size range included 
+large effect sizes (see Table 5 in Appendix B). Within this hybrid category, most 
+articles (81.0%) investigated intervention efficacy in children and adolescents with 
+ADHD. Six articles (14.3%) investigated the efficacy of Cognitive-Functional 
+occupational therapy (Cog-Fun), making it the most commonly applied intervention. 
+Other types of occupational, cognitive, or behavioral therapeutic interventions were 
+also common. Five studies (11.9%) investigated biofeedback, neurofeedback, or 
+neurostimulation interventions. Four studies (9.5%) investigated hybridized 
+interventions combining exercise and technological (virtual reality or digital game) 
+elements. See Table 5 in Appendix B for a brief overview of studies in this category.  
+Trends Across Age Categories  
+Child/Adolescent 
+The majority of studies included in the present review (79.0%) investigated the 
+use of interventions for children or adolescents with ADHD.  Within this category, 
+75.0% of studies report effect size and 32.8% of studies provided some information
+[/PAGE 30]
+
+[PAGE 31]
+22 
+ 
+regarding statistical power. Thirty-four studies (53.1%) used a hybridized or 
+miscellaneous intervention, 14 studies (21.9%) used computerized training, 10 studies 
+(15.6%) used exercise training programs, and six studies (9.4%) used mindfulness 
+training. Nearly all studies (90.6%) found that the applied intervention had a 
+significant improvement in some aspect of EF. Effects were mostly medium and large 
+in size; of the studies that found a significant improvement in EF, one study found an 
+effect size below threshold, nine studies’ effect size range included 
+small/modest/minimum practically significant effect sizes, 26 studies’ effect size 
+range included medium/moderate effect sizes, and 27 studies’ effect size range 
+included large effect sizes. Fifty-five studies (85.9%) reported mean age of all 
+participants or participant groups and of those, most studies (78.2%) used participant 
+samples in which the mean age of participants fell between 6-12 years of age (the 
+periods of time identified as middle childhood and preadolescence) (American 
+Psychological Association, n.d.-c , n.d.-d; Collins, 1984). Six studies (10.9%) used 
+early childhood participant samples in which the mean age was less than six years of 
+age (American Psychological Association, n.d.-c); another six studies (10.9%) used 
+adolescent participant samples in which the mean age was greater than twelve years 
+of age. See Table 6 in Appendix B for a brief overview of studies in this category.  
+Adult 
+Only seventeen studies (21.0%) in the present review investigated the use of 
+interventions for adults with ADHD. Within this category, 88.2% of studies report 
+effect size and 17.7% of studies provided some information regarding statistical 
+power. Eight studies (47.1%) used a hybridized or miscellaneous intervention, five 
+studies (29.4%) used mindfulness training, three studies (17.6%) used an exercise 
+training program, and one study (5.9%) used computerized training. The majority of 
+the studies (82.3%) found that the applied intervention had a significant
+[/PAGE 31]
+
+[PAGE 32]
+23 
+ 
+improvement in some aspect of EF. Effects were mostly large in size; of the studies 
+that found a significant improvement in EF, four studies’ effect size range included 
+small effect sizes, six studies’ effect size range included medium/moderate effect sizes, 
+eight studies’ effect size range included large effect sizes, and one study’s effect size 
+range included very large effect sizes. Ten studies (58.8%) used samples of emerging 
+and young adult participants, with mean ages falling between approximately 20-35 
+years of age (American Psychological Association, n.d.-b); five studies (29.4%) 
+focused on college students in particular. The remaining seven studies in this category 
+(41.2%) used participant samples with mean ages characteristic of middle adulthood, 
+approximately 36-64 years of age (American Psychological Association, n.d.-b). 
+Solanto et al. (2018) investigated the oldest age group in the review, using a 
+subsample of adults with a mean age of 56.15 years. While Solanto et al. (2018) 
+characterized this group as older adults, they had not yet reached the stage of later 
+adulthood, which typically begins around 65 years of age (American Psychological 
+Association, n.d.-b). No studies in this review examine interventions for individuals in 
+later adulthood with ADHD. See Table 7 in Appendix B for a brief overview of studies 
+in this category.
+[/PAGE 32]
+
+[PAGE 33]
+24 
+ 
+DISCUSSION 
+ 
+The purpose of the current review was to examine whether interventions result in 
+significant improvement in EFs for individuals with ADHD, and whether intervention 
+efficacy differs with regard to: a) intervention modality, and b) age of participants. 
+Additionally, trends in demographic information availability were examined. In 
+general, results supported that non-pharmacological interventions are efficacious for 
+improving EFs in individuals with ADHD across intervention modalities and age 
+groups. While reported ES varied across studies, 88.9% found significant 
+improvement in either overall EF or one or more domains. Some 11.1% studies found 
+no significant improvement related to the intervention. No studies reported 
+significant worsening of EF or serious adverse events related to the intervention. 
+These findings may suggest that, while additional research into EF interventions is 
+still necessary, non-pharmacological interventions may be a low-risk method of 
+improving EFs in individuals with ADHD.  
+Demographic Information 
+The studies differed substantially in how they reported the demographics of their 
+participant sample. For example, age and sex were always reported. Other variables, 
+such as race/ethnicity and SES, were reported in less than half the studies. Previous 
+research has shown that disparities in ADHD diagnosis and treatment exist with 
+regard to demographic variables (Morgan et al., 2013; Mowlem et al., 2019; 
+Rucklidge, 2010; Russell et al., 2016). Specifically, Morgan et al. (2013) conducted a 
+study in the United States using a nationally representative cohort of school children 
+and found that minority children were significantly less likely to receive an ADHD 
+diagnosis or prescription medication than their white counterparts. This relationship 
+held even when potential confounding variables (such as SES) were controlled for
+[/PAGE 33]
+
+[PAGE 34]
+25 
+ 
+(Morgan et al., 2013). Additionally, a systematic review conducted by Russell et al. 
+(2016) examining the relationship between ADHD and different dimensions of SES 
+(including both indices and individual measures such as parental income, occupation, 
+education, and marital status) found that, overall, ADHD was associated with low 
+SES. Lastly, in a study investigating SES and ADHD treatment using data from a 
+national cohort of U.S. children, Simoni & Drentea (2016) found that higher parental 
+income was significantly correlated with ADHD medication use. Simoni & Drentea 
+(2016) also found that children taking medication were more likely to be white, 
+younger, and male as compared to children not taking ADHD medication. Sex 
+differences in ADHD diagnosis and treatment have also been observed in additional 
+studies (Mowlem et al., 2019; Rucklidge, 2010). Future studies of individuals with 
+ADHD would benefit from reporting demographic information more thoroughly, as it 
+affects the generalizability of the findings.  
+Additionally, future research should address the role that demographic variables 
+may play in the relationship between ADHD and EF abilities. For example, previous 
+research has found a mediating effect of EF in SES and ADHD problems of Chinese 
+preschool children, wherein SES affected ADHD directly and indirectly through EF, 
+particularly the domains of working memory and inhibition (Fan et al., 2022). None 
+of the studies in the current review used the demographic variables of sex, 
+race/ethnicity, or SES as a grouping criterion to investigate potential differential 
+effects of the chosen intervention(s).  
+ADHD Subtypes and Medication Status 
+Most studies reported information on participants’ diagnosed subtype, and 
+almost all studies reported information on participants’ medication status. Previous 
+studies investigating EF differences between ADHD subtypes have yielded mixed, but 
+mostly non-significant, results (Bahçıvan Saydam et al., 2015; Geurts et al., 2005;
+[/PAGE 34]
+
+[PAGE 35]
+26 
+ 
+Martel et al., 2007). These studies have compared EF performance between 
+individuals with predominantly inattentive and combined subtype; one study suggests 
+that children with ADHD-I performed significantly better than children with ADHD-C 
+in specific EF domains (verbal working memory and verbal category shifting) 
+(Bahçıvan Saydam et al., 2015). However, Bahçıvan Saydam et al. (2015) did not find 
+significant differences between ADHD subtypes in other domain measures, consistent 
+with previous studies that demonstrated no significant differences in EF performance 
+between ADHD subtypes (Bahçıvan Saydam et al., 2015; Geurts et al., 2005; Martel et 
+al., 2007). Although previous research has found that individuals with different EF 
+subtypes do not display significantly different patterns of EF impairment, research 
+has not addressed whether they respond to non-pharmacological EF interventions in 
+the same way. No studies in the current review investigated differences in 
+intervention response related to ADHD subtype, although one study (Bikic et al., 
+2018) conducted a post hoc analysis that suggested that participants with ADHD-I 
+made the greatest improvement relative to controls (however, significance and ES 
+were not reported for this analysis). 
+Stimulant medication has been shown to significantly improve core symptoms in 
+individuals with ADHD, and is one of the most common methods used to treat ADHD 
+(Center for Disease Control and Prevention, 2022; Schweitzer et al., 2012). However, 
+stimulant medication may not be effective for all individuals, or may have undesirable 
+side effects such as decreased appetite or insomnia (Schweitzer et al., 2012; The 
+National Institute of Mental Health, 2021; Weyandt, 2019). Additionally, research has 
+demonstrated variable results regarding the effect of stimulant medication on 
+cognition, including EFs (Coghill et al., 2007; Rhodes et al., 2006). For these reasons, 
+non-pharmacological treatments that may be used as a supplement or alternative to 
+medication to improve EFs and core ADHD symptoms are of interest. Results from
+[/PAGE 35]
+
+[PAGE 36]
+27 
+ 
+the present systematic review support the potential efficacy of non-pharmacological 
+interventions. However, only a small number of studies that investigated non-
+pharmacological interventions in the absence of or compared to stimulant 
+medication. Results from these studies suggest that non-pharmacological 
+interventions may be effective even without being paired with pharmacological 
+treatment, but future research should continue to investigate the combined and 
+individual effects of pharmacological and non-pharmacological interventions.    
+Intervention Modalities 
+Results of the current review suggest that multiple modalities, including exercise, 
+mindfulness, computer-based training, and various therapeutic interventions may 
+significantly improve EFs in individuals with ADHD across the lifespan. However, 
+there are differences in study design that should be considered when interpreting 
+these results. First, previous research has demonstrated that performance-based and 
+reporting neuropsychological measures may not provide the same information about 
+EF abilities; it has been suggested that reporting measures may provide information 
+about individuals’ typical EF performance, while performance-based measures may 
+provide information about optimal EF performance (Toplak et al., 2013). In the 
+present review, exercise studies were measured almost exclusively with performance-
+based measures, while the majority of mindfulness studies (63.6%) used only 
+reporting measures. Additionally, studies in the current review used a broad range of 
+controls, including having no control group, a passive control group, or an active 
+control group. Although speculative, this finding may indicate that studies do not 
+control for non-specific or therapeutic effects to the same degree. However, a recent 
+meta-analysis (Au et al., 2020) has found that there were no profound performance 
+differences between active and passive control groups in cognitive intervention 
+studies using objective performance-based measures.
+[/PAGE 36]
+
+[PAGE 37]
+28 
+ 
+Age Groups 
+Results of the current review suggest that exercise, mindfulness training, 
+computerized training, and some hybridized or miscellaneous interventions are 
+effective at improving EFs in individuals with ADHD across the lifespan. However, 
+different age groups were not studied or exposed to intervention modalities in the 
+same proportions. The majority of the studies in the current review used samples of 
+children or adolescents, and within this age group category, most studies used 
+participants with a mean age in the developmental period of middle childhood (6 – 12 
+years of age). While ADHD can be diagnosed in early childhood, most diagnoses occur 
+in school-age children; in the United States, the median age of onset in children with 
+ADHD was six years of age, with age of diagnosis ranging from four to seven years 
+depending on severity (American Psychiatric Association, 2013; Visser et al., 2014). 
+Therefore, it is not surprising that this age group (early childhood) received less 
+representation in the current review. It was surprising, however, that relatively few 
+studies investigated interventions in adolescent samples with a mean age greater than 
+12 years old. U.S. survey data from 2016 – 2019 showed that 3.3 million (13%) 
+adolescents aged 12 – 17 years old had been diagnosed with ADHD compared to  2.4 
+million children (10%) aged 6 – 11 years old (Bitsko et al., 2022). Additionally, 
+teenagers with ADHD may experience academic, organizational, and interpersonal 
+difficulties, impaired executive functions, and are more likely to participate in risky 
+behaviors such as substance use or unsafe sexual activity (Martel et al., 2007; The 
+National Institute of Mental Health, 2021). Because of the prevalence of ADHD and 
+related impairment in teenagers, future studies should further investigate the efficacy 
+and utility of EF interventions, particularly the intervention modalities of exercise and 
+mindfulness training, which were not applied to this age group in any of the studies 
+included in the current review.
+[/PAGE 37]
+
+[PAGE 38]
+29 
+ 
+While ADHD is less prevalent in adults than in children and adolescents, 
+prevalence rates may be increasing more rapidly in adults than children. A study 
+investigating the prevalence rates of ADHD in adults and children aged 5 – 11 years 
+using medical records from a large U.S. regional health care delivery system found 
+that from 2007 – 2016, prevalence increased by 26.4% in children, while in adults 
+prevalence increased by 123.3% (Chung et al., 2019). Additionally, impairments 
+associated with ADHD continue into adulthood;  a 16-year follow-up study of male 
+participants found that, compared to controls without ADHD,   participants with 
+ADHD were significantly more likely to experience a comorbid psychiatric disorder in 
+their lifetime, report greater impaired current global functioning and family conflict, 
+and experience significant impairment on neuropsychological measures (Biederman 
+et al., 2012). While the results of the current review suggest that interventions are 
+effective at improving EFs in adults with ADHD, most adult studies used either a 
+behavioral or cognitive therapy or mindfulness training intervention. Only three 
+studies investigated exercise interventions, and all of them used an acute training 
+paradigm. Only one study investigated the use of computerized training. Future 
+studies should expand upon the types of interventions designed to improve EFs and 
+core ADHD symptoms offered to adults with ADHD. 
+Limitations 
+There are limitations in the present systematic review that should be considered 
+when interpreting the results. First, the use of reviewer-assigned qualitative effect 
+sizes based on fixed thresholds may not reflect the true effect sizes achieved, as 
+appropriate thresholds may vary with field and study design (Harlow, 2014; Lakens, 
+2013). For this reason, qualitative effect sizes assigned by study authors were 
+preferentially reported, and qualitative effect sizes were only assigned by reviewer 
+when the study did not provide this information.
+[/PAGE 38]
+
+[PAGE 39]
+30 
+ 
+Additionally, review criteria relied on studies to identify EF as a primary or 
+secondary outcome. EF is an umbrella term used to describe a related set of cognitive 
+functions and lacks a standardized definition (Weyandt, 2009). Therefore, it’s likely 
+that additional articles using the same measures or tapping into the same functions as 
+included studies (or related cognitive outcomes within the included studies) were 
+excluded due to the terminology used in their article (e.g., cognitive function or 
+neuropsychological function instead of EF). However, despite this limitation, the 
+current systematic review included 81 studies across four intervention modalities and 
+two age categories, producing meaningful findings that inform clinical practice and 
+future research.
+[/PAGE 39]
+
+[PAGE 40]
+31 
+ 
+CONCLUSION 
+ 
+The purpose of the present systematic review was to examine whether 
+interventions result in significant improvement in EFs for individuals with ADHD, 
+and whether intervention efficacy differs with regard to: a) intervention modality, and 
+b) age of participants. Results demonstrated that non-pharmacological interventions 
+are efficacious for improving EFs in individuals with ADHD. Interventions were 
+found to be efficacious across modalities and age groups, with small to large effect 
+sizes.  However, future research should increase the number of intervention 
+modalities applied to teenagers and adults with ADHD, and further investigate how 
+demographic variables are related to intervention outcomes.
+[/PAGE 40]
+
+[PAGE 41]
+32 
+ 
+ 
+APPENDIX A. FIGURES 
+ 
+Figure 1. 
+PRISMA Flowchart (Page et al., 2021) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Records identified from: 
+Databases (n = 10501) 
+Records removed before 
+screening: 
+Records marked as ineligible 
+by automation tools (n = 
+8256) 
+Records screened 
+(n = 2245) 
+Records excluded by human 
+review 
+(n = 2023) 
+Records reviewed 
+(n = 222) 
+Reports excluded (n = 144) 
+Outside of publication year 
+range (n = 1) 
+Review article (n = 8) 
+Abstract only (n = 3) 
+Protocol only (n = 3) 
+Full-text unavailable (n = 7) 
+Duplicate record (n = 11) 
+No intervention (n = 2) 
+Secondary (parent-only) 
+intervention (n = 1) 
+Only pharmacological 
+intervention (n = 49) 
+No ADHD diagnosis or mixed 
+ADHD and non-ADHD 
+groups (n = 15) 
+EF not a primary or 
+secondary outcome (n = 43) 
+No EF measure (n = 1) 
+ 
+Studies included in review 
+(n = 78) 
+Reports of included studies 
+(n = 78) 
+Identification of studies via databases and registers 
+Identification 
+Screening 
+ 
+Included
+[/PAGE 41]
+
+[PAGE 42]
+33 
+APPENDIX B. TABLES 
+ 
+Table 1.  
+Summary of Demographic Information Provided  
+Reference 
+n  
+Participants 
+with ADHD 
+ 
+Participant Information Reported 
+Sex or 
+Gender 
+Race or 
+Ethnicity 
+SES,  
+Employment, 
+Income, or 
+Education 
+ADHD  
+Subtype or 
+Presentation 
+Medication 
+Status 
+Comorbidity 
+Anastopoulos & 
+King (2015) 
+43 
+Yes 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Anastopoulos et al. 
+(2020) 
+88 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Anastopoulos et al. 
+(2021) 
+250 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Azami et al. (2016) 
+34 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Barudin-Carreiro 
+(2020) 
+22 
+Yes 
+ 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Becker et al. (2022) 14 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Benzing et al. 
+(2018) 
+46 
+Yes 
+No 
+Yes 
+No 
+Yes 
+No 
+Benzing & Schmidt 
+(2019) 
+51 
+Yes 
+No 
+Yes 
+No 
+Yes 
+No 
+Bigorra et al. 
+(2016) 
+66 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Bikic et al. (2018) 
+70 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+No 
+Bir (2019) 
+13 
+Yes 
+Yes 
+No 
+No 
+Yes 
+Yes 
+Bögels et al. (2021) 
+167 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+No 
+Boyer et al. (2015) 
+159 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes
+[/PAGE 42]
+
+[PAGE 43]
+34 
+Carboni (2012) 
+4 
+Yes 
+Yes 
+No 
+No 
+Yes 
+No 
+Cardoso-Moreno et 
+al. (2015) 
+25 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Chang et al. (2012) 
+40 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Chang et al. (2022) 
+48 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Chimiklis (2019) 
+20 
+Yes 
+Yes 
+Yes 
+Yes 
+No 
+Yes 
+Dentz et al. (2020) 
+60 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Dovis et al. (2015) 
+89 
+Yes 
+No 
+No 
+Yes 
+Yes 
+Yes 
+Durgut et al. 
+(2020) 
+30 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Estrada-Plana et al. 
+(2019) 
+27 
+Yes 
+No 
+Yes 
+Yes  
+Yes 
+No 
+Farias et al. (2017) 
+27 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Gapin et al. (2015) 
+10 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Gawrilow et al. 
+(2016) 
+47 
+Yes 
+Yes 
+No 
+No 
+Yes 
+No 
+Gerber et al. (2012) 
+40 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Gilboa & Helmer 
+(2020) 
+25 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Guillaume et al. 
+(2021) 
+6 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes 
+Hahn-Markowitz et 
+al. (2017) 
+107 
+Yes 
+No 
+Yes 
+No 
+Yes 
+No 
+Hahn-Markowitz et 
+al. (2020) 
+107 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+No 
+Hannesdottir et al. 
+(2017) 
+41 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Heishman (2015) 
+23 
+Yes 
+Yes 
+No 
+No 
+Yes 
+No 
+Hepark et al. 
+(2019) 
+103 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Horowitz-Kraus 
+(2015) 
+28 
+Yes 
+No 
+No 
+No 
+Yes 
+Yes
+[/PAGE 43]
+
+[PAGE 44]
+35 
+Horowitz-Kraus et 
+al. (2019) 
+18 
+Yes 
+No 
+No 
+No 
+No 
+Yes 
+Huguet et al. 
+(2017) 
+5 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+No 
+In de Braek et al. 
+(2012) 
+27 
+Yes 
+No 
+Yes 
+No 
+Yes 
+No 
+Janssen et al. 
+(2018) 
+120 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes 
+Janssen et al. 
+(2020) 
+31 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes 
+Kim et al. (2020) 
+3 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Korpa et al. (2020) 
+52 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+No 
+LaCount et al. 
+(2022) 
+18 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+No 
+Lan et al. (2020) 
+81 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Levanon-Erez et al. 
+(2019) 
+22 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Liang et al. (2022) 
+80 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Liao et al. (2022) 
+50 
+Yes 
+No 
+Yes 
+No 
+Yes 
+No 
+Maeir et al. (2014) 
+19 
+Yes 
+No 
+Yes 
+No 
+Yes 
+No 
+McGough et al. 
+(2015) 
+24 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Mehren et al. 
+(2019) 
+23 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Memarmoghad-
+dam et al. (2016) 
+40 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Menezes et al. 
+(2015) 
+18 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Miranda et al. 
+(2013) 
+42 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+No 
+Mitchell et al. 
+(2017) 
+20 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Nejati et al. (2020) 
+15, 10 
+Yes 
+No 
+No 
+No 
+Yes 
+No
+[/PAGE 44]
+
+[PAGE 45]
+36 
+Nejati (2021a) 
+30 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Nejati (2021b) 
+29 
+Yes 
+No 
+No 
+No 
+No 
+No 
+Pan et al. (2016) 
+32 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Pan et al. (2019) 
+30 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Pan et al. (2022) 
+98 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes 
+Passarotti et al. 
+(2020) 
+13 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Piepmeier et al. 
+(2015) 
+32 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Qian et al. (2017) 
+68 
+Yes 
+No 
+No 
+Yes 
+Yes 
+Yes 
+Qian et al. (2021) 
+70 
+Yes 
+No 
+No 
+Yes 
+Yes 
+Yes 
+Rosenberg et al. 
+(2015) 
+17 
+Yes 
+No 
+No 
+No 
+No 
+No 
+Salomone et al. 
+(2015) 
+51 
+Yes 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Santonastaso et al. 
+(2020) 
+25 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Shema-Shiratzky et 
+al. (2019) 
+14 
+Yes 
+No 
+No 
+No 
+Yes 
+No 
+Shuai et al. (2021) 
+96 
+Yes 
+No 
+No 
+Yes 
+Yes 
+Yes 
+Solanto et al. 
+(2018) 
+88 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes 
+Solanto & Scheres 
+(2021) 
+18 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes 
+Steeger et al. 
+(2016) 
+91 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Yes 
+Steiner et al. 
+(2014) 
+104 
+Yes 
+Yes 
+Yes 
+No 
+Yes 
+No 
+Stern et al. (2016) 
+60 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+No 
+Tamm et al. (2013) 
+105 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Tamm et al. (2014) 
+24 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+No 
+Tamm &  
+Nakonezny (2015) 
+25 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Yes
+[/PAGE 45]
+
+[PAGE 46]
+37 
+Valero et al. (2022) 
+30 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Yes 
+van der Oord et al. 
+(2014) 
+40 
+Yes 
+No 
+No 
+Yes 
+Yes 
+Yes 
+van Dongen-
+Boomsma et al. 
+(2014) 
+51 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+Yes 
+Zhang et al. (2016) 
+11 
+Yes 
+No 
+Yes 
+No 
+Yes 
+Yes 
+Ziereis & Jansen 
+(2015) 
+43 
+Yes 
+No 
+No 
+Yes 
+Yes 
+No 
+Note: Information provided is categorized “Yes” if partial or full information is reported for the category. In adult studies, 
+socioeconomic status (SES) is categorized “Yes” if information regarding participant SES, employment, income, or education is 
+provided. In child/adolescent studies, SES is categorized “Yes” if information regarding parental SES, employment, income, or 
+education is provided.
+[/PAGE 46]
+
+[PAGE 47]
+38 
+Table 2.  
+Summary of Exercise Studies 
+Reference 
+Age 
+Group 
+Intervention 
+Intervention 
+Duration 
+Control or 
+Comparison 
+Significant 
+Effect of  
+Intervention 
+on EF 
+Measures 
+Significant 
+Effect 
+Size(s) 
+Barudin- 
+Carreiro 
+(2020) 
+Child/ 
+Adolescent 
+Walking or 
+standing 
+Acute (20 min) 
+Yes (Sitting 
+control 
+group) 
+No 
+SCWT, 
+WCST  
+ 
+Chang et al. 
+(2012) 
+Child/ 
+Adolescent 
+Aerobic exercise Acute (30 min) 
+Yes (Non- 
+active control 
+group) 
+Yes 
+Stroop 
+Test*, 
+WCST* 
+η p 2 = 0.12 – 
+0.27 (medium 
+to large effect 
+sizes) 
+Durgut et al. 
+(2020) 
+Child/ 
+Adolescent 
+Treadmill train-
+ing (TT) + 
+Whole body vi-
+bration training 
+(WBVT) 
+Chronic (8 
+weeks) 
+Yes (TT only 
+group) 
+Yes 
+BRIEF* 
+Not reported 
+Gapin et al. 
+(2015) 
+Adult 
+Aerobic exercise Acute (40 min) 
+Yes (Non-
+ADHD group) 
+Yes 
+Stroop 
+Test*, 
+TMT, 
+WAIS-IV 
+subtest 
+(Digit Span) 
+d = 0.36 – 
+0.82 (small to 
+large effect 
+sizes) 
+Gawrilow et 
+al. (2016) 
+Child/ 
+Adolescent 
+Trampoline 
+jumping 
+Acute (5 min) 
+Yes (Seden-
+tary task 
+group) 
+Yes 
+Combined 
+classifica-
+tion and 
+Go/No-Go 
+task* 
+d = 0.04   
+(below thresh-
+old)
+[/PAGE 47]
+
+[PAGE 48]
+39 
+LaCount et al. 
+(2022) 
+Adult 
+High intensity 
+interval training 
+(HIIT) 
+Acute (19 min) 
+Yes (Non-
+ADHD group) 
+Yes 
+AX-CPT* 
+η p 2 = 0.15 
+(large effect 
+sizes) 
+Liang et al. 
+(2022) 
+Child/ 
+Adolescent 
+Aerobic and 
+neurocognitive 
+exercise 
+Chronic (12 
+weeks) 
+Yes (Wait-list 
+control) 
+Yes 
+Arrow 
+Flanker 
+Task*, 
+Tower of 
+London* 
+Trail Mak-
+ing Test* 
+η2 = 0.095 – 
+0.24 (medium 
+to large effect 
+sizes) 
+Mehren et al. 
+(2019) 
+Adult 
+Aerobic exercise 
+(Cycling) 
+Acute (30 min) 
+Yes (Non-
+ADHD group, 
+movie condi-
+tion) 
+Yes 
+Flanker 
+Task* 
+η2 = 0.18 – 
+0.20 (large ef-
+fect sizes) 
+Memar-
+moghaddam 
+et al. (2016) 
+Child/ 
+Adolescent 
+Selected  
+exercise  
+program 
+Chronic (8 
+weeks) 
+Yes (Non- 
+active control 
+group) 
+Yes 
+Stroop 
+Test*, 
+Go-No-Go 
+Test* 
+η2 = 0.703 – 
+0.86 (large ef-
+fect sizes) 
+Pan et al. 
+(2016) 
+Child/ 
+Adolescent 
+Table tennis 
+training 
+Chronic (12 
+weeks) 
+Yes (Waitlist 
+control group 
+with crosso-
+ver design) 
+Yes 
+Stroop* 
+η2 = 0.48 
+(large effect 
+size) 
+Pan et al. 
+(2019) 
+Child/ 
+Adolescent 
+Table tennis 
+training 
+Chronic (12 
+weeks) 
+Yes (Non-
+ADHD group, 
+non-training 
+condition) 
+Yes 
+Stroop 
+Color-
+Word*, 
+WCST* 
+η p 2 = 0.10 – 
+0.15 (medium 
+to large effect 
+size)  
+Piepmeier et 
+al. (2015) 
+Child/ 
+Adolescent 
+Aerobic exercise Acute (30 min) 
+Yes (Non-
+ADHD group, 
+non-exercise 
+condition) 
+Yes 
+Stroop 
+Test*, 
+TOL, 
+TMT 
+η p 2 = 0.14 
+(large effect 
+size) 
+Ziereis & Jan-
+sen (2015) 
+Child/ 
+Adolescent 
+Ball handling, 
+balance,  
+dexterity  
+Chronic (12 
+weeks) 
+Yes (Waitlist 
+control 
+group) 
+Yes 
+HAWIK-IV 
+tasks (digit 
+span*, 
+η2 = 0.17 – 
+0.38 (large  
+effect sizes)
+[/PAGE 48]
+
+[PAGE 49]
+40 
+training (EG1) 
+or sports  
+training (EG2) 
+letter-num-
+ber-se-
+quencing*), 
+Corsi block 
+tapping test 
+Note: in-
+dex-score 
+Working 
+Memory* 
+(composed 
+of index 
+scores from 
+HAWIK-IV 
+tasks) was 
+used in 
+analysis 
+Note: Significant effect size(s) listed are those associated with significant effect of intervention on EF. Bolded qualitative effect sizes 
+were provided by study authors. Non-bolded qualitative effect sizes were assigned by reviewer according to Cohen’s standards for d, 
+ηp2, and η2. 
+* Measure associated with significant effect of intervention on EF
+[/PAGE 49]
+
+[PAGE 50]
+41 
+Table 3.  
+Summary of Mindfulness Studies.  
+Reference 
+Age Group 
+Intervention 
+Control or 
+Comparison 
+Significant  
+Effect of  
+Intervention 
+on EF 
+Outcome 
+Measures 
+Significant  
+Effect 
+Size(s) 
+Bögels et al. 
+(2021) 
+Child/ 
+Adolescent 
+MYmind 
+No 
+Yes 
+BRIEF* 
+d = -0.44 – -
+0.77 (me-
+dium to ap-
+proaching 
+large effect 
+sizes) 
+Note: negative 
+ES here de-
+notes im-
+provement 
+Carboni (2012) 
+Child/ 
+Adolescent 
+Individual 
+mindfulness 
+training 
+No 
+Yes 
+BRIEF* 
+Not reported 
+Guillaume et 
+al. (2021) 
+Adult 
+Training in  
+tranquil abid-
+ing (TTA) 
+No 
+Yes 
+BRIEF-A* 
+d = 0.71 – 1.66 
+(medium to 
+very large) 
+Hepark et al. 
+(2019) 
+Adult 
+Adapted 
+mindfulness-
+based cogni-
+tive therapy 
+(MBCT) 
+Yes (Waitlist 
+control 
+group) 
+Yes 
+BRIEF-A* 
+d = 0.43 – 
+0.93 (moder-
+ate to large) 
+Huguet et al. 
+(2017) 
+Child/ 
+Adolescent 
+Mindfulness 
+training pro-
+gram 
+No 
+Yes 
+CPT-3, 
+Stroop Test*, 
+WISC sub-
+tests 
+Not reported
+[/PAGE 50]
+
+[PAGE 51]
+42 
+(Arithmetic, 
+Coding-Digit 
+Symbol*, 
+Digit Span) 
+Janssen et al. 
+(2018) 
+Adult 
+MBCT 
+Yes (TAU only 
+group) 
+Yes 
+BRIEF-A* 
+d = 0.49 
+(small effect 
+size) 
+Janssen et al. 
+(2020) 
+Adult 
+MBCT 
+No 
+Yes 
+BRIEF-A* 
+d = 0.28 – 
+0.48 (small ef-
+fect sizes) 
+Mitchell et al. 
+(2017) 
+Adult 
+Mindfulness 
+meditation 
+training 
+Yes (Waitlist 
+control 
+group) 
+Yes 
+ANT, 
+BRIEF-A*, 
+CPT, 
+DEFS*, 
+Trail-making 
+test 
+d = 1.45 – 2.67 
+(large effect 
+sizes) 
+Santonastaso 
+et al. (2020) 
+Child/ 
+Adolescent 
+Mindfulness-
+oriented medi-
+tation (MOM) 
+Yes (Emotion 
+education 
+program 
+(EEP) group) 
+Yes 
+CPT-II*, 
+Stroop Color 
+Word Test*, 
+Stop task*, 
+N-Back task* 
+η p 2 = 0.21 
+(large effect 
+size) 
+Valero et al. 
+(2022) 
+Child/ 
+Adolescent 
+MYmind 
+Yes (Waitlist 
+control 
+group) 
+Yes 
+WISC-IV 
+subtest (Let-
+ter-Number 
+Sequencing), 
+NEPSY-II 
+subtest (Inhi-
+bition), 
+Conners 3 
+subtest (exec-
+utive func-
+tions*) 
+η p 2 = 0.314 
+(large effect 
+size)
+[/PAGE 51]
+
+[PAGE 52]
+43 
+Zhang et al. 
+(2017) 
+Child/ 
+Adolescent 
+MYmind 
+No 
+No 
+BRIEF 
+ 
+Note: Significant effect size(s) listed are those associated with significant effect of intervention on EF. Bolded qualitative effect sizes 
+were provided by study authors. Non-bolded qualitative effect sizes were assigned by reviewer according to Cohen’s standards for d, 
+ηp2, and η2. 
+* Measure associated with significant effect of intervention on EF
+[/PAGE 52]
+
+[PAGE 53]
+44 
+ 
+Table 4.  
+Summary of Computer-Based Studies  
+Reference 
+Age Group 
+Intervention 
+Control or 
+Comparison 
+Significant 
+Effect of  
+Intervention 
+on EF 
+Outcome 
+Measures 
+Significant 
+Effect 
+Size(s) 
+Azami et al. 
+(2016) 
+Child/ 
+Adolescent 
+Computer- 
+Assisted  
+Cognitive  
+Rehabilitation 
+(CACR) 
+Yes  
+(Medication 
+group,  
+Placebo CACR 
+group) 
+Yes 
+CPT*, 
+TOL*, 
+WISC-R sub-
+tests (For-
+ward/Back-
+ward digit 
+span*), 
+Raven’s Pro-
+gressive matri-
+ces*, 
+Span Board* 
+d = 1.12 – 
+1.436 
+(large effect 
+sizes) 
+Bigorra et al. 
+(2016) 
+Child/ 
+Adolescent 
+Cogmed  
+Working 
+Memory  
+Training 
+(CWMT) 
+Yes (Non-
+adaptive 
+CWMT  
+control 
+group) 
+Yes 
+BRIEF*, 
+WISC-IV sub-
+tests (Digit 
+span  
+backward, Let-
+ter- 
+Number  
+Sequencing), 
+WMS-III sub-
+test (Spatial 
+span  
+backward), 
+d’ = -0.86 – 
+0.81 (small 
+to large ef-
+fect sizes) 
+Note: all ES 
+in expected 
+direction
+[/PAGE 53]
+
+[PAGE 54]
+45 
+CPT II*, 
+TOL DX, 
+WCST-64, 
+TMT-B 
+Note: WMS-III 
+and WISC-IV 
+subtests were 
+combined into 
+a working 
+memory com-
+posite score* 
+Bikic et al. 
+(2018) 
+Child/ 
+Adolescent 
+ACTIVATE + 
+TAU 
+Yes (TAU only 
+group) 
+Yes 
+BRIEF, 
+CANTAB sub-
+tests (SWM, 
+SOC*, IED, 
+and SST) 
+0.30 of a 
+standard de-
+viation 
+(modest  
+effect size) 
+Bir (2019) 
+Child/ 
+Adolescent 
+CWMT 
+No 
+No 
+BRIEF, 
+SST 
+ 
+Chimiklis 
+(2019) 
+Child/ 
+Adolescent 
+ACTIVATE 
+Yes (Non- 
+impaired 
+reading 
+group) 
+Yes 
+BRIEF*, 
+WISC-IV sub-
+tests (Coding, 
+Symbol 
+Search, Digit 
+Span, Letter-
+Number  
+Sequencing), 
+D-KEFS sub-
+test (TMT*), 
+TEC* 
+η p 2 = 0.28 – 
+0.52 (large  
+effect sizes) 
+Dentz et al. 
+(2020) 
+Child/ 
+Adolescent 
+CWMT 
+Yes (Non-
+adaptive 
+CWMT  
+No 
+BRIEF
+[/PAGE 54]
+
+[PAGE 55]
+46 
+control 
+group) 
+Dovis et al. 
+(2015) 
+Child/ 
+Adolescent 
+Braingame 
+Brian (BGB) 
+Yes (Partially-
+active treat-
+ment group 
+and Placebo 
+treatment 
+group) 
+Yes 
+BRIEF, 
+Stop task, 
+Troop, 
+CBTT*, 
+Digit span, 
+TMT, 
+Raven col-
+oured progres-
+sive matrices 
+η p 2 = 0.12  
+(medium ef-
+fect size) 
+Farias et al. 
+(2017) 
+Child/ 
+Adolescent 
+Captain’s Log 
+Computerized 
+Cognitive  
+Training (CCT) 
+Yes  
+(Medicated 
+group) 
+Yes 
+WCST*, 
+ROCF*, 
+d2 test*, 
+WISC-III sub-
+test (Digit 
+Span) 
+Not reported 
+Heishman 
+(2015) 
+Child/ 
+Adolescent 
+CWMT 
+No 
+Yes 
+BRIEF* 
+η p 2 = 0.15 – 
+0.18 (large 
+effect sizes) 
+Horowitz-
+Kraus (2015) 
+Child/ 
+Adolescent 
+Cognifit 
+Yes (ADHD + 
+Reading  
+Disability 
+(RD) group) 
+Yes 
+WAIS-III sub-
+tests (Digit 
+span*,  
+Coding, Sym-
+bol search*), 
+Letters*, 
+Rapid alternat-
+ing stimulus, 
+WCST* 
+Not reported 
+Horowitz-
+Kraus et al. 
+(2019) 
+Child/ 
+Adolescent 
+Reading  
+Acceleration 
+Program (RAP) 
+Yes (RD only 
+group) 
+Yes 
+CTOPP subtest 
+(naming), 
+η2 = 0.086  
+(medium ef-
+fect size)
+[/PAGE 55]
+
+[PAGE 56]
+47 
+D-KEFS sub-
+test (Stroop 
+test*), 
+TEA-Ch sub-
+test (Sky-
+search*) 
+Passarotti et 
+al. (2020) 
+Child/ 
+Adolescent 
+CWMT 
+Yes (Pediatric 
+bipolar  
+disorder 
+(PBD) group) 
+Yes 
+BRIEF, 
+TMT-B*, 
+WISC-III sub-
+test (Digit span 
+forward*), 
+WNV subtest 
+(Spatial span 
+forward*), 
+SST 
+d = 0.58 – 
+0.65 (me-
+dium effect 
+sizes) 
+Stern et al. 
+(2016) 
+Adult 
+AttenFocus 
+Yes (Less- 
+demanding 
+AttenFocus 
+control 
+group) 
+No 
+BRIEF-A, 
+IntegNeuro 
+subtests 
+(Working 
+memory, Sus-
+tained  
+attention,  
+Intrusions,  
+Inhibition,  
+Response  
+variability, 
+Fluency)  
+ 
+van der Oord 
+et al. (2014) 
+Child/ 
+Adolescent 
+BGB 
+Yes (Waitlist 
+control 
+group) 
+Yes 
+BRIEF* 
+η2 = 0.16 – 
+0.39 (large 
+effect 
+sizes)
+[/PAGE 56]
+
+[PAGE 57]
+48 
+Note: 
+Significant 
+effect 
+size(s) 
+listed are 
+those 
+associated 
+with 
+significant 
+effect of intervention on EF. Bolded qualitative effect sizes were provided by study authors. Non-bolded qualitative effect sizes were 
+assigned by reviewer according to Cohen’s standards for d, ηp2, and η2. 
+* Measure associated with significant effect of intervention on EF 
+ 
+ 
+ 
+ 
+ 
+van Dongen-
+Boomsma et 
+al. (2014) 
+Child/ 
+Adolescent 
+CWMT 
+Yes (Placebo 
+non-adaptive 
+CWMT  
+control 
+group) 
+No 
+BRIEF, 
+WISC-III sub-
+test (Digit 
+span), 
+Knox Cubes 
+LDT, 
+Shortened Ra-
+ven Coloured  
+Progressive  
+Matrices, 
+Day-Night 
+Stroop task, 
+Sustained at-
+tention dots 
+task (02K), 
+Shape School
+[/PAGE 57]
+
+[PAGE 58]
+49 
+Table 5.  
+Summary of Hybridized and Miscellaneous Studies 
+Reference 
+Age Group 
+Intervention 
+Control or 
+Comparison 
+Significant 
+Effect of  
+Intervention 
+on EF 
+Outcome 
+Measures 
+Significant 
+Effect 
+Size(s) 
+Anastopoulos 
+& King (2015) 
+Adult 
+ACCESS 
+No 
+Yes 
+BRIEF-A* 
+d = 0.74 – 
+0.88 (large 
+effect sizes) 
+Anastopoulos 
+et al. (2020) 
+Adult 
+ACCESS 
+No 
+Yes 
+BRIEF-A* 
+d = -0.66 – -
+0.53  
+(medium  
+effect sizes) 
+ 
+Anastopoulos 
+et al. (2021) 
+Adult 
+ACCESS 
+Yes (Waitlist  
+control group) 
+Yes 
+BRIEF-A* 
+d = 0.43 – 
+0.56  
+(medium  
+effect sizes) 
+Becker et al. 
+(2022) 
+Child/ 
+Adolescent 
+Behavioral 
+sleep interven-
+tion (TranS-C) 
+No 
+Yes 
+BDEFS-CA* 
+g = 0.69 – 
+0.81 (mod-
+erate-to-
+large effect 
+sizes) 
+Benzing et al. 
+(2018) 
+Child/ 
+Adolescent 
+Acute exer-
+gaming 
+Yes (Sedentary 
+control group) 
+Yes 
+Modified 
+Flanker 
+Task* 
+Modified 
+Color Span 
+Backwards 
+Task 
+ηp2 = 0.094 – 
+0.117  
+(moderate  
+effect sizes)
+[/PAGE 58]
+
+[PAGE 59]
+50 
+Benzing & 
+Schmidt 
+(2019) 
+Child/ 
+Adolescent 
+Exergaming 
+Yes (Waitlist  
+control group) 
+Yes 
+Modified 
+Flanker 
+Task*, 
+Modified Si-
+mon Task*, 
+Modified 
+Color Span 
+Backwards 
+Task 
+d = 0.58 – 
+0.65 (medium 
+effect sizes) 
+Boyer et al. 
+(2015) 
+Child/ 
+Adolescent 
+CBT 
+Yes (SFT 
+group) 
+Yes 
+BRIEF*, 
+Tower Test, 
+DKEFS sub-
+test (TMT), 
+Key Search 
+Test, 
+Zoo Map 
+Test 
+ηp2 = 0.023 – 
+0.031 
+(small effect 
+sizes) 
+Cardoso-
+Moreno et al. 
+(2015) 
+Child/ 
+Adolescent 
+Socio-emo-
+tional inter-
+vention  
+program 
+No 
+Yes 
+Tower of Ha-
+noi*, 
+Zoo Map 
+Test* 
+Not reported 
+Chang et al. 
+(2022) 
+Child/ 
+Adolescent 
+Table tennis 
+training, 
+Exergaming 
+Yes  
+(Non-training 
+group) 
+Yes 
+Stroop Test*, 
+WCST* 
+η2 = 0.141 – 
+0.168 
+ (large effect 
+sizes) 
+Estrada-Plana 
+et al. (2019) 
+Child/ 
+Adolescent 
+Board game-
+based cogni-
+tive training 
+Yes (Waitlist  
+control group) 
+Yes 
+Corsi block 
+span task, 
+WISC-IV 
+subtest (Di-
+rect Digits*), 
+Keep Track 
+Task, 
+ηp2 = 0.27 
+(large effect 
+size)
+[/PAGE 59]
+
+[PAGE 60]
+51 
+Go/NoGo 
+task, 
+TMT 
+Gerber et al. 
+(2012) 
+Child/ 
+Adolescent 
+ADHD Sum-
+mer Camp 
+Training 
+(ASCT) 
+Yes (SPC 
+group) 
+Yes 
+TMT* 
+Not reported 
+Gilboa & 
+Helmer (2020) 
+Child/ 
+Adolescent 
+Equine-as-
+sisted occupa-
+tional therapy  
+(STABLE-OT) 
+No 
+Yes 
+BRIEF* 
+d = 0.32 – 
+0.49 (small 
+to  
+medium  
+effect sizes) 
+Hahn- 
+Markowitz et 
+al. (2017) 
+Child/ 
+Adolescent 
+Cognitive- 
+Functional  
+(Cog-Fun)  
+occupational 
+therapy 
+Yes (Waitlist  
+control group) 
+Yes 
+BRIEF* 
+ηp2 = 0.046 – 
+0.193 
+(minimum 
+practically 
+significant 
+to moderate  
+effect sizes) 
+Hahn- 
+Markowitz et 
+al. (2020) 
+Child/ 
+Adolescent 
+Cog-Fun 
+Yes (Waitlist 
+control group) 
+Yes 
+BRIEF* 
+ηp2 = 0.08 – 
+0.11  
+(moderate  
+effect sizes) 
+Hannesdottir 
+et al. (2017) 
+Child/ 
+Adolescent 
+OutSMARTers 
+Program 
+Yes (Waitlist  
+control group 
+and parent  
+training group) 
+No 
+WISC-IV  
+subtests 
+(Coding, Let-
+ter-number 
+sequencing, 
+Arithmetic), 
+Lumosity  
+assessment 
+tasks (Stop 
+signal
+[/PAGE 60]
+
+[PAGE 61]
+52 
+response, 
+Letter 
+memory) 
+In de Braek et 
+al. (2012) 
+Adult 
+Goal  
+management 
+training 
+(GMT) 
+Yes (Psy-
+choeducation 
+only group) 
+No 
+CFQ, 
+BADS sub-
+test (Zoo 
+Map) 
+ 
+Kim et al. 
+(2020) 
+Child/ 
+Adolescent 
+Cog-Fun 
+No 
+Yes 
+BRIEF*, 
+Children’s 
+Color Trails 
+Test*, 
+Stroop test* 
+Not reported 
+Korpa et al. 
+(2020) 
+Child/ 
+Adolescent 
+EF Train 
+Yes  
+(Non-training 
+group) 
+Yes 
+Digit Span*, 
+Tower Task*, 
+TSVA*, 
+TSAA*, 
+Raven’s Col-
+ored Pro-
+gressive Ma-
+trices 
+ηp2 = 0.06 – 
+0.43 (medium 
+to large effect 
+sizes) 
+Lan et al. 
+(2020) 
+Child/ 
+Adolescent 
+Group execu-
+tive function 
+training 
+(GEFT), 
+Social skills 
+training (SST) 
+Yes (Waitlist  
+control group) 
+Yes 
+Conners’ 
+CPT-II*, 
+Operational 
+Span Test*, 
+WCST 
+η2 = 0.13 – 
+0.219  
+(moderate 
+to large  
+effect sizes) 
+Levanon-Erez 
+et al. (2019) 
+Child/ 
+Adolescent 
+Cog-Fun 
+No 
+Yes 
+BRIEF* 
+d = 0.76 – 
+1.13 (large 
+effect sizes) 
+Liao et al. 
+(2022) 
+Child/ 
+Adolescent 
+Will Well Neu-
+rofeedback 
+(WWNF) + 
+Yes (Waitlist  
+control group) 
+Yes 
+Tower of 
+London, 
+WCST, 
+η2 = 0.079 – 
+0.087 
+(medium  
+effect sizes)
+[/PAGE 61]
+
+[PAGE 62]
+53 
+cognitive train-
+ing 
+CNAT sub-
+tests (Focus, 
+Search*, In-
+hibition*, 
+Distract), 
+Daily EF 
+Question-
+naire 
+Note: omis-
+sion errors 
+from  
+Inhibition 
+and Distract 
+subtests 
+form  
+dysexecutive 
+function in-
+dex* 
+Maeir et al. 
+(2014) 
+Child/ 
+Adolescent 
+Cog-Fun 
+Yes (Waitlist  
+control group) 
+Yes 
+BRIEF* 
+g = 0.56 – 
+0.69 (small 
+to  
+medium  
+effect sizes) 
+McGough et al. 
+(2015) 
+Child/ 
+Adolescent 
+Trigeminal 
+nerve stimula-
+tion (TNS) 
+No 
+Yes 
+BRIEF* 
+Not reported 
+Menezes et al. 
+(2015) 
+Child/ 
+Adolescent 
+Intervention 
+Program for 
+Self-regulation 
+and Executive 
+Functions 
+(PIAFEx) 
+Yes (Control 
+group) 
+Yes 
+CHEXI, 
+Computer-
+ized Stroop 
+Test*, 
+CAT, 
+TMT, 
+WCST, 
+Not reported
+[/PAGE 62]
+
+[PAGE 63]
+54 
+AWM*, 
+VWM, 
+FAS and Ani-
+mals Verbal 
+Fluency Test 
+Miranda et al. 
+(2013) 
+Child/ 
+Adolescent 
+Psychosocial 
+intervention 
+Yes  
+(no-treatment 
+control group) 
+Yes 
+CPT*, 
+Stroop test*, 
+WMS*, 
+WISC-R sub-
+test (Inverse 
+Digits*), 
+TSRT*, 
+Tower of 
+London*, 
+WCST 
+η2 = 0.125 – 
+0.396  
+(medium to 
+large effect 
+sizes)  
+Nejati et al. 
+(2020) 
+Child/ 
+Adolescent 
+tDCS 
+Yes (Sham  
+condition) 
+Yes 
+Stroop task*  
+(experiment 
+1 only), 
+Go/No-Go 
+task*, 
+N-Back test*, 
+WCST* 
+ηp2 = 0.33 – 
+0.62; 
+ηp2 = 0.33 – 
+0.64 
+(large effect 
+sizes) 
+Nejati (2021a) 
+Child/ 
+Adolescent 
+Program for  
+attention  
+rehabilitation 
+and  
+strengthening 
+(PARS) 
+Yes (Control 
+group) 
+Yes 
+PART*, 
+Color-word 
+Stroop test*, 
+TMT, 
+Go/No-Go 
+task*, 
+1-back task* 
+ηp2 = 0.097 – 
+0.424  
+(medium to 
+large effect 
+sizes) 
+Nejati (2021b) 
+Child/ 
+Adolescent 
+Balance-based 
+Attention  
+Rehabilitation 
+of Attention  
+Yes (Aerobic  
+exercise group) 
+Yes 
+WCST*, 
+SST*, 
+1-back test* 
+ηp2 = 0.108 – 
+0.431
+[/PAGE 63]
+
+[PAGE 64]
+55 
+Networks 
+(BARAN) 
+(medium to 
+large effect 
+sizes) 
+Pan et al. 
+(2022) 
+Adult 
+CBT +  
+medication 
+Yes (Medica-
+tion only 
+group) 
+No 
+BRIEF, 
+TMT, 
+Stroop Color 
+Test 
+ 
+Qian et al. 
+(2017) 
+Child/ 
+Adolescent 
+Ecological  
+executive skills 
+training pro-
+gram (EEST) 
+Yes (Waitlist  
+control group, 
+non-ADHD 
+group) 
+Yes 
+BRIEF*, 
+Stroop test, 
+ROCF, 
+TMT 
+Not reported 
+Qian et al. 
+(2021) 
+Child/ 
+Adolescent 
+EEST 
+Yes (Waitlist  
+control group) 
+Yes 
+BRIEF, 
+CANTAB 
+subtests 
+(CGT*, IED, 
+SOC*, SST, 
+SWM) 
+η2 = 0.07 – 
+0.1 (medium 
+effect sizes) 
+Rosenberg et 
+al. (2015) 
+Child/ 
+Adolescent 
+Cog-Fun 
+No 
+Yes 
+BRIEF-P* 
+Not reported 
+Salomone et al. 
+(2015) 
+Adult 
+Self-Alert 
+Training (SAT) 
+Yes (Placebo 
+group) 
+Yes 
+Hotel task* 
+η2 = 0.07 
+(medium  
+effect size) 
+Shema- 
+Shiratzky et al. 
+(2019) 
+Child/ 
+Adolescent 
+Combined  
+virtual reality 
++ treadmill  
+training 
+No 
+Yes 
+CTT*, 
+NeuroTrax  
+battery index 
+score* 
+(Stroop test, 
+Go-NoGo, 
+Verbal 
+memory 
+task, Non-
+verbal 
+memory 
+d = 0.63 – 
+1.46  
+(medium to 
+large effect 
+sizes)
+[/PAGE 64]
+
+[PAGE 65]
+56 
+task, Catch 
+game) 
+Shuai et al. 
+(2021) 
+Child/ 
+Adolescent 
+Executive  
+Function 
+Training for 
+Preschool 
+(EFT-P) 
+Yes (Waitlist  
+control) 
+Yes 
+BRIEF-P, 
+NEPSY-II 
+subtests 
+(Memory for 
+Designs, 
+Narrative 
+Memory, 
+Statue, Affect 
+Recognition, 
+Theory of 
+Mind, Word  
+Generation, 
+Comprehen-
+sion of In-
+structions, 
+Block Con-
+struction, 
+Visuomotor 
+Precision*) 
+ηp2 = 0.05 
+(small effect 
+size) 
+Solanto et al. 
+(2018) 
+Adult 
+CBT 
+Yes (Support 
+group) 
+Yes 
+BRIEF-A, 
+Brown ADD 
+Scales*, 
+ON-TOP* 
+d’ = 0.33 – 
+0.40 (small 
+effect sizes) 
+Solanto & 
+Scheres (2021) 
+Adult 
+Cognitive- 
+Behavioral  
+Intervention 
+No 
+Yes 
+BDEFS*, 
+LASSI* 
+ηp2 = 0.635 – 
+0.722  
+(large effect 
+sizes) 
+Steeger et al. 
+(2016) 
+Child/ 
+Adolescent 
+CWMT +  
+Behavioral  
+Parent Train-
+ing (BPT) 
+Yes (Treat-
+ment CWMT + 
+Control BPT 
+group,  
+Yes 
+BRIEF* 
+ηp2 = 0.06 – 
+0.08  
+(medium ef-
+fect sizes)
+[/PAGE 65]
+
+[PAGE 66]
+57 
+Control CWMT 
++ Treatment 
+BPT group, 
+Control CWMT 
++ Control BPT 
+group) 
+Steiner et al. 
+(2014) 
+Child/ 
+Adolescent 
+Neurofeedback 
+or Cognitive 
+training (CT) 
+Yes (Control 
+group) 
+Yes 
+BRIEF* 
+d = -0.33 – -
+0.23 (small 
+effect sizes) 
+Tamm et al. 
+(2013) 
+Child/ 
+Adolescent 
+Pay Attention! 
+Yes (Waitlist  
+control group) 
+Yes 
+BRIEF*, 
+WISC-IV 
+subtests 
+(Digit span, 
+Letter-num-
+ber sequenc-
+ing,  
+Matrix  
+reasoning), 
+WJ-III sub-
+test (Under-
+standing di-
+rections), 
+D-KEFS sub-
+tests (Tower 
+test*, Color-
+word  
+interference) 
+d = 0.53 – 
+1.16  
+(medium to 
+large effect 
+sizes) 
+Tamm et al. 
+(2014) 
+Child/ 
+Adolescent 
+Metacognitive 
+Executive  
+Function  
+Training 
+No 
+Yes 
+BRIEF*, 
+NEPSY sub-
+test (Visual  
+Attention*), 
+CELF-IV 
+subtest 
+d = 0.39 – 
+0.64 (small 
+to moderate  
+effect sizes)
+[/PAGE 66]
+
+[PAGE 67]
+58 
+(Concepts 
+and Follow-
+ing  
+Directions*), 
+Shape 
+School, 
+Wechsler 
+subtests 
+(Digit Span*, 
+Matrix Rea-
+soning) 
+Tamm &  
+Nakonezny 
+(2015) 
+Child/ 
+Adolescent 
+Metacognitive 
+Executive  
+Function  
+Training 
+Yes (Waitlist  
+control group) 
+Yes 
+BRIEF*, 
+NEPSY sub-
+test (Visual 
+Attention), 
+CELF-IV 
+subtest (Con-
+cepts and 
+Following 
+Directions), 
+WISC sub-
+test (Matrix 
+Reasoning) 
+g = 0.97 – 
+1.01 (large 
+effect sizes) 
+Note: Significant effect size(s) listed are those associated with significant effect of intervention on EF. Bolded qualitative effect sizes 
+were provided by study authors. Non-bolded qualitative effect sizes were assigned by reviewer according to Cohen’s standards for d, 
+ηp2, and η2. 
+* Measure associated with significant effect of intervention on EF
+[/PAGE 67]
+
+[PAGE 68]
+59 
+Table 6.  
+Summary of Child/Adolescent Studies 
+Reference 
+Intervention  
+Category 
+Intervention 
+M(SD) Age 
+Significant Effect of 
+Intervention on EF 
+Azami et al. (2016) 
+Computer-Based 
+Training 
+CACR 
+Not reported 
+Range: 7 – 12 years 
+Yes 
+Barudin-Carreiro 
+(2020) 
+Exercise Program(s) 
+Walking or standing 
+9.51 (1.42) years 
+No 
+Becker et al. (2022) 
+Hybridized/ 
+Miscellaneous 
+TranS-C 
+14.93 (1.39) years 
+Yes 
+Benzing et al. (2018) 
+Hybridized/ 
+Miscellaneous 
+Acute Exergaming 
+10.48 (1.38) years 
+Yes 
+Benzing & Schmidt 
+(2019) 
+Hybridized/ 
+Miscellaneous 
+Exergaming 
+Experimental group: 
+10.46 (1.30) years 
+Control group:  
+10.39 (1.44) years 
+Yes 
+Bigorra et al. (2016) 
+Computer-Based 
+Training 
+CWMT 
+Experimental group: 
+8.79 (1.75) years 
+Control group: 
+9.04 (1.68) years 
+Yes 
+Bikic et al. (2018) 
+Computer-Based 
+Training 
+ACTIVATE + TAU 
+9.95 (1.7) years 
+Yes 
+Bir (2019) 
+Computer-Based 
+Training 
+CWMT 
+Not reported 
+Range: 9 – 17 years 
+No 
+Bögels et al. (2021) 
+Mindfulness Training MYmind 
+11.4 (2.27) years 
+Yes 
+Boyer et al. (2015) 
+Hybridized/ 
+Miscellaneous 
+CBT 
+PML group: 
+14.4 (1.2) years 
+SFT group: 
+14.4 (1.3) years 
+Yes 
+Carboni (2012) 
+Mindfulness Training Individual  
+mindfulness training 
+Not reported 
+Yes
+[/PAGE 68]
+
+[PAGE 69]
+60 
+Range: 8 years 3 
+months – 8 years 9 
+months 
+Cardoso-Moreno et 
+al. (2015) 
+Hybridized/ 
+Miscellaneous 
+Socioemotional  
+intervention program 
+Not reported 
+Range: 8 – 12 years 
+Yes 
+Chang et al. (2012) 
+Exercise Program(s) 
+Acute aerobic  
+exercise 
+10.43 years 
+Yes 
+Chang et al. (2022) 
+Hybridized/ 
+Miscellaneous 
+Table tennis training, 
+Exergaming 
+Table tennis group: 
+8.31 (1.30) years 
+Exergame group: 
+8.38 (1.20) years 
+Control group: 
+8.38 (1.31) years 
+Yes 
+Chimiklis (2019) 
+Computer-Based 
+Training 
+ACTIVATE 
+8.4 (1.1) years 
+Yes 
+Dentz et al. (2020) 
+Computer-Based 
+Training 
+CWMT 
+CWMT group: 
+10.76 (1.98) years 
+Control group: 
+9.42 (2.06) years 
+No 
+Dovis et al. (2015) 
+Computer-Based 
+Training 
+BGB 
+Full-active group: 
+10.6 (1.4) years 
+Partial-active group: 
+10.3 (1.3) years 
+Placebo group: 
+10.5 (1.3) years 
+Yes 
+Durgut et al. (2020) 
+Exercise Program(s) 
+TT + WBVT 
+TT + WBVT group: 
+7.93 (1.22) years 
+TT group: 
+8.33 (1.17) years 
+Yes 
+Estrada-Plana et al. 
+(2019) 
+Hybridized/ 
+Miscellaneous 
+Board game-based 
+cognitive training 
+Not reported 
+Range: 8 – 12 years 
+Yes 
+Farias et al. (2017) 
+Computer-Based 
+Training 
+Captain’s Log 
+Medicated group: 
+9.4 (1.5) years 
+Yes
+[/PAGE 69]
+
+[PAGE 70]
+61 
+Unmedicated group: 
+11.1 (1.5) years 
+Gawrilow et al. 
+(2016) 
+Exercise Program(s) 
+Acute trampoline 
+jumping 
+10.47 (1.49) years 
+Yes 
+Gerber et al. (2012) 
+Hybridized/ 
+Miscellaneous 
+ASCT 
+ASCT group: 
+12.3 (2.3) years 
+SPC group: 
+10.3 (3.5) years 
+Yes 
+Gilboa & Helmer 
+(2020) 
+Hybridized/ 
+Miscellaneous 
+STABLE-OT 
+9.44 (1.75) years 
+Yes 
+Hahn-Markowitz et 
+al. (2017) 
+Hybridized/ 
+Miscellaneous 
+Cog-Fun 
+Experimental group: 
+8.4 (0.9) years 
+Control group: 
+8.6 (0.8) years 
+Yes 
+Hahn-Markowitz et 
+al. (2020) 
+Hybridized/ 
+Miscellaneous 
+Cog-Fun 
+Experimental group: 
+8.4 (0.9) years 
+Control group: 
+8.6 (0.8) years 
+Yes 
+Hannesdottir et al. 
+(2017) 
+Hybridized/ 
+Miscellaneous 
+OutSMARTers  
+Program 
+9.2 (0.62) years 
+No 
+Heishman (2015) 
+Computer-Based 
+Training 
+CWMT 
+Not reported 
+Range: 11 – 18 years 
+Yes 
+Horowitz-Kraus 
+(2015) 
+Computer-Based 
+Training 
+CogniFit 
+ADHD only group: 
+12.92 (0.65) years 
+ADHD + RD group: 
+13.19 (0.75) years 
+Yes 
+Horowitz-Kraus et al. 
+(2019) 
+Computer-Based 
+Training 
+RAP 
+ADHD + RD group: 
+9.69 (1.18) years 
+Yes 
+Huguet et al. (2017) 
+Mindfulness Training Mindfulness training 
+9.2 (1.30) years 
+Yes 
+Kim et al. (2020) 
+Hybridized/ 
+Miscellaneous 
+Cog-Fun 
+Not reported 
+Range: 9 years 4 
+months – 10 years 3 
+months 
+Yes
+[/PAGE 70]
+
+[PAGE 71]
+62 
+Korpa et al. (2020) 
+Hybridized/ 
+Miscellaneous 
+EF Train 
+Experimental group: 
+5.72 (1.06) years 
+Control group: 
+5.65 (1.07) 
+Yes 
+Lan et al. (2020) 
+Hybridized/ 
+Miscellaneous 
+GEFT, SST 
+10.54 (1.16) years 
+Yes 
+Levanon-Erez et al. 
+(2019) 
+Hybridized/ 
+Miscellaneous 
+Cog-Fun 
+14.22 (1.45) years 
+Yes 
+Liang et al. (2022) 
+Exercise Program(s) 
+Aerobic and  
+neurocognitive  
+exercise 
+Experimental group: 
+8.37 (1.42) years 
+Control group: 
+8.29 (1.27) years 
+Yes 
+Liao et al. (2022) 
+Hybridized/ 
+Miscellaneous 
+WWNF + cognitive 
+training 
+Experimental group: 
+9.82 (1.32) years 
+Control group: 
+10.07 (2.12) years 
+Yes 
+Maeir et al. (2014) 
+Hybridized/ 
+Miscellaneous 
+Cog-Fun 
+5.97 (0.66) years 
+Yes 
+McGough et al. 
+(2015) 
+Hybridized/ 
+Miscellaneous 
+TNS 
+10.3 (2.1) years 
+Yes 
+Memarmoghaddam 
+et al. (2016) 
+Exercise Program(s) 
+Selected exercise  
+program 
+Experimental group: 
+8.31 (1.29) years 
+Control group: 
+8.29 (1.31) years 
+Yes 
+Menezes et al. (2015) 
+Hybridized/ 
+Miscellaneous 
+PIAFEx 
+Not reported 
+Range: 7 – 13 years 
+Yes 
+Miranda et al. (2013) 
+Hybridized/ 
+Miscellaneous 
+Psychosocial  
+intervention 
+Not reported 
+Range: 7 – 10 years 
+Yes 
+Nejati et al. (2020) 
+Hybridized/ 
+Miscellaneous 
+tDCS 
+Experiment 1 group: 
+10 (2.3) years 
+Experiment 2 group: 
+9 (1.8) years 
+Yes 
+Nejati (2021a) 
+Hybridized/ 
+PARS 
+10.74 (1.81) years 
+Yes
+[/PAGE 71]
+
+[PAGE 72]
+63 
+Miscellaneous 
+Nejati (2021b) 
+Hybridized/ 
+Miscellaneous 
+BARAN 
+Experimental group: 
+9.73 (1.94) years 
+Control group: 
+9.21 (1.25) years 
+Yes 
+Pan et al. (2016) 
+Exercise Program(s) 
+Table tennis training 
+Experimental group: 
+8.93 (1.49) years 
+Control group: 
+8.87 (1.56) years 
+Yes 
+Pan et al. (2019) 
+Exercise Program(s) 
+Table tennis training 
+ADHD training 
+group: 
+9.08 (1.43) years 
+ADHD non-training 
+group: 
+8.90 (1.66) years 
+Yes 
+Passarotti et al. 
+(2020) 
+Computer-Based 
+Training 
+CWMT 
+ADHD group: 
+12.18 (1.87) years 
+Yes 
+Piepmeier et al. 
+(2015) 
+Exercise Program(s) 
+Acute aerobic exer-
+cise 
+10.7 (2.27) years 
+Yes 
+Qian et al. (2017) 
+Hybridized/ 
+Miscellaneous 
+EEST 
+Experimental group: 
+8.3 (1.3) years 
+Control group: 
+7.8 (1.2) years 
+Yes 
+Qian et al. (2021) 
+Hybridized/ 
+Miscellaneous 
+EEST 
+Experimental group: 
+9.13 (0.83) years 
+Control group: 
+9.36 (1.22) years 
+Yes 
+Rosenberg et al. 
+(2015) 
+Hybridized/ 
+Miscellaneous 
+Cog-Fun 
+5.6 (0.4) years 
+Yes 
+Santonastaso et al. 
+(2020) 
+Mindfulness Training MOM 
+8.9 (1.2) years 
+Yes 
+Shema-Shiratzky et 
+al. (2019) 
+Hybridized/ 
+Miscellaneous 
+VR + treadmill  
+training 
+9.3 (1.2) years 
+Yes
+[/PAGE 72]
+
+[PAGE 73]
+64 
+Shuai et al. (2021) 
+Hybridized/ 
+Miscellaneous 
+EFT-P 
+Experimental group: 
+61.78 (6.67) months 
+Control group: 
+59.09 (6.62) months 
+Yes 
+Steeger et al. (2016) 
+Hybridized/ 
+Miscellaneous 
+CWMT + BPT 
+12.5 (1.2) years 
+ 
+Yes 
+Steiner et al. (2014) 
+Hybridized/ 
+Miscellaneous 
+NF or CT 
+NF group: 
+8.4 (1.1) years 
+CT group: 
+8.9 (1.0) years 
+Control group: 
+8.4 (1.1) years 
+Yes 
+Tamm et al. (2013) 
+Hybridized/ 
+Miscellaneous 
+Pay Attention! 
+9.3 (1.4) years 
+Yes 
+Tamm et al. (2014) 
+Hybridized/ 
+Miscellaneous 
+MEFT 
+5.2 (1.2) years 
+Yes 
+Tamm & Nakonezny 
+(2015) 
+Hybridized/ 
+Miscellaneous 
+MEFT 
+5.0 (1.3) years 
+Yes 
+Valero et al. (2022) 
+Mindfulness Training MYmind 
+10.6 (1.69) years 
+Yes 
+van der Oord et al. 
+(2014) 
+Computer-Based 
+Training 
+BGB 
+9.79 (1.04) years 
+Yes 
+van Dongen-
+Boomsma et al. 
+(2014) 
+Computer-Based 
+Training 
+CWMT 
+Experimental group: 
+6.5 (0.6) years 
+Control group: 
+6.6 (0.7) years 
+No 
+Zhang et al. (2016) 
+Mindfulness Training MYmind 
+9.5 (1.4) years 
+No 
+Ziereis & Jansen 
+(2015) 
+Exercise Program(s) 
+Ball handling,  
+balance, dexterity 
+training, or sports 
+training 
+9.45 (1.43) years 
+Yes 
+Note: Mean and standard deviation for age of all participants is reported if available; when overall mean and standard deviation were 
+not provided, group means and standard deviations are reported. Age range is reported if no means are provided.
+[/PAGE 73]
+
+[PAGE 74]
+65 
+Table 7.  
+Summary of Adult Studies 
+Reference 
+Intervention  
+Category 
+Intervention 
+M (SD) Age 
+Significant Effect 
+of Intervention 
+on EF 
+Anastapoulos & King 
+(2015) 
+Hybridized/ 
+Miscellaneous 
+ACCESS 
+20.3 years 
+Yes 
+Anastopoulos et al. 
+(2020) 
+Hybridized/ 
+Miscellaneous 
+ACCESS 
+20.2 years 
+Yes 
+Anastopoulos et al. 
+(2021) 
+Hybridized/ 
+Miscellaneous 
+ACCESS 
+19.7 years 
+Yes 
+Gapin et al. (2015) 
+Exercise Program(s) 
+Acute aerobic  
+exercise 
+21.75 (1.99) years 
+Yes 
+Guillaume et al. 
+(2021) 
+Mindfulness Train-
+ing 
+TTA 
+31.33 (4.53) years 
+Yes 
+Hepark et al. (2019) 
+Mindfulness Train-
+ing 
+MBCT 
+Experimental 
+group: 36.5 (10) 
+years 
+Control group: 35.2 
+(9) years 
+Yes 
+In de Braek et al. 
+(2012) 
+Hybridized/ 
+Miscellaneous 
+GMT +  
+psychoeducation 
+Experimental 
+group: 35.5 years 
+Control group: 37.9 
+years 
+No 
+Janssen et al. (2018) 
+Mindfulness Train-
+ing 
+MBCT 
+Experimental 
+group: 39.7 (11.1) 
+years 
+Control group: 39.0 
+(10.1) years 
+Yes 
+Janssen et al. (2020) 
+Mindfulness Train-
+ing 
+MBCT 
+38 (12.4) years 
+Yes
+[/PAGE 74]
+
+[PAGE 75]
+66 
+LaCount et al. (2022) Exercise Program(s) 
+Acute HIIT 
+20.8(1.7) years 
+Yes 
+Mehren et al. (2019) 
+Exercise Program(s) 
+Acute aerobic  
+exercise 
+ADHD group: 29.9 
+(9.5) years 
+Yes 
+Mitchell et al. (2017) 
+Mindfulness Train-
+ing 
+Mindfulness  
+meditation train-
+ing 
+Experimental 
+group: 40.55 (6.83) 
+years 
+Control group: 
+36.22 (6.92) years 
+Yes 
+Pan et al. (2022) 
+Hybridized/ 
+Miscellaneous 
+Group CBT 
+Experimental 
+group: 26.84 (5.65) 
+years 
+Control group: 
+24.78 (5.59) years 
+No 
+Salomone et al. 
+(2015) 
+Hybridized/ 
+Miscellaneous 
+SAT 
+Experimental 
+group: 32.7 (12.4) 
+years 
+Control group: 31.6 
+(11.3) years 
+Yes 
+Solanto et al. (2018) 
+Hybridized/ 
+Miscellaneous 
+CBT 
+Younger group: 
+35.30 (7.60) years 
+Older group: 56.15 
+(4.31) years 
+Yes 
+Solanto & Scheres 
+(2021) 
+Hybridized/ 
+Miscellaneous 
+Cognitive-behav-
+ioral intervention 
+ADHD group: 23.61 
+(2.75) years 
+Yes 
+Stern et al. (2016) 
+Computer-Based  
+Training 
+AttenFocus 
+37.31 (10.11) years 
+No 
+Note: Mean and standard deviation for age of all participants is reported if available; when overall mean and standard deviation were 
+not provided, group means and standard deviations are reported.
+[/PAGE 75]
+
+[PAGE 76]
+67 
+Table 8.  
+Abbreviations Used in Tables and Corresponding Measure Names 
+Abbreviation 
+Measure Name 
+ANT 
+Attention Network Task 
+AWM 
+Auditory Working Memory Test 
+AX-CPT 
+AX – Continuous Performance Test 
+BADS 
+Behavioral Assessment of Dysexecutive Syn-
+drome 
+BDEFS (DEFS) 
+Barkley Deficits in Executive Functioning 
+Scale 
+BDEFS-CA 
+Barkley Deficits in Executive Functioning 
+Scale – Children and Adolescents 
+BRIEF 
+Behavior Rating Inventory of Executive Func-
+tions 
+BRIEF-A 
+Behavior Rating Inventory of Executive Func-
+tion – Adult version  
+BRIEF-P 
+Behavior Rating Inventory of Executive Func-
+tion – Preschool version 
+CANTAB 
+Cambridge Neuropsychological Test Auto-
+mated Battery 
+CAT 
+Cancellation Attention Test 
+CBTT 
+Corsi Block Tapping Task 
+CELF-IV 
+Clinical Evaluation of Language Fundamen-
+tals – Fourth Edition 
+CFQ 
+Cognitive Failures Questionnaire 
+CGT 
+Cambridge Gambling Task 
+CHEXI 
+Childhood Executive Functioning Inventory 
+CNAT 
+Comprehensive Nonverbal Attention Test 
+CPT 
+Continuous Performance Test 
+CPT-II 
+Conners’ Continuous Performance Test – II  
+CPT-3 
+Conners’ Continuous Performance Test – 3
+[/PAGE 76]
+
+[PAGE 77]
+68 
+CTOPP 
+Comprehensive Test of Phonological Pro-
+cessing 
+CTT 
+Color Trails Test 
+D-KEFS (DKEFS) 
+Delis-Kaplan Executive Function System 
+HAWIK-IV 
+Hamburg Wechsler Intelligenztest für Kinder 
+– IV  
+IED 
+Intra-Extra Dimensional Set Shift 
+LASSI 
+Learning and Study Skills Inventory 
+NEPSY 
+ 
+NEPSY-II 
+NEPSY – Second Edition 
+ON-TOP 
+On Time Management Organization and 
+Planning questionnaire 
+PART 
+Persian Attention Registration Task 
+ROCF 
+Rey-Osterrieth Complex Figure test 
+SCWT 
+Stroop Color and Word Test 
+SOC 
+Stockings of Cambridge 
+SST 
+Stop Signal Task 
+SWM 
+Spatial Working Memory 
+TEA-Ch 
+Test of Everyday Attention for Children 
+TEC 
+Tasks of Executive Control 
+TMT 
+Trail-Making Test 
+TMT-B 
+Trail-Making Test Part B 
+TOL 
+Tower of London 
+TOL DX 
+Tower of London DX 
+TSAA 
+Test of Selective Auditory Attention 
+TSRT 
+Temporal Spatial Recall Task 
+TSVA 
+Test of Selective Visual Attention 
+VWM 
+Verbal Working Memory Test 
+WAIS-III 
+Wechsler Adult Intelligence Scale – Third 
+Edition 
+WAIS-IV 
+Wechsler Adult Intelligence Scale – Fourth 
+Edition 
+WCST 
+Wisconsin Card Sorting Test
+[/PAGE 77]
+
+[PAGE 78]
+69 
+WCST-64 
+Wisconsin Card Sorting Test – 64  
+WISC 
+Wechsler Intelligence Scale for Children 
+WISC-III 
+Wechsler Intelligence Scale for Children – 
+Third Edition 
+WISC-IV 
+Wechsler Intelligence Scale for Children – 
+Fourth Edition 
+WISC-R 
+Wechsler Intelligence Scale for Children – 
+Revised  
+WJ-III 
+Woodcock Johnson Tests of Achievement 
+WMS 
+Working Memory Sentences 
+WMS-III 
+Wechsler Memory Scale – Third Edition 
+WNV 
+Wechsler Nonverbal Scale of Ability
+[/PAGE 78]
+
+[PAGE 79]
+70 
+ 
+BIBLIOGRAPHY 
+Adler, L. A., Faraone, S. V., Spencer, T. J., Berglund, P., Alperin, S., & Kessler, R. C. 
+(2017). The structure of adult ADHD. International Journal of Methods in 
+Psychiatric Research, 26(1). https://doi.org/10.1002/MPR.1555 
+American Psychiatric Association. (2013). Diagnostic and Statistical Manual of 
+Mental Disorders Fifth Edition.  
+https://doi.org/https://doi.org/10.1176/appi.books.9780890425596 
+American Psychological Association. (n.d.-a). Adolescence. In APA Dictionary of 
+Psychology. Retrieved November 21, 2022, from 
+https://dictionary.apa.org/adolescence 
+American Psychological Association. (n.d.-b). Adulthood. In APA Dictionary of 
+Psychology. Retrieved February 7, 2023, from 
+https://dictionary.apa.org/adulthood 
+American Psychological Association. (n.d.-c). Childhood. In APA Dictionary of 
+Psychology. Retrieved November 21, 2022, from 
+https://dictionary.apa.org/childhood 
+American Psychological Association. (n.d.-d). Preadolescence. In APA Dictionary of 
+Psychology. Retrieved February 7, 2023, from 
+https://dictionary.apa.org/preadolescence 
+American Psychological Association. (n.d.-e). Socioeconomic status (SES). In 
+Dictionary of Psychology. Retrieved January 20, 2023, from 
+https://dictionary.apa.org/socioeconomic-status 
+Anastopoulos, A. D., & King, K. A. (2015). A Cognitive-Behavior Therapy and 
+Mentoring Program for College Students With ADHD. Cognitive and Behavioral 
+Practice, 22(2), 141–151. https://doi.org/10.1016/J.CBPRA.2014.01.002 
+Anastopoulos, A. D., King, K. A., Besecker, L. H., O’Rourke, S. R., Bray, A. C., &
+[/PAGE 79]
+
+[PAGE 80]
+71 
+ 
+Supple, A. J. (2020). Cognitive-Behavioral Therapy for College Students With 
+ADHD: Temporal Stability of Improvements in Functioning Following Active 
+Treatment. Journal of Attention Disorders, 24(6), 863–874. 
+https://doi.org/10.1177/1087054717749932 
+Anastopoulos, A. D., Langberg, J. M., Eddy, L. D., Silvia, P. J., & Labban, J. D. (2021). 
+A randomized controlled trial examining CBT for college students with ADHD. 
+Journal of Consulting and Clinical Psychology, 89(1), 21–33. 
+https://doi.org/10.1037/CCP0000553 
+Arnett, J. J. (2014). Emerging Adulthood: The Winding Road from the Late Teens 
+Through the Twenties. Oxford Academic. 
+https://doi.org/10.1093/ACPROF:OSO/9780199929382.001.0001 
+Au, J., Gibson, B. C., Bunarjo, K., Buschkuehl, M., & Jaeggi, S. M. (2020). Quantifying 
+the Difference between Active and Passive Control Groups in Cognitive 
+Interventions Using two Meta-Analytical Approaches. Journal of Cognitive 
+Enhancement : Towards the Integration of Theory and Practice, 4(2), 192. 
+https://doi.org/10.1007/S41465-020-00164-6 
+Azami, S., Moghadas, A., Sohrabi-Esmrood, F., Nazifi, M., Mirmohamad, M., 
+Hemmati, F., Ahmadi, A., Hamzeh-poor, P., Khari, S., & Lakes, K. (2016). A pilot 
+randomized controlled trial comparing computer-assisted cognitive 
+rehabilitation, stimulant medication, and an active control in the treatment of 
+ADHD. Child and Adolescent Mental Health, 21(4), 217–224. 
+https://doi.org/10.1111/CAMH.12157 
+Bahçıvan Saydam, R., Belgin Ayvaşik, H., & Alyanak, B. (2015). Executive Functioning 
+in Subtypes of Attention Deficit Hyperactivity Disorder. Nöro Psikiyatri Arşivi, 
+52(4), 386. https://doi.org/10.5152/NPA.2015.8712 
+Bailey, C. E. (2007). Cognitive accuracy and intelligent executive function in the brain
+[/PAGE 80]
+
+[PAGE 81]
+72 
+ 
+and in business. Annals of the New York Academy of Sciences, 1118, 122–141. 
+https://doi.org/10.1196/annals.1412.011 
+Barkley, R. A., Murphy, K. R., & Fischer, M. (2008). ADHD in adults: What the 
+science says. Guilford Press. 
+Barudin-Carreiro, A. M. (2020). Effects of Walking and Standing on Executive 
+Function in Children with Attention Deficit/Hyperactivity Disorder [Doctoral 
+dissertation, University of Massachusetts Boston]. ProQuest Dissertations 
+Publishing. 
+Becker, S. P., Duraccio, K. M., Sidol, C. A., Fershtman, C. E. M., Byars, K. C., & 
+Harvey, A. G. (2022). Impact of a Behavioral Sleep Intervention in Adolescents 
+With ADHD: Feasibility, Acceptability, and Preliminary Effectiveness From a 
+Pilot Open Trial. Journal of Attention Disorders, 26(7), 1051–1066. 
+https://doi.org/10.1177/10870547211056965 
+Benzing, V., Chang, Y. K., & Schmidt, M. (2018). Acute Physical Activity Enhances 
+Executive Functions in Children with ADHD. Scientific Reports, 8(1). 
+https://doi.org/10.1038/S41598-018-30067-8 
+Benzing, V., & Schmidt, M. (2019). The effect of exergaming on executive functions in 
+children with ADHD: A randomized clinical trial. Scandinavian Journal of 
+Medicine & Science in Sports, 29(8), 1243–1253. 
+https://doi.org/10.1111/SMS.13446 
+Biederman, J., Petty, C. R., Woodworth, K. Y., Lomedico, A., Hyder, L. L., & Faraone, 
+S. V. (2012). Adult Outcome of Attention-Deficit/Hyperactivity Disorder: A 
+Controlled 16-Year Follow-Up Study. The Journal of Clinical Psychiatry, 73(7), 
+577. https://doi.org/10.4088/JCP.11M07529
+[/PAGE 81]
+
+[PAGE 82]
+73 
+ 
+Bigorra, A., Garolera, M., Guijarro, S., & Hervás, A. (2016). Long-term far-transfer 
+effects of working memory training in children with ADHD: a randomized 
+controlled trial. European Child & Adolescent Psychiatry, 25(8), 853–867. 
+https://doi.org/10.1007/S00787-015-0804-3 
+Bikic, A., Leckman, J. F., Christensen, T., Bilenberg, N., & Dalsgaard, S. (2018). 
+Attention and executive functions computer training for attention-
+deficit/hyperactivity disorder (ADHD): results from a randomized, controlled 
+trial. European Child & Adolescent Psychiatry, 27(12), 1563–1574. 
+https://doi.org/10.1007/S00787-018-1151-Y 
+Bir, L. (2019). The Impact of a Cognitive Intervention Program on Working Memory 
+and Executive Functions in Children and Adolescents with ADHD (Publication 
+No. 13904212) [Doctoral dissertation, Adler University]. ProQuest Dissertations 
+Publishing. 
+Bitsko, R. H., Claussen, A. H., Lichstein, J., Black, L. I., Jones, S. E., Danielson, M. L., 
+Hoenig, J. M., Davis Jack, S. P., Brody, D. J., Gyawali, S., Maenner, M. J., 
+Warner, M., Holland, K. M., Perou, R., Crosby, A. E., Blumberg, S. J., Avenevoli, 
+S., Kaminski, J. W., & Ghandour, R. M. (2022). Mental Health Surveillance 
+Among Children — United States, 2013–2019. MMWR Supplements, 71(2), 1–
+42. https://doi.org/10.15585/MMWR.SU7102A1 
+Bögels, S. M., Oort, F. J., Potharst, E., van Roosmalen, R., Williams, J. M. G., & de 
+Bruin, E. I. (2021). Family Mindfulness Training for Childhood ADHD: Short- 
+and Long-Term Effects on Children, Fathers and Mothers. Mindfulness, 12(12), 
+3011–3025. https://doi.org/10.1007/S12671-021-01761-Y/FIGURES/2 
+Borella, E., Carretti, B., & Pelegrina, S. (2010). The specific role of inhibition in 
+reading comprehension in good and poor comprehenders. Journal of Learning
+[/PAGE 82]
+
+[PAGE 83]
+74 
+ 
+Disabilities, 43(6), 541–552. https://doi.org/10.1177/0022219410371676 
+Boyer, B. E., Geurts, H. M., Prins, P. J. M., & Van der Oord, S. (2015). Two novel CBTs 
+for adolescents with ADHD: the value of planning skills. European Child & 
+Adolescent Psychiatry, 24(9), 1075–1090. https://doi.org/10.1007/S00787-014-
+0661-5 
+Brown, T. E., & Landgraf, J. M. (2010). Improvements in executive function correlate 
+with enhanced performance and functioning and health-related quality of life: 
+Evidence from 2 large, double-blind, randomized, placebo-controlled trials in 
+ADHD. Postgraduate Medicine, 122(5), 42–51. 
+https://doi.org/10.3810/pgm.2010.09.2200 
+Carboni, J. A. (2012). The Impact of Mindfulness Training on Hyperactive Behaviors 
+Demonstrated by Elementary Age Children with a Diagnosis of Attention 
+Deficit Hyperactivity Disorder [Doctoral dissertation, Georgia State University]. 
+ProQuest Dissertations Publishing. 
+Cardoso-Moreno, M. J., Tomás-Aragonés, L., & Rodríguez-Ledo, C. (2015). Socio-
+emotional intervention in attention deficit hyperactive disorder. European 
+Journal of Education and Psychology, 8(2), 53–59. 
+https://doi.org/10.1016/J.EJEPS.2015.07.001 
+Center for Disease Control and Prevention. (2022). Treatment of ADHD. 
+https://www.cdc.gov/ncbddd/adhd/treatment.html 
+Chang, Y. K., Liu, S., Yu, H. H., & Lee, Y. H. (2012). Effect of Acute Exercise on 
+Executive Function in Children with Attention Deficit Hyperactivity Disorder. 
+Archives of Clinical Neuropsychology, 27(2), 225–237. 
+https://doi.org/10.1093/ARCLIN/ACR094 
+Chang, S. H., Shie, J. J., & Yu, N. Y. (2022). Enhancing Executive Functions and
+[/PAGE 83]
+
+[PAGE 84]
+75 
+ 
+Handwriting with a Concentrative Coordination Exercise in Children with 
+ADHD: A Randomized Clinical Trial. Perceptual and Motor Skills, 129(4), 1014–
+1035. https://doi.org/10.1177/00315125221098324 
+Chimiklis, A. L. (2019). Examining the Effects of a Multi-Component Neurocognitive 
+Intervention for School-Aged Children with Co-Occurring ADHD and Reading 
+Difficulties (Publication No. 13895525) [Doctoral dissertation, City University of 
+New York]. ProQuest Dissertations Publishing. 
+Chung, W., Jiang, S. F., Paksarian, D., Nikolaidis, A., Castellanos, F. X., Merikangas, 
+K. R., & Milham, M. P. (2019). Trends in the Prevalence and Incidence of 
+Attention-Deficit/Hyperactivity Disorder Among Adults and Children of 
+Different Racial and Ethnic Groups. JAMA Network Open, 2(11), e1914344–
+e1914344. https://doi.org/10.1001/JAMANETWORKOPEN.2019.14344 
+Clark, L. T., Watkins, L., Piña, I. L., Elmer, M., Akinboboye, O., Gorham, M., 
+Jamerson, B., McCullough, C., Pierre, C., Polis, A. B., Puckrein, G., & Regnante, 
+J. M. (2019). Increasing Diversity in Clinical Trials: Overcoming Critical 
+Barriers. Current Problems in Cardiology, 44(5), 148–172. 
+https://doi.org/10.1016/J.CPCARDIOL.2018.11.002 
+Coghill, D. R., Rhodes, S. M., & Matthews, K. (2007). The neuropsychological effects 
+of chronic methylphenidate on drug-naive boys with attention-
+deficit/hyperactivity disorder. Biological Psychiatry, 62(9), 954–962. 
+https://doi.org/10.1016/J.BIOPSYCH.2006.12.030 
+Cohen, J. (1988). Statistical Power Analysis for the Behavioral Sciences. Routledge 
+Academic. 
+Collins, W. (Ed.). (1984). Development During Middle Childhood: The Years From 
+Six to Twelve. National Academies Press (US).
+[/PAGE 84]
+
+[PAGE 85]
+76 
+ 
+Crescioni, A. W., Ehrlinger, J., Alquist, J. L., Conlon, K. E., Baumeister, R. F., 
+Schatschneider, C., & Dutton, G. R. (2011). High trait self-control predicts 
+positive health behaviors and success in weight loss. Journal of Health 
+Psychology, 16(5), 750–759. https://doi.org/10.1177/1359105310390247 
+Cristofori, I., Cohen-Zimerman, S., & Grafman, J. (2019). Executive functions. 
+Handbook of Clinical Neurology, 163, 197–219. https://doi.org/10.1016/B978-
+0-12-804281-6.00011-2 
+Danielson, M. L., Bitsko, R. H., Ghandour, R. M., Holbrook, J. R., Kogan, M. D., & 
+Blumberg, S. J. (2018). Prevalence of Parent-Reported ADHD Diagnosis and 
+Associated Treatment Among U.S. Children and Adolescents, 2016. Journal of 
+clinical child & adolescent psychology: the official journal for the Society of 
+Clinical Child and Adolescent Psychology, American Psychological Association, 
+Division 53, 47(2), 199–212. https://doi.org/10.1080/15374416.2017.1417860 
+Deligkaris, P., Panagopoulou, E., Montgomery, A. J., & Masoura, E. (2014). Job 
+burnout and cognitive functioning: A systematic review. Work and Stress, 28(2), 
+107–123. https://doi.org/10.1080/02678373.2014.909545 
+Denson, T. F., Pedersen, W. C., Friese, M., Hahm, A., & Roberts, L. (2011). 
+Understanding impulsive aggression: Angry rumination and reduced self-control 
+capacity are mechanisms underlying the provocation-aggression relationship. 
+Personality & Social Psychology Bulletin, 37(6), 850–862. 
+https://doi.org/10.1177/0146167211401420 
+Dentz, A., Guay, M. C., Gauthier, B., Romo, L., & Parent, V. (2020). Is the Cogmed 
+program effective for youths with attention deficit/hyperactivity disorder under 
+pharmacological treatment? Applied Cognitive Psychology, 34(3), 577–589. 
+https://doi.org/10.1002/ACP.3631 
+Diamond, A. (2013). Executive functions. Annual Review of Psychology, 64, 135–168.
+[/PAGE 85]
+
+[PAGE 86]
+77 
+ 
+https://doi.org/10.1146/annurev-psych-113011-143750 
+Diamond, A., & Ling, D. S. (2016). Conclusions about interventions, programs, and 
+approaches for improving executive functions that appear justified and those 
+that, despite much hype, do not. Developmental Cognitive Neuroscience, 18, 34–
+48. https://doi.org/https://doi.org/10.1016/j.dcn.2015.11.005 
+Dovis, S., Van Der Oord, S., Wiers, R. W., & Prins, P. J. M. (2015). Improving 
+executive functioning in children with ADHD: training multiple executive 
+functions within the context of a computer game. a randomized double-blind 
+placebo controlled trial. PloS One, 10(4). 
+https://doi.org/10.1371/JOURNAL.PONE.0121651 
+Downs, S. H., & Black, N. (1998). The feasibility of creating a checklist for the 
+assessment of the methodological quality both of randomised and non-
+randomised studies of health care interventions. Journal of Epidemiology and 
+Community Health, 52(6), 377–384. https://doi.org/10.1136/JECH.52.6.377 
+Duncan, G. J., Dowsett, C. J., Claessens, A., Magnuson, K., Huston, A. C., Klebanov, 
+P., Pagani, L. S., Feinstein, L., Engel, M., Brooks-Gunn, J., Sexton, H., 
+Duckworth, K., & Japel, C. (2007). School readiness and later achievement. 
+Developmental Psychology, 43(6), 1428–1446. https://doi.org/10.1037/0012-
+1649.43.6.1428 
+DuPaul, G. J., Gormley, M. J., Anastopoulos, A. D., Weyandt, L. L., Labban, J., Sass, 
+A. J., Busch, C. Z., Franklin, M. K., & Postler, K. B. (2021). Academic Trajectories 
+of College Students with and without ADHD: Predictors of Four-Year Outcomes. 
+Journal of Clinical Child and Adolescent Psychology, 50(6), 828–843. 
+https://doi.org/10.1080/15374416.2020.1867990/SUPPL_FILE/HCAP_A_1867
+990_SM9863.DOCX 
+Durgut, E., Orengul, A. C., & Algun, Z. C. (2020). Comparison of the effects of
+[/PAGE 86]
+
+[PAGE 87]
+78 
+ 
+treadmill and vibration training in children with attention deficit hyperactivity 
+disorder: A randomized controlled trial. NeuroRehabilitation, 47(2), 121–131. 
+https://doi.org/10.3233/NRE-203040 
+Eakin, L., Minde, K., Hechtman, L., Ochs, E., Krane, E., Bouffard, R., Greenfield, B., & 
+Looper, K. (2004). The marital and family functioning of adults with ADHD and 
+their spouses. Journal of Attention Disorders, 8(1), 1–10. 
+https://doi.org/10.1177/108705470400800101 
+Estrada-Plana, V., Esquerda, M., Mangues, R., March-Llanes, J., & Moya-Higueras, J. 
+(2019). A Pilot Study of the Efficacy of a Cognitive Training Based on Board 
+Games in Children with Attention-Deficit/Hyperactivity Disorder: A 
+Randomized Controlled Trial. Games for Health Journal, 8(4), 265–274. 
+https://doi.org/10.1089/g4h.2018.0051 
+Fan, L., Qing, W., Wang, Y., & Zhan, M. (2022). Family Socioeconomic Status and 
+Attention Deficit/Hyperactivity Disorder in Preschool Children: The Mediating 
+Role of Executive Function. International Journal of Environmental Research 
+and Public Health, 19(18). https://doi.org/10.3390/IJERPH191811608 
+Farias, A. C., Cordeiro, M. L., Felden, E. P. G., Bara, T. S., Benko, C. R., Coutinho, D., 
+Martins, L. F., Ferreira, R. T. C., & McCracken, J. T. (2017). Attention-memory 
+training yields behavioral and academic improvements in children diagnosed 
+with attention-deficit hyperactivity disorder comorbid with a learning disorder. 
+Neuropsychiatric Disease and Treatment, 13, 1761–1769. 
+https://doi.org/10.2147/NDT.S136663 
+Gapin, J. I., Labban, J. D., Bohall, S. C., Wooten, J. S., & Chang, Y. K. (2015). Acute 
+exercise is associated with specific executive functions in college students with 
+ADHD: A preliminary study. Journal of Sport and Health Science, 4(1), 89–96.
+[/PAGE 87]
+
+[PAGE 88]
+79 
+ 
+https://doi.org/10.1016/J.JSHS.2014.11.003 
+Gawrilow, C., Stadler, G., Langguth, N., Naumann, A., & Boeck, A. (2016). Physical 
+Activity, Affect, and Cognition in Children With Symptoms of ADHD. Journal of 
+Attention Disorders, 20(2), 151–162. 
+https://doi.org/10.1177/1087054713493318 
+Gentile, D. A. (1993). Just What Are Sex and Gender, Anyway? A Call for a New 
+Terminological Standard. Psychological Science, 4(2), 120–122. 
+https://doi.org/10.1111/J.1467-9280.1993.TB00472.X 
+Gerber, W. D., Gerber-Von Müller, G., Andrasik, F., Niederberger, U., Siniatchkin, M., 
+Kowalski, J. T., Petermann, U., & Petermann, F. (2012). The impact of a 
+multimodal Summer Camp Training on neuropsychological functioning in 
+children and adolescents with ADHD: an exploratory study. Child 
+Neuropsychology : A Journal on Normal and Abnormal Development in 
+Childhood and Adolescence, 18(3), 242–255. 
+https://doi.org/10.1080/09297049.2011.599115 
+Geurts, H. M., Verté, S., Oosterlaan, J., Roeyers, H., & Sergeant, J. A. (2005). ADHD 
+subtypes: do they differ in their executive functioning profile? Archives of 
+Clinical Neuropsychology, 20(4), 457–477. 
+https://doi.org/10.1016/J.ACN.2004.11.001 
+Gilboa, Y., & Helmer, A. (2020). Self-Management Intervention for Attention and 
+Executive Functions Using Equine-Assisted Occupational Therapy Among 
+Children Aged 6-14 Diagnosed with Attention Deficit/Hyperactivity Disorder. 
+Journal of Alternative and Complementary Medicine (New York, N.Y.), 26(3), 
+239–246. https://doi.org/10.1089/ACM.2019.0374 
+Guillaume, N., Belisle, M. P., Jean, M., & Dupuis, G. (2021). Training in Tranquil
+[/PAGE 88]
+
+[PAGE 89]
+80 
+ 
+Abiding Meditation as a Treatment for Core Symptoms and a Cognitive 
+Remediation Program of Executive Functions in Young Adults With ADHD: A 
+Pilot Study. Psychology of Consciousness: Theory Research, and Practice. 
+https://doi.org/10.1037/CNS0000294 
+Hahn-Markowitz, J., Berger, I., Manor, I., & Maeir, A. (2017). Impact of the 
+Cognitive-Functional (Cog-Fun) Intervention on Executive Functions and 
+Participation Among Children With Attention Deficit Hyperactivity Disorder: A 
+Randomized Controlled Trial. The American Journal of Occupational Therapy : 
+Official Publication of the American Occupational Therapy Association, 71(5), 
+7105220010p1-7105220010p9. https://doi.org/10.5014/AJOT.2017.022053 
+Hahn-Markowitz, J., Berger, I., Manor, I., & Maeir, A. (2020). Efficacy of Cognitive-
+Functional (Cog-Fun) Occupational Therapy Intervention Among Children With 
+ADHD: An RCT. Journal of Attention Disorders, 24(5), 655–666. 
+https://doi.org/10.1177/1087054716666955 
+Hannesdottir, D. K., Ingvarsdottir, E., & Bjornsson, A. (2017). The OutSMARTers 
+Program for Children With ADHD: A Pilot Study on the Effects of Social Skills, 
+Self-Regulation, and Executive Function Training. Journal of Attention 
+Disorders, 21(4), 353–364. https://doi.org/10.1177/1087054713520617 
+Harlow, L. L. (2014). The essence of multivariate thinking: Basic themes and 
+methods, second edition. The Essence of Multivariate Thinking: Basic Themes 
+and Methods, Second Edition, 1–396. https://doi.org/10.4324/9781315832746 
+Heishman, A. (2015). Examination of the Effectiveness of Computerized Working 
+Memory Training on Math Achievement and Other Transfer Effects in Children 
+with ADHD and Math Difficulties (Publication No. 3687559) [Doctoral
+[/PAGE 89]
+
+[PAGE 90]
+81 
+ 
+dissertation, George Washington University]. ProQuest Dissertations Publishing. 
+Hepark, S., Janssen, L., de Vries, A., Schoenberg, P. L. A., Donders, R., Kan, C. C., & 
+Speckens, A. E. M. (2019). The Efficacy of Adapted MBCT on Core Symptoms 
+and Executive Functioning in Adults With ADHD: A Preliminary Randomized 
+Controlled Trial. Journal of Attention Disorders, 23(4), 351–362. 
+https://doi.org/10.1177/1087054715613587 
+Horowitz-Kraus, T. (2015). Differential effect of cognitive training on executive 
+functions and reading abilities in children with ADHD and in children with 
+ADHD comorbid with reading difficulties. Journal of Attention Disorders, 19(6), 
+515–526. https://doi.org/10.1177/1087054713502079 
+Horowitz-Kraus, T., Hershey, A., Kay, B., & DiFrancesco, M. (2019). Differential effect 
+of reading training on functional connectivity in children with reading difficulties 
+with and without ADHD comorbidity. Journal of Neurolinguistics, 49, 93–108. 
+https://doi.org/10.1016/J.JNEUROLING.2018.09.002 
+Huguet, A., Miguel Ruiz, D., Haro, J. M., & Alda, J. A. (2017). A Pilot Study of the 
+Efficacy of a Mindfulness Program for Children Newly Diagnosed with Attention-
+Deficit Hyperactivity Disorder: Impact on Core Symptoms and Executive 
+Functions. Revista Internacional de Psicología y Terapia Psicológica, 17(3), 
+305–316. 
+In de Braek, D. M. J. M., Dijkstra, J. B., Ponds, R. W., & Jolles, J. (2017). Goal 
+Management Training in Adults With ADHD: An Intervention Study. Journal of 
+Attention Disorders, 21(13), 1130–1137. 
+https://doi.org/10.1177/1087054712468052 
+Janssen, L., de Vries, A. M., Hepark, S., & Speckens, A. E. M. (2020). The Feasibility, 
+Effectiveness, and Process of Change of Mindfulness-Based Cognitive Therapy
+[/PAGE 90]
+
+[PAGE 91]
+82 
+ 
+for Adults With ADHD: A Mixed-Method Pilot Study. Journal of Attention 
+Disorders, 24(6), 928–942. https://doi.org/10.1177/1087054717727350 
+Janssen, L., Kan, C. C., Carpentier, P. J., Sizoo, B., Hepark, S., Schellekens, M. P. J., 
+Donders, A. R. T., Buitelaar, J. K., & Speckens, A. E. M. (2018). Mindfulness-
+based cognitive therapy v. Treatment as usual in adults with ADHD: A 
+multicentre, single-blind, randomised controlled trial. Psychological Medicine, 
+49(1), 55–65. https://doi.org/10.1017/s0033291718000429 
+Junger, M., & van Kampen, M. (2010). Cognitive ability and self-control in relation to 
+dietary habits, physical activity and bodyweight in adolescents. The 
+International Journal of Behavioral Nutrition and Physical Activity, 7. 
+https://doi.org/10.1186/1479-5868-7-22 
+Kessler, R. C., Adler, L., Barkley, R., Biederman, J., Conners, C. K., Demler, O., 
+Faraone, S. V., Greenhill, L. L., Howes, M. J., Secnik, K., Spencer, T., Ustun, T. 
+B., Walters, E. E., & Zaslavsky, A. M. (2006). The prevalence and correlates of 
+adult ADHD in the United States: Results from the National Comorbidity Survey 
+Replication. The American Journal of Psychiatry, 163(4), 716. 
+https://doi.org/10.1176/APPI.AJP.163.4.716 
+Kessler, R. C., Berglund, P., Demler, O., Jin, R., Merikangas, K. R., & Walters, E. E. 
+(2005). Lifetime prevalence and age-of-onset distributions of DSM-IV disorders 
+in the National Comorbidity Survey Replication. Archives of General Psychiatry, 
+62(6), 593–602. https://doi.org/10.1001/ARCHPSYC.62.6.593 
+Kessler, R. C., Wai, T. C., Demler, O., & Walters, E. E. (2005). Prevalence, severity, 
+and comorbidity of 12-month DSM-IV disorders in the National Comorbidity 
+Survey Replication. Archives of General Psychiatry, 62(6), 617–627. 
+https://doi.org/10.1001/archpsyc.62.6.617
+[/PAGE 91]
+
+[PAGE 92]
+83 
+ 
+Kim, M. J., Park, H. Y., Yoo, E. Y., & Kim, J. R. (2020). Effects of a Cognitive-
+Functional Intervention Method on Improving Executive Function and Self-
+Directed Learning in School-Aged Children with Attention Deficit Hyperactivity 
+Disorder: A Single-Subject Design Study. Occupational Therapy International, 
+2020, 1250801. https://doi.org/10.1155/2020/1250801 
+Kofler, M. J., Irwin, L. N., Soto, E. F., Groves, N. B., Harmon, S. L., & Sarver, D. E. 
+(2019). Executive Functioning Heterogeneity in Pediatric ADHD. Journal of 
+Abnormal Child Psychology, 47(2), 273. https://doi.org/10.1007/S10802-018-
+0438-2 
+Korpa, T., Skaloumbakas, C., Katsounas, M., Papadopoulou, P., Lytra, F., & 
+Karagianni, S. (2020). EF Train: Development of an Executive Function Training 
+Program for Preschool and School-aged Children with ADHD. International 
+Journal of Psychology and Psychological Therapy, 20(1), 13–27. 
+LaCount, P. A., Hartung, C. M., Vasko, J. M., Serrano, J. W., Wright, H. A., & Smith, 
+D. T. (2022). Acute effects of physical exercise on cognitive and psychological 
+functioning in college students with attention-deficit/hyperactivity disorder. 
+Mental Health and Physical Activity, 22, 100443. 
+https://doi.org/10.1016/J.MHPA.2022.100443 
+Lakens, D. (2013). Calculating and reporting effect sizes to facilitate cumulative 
+science: A practical primer for t-tests and ANOVAs. Frontiers in Psychology, 4, 
+863. https://doi.org/10.3389/fpsyg.2013.00863 
+Lambez, B., Harwood-Gross, A., Golumbic, E. Z., & Rassovsky, Y. (2020). Non-
+pharmacological interventions for cognitive difficulties in ADHD: A systematic 
+review and meta-analysis. Journal of Psychiatric Research, 120, 40–55. 
+https://doi.org/10.1016/J.JPSYCHIRES.2019.10.007
+[/PAGE 92]
+
+[PAGE 93]
+84 
+ 
+Lan, Y. T., Liu, X. P., & Fang, H. S. (2020). Randomized control study of the effects of 
+executive function training on peer difficulties of children with attention-
+deficit/hyperactivity disorder C subtype. Applied Neuropsychology. Child, 9(1), 
+41–55. https://doi.org/10.1080/21622965.2018.1509003 
+Levanon-Erez, N., Kampf-Sherf, O., & Maeir, A. (2019). Occupational therapy 
+metacognitive intervention for adolescents with ADHD: Teen Cognitive-
+Functional (Cog-Fun) feasibility study. British Journal of Occupational 
+Therapy, 82(10), 618–629. https://doi.org/10.1177/0308022619860978 
+Liang, X., Li, R., Wong, S. H. S., Sum, R. K. W., & Sit, C. H. P. (2021). The impact of 
+exercise interventions concerning executive functions of children and 
+adolescents with attention-deficit/hyperactive disorder: a systematic review and 
+meta-analysis. The International Journal of Behavioral Nutrition and Physical 
+Activity, 18(1). https://doi.org/10.1186/S12966-021-01135-6 
+Liang, X., Qiu, H., Wang, P., & Sit, C. H. P. (2022). The impacts of a combined 
+exercise on executive function in children with ADHD: A randomized controlled 
+trial. Scandinavian Journal of Medicine & Science in Sports, 32(8), 1297–1312. 
+https://doi.org/10.1111/SMS.14192 
+Liao, Y. C., Guo, N. W., Su, B. Y., Chen, S. J., & Tsai, H. F. (2022). Effects of Twenty 
+Hours of Neurofeedback-Based Neuropsychotherapy on the Executive Functions 
+and Achievements among ADHD Children. Clinical EEG and Neuroscience, 
+53(5), 387–398. https://doi.org/10.1177/15500594221101693 
+Madsen, T. E., Bourjeily, G., Hasnain, M., Jenkins, M., Morrison, M. F., Sandberg, K., 
+Tong, I. L., Trott, J., Werbinski, J. L., & McGregor, A. J. (2017). Sex- and 
+Gender-Based Medicine: The Need for Precise Terminology. Gender and the 
+Genome, 1(3), 122–128. https://doi.org/10.1089/GG.2017.0005
+[/PAGE 93]
+
+[PAGE 94]
+85 
+ 
+Maeir, A., Fisher, O., Bar-Ilan, R. T., Boas, N., Berger, I., & Landau, Y. E. (2014). 
+Effectiveness of cognitive-Functional (Cog-Fun) occupational therapy 
+intervention for young children with attention deficit hyperactivity disorder: A 
+controlled study. American Journal of Occupational Therapy, 68(3), 260–267. 
+https://doi.org/10.5014/ajot.2014.011700 
+Martel, M., Nikolas, M., & Nigg, J. T. (2007). Executive function in adolescents with 
+ADHD. Journal of the American Academy of Child and Adolescent Psychiatry, 
+46(11), 1437–1444. https://doi.org/10.1097/CHI.0B013E31814CF953 
+McGough, J. J., Loo, S. K., Sturm, A., Cowen, J., Leuchter, A. F., & Cook, I. A. (2015). 
+An eight-week, open-trial, pilot feasibility study of trigeminal nerve stimulation 
+in youth with attention-deficit/hyperactivity disorder. Brain Stimulation, 8(2), 
+299–304. https://doi.org/10.1016/J.BRS.2014.11.013 
+Mehren, A., Özyurt, J., Lam, A. P., Brandes, M., Müller, H. H. O., Thiel, C. M., & 
+Philipsen, A. (2019). Acute Effects of Aerobic Exercise on Executive Function 
+and Attention in Adult Patients With ADHD. Frontiers in Psychiatry, 10, 132. 
+https://doi.org/10.3389/FPSYT.2019.00132 
+Memarmoghaddam, M., Torbati, H. T., Sohrabi, M., Mashhadi, A., & Kashi, A. (2016). 
+Effects of a selected exercise programon executive function of children with  
+attention deficit hyperactivity disorder. Journal of Medicine and Life, 9(4), 373–
+379. 
+Menezes, A., Dias, N. M., Trevisan, B. T., Carreiro, L. R. R., & Seabra, A. G. (2015). 
+Intervention for executive functions in attention deficit and hyperactivity 
+disorder. Arquivos de Neuro-Psiquiatria, 73(3), 227–236. 
+https://doi.org/10.1590/0004-282X20140225
+[/PAGE 94]
+
+[PAGE 95]
+86 
+ 
+Miranda, A., Presentación, M. J., Siegenthaler, R., & Jara, P. (2013). Effects of a 
+psychosocial intervention on the executive functioning in children with ADHD. 
+Journal of Learning Disabilities, 46(4), 363–376. 
+https://doi.org/10.1177/0022219411427349 
+Mitchell, J. T., McIntyre, E. M., English, J. S., Dennis, M. F., Beckham, J. C., & 
+Kollins, S. H. (2017). A Pilot Trial of Mindfulness Meditation Training for ADHD 
+in Adulthood: Impact on Core Symptoms, Executive Functioning, and Emotion 
+Dysregulation. Journal of Attention Disorders, 21(13), 1105–1120. 
+https://doi.org/10.1177/1087054713513328 
+Miyake, A., Friedman, N. P., Emerson, M. J., Witzki, A. H., Howerter, A., & Wager, T. 
+D. (2000). The Unity and Diversity of Executive Functions and Their 
+Contributions to Complex “Frontal Lobe” Tasks: A Latent Variable Analysis. 
+Cognitive Psychology, 41(1), 49–100. https://doi.org/10.1006/cogp.1999.0734 
+Morgan, P. L., Staff, J., Hillemeier, M. M., Farkas, G., & Maczuga, S. (2013). Racial 
+and Ethnic Disparities in ADHD Diagnosis From Kindergarten to Eighth Grade. 
+Pediatrics, 132(1), 85. https://doi.org/10.1542/PEDS.2012-2390 
+Mowlem, F. D., Rosenqvist, M. A., Martin, J., Lichtenstein, P., Asherson, P., & 
+Larsson, H. (2019). Sex differences in predicting ADHD clinical diagnosis and 
+pharmacological treatment. European Child & Adolescent Psychiatry, 28(4), 
+481–489. https://doi.org/10.1007/S00787-018-1211-3 
+Nejati, V. (2021a). Program for attention rehabilitation and strengthening (PARS) 
+improves executive functions in children with attention deficit- hyperactivity 
+disorder (ADHD). Research in Developmental Disabilities, 113. 
+https://doi.org/10.1016/J.RIDD.2021.103937 
+Nejati, V. (2021b). Balance-based Attentive Rehabilitation of Attention Networks
+[/PAGE 95]
+
+[PAGE 96]
+87 
+ 
+(BARAN) improves executive functions and ameliorates behavioral symptoms in 
+children with ADHD. Complementary Therapies in Medicine, 60. 
+https://doi.org/10.1016/J.CTIM.2021.102759 
+Nejati, V., Salehinejad, M. A., Nitsche, M. A., Najian, A., & Javadi, A. H. (2020). 
+Transcranial Direct Current Stimulation Improves Executive Dysfunctions in 
+ADHD: Implications for Inhibitory Control, Interference Control, Working 
+Memory, and Cognitive Flexibility. Journal of Attention Disorders, 24(13), 
+1928–1943. https://doi.org/10.1177/1087054717730611 
+Page, M. J., McKenzie, J. E., Bossuyt, P. M., Boutron, I., Hoffmann, T. C., Mulrow, C. 
+D., Shamseer, L., Tetzlaff, J. M., Akl, E. A., Brennan, S. E., Chou, R., Glanville, J., 
+Grimshaw, J. M., Hróbjartsson, A., Lalu, M. M., Li, T., Loder, E. W., Mayo-
+Wilson, E., McDonald, S., … Moher, D. (2021). The PRISMA 2020 statement: An 
+updated guideline for reporting systematic reviews. PLOS Medicine, 18(3), 
+e1003583. https://doi.org/10.1371/JOURNAL.PMED.1003583 
+Pan, C. Y., Chu, C. H., Tsai, C. L., Lo, S. Y., Cheng, Y. W., & Liu, Y. J. (2016). A racket-
+sport intervention improves behavioral and cognitive performance in children 
+with attention-deficit/hyperactivity disorder. Research in Developmental 
+Disabilities, 57, 1–10. https://doi.org/10.1016/J.RIDD.2016.06.009 
+Pan, C. Y., Tsai, C. L., Chu, C. H., Sung, M. C., Huang, C. Y., & Ma, W. Y. (2019). 
+Effects of Physical Exercise Intervention on Motor Skills and Executive 
+Functions in Children With ADHD: A Pilot Study. Journal of Attention 
+Disorders, 23(4), 384–397. https://doi.org/10.1177/1087054715569282 
+Pan, M. R., Zhang, S. Y., Qiu, S. W., Liu, L., Li, H. M., Zhao, M. J., Dong, M., Si, F. F., 
+Wang, Y. F., & Qian, Q. J. (2022). Efficacy of cognitive behavioural therapy in 
+medicated adults with attention-deficit/hyperactivity disorder in multiple
+[/PAGE 96]
+
+[PAGE 97]
+88 
+ 
+dimensions: a randomised controlled trial. European Archives of Psychiatry and 
+Clinical Neuroscience, 272(2), 235–255. https://doi.org/10.1007/S00406-021-
+01236-0 
+Passarotti, A. M., Balaban, L., Colman, L. D., Katz, L. A., Trivedi, N., Liu, L., & 
+Langenecker, S. A. (2020). A Preliminary Study on the Functional Benefits of 
+Computerized Working Memory Training in Children With Pediatric Bipolar 
+Disorder and Attention Deficit Hyperactivity Disorder. Frontiers in Psychology, 
+10. https://doi.org/10.3389/FPSYG.2019.03060 
+Piepmeier, A. T., Shih, C. H., Whedon, M., Williams, L. M., Davis, M. E., Henning, D. 
+A., Park, S. Y., Calkins, S. D., & Etnier, J. L. (2015). The effect of acute exercise 
+on cognitive performance in children with and without ADHD. Journal of Sport 
+and Health Science, 4(1), 97–104. https://doi.org/10.1016/J.JSHS.2014.11.004 
+Poissant, H., Mendrek, A., Talbot, N., Khoury, B., & Nolan, J. (2019). Behavioral and 
+Cognitive Impacts of Mindfulness-Based Interventions on Adults with Attention-
+Deficit Hyperactivity Disorder: A Systematic Review. Behavioural Neurology, 
+2019. https://doi.org/10.1155/2019/5682050 
+Qian, Y., Chen, M., Shuai, L., Cao, Q. J., Yang, L., & Wang, Y. F. (2017). Effect of an 
+Ecological Executive Skill Training Program for School-aged Children with 
+Attention Deficit Hyperactivity Disorder: A Randomized Controlled Clinical 
+Trial. Chinese Medical Journal, 130(13), 1513–1520. 
+https://doi.org/10.4103/0366-6999.208236 
+Qian, Y., Fan, Z., Gao, B., Margaret, S., Cao, Q., Li, F., & Yang, L. (2021). Efficacy and 
+acceptability of a second dose of ecological executive skills training for children 
+with ADHD: a randomized controlled study and follow-up. European Child & 
+Adolescent Psychiatry, 30(6), 921–935. https://doi.org/10.1007/S00787-020-
+[/PAGE 97]
+
+[PAGE 98]
+89 
+ 
+01571-Y 
+Rhodes, S. M., Coghill, D. R., & Matthews, K. (2006). Acute neuropsychological 
+effects of methylphenidate in stimulant drug-naïve boys with ADHD II--broader 
+executive and non-executive domains. Journal of Child Psychology and 
+Psychiatry, and Allied Disciplines, 47(11), 1184–1194. 
+https://doi.org/10.1111/J.1469-7610.2006.01633.X 
+Rosenberg, L., Maeir, A., Yochman, A., Dahan, I., & Hirsch, I. (2015). Effectiveness of 
+a cognitive-functional group intervention among preschoolers with attention 
+deficit hyperactivity disorder: a pilot study. The American Journal of 
+Occupational Therapy : Official Publication of the American Occupational 
+Therapy Association, 69(3), 6903220040. 
+https://doi.org/10.5014/AJOT.2015.014795 
+Rucklidge, J. J. (2010). Gender differences in attention-deficit/hyperactivity disorder. 
+The Psychiatric Clinics of North America, 33(2), 357–373. 
+https://doi.org/10.1016/J.PSC.2010.01.006 
+Russell, A. E., Ford, T., Williams, R., & Russell, G. (2016). The Association Between 
+Socioeconomic Disadvantage and Attention Deficit/Hyperactivity Disorder 
+(ADHD): A Systematic Review. Child Psychiatry and Human Development, 
+47(3), 440–458. https://doi.org/10.1007/S10578-015-0578-3/FIGURES/4 
+Salomone, S., Fleming, G. R., Shanahan, J. M., Castorina, M., Bramham, J., O’connell, 
+R. G., & Robertson, I. H. (2015). The effects of a Self-Alert Training (SAT) 
+program in adults with ADHD. Frontiers in Human Neuroscience, 9, 45. 
+https://doi.org/10.3389/FNHUM.2015.00045 
+Santonastaso, O., Zaccari, V., Crescentini, C., Fabbro, F., Capurso, V., Vicari, S., &
+[/PAGE 98]
+
+[PAGE 99]
+90 
+ 
+Menghini, D. (2020). Clinical Application of Mindfulness-Oriented Meditation: 
+A Preliminary Study in Children with ADHD. International Journal of 
+Environmental Research and Public Health, 17(18), 1–16. 
+https://doi.org/10.3390/IJERPH17186916 
+Sayal, K., Prasad, V., Daley, D., Ford, T., & Coghill, D. (2018). ADHD in children and 
+young people: prevalence, care pathways, and service provision. The Lancet. 
+Psychiatry, 5(2), 175–186. https://doi.org/10.1016/S2215-0366(17)30167-0 
+Schweitzer, J. B., Fassbender, C., Lit, L., Reeves, G. M., & Powell, S. P. H. (2012). 
+Attention-deficit/hyperactivity disorder. Handbook of Clinical Neurology, 106, 
+391–405. https://doi.org/10.1016/B978-0-444-52002-9.00022-X 
+Shea, L., Pesa, J., Geonnotti, G., Powell, V., Kahn, C., & Peters, W. (2022). Improving 
+diversity in study participation: Patient perspectives on barriers, racial 
+differences and the role of communities. Health Expectations, 25(4), 1979–1987. 
+https://doi.org/10.1111/HEX.13554 
+Shema-Shiratzky, S., Brozgol, M., Cornejo-Thumm, P., Geva-Dayan, K., Rotstein, M., 
+Leitner, Y., Hausdorff, J. M., & Mirelman, A. (2019). Virtual reality training to 
+enhance behavior and cognitive function among children with attention-
+deficit/hyperactivity disorder: brief report. Developmental Neurorehabilitation, 
+22(6), 431–436. https://doi.org/10.1080/17518423.2018.1476602 
+Shuai, L., Wang, Y., Li, W., Wilson, A., Wang, S., Chen, R., & Zhang, J. (2021). 
+Executive Function Training for Preschool Children With ADHD: A Randomized 
+Controlled Trial. Journal of Attention Disorders, 25(14), 2037–2047. 
+https://doi.org/10.1177/1087054720956723 
+Snyder, H. R. (2013). Major depressive disorder is associated with broad impairments 
+on neuropsychological measures of executive function: A meta-analysis and
+[/PAGE 99]
+
+[PAGE 100]
+91 
+ 
+review. Psychological Bulletin, 139(1), 81–132. 
+https://doi.org/10.1037/a0028727 
+Solanto, M. V., & Scheres, A. (2021). Feasibility, Acceptability, and Effectiveness of a 
+New Cognitive-Behavioral Intervention for College Students with ADHD. 
+Journal of Attention Disorders, 25(14), 2068–2082. 
+https://doi.org/10.1177/1087054720951865 
+Solanto, M. V., Surman, C. B., & Alvir, J. M. J. (2018). The efficacy of cognitive-
+behavioral therapy for older adults with ADHD: a randomized controlled trial. 
+Attention Deficit and Hyperactivity Disorders, 10(3), 223–235. 
+https://doi.org/10.1007/S12402-018-0253-1 
+Song, P., Zha, M., Yang, Q., Zhang, Y., Li, X., & Rudan, I. (2021). The prevalence of 
+adult attention-deficit hyperactivity disorder: A global systematic review and 
+meta-analysis. Journal of Global Health, 11, 1–9. 
+https://doi.org/10.7189/JOGH.11.04009 
+Steeger, C. M., Gondoli, D. M., Gibson, B. S., & Morrissey, R. A. (2016). Combined 
+cognitive and parent training interventions for adolescents with ADHD and their 
+mothers: A randomized controlled trial. Child Neuropsychology : A Journal on 
+Normal and Abnormal Development in Childhood and Adolescence, 22(4), 
+394–419. https://doi.org/10.1080/09297049.2014.994485 
+Stein, D. J., Costa, D. L. C., Lochner, C., Miguel, E. C., Reddy, Y. C. J., Shavitt, R. G., 
+van den Heuvel, O. A., & Simpson, H. B. (2019). Obsessive–compulsive disorder. 
+Nature Reviews. Disease Primers, 5(1), 52. https://doi.org/10.1038/S41572-
+019-0102-3 
+Steiner, N. J., Frenette, E. C., Rene, K. M., Brennan, R. T., & Perrin, E. C. (2014). In-
+school neurofeedback training for ADHD: sustained improvements from a
+[/PAGE 100]
+
+[PAGE 101]
+92 
+ 
+randomized control trial. Pediatrics, 133(3), 483–492. 
+https://doi.org/10.1542/PEDS.2013-2059 
+Stern, A., Malik, E., Pollak, Y., Bonne, O., & Maeir, A. (2016). The Efficacy of 
+Computerized Cognitive Training in Adults With ADHD: A Randomized 
+Controlled Trial. Journal of Attention Disorders, 20(12), 991–1003. 
+https://doi.org/10.1177/1087054714529815 
+Tamm, L., Epstein, J. N., Peugh, J. L., Nakonezny, P. A., & Hughes, C. W. (2013). 
+Preliminary data suggesting the efficacy of attention training for school-aged 
+children with ADHD. Developmental Cognitive Neuroscience, 4, 16–28. 
+https://doi.org/10.1016/J.DCN.2012.11.004 
+Tamm, L., & Nakonezny, P. A. (2015). Metacognitive executive function training for 
+young children with ADHD: a proof-of-concept study. Attention Deficit and 
+Hyperactivity Disorders, 7(3), 183–190. https://doi.org/10.1007/S12402-014-
+0162-X 
+Tamm, L., Nakonezny, P. A., & Hughes, C. W. (2014). An open trial of a metacognitive 
+executive function training for young children with ADHD. Journal of Attention 
+Disorders, 18(6), 551–559. https://doi.org/10.1177/1087054712445782 
+The National Institute of Mental Health. (2021). Attention-Deficit/Hyperactivity 
+Disorder in Children and Teens: What You Need to Know [Brochure].  
+Toplak, M. E., West, R. F., & Stanovich, K. E. (2013). Practitioner Review: Do 
+performance-based measures and ratings of executive function assess the same 
+construct?. Journal of Child Psychology and Psychiatry and Allied Disciplines, 
+54(2), 131-143. https://doi.org/10.1111/jcpp.12001 
+Torgrimson, B. N., & Minson, C. T. (2005). Sex and gender: What is the difference? 
+Journal of Applied Physiology, 99(3), 785–787.
+[/PAGE 101]
+
+[PAGE 102]
+93 
+ 
+https://doi.org/10.1152/JAPPLPHYSIOL.00376.2005/ASSET/IMAGES/LARGE
+/ZDG0090560300001.JPEG 
+Valero, M., Cebolla, A., & Colomer, C. (2022). Mindfulness Training for Children with 
+ADHD and Their Parents: A Randomized Control Trial. Journal of Attention 
+Disorders, 26(5), 755–766. https://doi.org/10.1177/10870547211027636 
+van der Oord, S., Ponsioen, A. J. G. B., Geurts, H. M., Brink, E. L. T., & Prins, P. J. M. 
+(2014). A pilot study of the efficacy of a computerized executive functioning 
+remediation training with game elements for children with ADHD in an 
+outpatient setting: outcome on parent- and teacher-rated executive functioning 
+and ADHD behavior. Journal of Attention Disorders, 18(8), 699–712. 
+https://doi.org/10.1177/1087054712453167 
+Van Dongen-Boomsma, M., Vollebregt, M. A., Buitelaar, J. K., & Slaats-Willemse, D. 
+(2014). Working memory training in young children with ADHD: a randomized 
+placebo-controlled trial. Journal of Child Psychology and Psychiatry, and Allied 
+Disciplines, 55(8), 886–896. https://doi.org/10.1111/JCPP.12218 
+Visser, S. N., Danielson, M. L., Bitsko, R. H., Holbrook, J. R., Kogan, M. D., 
+Ghandour, R. M., Perou, R., & Blumberg, S. J. (2014). Trends in the Parent-
+report of Health Care Provider Diagnosed and Medicated ADHD: United States, 
+2003—2011. Journal of the American Academy of Child and Adolescent 
+Psychiatry, 53(1), 34. https://doi.org/10.1016/J.JAAC.2013.09.001 
+Weyandt, L. L. (1991). Validity of Tasks of Executive Functions with School-Aged 
+Children: Potential Efficacy in Discriminating Clinical Groups. Open Access 
+Dissertations. https://doi.org/10.23860/diss-weyandt-lisa-1991 
+Weyandt, L. L. (2009). Executive Functions and Attention Deficit Hyperactivity 
+Disorder. The ADHD Report, 17(6), 1–7.
+[/PAGE 102]
+
+[PAGE 103]
+94 
+ 
+https://doi.org/10.1521/adhd.2009.17.6.1 
+Weyandt, L. L. (2019). Clinical Neuroscience: Foundations of Psychological and 
+Neurodegenerative Disorders. Routledge. 
+Weyandt, L. L., & DuPaul, G. J. (2013). Introduction and Background Information. In 
+College Students with ADHD: Current Issues and Future Directions (pp. 1–9). 
+Springer New York. https://doi.org/10.1007/978-1-4614-5345-1_1 
+Weyandt, L. L., Dupaul, G. J., Verdi, G., Rossi, J. S., Swentosky, A. J., Vilardo, B. S., 
+O’Dell, S. M., & Carson, K. S. (2013). The performance of college students with 
+and without adhd: Neuropsychological, academic, and psychosocial functioning. 
+Journal of Psychopathology and Behavioral Assessment, 35(4), 421–435. 
+https://doi.org/10.1007/S10862-013-9351-8/TABLES/2 
+Zhang, D., Chan, S. K. C., Lo, H. H. M., Chan, C. Y. H., Chan, J. C. Y., Ting, K. T., Gao, 
+T. T., Lai, K. Y. C., Bögels, S. M., & Wong, S. Y. S. (2017). Mindfulness-Based 
+Intervention for Chinese Children with ADHD and Their Parents: a Pilot Mixed-
+Method Study. Mindfulness, 8(4), 859–872. https://doi.org/10.1007/S12671-
+016-0660-3/TABLES/2 
+Ziereis, S., & Jansen, P. (2015). Effects of physical activity on executive function and 
+motor performance in children with ADHD. Research in Developmental 
+Disabilities, 38, 181–191. https://doi.org/10.1016/J.RIDD.2014.12.005
+[/PAGE 103]

@@ -3,5 +3,16 @@
   "columns": 42,
   "missing_by_item": {},
   "invalid_by_item": {},
-  "duplicate_rows": 28
+  "duplicate_rows": 28,
+  "duplicate_investigation": {
+    "method": "exact full-row duplicate detection across all 42 columns",
+    "n_duplicate_groups": 28,
+    "n_rows_flagged_secondary": 28,
+    "pattern_found": "Duplicated rows occur as contiguous BLOCKS reappearing at a near-constant row-index offset (most commonly 17, 19, 20, or 22 rows apart), e.g. rows 240-251 reappear verbatim at rows 259-270. This is the signature of a copy/append error during data export, not independent respondents who coincidentally answered identically across 39 columns.",
+    "recommendation": "Exclude rows where is_duplicate_secondary == true from statistical analysis and model training. Do NOT delete them from the stored dataset -- keep them flagged for traceability in case the original data collection team needs to verify against source records.",
+    "columns_added": [
+      "duplicate_group_id",
+      "is_duplicate_secondary"
+    ]
+  }
 }

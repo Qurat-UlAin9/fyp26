@@ -84,6 +84,7 @@ def build_chunks(stem: str):
             "trust_score": 0.5,
             "category": "unclassified",
             "source_type": "unknown",
+            "recommended_tool": None,
         }
 
     pages = load_pages(txt_path)
@@ -118,6 +119,7 @@ def build_chunks(stem: str):
             "trust_score": doc_meta["trust_score"],
             "category": doc_meta["category"],
             "source_type": doc_meta["source_type"],
+            "recommended_tool": doc_meta.get("recommended_tool"),
             "page_start": min(page_range),
             "page_end": max(page_range),
             "word_count": len(window),
