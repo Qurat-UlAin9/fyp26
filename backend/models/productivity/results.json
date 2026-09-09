@@ -1,0 +1,18 @@
+{
+  "training_metrics": {
+    "rmse": 0.5309311698866654,
+    "mae": 0.41541134169369937,
+    "r2": 0.99891186677464
+  },
+  "test_metrics": {
+    "rmse": 0.9555115137191029,
+    "mae": 0.7554275981712342,
+    "r2": 0.9964556112457031
+  },
+  "dataset": {
+    "total_records": 20000,
+    "training_samples": 16000,
+    "test_samples": 4000,
+    "total_features": 16
+  }
+}

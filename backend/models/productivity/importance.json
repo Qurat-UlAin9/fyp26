@@ -1,0 +1,66 @@
+[
+  {
+    "feature": "study_hours_per_day",
+    "importance": 0.5205873250961304
+  },
+  {
+    "feature": "focus_score",
+    "importance": 0.16891129314899445
+  },
+  {
+    "feature": "phone_usage_hours",
+    "importance": 0.1012372374534607
+  },
+  {
+    "feature": "sleep_hours",
+    "importance": 0.10110639035701752
+  },
+  {
+    "feature": "stress_level",
+    "importance": 0.045643046498298645
+  },
+  {
+    "feature": "attendance_percentage",
+    "importance": 0.03386757895350456
+  },
+  {
+    "feature": "coffee_intake_mg",
+    "importance": 0.003981764428317547
+  },
+  {
+    "feature": "youtube_hours",
+    "importance": 0.0034953986760228872
+  },
+  {
+    "feature": "exercise_minutes",
+    "importance": 0.0032499453518539667
+  },
+  {
+    "feature": "breaks_per_day",
+    "importance": 0.0031069559045135975
+  },
+  {
+    "feature": "gaming_hours",
+    "importance": 0.003038727678358555
+  },
+  {
+    "feature": "final_grade",
+    "importance": 0.0027541392482817173
+  },
+  {
+    "feature": "social_media_hours",
+    "importance": 0.002526504686102271
+  },
+  {
+    "feature": "assignments_completed",
+    "importance": 0.002286500995978713
+  },
+  {
+    "feature": "age",
+    "importance": 0.002271659905090928
+  },
+  {
+    "feature": "gender",
+    "importance": 0.0019355163676664233
+  }
+]
