@@ -1,15 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Sparkles, ClipboardList } from 'lucide-react-native';
+import { Sparkles, ClipboardList, Brain } from 'lucide-react-native';
 import ADHDButton from '../../components/common/ADHDButton';
 import { useTheme } from '../../contexts/ThemeContext';
 
 export default function WelcomeScreen({ navigation }) {
   const { theme, isDark } = useTheme();
 
-  const goToAssessment = () => {
+  const goToADHDAssessment = () => {
     navigation.navigate('Questionnaire');
+  };
+
+  const goToEFAssessment = () => {
+    navigation.navigate('EFQuestionnaire');
   };
 
   return (
@@ -21,23 +25,35 @@ export default function WelcomeScreen({ navigation }) {
         <Sparkles color="#FFFFFF" size={26} />
         <Text style={styles.heroTitle}>Welcome to FocusMind</Text>
         <Text style={styles.heroText}>
-          Let's personalize your journey. A quick assessment helps tailor your experience.
+          Let's personalize your journey. A couple of quick assessments help tailor your experience.
         </Text>
       </LinearGradient>
 
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={goToAssessment}
+        onPress={goToADHDAssessment}
         style={[styles.assessmentCard, { backgroundColor: theme.card, borderColor: theme.border }]}
       >
         <ClipboardList color={theme.primary} size={22} />
         <View style={styles.assessmentCopy}>
-          <Text style={[styles.assessmentTitle, { color: theme.text }]}>Start Assessment</Text>
+          <Text style={[styles.assessmentTitle, { color: theme.text }]}>ADHD Screening</Text>
           <Text style={[styles.assessmentSubtitle, { color: theme.textSecondary }]}>2-3 minutes • Understand your needs</Text>
         </View>
       </TouchableOpacity>
 
-      <ADHDButton title="Start Assessment" onPress={goToAssessment} style={styles.primaryButton} />
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={goToEFAssessment}
+        style={[styles.assessmentCard, { backgroundColor: theme.card, borderColor: theme.border }]}
+      >
+        <Brain color={theme.primary} size={22} />
+        <View style={styles.assessmentCopy}>
+          <Text style={[styles.assessmentTitle, { color: theme.text }]}>Executive Function Assessment</Text>
+          <Text style={[styles.assessmentSubtitle, { color: theme.textSecondary }]}>5-7 minutes • Attention, organization, and more</Text>
+        </View>
+      </TouchableOpacity>
+
+      <ADHDButton title="Start ADHD Screening" onPress={goToADHDAssessment} style={styles.primaryButton} />
       <ADHDButton title="Continue to Home" gradient={false} onPress={() => navigation.replace('MainTabs')} />
     </View>
   );
@@ -72,7 +88,7 @@ const styles = StyleSheet.create({
     padding: 18,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 18,
+    marginBottom: 14,
   },
   assessmentCopy: {
     marginLeft: 12,
@@ -88,6 +104,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   primaryButton: {
+    marginTop: 4,
     marginBottom: 12,
   },
 });

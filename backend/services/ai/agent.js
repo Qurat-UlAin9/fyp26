@@ -39,6 +39,47 @@ async function getUserMemories(userId) {
 }
 
 /**
+ * Latest ADHD/ASRS screening result for this user, or null if they
+ * haven't completed one. Queried directly via Supabase (service role) --
+ * this is backend-internal context, not the same path as the frontend's
+ * getLatestADHDAssessment() in services/api.js.
+ */
+async function getLatestADHDContext(userId) {
+  const { data, error } = await supabaseAdmin
+    .from('assessments')
+    .select('score, max_score, percentage, predicted_label, adhd_probability, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Failed to load ADHD assessment context:', error);
+    return null;
+  }
+  return data || null;
+}
+
+/**
+ * Latest Executive Function assessment result for this user, or null.
+ */
+async function getLatestEFContext(userId) {
+  const { data, error } = await supabaseAdmin
+    .from('ef_assessments')
+    .select('dimension_scores, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Failed to load EF assessment context:', error);
+    return null;
+  }
+  return data || null;
+}
+
+/**
  * @param {{userId: string, conversationId: string, userMessage: string}} params
  * @returns {{reply: string, knowledgeChunks: object[], usage: object}}
  */
@@ -57,8 +98,15 @@ async function handleMessage({ userId, conversationId, userMessage }) {
   // 4. Pull recent conversation history for continuity
   const history = await getRecentMessages(conversationId);
 
-  // 5. Build prompt and call the LLM
-  const systemPrompt = buildSystemPrompt(knowledgeChunks, memories);
+  // 5. Pull latest screening/assessment context (best-effort -- a missing
+  //    or failed lookup should never break the chat).
+  const [adhdContext, efContext] = await Promise.all([
+    getLatestADHDContext(userId).catch(() => null),
+    getLatestEFContext(userId).catch(() => null),
+  ]);
+
+  // 6. Build prompt and call the LLM
+  const systemPrompt = buildSystemPrompt(knowledgeChunks, memories, { adhdContext, efContext });
   const messages = [
     ...history.map((m) => ({
       role: m.sender === 'assistant' ? 'assistant' : 'user',

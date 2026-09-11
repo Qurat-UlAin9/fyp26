@@ -17,6 +17,9 @@ import CognitivePowerScreen from '../screens/Emotion/CognitivePowerScreen';
 import ChatbotScreen from '../screens/Chatbot/ChatbotScreen';
 import QuestionnaireScreen from '../screens/Detection/QuestionnaireScreen';
 import AssessmentResultScreen from '../screens/Detection/AssessmentResultScreen';
+import EFQuestionnaireScreen from '../screens/Detection/EFQuestionnaireScreen';
+import EFAssessmentResultScreen from '../screens/Detection/EFAssessmentResultScreen';
+
 import BalloonSession from '../screens/Emotion/BallonSession';
 import SplashSession from '../screens/Emotion/SplashSession';
 import GroundingSession from '../screens/Emotion/GroundingSession';
@@ -75,6 +78,8 @@ export default function AppNavigator() {
       <Stack.Screen name="Chatbot" component={ChatbotScreen} options={{ title: 'AI Coach' }} />
       <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} options={{ headerShown: false }} />
       <Stack.Screen name="AssessmentResult" component={AssessmentResultScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EFQuestionnaire" component={EFQuestionnaireScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EFAssessmentResult" component={EFAssessmentResultScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

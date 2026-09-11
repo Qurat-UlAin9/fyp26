@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import QuestionCard from '../../components/detection/QuestionCard';
 import OptionCard from '../../components/detection/OptionCard';
 import { useTheme } from '../../contexts/ThemeContext';
-import { getCurrentUser, submitAssessment } from '../../services/api';
+import { submitAssessment } from '../../services/api';
 
 const QUESTIONS = [
   'How often do you have trouble finishing tasks once the challenging parts are done?',
@@ -71,11 +71,10 @@ export default function QuestionnaireScreen({ navigation }) {
 
     const scoreMap = { Never: 0, Rarely: 1, Sometimes: 2, Often: 3, 'Very Often': 4 };
     const numericAnswers = answers.map((answer) => scoreMap[answer] ?? 0);
-    const user = await getCurrentUser();
 
     try {
       setSubmitting(true);
-      const result = await submitAssessment(numericAnswers, user?.id);
+      const result = await submitAssessment(numericAnswers);
       navigation.navigate('AssessmentResult', {
         score: result.score,
         maxScore: result.max_score,

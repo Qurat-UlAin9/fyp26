@@ -122,6 +122,27 @@ DOCUMENT_REGISTRY = {
         "source_type": "narrative_review",
         "recommended_tool": "emotion_tool",
     },
+    "exercise_nma_adhd_ef": {
+        "title": "Comparative Effectiveness of Various Physical Exercise Interventions "
+                  "on Executive Functions and Related Symptoms in Children and "
+                  "Adolescents with ADHD: A Systematic Review and Network Meta-Analysis "
+                  "(Zhu et al., 2023, Frontiers in Public Health)",
+        "tier": 2,
+        "trust_score": 0.85,
+        "category": "exercise",
+        "source_type": "network_meta_analysis",
+        "recommended_tool": "exercise_tool",
+    },
+    "habit_formation_time_review": {
+        "title": "Time to Form a Habit: A Systematic Review and Meta-Analysis of "
+                  "Health Behaviour Habit Formation and Its Determinants "
+                  "(Singh et al., 2024, Healthcare)",
+        "tier": 2,
+        "trust_score": 0.85,
+        "category": "habit_formation",
+        "source_type": "systematic_review_meta_analysis",
+        "recommended_tool": "habit_tool",
+    },
 }
 
 for d in (EXTRACTED_DIR, CHUNKS_DIR):

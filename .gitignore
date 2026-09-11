@@ -5,6 +5,8 @@ node_modules/
 .venv/
 .venv-backend/
 .vscode
+rag/raw/
+raw/
 
 # Expo
 .expo/

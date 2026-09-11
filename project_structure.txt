@@ -46,6 +46,8 @@ fyp26/
 │   │   │   │   ├── cleaning_report.json
 │   │   │   │   └── executive_function_clean.csv
 │   │   │   ├── inspection/
+│   │   │   │   ├── cleaning_report.json
+│   │   │   │   ├── executive_function_clean.csv
 │   │   │   │   ├── sav_data_preview.csv
 │   │   │   │   ├── sav_missing_values.csv
 │   │   │   │   ├── sav_numeric_statistics.csv
@@ -68,6 +70,14 @@ fyp26/
 │   │   └── auth.js
 │   ├── models/
 │   │   ├── executive_function/
+│   │   ├── productivity/
+│   │   │   ├── encoders.pkl
+│   │   │   ├── features.json
+│   │   │   ├── importance.json
+│   │   │   ├── results.json
+│   │   │   ├── scaler.pkl
+│   │   │   ├── train_productivity_model.py
+│   │   │   └── xgboost_model.pkl
 │   │   ├── adhd_model.pkl
 │   │   ├── adhd_model_final.pkl
 │   │   ├── features.pkl
@@ -79,6 +89,7 @@ fyp26/
 │   │   ├── ai.js
 │   │   ├── assessments.js
 │   │   ├── auth.js
+│   │   ├── executiveFunction.js
 │   │   ├── exercises.js
 │   │   ├── focusSessions.js
 │   │   ├── habits.js
@@ -89,7 +100,9 @@ fyp26/
 │   │   ├── statistics.js
 │   │   └── tasks.js
 │   ├── scoring/
-│   │   └── executive_function_scoring.py
+│   │   ├── EF_scoring_audit_report.md
+│   │   ├── executive_function_scoring.py
+│   │   └── executiveFunctionScoring.js
 │   ├── services/
 │   │   └── ai/
 │   │       ├── memory/
@@ -129,14 +142,22 @@ fyp26/
 │   ├── output/
 │   │   ├── chunks/
 │   │   │   ├── ef_interventions_systematic_review_chunks.json
+│   │   │   ├── emotion_dysregulation_interventions_review_chunks.json
+│   │   │   ├── exercise_nma_adhd_ef_chunks.json
 │   │   │   ├── exercise_open_closed_skill_ef_chunks.json
+│   │   │   ├── habit_formation_dbci_review_chunks.json
+│   │   │   ├── habit_formation_time_review_chunks.json
 │   │   │   ├── peds_20192528_chunks.json
 │   │   │   ├── practice_standards_adhd_chunks.json
 │   │   │   ├── ukaan_university_students_chunks.json
 │   │   │   └── wfadhd_school_psychologists_chunks.json
 │   │   └── extracted/
 │   │       ├── ef_interventions_systematic_review.txt
+│   │       ├── emotion_dysregulation_interventions_review.txt
+│   │       ├── exercise_nma_adhd_ef.txt
 │   │       ├── exercise_open_closed_skill_ef.txt
+│   │       ├── habit_formation_dbci_review.txt
+│   │       ├── habit_formation_time_review.txt
 │   │       ├── peds_20192528.txt
 │   │       ├── practice_standards_adhd.txt
 │   │       ├── ukaan_university_students.txt
@@ -148,9 +169,12 @@ fyp26/
 │   │   │   ├── practice_standards_adhd.pdf
 │   │   │   └── ukaan_university_students.pdf
 │   │   ├── tier2_evidence/
-│   │   │   └── exercise_open_closed_skill_ef.pdf
+│   │   │   ├── exercise_nma_adhd_ef.pdf
+│   │   │   ├── exercise_open_closed_skill_ef.pdf
+│   │   │   └── habit_formation_time_review.pdf
 │   │   ├── tier3_research/
 │   │   │   ├── ef_interventions_systematic_review.pdf
+│   │   │   ├── emotion_dysregulation_interventions_review.pdf
 │   │   │   └── habit_formation_dbci_review.pdf
 │   │   └── tier4_applied/
 │   │       └── wfadhd_school_psychologists.pdf
@@ -212,6 +236,8 @@ fyp26/
 │   │   ├── AppDataContext.js
 │   │   ├── ProductivityContext.js
 │   │   └── ThemeContext.js
+│   ├── data/
+│   │   └── efQuestions.js
 │   ├── navigation/
 │   │   ├── AppNavigator.js
 │   │   └── TabNavigator.js
@@ -227,6 +253,8 @@ fyp26/
 │   │   │   └── ChatbotScreen.js
 │   │   ├── Detection/
 │   │   │   ├── AssessmentResultScreen.js
+│   │   │   ├── EFAssessmentResultScreen.js
+│   │   │   ├── EFQuestionnaireScreen.js
 │   │   │   └── QuestionnaireScreen.js
 │   │   ├── Emotion/
 │   │   │   ├── BallonSession.js

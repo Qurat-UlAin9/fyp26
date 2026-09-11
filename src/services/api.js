@@ -536,23 +536,44 @@ export async function sendChatMessage(conversationId, message) {
 ========================================================= */
 
 /*
- * Your current backend app.js does NOT register:
- *
- * /detection/predict
- *
- * Therefore this remains a compatibility function only.
- *
- * Do not use it until the assessment backend route exists.
+ * Posts to routes/assessments.js, mounted at /api/assessments.
+ * The backend identifies the user via the auth token (requireAuth),
+ * so no user_id needs to be sent from the client.
  */
-
-export async function submitAssessment(answers, userId) {
-  return request('/detection/predict', {
+export async function submitAssessment(answers) {
+  return request('/api/assessments', {
     method: 'POST',
-    body: JSON.stringify({
-      answers,
-      user_id: userId,
-    }),
+    body: JSON.stringify({ answers }),
   });
+}
+
+export async function getAssessments() {
+  return request('/api/assessments');
+}
+
+export async function getLatestADHDAssessment() {
+  const { data } = await getAssessments();
+  return Array.isArray(data) && data.length > 0 ? data[0] : null;
+}
+
+/* =========================================================
+   EXECUTIVE FUNCTION (EF) ASSESSMENT
+========================================================= */
+
+export async function submitEFAssessment(responses) {
+  return request('/api/executive-function', {
+    method: 'POST',
+    body: JSON.stringify({ responses }),
+  });
+}
+
+export async function getEFAssessments() {
+  return request('/api/executive-function');
+}
+
+export async function getLatestEFAssessment() {
+  const { data } = await getEFAssessments();
+  return Array.isArray(data) && data.length > 0 ? data[0] : null;
 }
 
 /* =========================================================

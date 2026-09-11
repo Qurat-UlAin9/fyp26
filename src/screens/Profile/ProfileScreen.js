@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { User, Award, Settings, LogOut, Target, CheckCircle2, Brain, Flame } from 'lucide-react-native';
+import { User, Award, Settings, LogOut, Target, CheckCircle2, Brain, Flame, ClipboardList } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
+import { getLatestADHDAssessment, getLatestEFAssessment } from '../../services/api';
+import { EF_DIMENSIONS_META } from '../../data/efQuestions';
 
 function StatCard({ icon, label, value, theme, isDark }) {
   return (
@@ -15,9 +17,41 @@ function StatCard({ icon, label, value, theme, isDark }) {
   );
 }
 
+function riskLabel(percentage) {
+  if (percentage >= 70) return 'High likelihood';
+  if (percentage >= 45) return 'Moderate likelihood';
+  return 'Low likelihood';
+}
+
 export default function ProfileScreen({ navigation }) {
   const { theme, isDark, stats, coins, titles } = useTheme();
   const { profile, tasks, habits, focusSessions } = useAppData();
+
+  const [adhdResult, setAdhdResult] = useState(null);
+  const [efResult, setEfResult] = useState(null);
+  const [loadingAssessments, setLoadingAssessments] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAssessments() {
+      try {
+        const [adhd, ef] = await Promise.all([
+          getLatestADHDAssessment().catch(() => null),
+          getLatestEFAssessment().catch(() => null),
+        ]);
+        if (!cancelled) {
+          setAdhdResult(adhd);
+          setEfResult(ef);
+        }
+      } finally {
+        if (!cancelled) setLoadingAssessments(false);
+      }
+    }
+
+    loadAssessments();
+    return () => { cancelled = true; };
+  }, []);
 
   const completedTasks = stats.tasksCompleted;
   const onTimeRate = completedTasks ? Math.round((completedTasks / (completedTasks + tasks.length)) * 100) : 0;
@@ -54,6 +88,65 @@ export default function ProfileScreen({ navigation }) {
           <Text style={[styles.insightText, { color: theme.textSecondary }]}>{insight}</Text>
         </View>
 
+        {/* ---------------- ADHD SCREENING SUMMARY ---------------- */}
+        <View style={[styles.insightCard, { backgroundColor: isDark ? 'rgba(15,23,42,0.62)' : 'rgba(255,255,255,0.9)', borderColor: theme.border }]}>
+          <ClipboardList color={theme.accentGradient[0]} size={18} />
+          <Text style={[styles.insightTitle, { color: theme.text }]}>ADHD Screening</Text>
+
+          {loadingAssessments ? (
+            <ActivityIndicator style={{ marginTop: 8 }} color={theme.accentGradient[0]} />
+          ) : adhdResult ? (
+            <>
+              <Text style={[styles.insightText, { color: theme.textSecondary }]}>
+                {riskLabel(adhdResult.percentage)} • {adhdResult.percentage}% ({adhdResult.score}/{adhdResult.max_score})
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Questionnaire')}>
+                <Text style={[styles.retakeLink, { color: theme.primary }]}>Retake screening</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <Text style={[styles.insightText, { color: theme.textSecondary }]}>
+                You haven't completed the ADHD screening yet.
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Questionnaire')}>
+                <Text style={[styles.retakeLink, { color: theme.primary }]}>Start screening</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+
+        {/* ---------------- EXECUTIVE FUNCTION SUMMARY ---------------- */}
+        <View style={[styles.insightCard, { backgroundColor: isDark ? 'rgba(15,23,42,0.62)' : 'rgba(255,255,255,0.9)', borderColor: theme.border }]}>
+          <Brain color={theme.accentGradient[0]} size={18} />
+          <Text style={[styles.insightTitle, { color: theme.text }]}>Executive Function</Text>
+
+          {loadingAssessments ? (
+            <ActivityIndicator style={{ marginTop: 8 }} color={theme.accentGradient[0]} />
+          ) : efResult ? (
+            <>
+              {Object.entries(efResult.dimension_scores || {}).map(([name, score]) => (
+                <Text key={name} style={[styles.efLine, { color: theme.textSecondary }]}>
+                  • {EF_DIMENSIONS_META[name]?.label ?? name}: {Math.round(score.normalized0to100)}%
+                  {score.status === 'partial' ? ' (approx.)' : ''}
+                </Text>
+              ))}
+              <TouchableOpacity onPress={() => navigation.navigate('EFQuestionnaire')}>
+                <Text style={[styles.retakeLink, { color: theme.primary }]}>Retake assessment</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <Text style={[styles.insightText, { color: theme.textSecondary }]}>
+                You haven't completed the Executive Function assessment yet.
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('EFQuestionnaire')}>
+                <Text style={[styles.retakeLink, { color: theme.primary }]}>Start assessment</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+
         <TouchableOpacity style={styles.actionBtn} onPress={() => navigation.navigate('Rewards')}><Award color="#FFFFFF" size={18} /><Text style={styles.actionText}>Rewards</Text></TouchableOpacity>
         <TouchableOpacity style={styles.actionBtn} onPress={() => navigation.navigate('Settings')}><Settings color="#FFFFFF" size={18} /><Text style={styles.actionText}>Settings</Text></TouchableOpacity>
         <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#EF4444' }]} onPress={() => navigation.replace('Login')}><LogOut color="#FFFFFF" size={18} /><Text style={styles.actionText}>Logout</Text></TouchableOpacity>
@@ -76,6 +169,8 @@ const styles = StyleSheet.create({
   insightCard: { width: '100%', borderWidth: 1, borderRadius: 16, padding: 14, marginBottom: 14 },
   insightTitle: { fontSize: 14, fontWeight: '700', marginTop: 8 },
   insightText: { marginTop: 6, fontSize: 13, lineHeight: 18 },
+  efLine: { marginTop: 4, fontSize: 13, lineHeight: 18 },
+  retakeLink: { marginTop: 8, fontSize: 13, fontWeight: '700' },
   actionBtn: { width: '100%', borderRadius: 14, paddingVertical: 13, marginBottom: 10, backgroundColor: '#7C3AED', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   actionText: { color: '#FFFFFF', fontWeight: '700', fontSize: 15 },
 });

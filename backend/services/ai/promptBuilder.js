@@ -7,7 +7,45 @@ sentences) unless the user asks for detail. Never invent clinical claims
 that aren't supported by the KNOWLEDGE section below; if it's not covered
 there, answer from general supportive coaching, not medical authority.`;
 
-function buildSystemPrompt(knowledgeChunks, memories) {
+// Human-readable labels for EF dimension keys, matching src/data/efQuestions.js
+// on the frontend. Keep these two lists in sync if dimension names change.
+const EF_DIMENSION_LABELS = {
+  SistemaAtencionalSupervisor: 'Attention/Supervisory System',
+  RegulacionDeliberadaEmocion: 'Emotion Regulation',
+  MonitorizacionConscieteResponsabilidades: 'Monitoring Responsibilities',
+  Verificaciondelaconducta: 'Verification of Conduct',
+  Organizacionelemnetostareas: 'Organization of Tasks',
+  Controlinhibitorio: 'Inhibitory Control',
+  tomadedecisiones: 'Decision Making',
+};
+
+function buildScreeningContext(adhdContext, efContext) {
+  if (!adhdContext && !efContext) return '';
+
+  let section = '\n\nUSER SCREENING CONTEXT (self-reported, NOT a diagnosis):\n';
+  section += 'Use this only to adjust tone and approach -- e.g. offer more structure or ';
+  section += 'shorter steps if scores suggest that would help. NEVER state or imply the ';
+  section += 'user has ADHD or any condition, and never cite these numbers back to the ';
+  section += 'user as if they were clinical findings.\n';
+
+  if (adhdContext) {
+    section += `\nADHD self-screening (ASRS-based): ${adhdContext.percentage}% ` +
+      `(${adhdContext.score}/${adhdContext.max_score}), model output: ${adhdContext.predicted_label}.\n`;
+  }
+
+  if (efContext && efContext.dimension_scores) {
+    section += '\nExecutive function self-assessment (higher % = fewer self-reported difficulties):\n';
+    Object.entries(efContext.dimension_scores).forEach(([key, score]) => {
+      const label = EF_DIMENSION_LABELS[key] || key;
+      const pct = Math.round(score.normalized0to100 ?? 0);
+      section += `- ${label}: ${pct}%${score.status === 'partial' ? ' (approximate)' : ''}\n`;
+    });
+  }
+
+  return section;
+}
+
+function buildSystemPrompt(knowledgeChunks, memories, screeningContext = {}) {
   let prompt = BASE_SYSTEM_PROMPT;
 
   if (knowledgeChunks && knowledgeChunks.length > 0) {
@@ -24,6 +62,9 @@ function buildSystemPrompt(knowledgeChunks, memories) {
       prompt += `- [${m.memory_type}] ${m.title ? m.title + ': ' : ''}${m.content}\n`;
     });
   }
+
+  const { adhdContext, efContext } = screeningContext;
+  prompt += buildScreeningContext(adhdContext, efContext);
 
   return prompt;
 }
