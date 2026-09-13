@@ -26,8 +26,10 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { useAppData } from '../../contexts/AppDataContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useProductivity } from '../../contexts/ProductivityContext';
 
 // ─── Layout constants ─────────────────────────────────────────────────────────
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -231,6 +233,8 @@ function EventBlock({ event, colIdx, onPress }) {
 export default function TimelineScreen() {
   const { timelineEvents } = useAppData();
   const { theme, isDark } = useTheme();
+  const navigation = useNavigation();
+  const { setActiveSessionTask } = useProductivity();
 
   const today       = new Date();
   const [weekBase,   setWeekBase]   = useState(today);
@@ -257,7 +261,7 @@ export default function TimelineScreen() {
   const visibleEvents = useMemo(() => {
     return timelineEvents.filter((e) => {
       if (!weekKeys.includes(e.isoKey)) return false;
-      if (activeTab === 'All')    return e.type !== 'focus';
+      if (activeTab === 'All')    return true;
       if (activeTab === 'Tasks')  return e.type === 'task';
       if (activeTab === 'Focus')  return e.type === 'focus';
       if (activeTab === 'Habits') return e.type === 'habit';
@@ -281,14 +285,30 @@ export default function TimelineScreen() {
   const goToToday = useCallback(() => setWeekBase(new Date()), []);
 
   const handleEventPress = useCallback((event) => {
+    const typeLabel =
+      event.type === 'focus'
+        ? 'Focus session — start a timer from the Focus tab. Completed sessions appear here in purple.'
+        : event.type === 'habit'
+        ? 'Habit block — scheduled from your Habits time slots (Morning, Noon, Evening, Night).'
+        : 'Task — due/start time from Tasks.';
+
     Alert.alert(
       `${event.type === 'focus' ? '🎯' : event.type === 'habit' ? '✅' : '📌'} ${event.title}`,
-      `${formatTime(event.startHour, event.startMin || 0)} · ${event.durationMins} min\nType: ${event.type}`,
+      `${formatTime(event.startHour, event.startMin || 0)} · ${event.durationMins} min\n\n${typeLabel}`,
       event.type === 'focus'
-        ? [{ text: 'Not Now', style: 'cancel' }, { text: 'Start Focus', onPress: () => {} }]
+        ? [
+            { text: 'Close', style: 'cancel' },
+            {
+              text: 'Open Focus',
+              onPress: () => {
+                setActiveSessionTask({ title: event.title.replace(/^Focus:\s*/, '') });
+                navigation.navigate('Focus');
+              },
+            },
+          ]
         : [{ text: 'OK' }],
     );
-  }, []);
+  }, [navigation, setActiveSessionTask]);
 
   // Auto-scroll to current time on mount
   const handleGridLayout = useCallback(() => {
@@ -341,6 +361,10 @@ export default function TimelineScreen() {
           </View>
         </View>
 
+        <Text style={[styles.legend, { color: theme.textSecondary }]}>
+          📌 Tasks · 🎯 Focus (timer sessions) · ✅ Habits (time slots)
+        </Text>
+
         {/* ── Tabs ─────────────────────────────────────────────────────────── */}
         <View style={styles.tabRow}>
           {TABS.map((tab) => {
@@ -378,8 +402,8 @@ export default function TimelineScreen() {
                 : activeTab === 'Habits'
                 ? 'Add a habit — it will appear on the grid.'
                 : activeTab === 'Focus'
-                ? 'Start a focus session — it will appear here.'
-                : 'Add tasks or habits and they will show up below.'}
+                ? 'Start a timer on the Focus tab. When a session runs, it shows here in purple.'
+                : 'Tasks, focus sessions, and habits all appear on this grid.'}
             </Text>
           </View>
         )}

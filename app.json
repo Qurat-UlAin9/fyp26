@@ -30,7 +30,8 @@
     "plugins": [
       "expo-font",
       "expo-localization",
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-splash-screen"
     ],
     "extra": {
       "eas": {

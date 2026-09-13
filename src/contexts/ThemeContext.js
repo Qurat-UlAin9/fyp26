@@ -116,6 +116,7 @@ export const ThemeProvider = ({ children }) => {
   const registerSubtaskCompletion = useCallback(() => { earnCoins(1); setState((prev) => ({ ...prev, stats: { ...prev.stats, subtasksCompleted: prev.stats.subtasksCompleted + 1 } })); }, [earnCoins]);
   const registerHabitCompletion = useCallback(() => { earnCoins(2); setState((prev) => ({ ...prev, stats: { ...prev.stats, habitCompletions: prev.stats.habitCompletions + 1, habitStreak: Math.min(prev.stats.habitStreak + 1, 3) } })); }, [earnCoins]);
   const addFocusMinutes = useCallback((minutes) => minutes && setState((prev) => ({ ...prev, stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes } })), []);
+  const resetThemeData = useCallback(() => setState(defaultState), []);
 
   const titles = useMemo(() => TITLES.map((item) => ({ ...item, unlocked: item.condition(state.stats) })), [state.stats]);
   const theme = THEME_PRESETS[state.selectedThemeId] || THEME_PRESETS.vibrantLight;
@@ -125,8 +126,8 @@ export const ThemeProvider = ({ children }) => {
     titles, sounds: SOUND_PRESETS, coins: state.coins, stats: state.stats,
     unlockedThemes: state.unlockedThemes, selectedThemeId: state.selectedThemeId, unlockTheme, selectTheme,
     unlockedSounds: state.unlockedSounds, selectedSoundId: state.selectedSoundId, unlockSound, selectSound,
-    toggleSoundPlayback, isSoundPlaying, registerTaskCompletion, registerSubtaskCompletion, registerHabitCompletion, addFocusMinutes, earnCoins,
-  }), [theme, titles, state, unlockTheme, selectTheme, unlockSound, selectSound, toggleSoundPlayback, isSoundPlaying, registerTaskCompletion, registerSubtaskCompletion, registerHabitCompletion, addFocusMinutes, earnCoins]);
+    toggleSoundPlayback, isSoundPlaying, registerTaskCompletion, registerSubtaskCompletion, registerHabitCompletion, addFocusMinutes, earnCoins, resetThemeData,
+  }), [theme, titles, state, unlockTheme, selectTheme, unlockSound, selectSound, toggleSoundPlayback, isSoundPlaying, registerTaskCompletion, registerSubtaskCompletion, registerHabitCompletion, addFocusMinutes, earnCoins, resetThemeData]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

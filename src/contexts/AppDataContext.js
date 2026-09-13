@@ -1909,6 +1909,21 @@ export function AppDataProvider({
       [profile]
     );
 
+  const resetAppData = useCallback(async () => {
+    await Promise.all([
+      ...tasks.map((task) => apiDeleteTask(task.id).catch(() => undefined)),
+      ...habits.map((habit) => apiDeleteHabit(habit.id).catch(() => undefined)),
+      ...focusSessions.map((session) => apiDeleteFocusSession(session.id).catch(() => undefined)),
+    ]);
+
+    setTasks([]);
+    setHabits([]);
+    setFocusSessions([]);
+    setTaskHistory([]);
+    setStatistics(null);
+    await AsyncStorage.removeItem(APP_DATA_KEY);
+  }, [tasks, habits, focusSessions]);
+
   /* =======================================================
      TIMELINE
   ======================================================= */
@@ -2329,6 +2344,7 @@ export function AppDataProvider({
          * preferences
          */
         updateProfile,
+        resetAppData,
 
         /*
          * Timeline
@@ -2371,6 +2387,7 @@ export function AppDataProvider({
         addTaskToHistory,
 
         updateProfile,
+        resetAppData,
 
         timelineEvents,
         habitStats,
