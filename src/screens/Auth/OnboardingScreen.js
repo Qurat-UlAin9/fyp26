@@ -50,13 +50,13 @@ export default function OnboardingScreen({ navigation }) {
       navigation.replace('Welcome');
       return;
     }
-
     goToSlide(currentSlide + 1);
   };
 
   const back = () => goToSlide(currentSlide - 1);
 
-  const finish = () => navigation.replace('Welcome');
+  // Skip to Welcome directly (no assessment required)
+  const skipOnboarding = () => navigation.replace('Welcome');
 
   const onMomentumScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
@@ -67,7 +67,7 @@ export default function OnboardingScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: isDark ? '#0F172A' : '#F8FAFC' }]}>
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={finish}>
+        <TouchableOpacity onPress={skipOnboarding}>
           <Text style={[styles.skipText, { color: theme.accentGradient[0] }]}>Skip</Text>
         </TouchableOpacity>
       </View>

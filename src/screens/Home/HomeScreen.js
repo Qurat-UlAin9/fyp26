@@ -20,6 +20,9 @@ export default function HomeScreen() {
   const completedHabitSlots = habitStats.todayDone;
 
   const screenBackground = theme.background[0];
+  
+  // Use username instead of email for greeting
+  const displayName = profile?.username || profile?.name || 'Friend';
 
   const quickActions = [
     {
@@ -49,13 +52,19 @@ export default function HomeScreen() {
   ];
 
   return (
-    
     <View style={[styles.container, { backgroundColor: screenBackground }]}>
       <AnimatedOrbsBackground colors={[theme.glow + '40', theme.accentGradient[0] + '20', theme.accentGradient[1] + '20']} />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <View style={styles.greetingWrap}>
-            <View style={styles.greetRow}><TouchableOpacity onPress={() => navigation.navigate('Profile')} style={[styles.profileBtn, { backgroundColor: isDark ? 'rgba(15,23,42,0.6)' : '#fff' }]}><UserCircle2 color={theme.accentGradient[0]} size={20} /></TouchableOpacity><Text style={[styles.greeting, { color: theme.text }]}>{`${greeting}, ${profile.name || 'Friend'} ✨`}</Text></View>
+            <View style={styles.greetRow}>
+              <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={[styles.profileBtn, { backgroundColor: isDark ? 'rgba(15,23,42,0.6)' : '#fff' }]}>
+                <UserCircle2 color={theme.accentGradient[0]} size={24} />
+              </TouchableOpacity>
+              <View style={styles.greetingText}>
+                <Text style={[styles.greeting, { color: theme.text }]}>{greeting}, {displayName}!</Text>
+              </View>
+            </View>
             <Text style={[styles.subGreeting, { color: theme.textSecondary }]}>Let's make today amazing!</Text>
           </View>
 
@@ -67,6 +76,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
+        {/* Quote Section with proper image sizing */}
         <View style={[styles.quoteOuter, { backgroundColor: isDark ? '#111A4A' : '#FFFFFF' }]}>
           <ImageBackground
             source={quoteImageFailed || !theme.quoteImage ? require('../../../assets/images/onboarding1.png') : { uri: theme.quoteImage }}
@@ -74,15 +84,16 @@ export default function HomeScreen() {
             imageStyle={styles.quoteImage}
             defaultSource={require('../../../assets/images/onboarding1.png')}
             onError={() => setQuoteImageFailed(true)}
+            resizeMode="cover"
           >
             <View style={styles.quoteOverlay}>
-              <Text style={styles.quoteText}>“Small steps every day lead to big changes.”</Text>
+              <Text style={styles.quoteText}>"Small steps every day lead to big changes."</Text>
               <Text style={styles.quoteAuthor}>— Daily Motivation</Text>
             </View>
           </ImageBackground>
         </View>
 
-
+        {/* Assessment Card */}
         <TouchableOpacity onPress={() => navigation.navigate('Questionnaire')} activeOpacity={0.9}>
           <LinearGradient
             colors={isDark ? ['#4C1D95', '#2563EB'] : ['#C4B5FD', '#A5B4FC']}
@@ -95,6 +106,7 @@ export default function HomeScreen() {
           </LinearGradient>
         </TouchableOpacity>
 
+        {/* AI Chat Card */}
         <TouchableOpacity onPress={() => navigation.navigate('Chatbot')} activeOpacity={0.9}>
           <LinearGradient
             colors={isDark ? ['#5B21B6', '#1D4ED8'] : ['#A78BFA', '#22D3EE']}
@@ -106,8 +118,10 @@ export default function HomeScreen() {
             <Text style={styles.aiText}>AI Chat • Ask for support right now</Text>
           </LinearGradient>
         </TouchableOpacity>
+        
         <FocusSessionScheduler navigation={navigation} />
 
+        {/* Quick Actions */}
         <View style={styles.quickRow}>
           {quickActions.map((action) => {
             const Icon = action.icon;
@@ -123,6 +137,7 @@ export default function HomeScreen() {
           })}
         </View>
 
+        {/* Stats Snapshot */}
         <View style={styles.snapshotRow}>
           <LinearGradient colors={isDark ? ['#1E1B4B', '#1D4ED8'] : ['#FFFFFF', '#E0E7FF']} style={styles.snapshotCard}>
             <ListChecks color={isDark ? '#C4B5FD' : '#6366F1'} size={18} />
@@ -153,7 +168,8 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 },
   greetingWrap: { flex: 1, marginRight: 8 },
   greetRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  profileBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', shadowColor: '#312E81', shadowOpacity: 0.18, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
+  profileBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', shadowColor: '#312E81', shadowOpacity: 0.18, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 3 },
+  greetingText: { flex: 1 },
   greeting: { fontSize: 30, fontWeight: '800' },
   subGreeting: { fontSize: 18, fontWeight: '600', marginTop: 6 },
   rightIcons: { flexDirection: 'row', alignItems: 'center', gap: 8 },
@@ -179,9 +195,10 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 8 },
     elevation: 8,
+    overflow: 'hidden',
   },
   quoteInner: { borderRadius: 20, minHeight: 220, justifyContent: 'flex-end', overflow: 'hidden' },
-  quoteImage: { borderRadius: 20 },
+  quoteImage: { borderRadius: 20, resizeMode: 'cover' },
   quoteOverlay: {
     margin: 14,
     backgroundColor: 'rgba(7,10,36,0.35)',
