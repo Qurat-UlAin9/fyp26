@@ -1,18 +1,4 @@
-/**
- * TasksScreen.js  — updated to use AppDataContext
- *
- * Changes from original:
- *  - Removed local useState for tasks / history / coins
- *  - tasks, addTask, deleteTask, toggleSubtask now come from useAppData()
- *  - coins come from useTheme() (already existed)
- *  - Everything else (animations, CoinFly, TaskCard UI) is unchanged
- */
-
-import React, {
-  useRef,
-  useState,
-  useCallback,
-} from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   Animated as RNAnimated,
   Dimensions,
@@ -25,13 +11,13 @@ import {
   UIManager,
   View,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AddTaskBottomSheet from './AddTaskBottomSheet';
-
-// ── context hooks ──────────────────────────────────────────────────────────
 import { useAppData } from '../../contexts/AppDataContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { showAlert } from '../../utils/alert';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -39,7 +25,6 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 const { width: SW } = Dimensions.get('window');
 
-// ─── Theme palette ────────────────────────────────────────────────────────────
 const CARD_THEMES = [
   { id: 'coral',    dot: '#FF6B7A', cardGradient: ['#FF6B7A', '#FF8FA3'], glow: 'rgba(255,107,122,0.45)', accent: '#FF6B7A', textLight: '#FFF5F5', btnBg: 'rgba(255,255,255,0.22)' },
   { id: 'sky',      dot: '#4DA6FF', cardGradient: ['#4DA6FF', '#7EC8FF'], glow: 'rgba(77,166,255,0.45)',  accent: '#4DA6FF', textLight: '#F0F8FF', btnBg: 'rgba(255,255,255,0.22)' },
@@ -125,13 +110,14 @@ const CoinPill = React.forwardRef(({ coins, onHistoryPress }, ref) => (
 ));
 
 // ─── Task Card ────────────────────────────────────────────────────────────────
-function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onCoinFly }) {
+function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, onDelete, onEdit, onCoinFly }) {
   const th        = getThemeById(task.themeId);
   const scaleAnim = useRef(new RNAnimated.Value(1)).current;
   const cardRef   = useRef(null);
 
-  const completed = task.subtasks.filter((s) => s.done).length;
-  const total     = task.subtasks.length;
+  const subtasks  = Array.isArray(task.subtasks) ? task.subtasks : [];
+  const completed = subtasks.filter((s) => s.done).length;
+  const total     = subtasks.length;
   const pct       = total ? Math.round((completed / total) * 100) : 0;
 
   const pressCard = () => {
@@ -147,11 +133,44 @@ function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onC
     onToggle(task.id);
   };
 
-  const handleSubtask = (subtaskId) => {
-    cardRef.current?.measure((_fx, _fy, _w, _h, px, py) => {
-      onCoinFly({ x: px + 20, y: py + 20 });
-    });
-    onToggleSubtask(task.id, subtaskId);
+      const handleSubtask = (subtask, index) => {
+    const willBeDone = !subtask.done;
+
+    if (willBeDone) {
+      // Block if any earlier subtask is still undone
+      const earlierUndone = subtasks
+        .slice(0, index)
+        .some((s) => !s.done);
+            if (earlierUndone) {
+        showAlert(
+          'Finish earlier steps first',
+          'Complete the subtasks above this one before moving on. Small steps, in order.',
+          [{ text: 'OK' }]
+        );
+        return;
+      }
+
+      cardRef.current?.measure((_fx, _fy, _w, _h, px, py) => {
+        onCoinFly({ x: px + 20, y: py + 20 });
+      });
+      onToggleSubtask(task.id, subtask.id);
+      return;
+    }
+
+    // Unchecking: only allow if no later subtask is already done
+    const laterDone = subtasks
+      .slice(index + 1)
+      .some((s) => s.done);
+    if (laterDone) {
+      showAlert(
+        'Undo later steps first',
+        'You can only uncheck the most recent step. Undo the ones below it first.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    onToggleSubtask(task.id, subtask.id);
   };
 
   return (
@@ -159,33 +178,41 @@ function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onC
       <View style={[styles.cardGlow, { backgroundColor: th.glow, shadowColor: th.accent }]} />
       <LinearGradient colors={th.cardGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.card}>
 
-        {/* Header */}
-        <TouchableOpacity onPress={pressCard} activeOpacity={0.9}>
-          <View style={styles.cardTop}>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.taskTitle, { color: th.textLight }]} numberOfLines={2}>
-                {task.title}
-              </Text>
-              <Text style={[styles.taskDate, { color: th.textLight, opacity: 0.8 }]}>
-                📅 {formatDate(task.dueDate)}
-              </Text>
-            </View>
-            <Text style={[styles.expandChev, { color: th.textLight }]}>
-              {task.expanded ? '▲' : '▼'}
+        {/* Header (pressable to expand) */}
+        <View style={styles.cardTop}>
+          <TouchableOpacity style={{ flex: 1 }} onPress={pressCard} activeOpacity={0.85}>
+            <Text style={[styles.taskTitle, { color: th.textLight }]} numberOfLines={2}>
+              {task.title}
             </Text>
-          </View>
+            <Text style={[styles.taskDate, { color: th.textLight, opacity: 0.8 }]}>
+              📅 {formatDate(task.dueDate)}
+            </Text>
+            <View style={[styles.progressTrack, { backgroundColor: 'rgba(255,255,255,0.25)' }]}>
+              <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: th.textLight }]} />
+            </View>
+            <Text style={[styles.pctText, { color: th.textLight }]}>
+              {completed}/{total} subtasks · {pct}%
+            </Text>
+          </TouchableOpacity>
 
-          {/* Progress bar */}
-          <View style={[styles.progressTrack, { backgroundColor: 'rgba(255,255,255,0.25)' }]}>
-            <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: th.textLight }]} />
+          {/* Always-visible action icons */}
+          <View style={styles.headerActions}>
+            <TouchableOpacity onPress={() => onEdit(task)} style={styles.iconBtn} hitSlop={8}>
+              <Text style={styles.iconEmoji}>✏️</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onDelete(task.id)} style={styles.iconBtn} hitSlop={8}>
+              <Text style={styles.iconEmoji}>🗑️</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={pressCard} style={styles.iconBtn} hitSlop={8}>
+              <Text style={[styles.expandChev, { color: th.textLight }]}>
+                {isExpanded ? '▲' : '▼'}
+              </Text>
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.pctText, { color: th.textLight }]}>
-            {completed}/{total} subtasks · {pct}%
-          </Text>
-        </TouchableOpacity>
+        </View>
 
-        {/* Expanded */}
-        {task.expanded && (
+        {/* Expanded content */}
+        {isExpanded && (
           <View style={styles.expandedContent}>
             <View style={styles.divider} />
 
@@ -196,28 +223,46 @@ function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onC
               ⚡ Priority: {task.priority || 'Medium'}
             </Text>
 
-            {task.subtasks.map((sub) => (
-              <TouchableOpacity
-                key={sub.id}
-                onPress={() => handleSubtask(sub.id)}
-                style={styles.subtaskRow}
-                activeOpacity={0.7}
-              >
-                <View style={[
-                  styles.checkCircle,
-                  { backgroundColor: sub.done ? th.textLight : 'rgba(255,255,255,0.3)', borderColor: th.textLight },
-                ]}>
-                  {sub.done && <Text style={{ fontSize: 10 }}>✓</Text>}
-                </View>
-                <Text style={[
-                  styles.subtaskText,
-                  { color: th.textLight, textDecorationLine: sub.done ? 'line-through' : 'none', opacity: sub.done ? 0.55 : 1 },
-                ]}>
-                  {sub.title}
-                </Text>
-                {sub.done && <Text style={styles.coinBadge}>+3🪙</Text>}
-              </TouchableOpacity>
-            ))}
+            {subtasks.length > 0 ? (
+              subtasks.map((sub, index) => (
+                <TouchableOpacity
+                  key={sub.id}
+                  onPress={() => handleSubtask(sub, index)}
+                  style={styles.subtaskRow}
+                  activeOpacity={0.7}
+                >
+                 <View style={[
+                    styles.checkCircle,
+                    {
+                      backgroundColor: sub.done
+                        ? th.textLight
+                        : subtasks.slice(0, index).some((s) => !s.done)
+                          ? 'rgba(255,255,255,0.1)'
+                          : 'rgba(255,255,255,0.3)',
+                      borderColor: th.textLight,
+                      opacity: subtasks.slice(0, index).some((s) => !s.done) && !sub.done ? 0.4 : 1,
+                    },
+                  ]}>
+                    {sub.done && <Text style={{ fontSize: 11, fontWeight: '900', color: th.accent }}>✓</Text>}
+                  </View>
+                  <Text style={[
+                    styles.subtaskText,
+                    {
+                      color: th.textLight,
+                      textDecorationLine: sub.done ? 'line-through' : 'none',
+                      opacity: sub.done ? 0.55 : 1,
+                    },
+                  ]}>
+                    {sub.title}
+                  </Text>
+                  {sub.done && <Text style={styles.coinBadge}>+1🪙</Text>}
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={[styles.noSubtasks, { color: th.textLight, opacity: 0.65 }]}>
+                No subtasks yet. Tap ✏️ to add some.
+              </Text>
+            )}
 
             <View style={styles.actionRow}>
               <TouchableOpacity
@@ -225,12 +270,6 @@ function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onC
                 onPress={() => onStartFocus(task)}
               >
                 <Text style={[styles.focusBtnText, { color: th.textLight }]}>▶ Start Focus</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.deleteBtn, { backgroundColor: 'rgba(255,255,255,0.15)' }]}
-                onPress={() => onDelete(task.id)}
-              >
-                <Text style={styles.deleteBtnText}>🗑️</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -243,15 +282,23 @@ function TaskCard({ task, onToggle, onToggleSubtask, onStartFocus, onDelete, onC
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export default function TasksScreen() {
   const navigation = useNavigation();
-
-  // ── Pull from contexts (no more local useState for data) ──────────────────
-  const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, addTaskToHistory } = useAppData();
-  const { coins, registerSubtaskCompletion, registerTaskCompletion, theme, isDark } = useTheme();
-
+  const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, completeTask } = useAppData();
+  const {  coins,
+  registerSubtaskCompletion,
+  registerTaskCompletion,
+  unregisterSubtaskCompletion,
+  theme,
+} = useTheme();
   const addSheetRef  = useRef(null);
   const coinPillRef  = useRef(null);
   const [coinFlies, setCoinFlies] = useState([]);
+  const [expandedIds, setExpandedIds] = useState(() => new Set());
+  const [editingTask, setEditingTask] = useState(null);
+
   const history = taskHistory.filter((t) => daysSince(t.completedAt) <= 10);
+  const activeTasks = tasks.filter(
+    (t) => t.status !== 'Completed' && t.status !== 'Cancelled'
+  );
 
   const fireCoins = useCallback(({ x, y }) => {
     const id = Date.now() + Math.random();
@@ -259,40 +306,133 @@ export default function TasksScreen() {
     setTimeout(() => setCoinFlies((prev) => prev.filter((c) => c.id !== id)), 1200);
   }, []);
 
-  // Toggle expanded state locally inside context
+  // Purely local UI state — no API call
   const toggleExpanded = useCallback((taskId) => {
-    updateTask(taskId, (t) => ({ ...t, expanded: !t.expanded }));
-  }, [updateTask]);
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(taskId)) next.delete(taskId);
+      else next.add(taskId);
+      return next;
+    });
+  }, []);
 
-  const handleToggleSubtask = useCallback((taskId, subtaskId) => {
-    toggleSubtask(taskId, subtaskId);
-    registerSubtaskCompletion(); // +1 coin via ThemeContext
-
-    // Check if all subtasks now done → move to history
+      const handleToggleSubtask = useCallback((taskId, subtaskId) => {
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
-    const willAllBeDone = task.subtasks.every(
-      (s) => s.id === subtaskId ? true : s.done
-    );
-    if (willAllBeDone && !task.completedRewarded) {
-      registerTaskCompletion(); // +5 coins bonus
-      const completed = { ...task, completedAt: new Date().toISOString(), completedRewarded: true };
-      setTimeout(() => {
-        addTaskToHistory(completed);
-        deleteTask(taskId); // removes from AppDataContext → also removes from timeline
-      }, 600);
+
+    const subs = Array.isArray(task.subtasks) ? task.subtasks : [];
+    const target = subs.find((s) => s.id === subtaskId);
+    if (!target) return;
+
+    const willBeDone = !target.done;
+
+    toggleSubtask(taskId, subtaskId);
+
+    if (willBeDone) {
+      registerSubtaskCompletion();
+
+      const willAllBeDone = subs.every((s) =>
+        s.id === subtaskId ? true : s.done
+      );
+            if (willAllBeDone && subs.length > 0 && !task.completedRewarded) {
+        registerTaskCompletion();
+        Toast.show({
+          type: 'success',
+          text1: 'Task complete! 🎉',
+          text2: '+5 🪙',
+        });
+        setTimeout(() => {
+          completeTask(taskId);
+          setExpandedIds((prev) => {
+            const next = new Set(prev);
+            next.delete(taskId);
+            return next;
+          });
+        }, 600);
+      }
+    } else if (typeof unregisterSubtaskCompletion === 'function') {
+      unregisterSubtaskCompletion();
     }
-  }, [tasks, toggleSubtask, deleteTask, addTaskToHistory, registerSubtaskCompletion, registerTaskCompletion]);
+  }, [
+    tasks,
+    toggleSubtask,
+    completeTask,
+    registerSubtaskCompletion,
+    registerTaskCompletion,
+    unregisterSubtaskCompletion,
+  ]);
 
-  const handleDelete = useCallback((taskId) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    deleteTask(taskId);
-  }, [deleteTask]);
+  const handleDelete = useCallback(
+    (taskId) => {
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task) return;
 
-  const handleAddTask = useCallback((taskObj) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-    addTask(taskObj); // goes straight into AppDataContext → timeline sees it instantly
-  }, [addTask]);
+      showAlert(
+        'Delete task?',
+        `"${task.title}" will be removed permanently.`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: () => {
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+              );
+              deleteTask(taskId);
+              Toast.show({
+                type: 'info',
+                text1: 'Task deleted',
+                text2: task.title,
+              });
+            },
+          },
+        ]
+      );
+    },
+    [tasks, deleteTask]
+  );
+
+  const handleEdit = useCallback((task) => {
+    setEditingTask(task);
+    setTimeout(() => addSheetRef.current?.expand(), 60);
+  }, []);
+
+  const handleSheetSubmit = useCallback((taskObj) => {
+    if (editingTask) {
+      updateTask(editingTask.id, (t) => ({
+        ...t,
+        title: taskObj.title,
+        dueDate: taskObj.dueDate,
+        themeId: taskObj.themeId,
+        priority: taskObj.priority,
+        subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : t.subtasks,
+        metadata: {
+          ...(t.metadata || {}),
+          themeId: taskObj.themeId,
+          subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : t.subtasks,
+        },
+      }));
+      setEditingTask(null);
+      Toast.show({
+        type: 'success',
+        text1: 'Task updated',
+        text2: taskObj.title,
+      });
+    } else {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+      addTask(taskObj);
+      Toast.show({
+        type: 'success',
+        text1: 'Task created',
+        text2: taskObj.title,
+      });
+    }
+  }, [editingTask, updateTask, addTask]);
+
+  const handleSheetClose = useCallback(() => {
+    setEditingTask(null);
+  }, []);
 
   const startFocus = useCallback((task) => {
     navigation.navigate('Focus', { task });
@@ -308,33 +448,34 @@ export default function TasksScreen() {
     <View style={[styles.screen, { backgroundColor: theme.background[0] }]}>
       <LinearGradient colors={theme.background} style={StyleSheet.absoluteFill} />
 
-      {/* Flying coins */}
       {coinFlies.map((cf) => (
         <CoinFly key={cf.id} trigger={cf.id} originX={cf.x} originY={cf.y} coinPillRef={coinPillRef} />
       ))}
 
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={[styles.headerTitle, { color: theme.text }]}>Tasks</Text>
-          <Text style={[styles.headerSub, { color: theme.textSecondary }]}>{tasks.length} active · {history.length} done</Text>
+          <Text style={[styles.headerSub, { color: theme.textSecondary }]}>
+            {activeTasks.length} active · {history.length} done
+          </Text>
         </View>
         <CoinPill ref={coinPillRef} coins={coins} onHistoryPress={openHistory} />
       </View>
 
-      {/* Task list */}
       <FlatList
-        data={tasks}
+        data={activeTasks}
         keyExtractor={(t) => t.id}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TaskCard
             task={item}
+            isExpanded={expandedIds.has(item.id)}
             onToggle={toggleExpanded}
             onToggleSubtask={handleToggleSubtask}
             onStartFocus={startFocus}
             onDelete={handleDelete}
+            onEdit={handleEdit}
             onCoinFly={fireCoins}
           />
         )}
@@ -346,14 +487,18 @@ export default function TasksScreen() {
         }
       />
 
-      {/* FAB */}
       <TouchableOpacity style={styles.fab} onPress={() => addSheetRef.current?.expand()} activeOpacity={0.85}>
         <LinearGradient colors={['#818CF8', '#6366F1']} style={styles.fabGradient}>
           <Text style={styles.fabIcon}>+</Text>
         </LinearGradient>
       </TouchableOpacity>
 
-      <AddTaskBottomSheet ref={addSheetRef} onSubmit={handleAddTask} />
+      <AddTaskBottomSheet
+        ref={addSheetRef}
+        onSubmit={handleSheetSubmit}
+        initialTask={editingTask}
+        onClose={handleSheetClose}
+      />
     </View>
   );
 }
@@ -369,8 +514,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: '#F1F5F9', letterSpacing: -0.5 },
-  headerSub:   { fontSize: 13, color: '#64748B', marginTop: 2 },
+  headerTitle: { fontSize: 28, fontWeight: '800', letterSpacing: -0.5 },
+  headerSub:   { fontSize: 13, marginTop: 2 },
   pillRow:     { flexDirection: 'row', alignItems: 'center', gap: 8 },
   historyBtn:  { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' },
   historyIcon: { fontSize: 18 },
@@ -383,26 +528,28 @@ const styles = StyleSheet.create({
   cardTop:     { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
   taskTitle:   { fontSize: 17, fontWeight: '700', lineHeight: 22, marginBottom: 4 },
   taskDate:    { fontSize: 13, fontWeight: '500' },
-  expandChev:  { fontSize: 13, marginTop: 4, opacity: 0.7 },
+  expandChev:  { fontSize: 14, fontWeight: '700' },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  iconBtn:     { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.15)' },
+  iconEmoji:   { fontSize: 15 },
   progressTrack:{ height: 5, borderRadius: 3, marginTop: 12, overflow: 'hidden' },
   progressFill: { height: '100%', borderRadius: 3 },
   pctText:     { fontSize: 11, marginTop: 5, opacity: 0.75, fontWeight: '600' },
-  expandedContent: { marginTop: 10 },
+  expandedContent: { marginTop: 12 },
   divider:     { height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 },
-  timeRange:   { fontSize: 12, fontWeight: '600', marginBottom: 10 },
-  subtaskRow:  { flexDirection: 'row', alignItems: 'center', paddingVertical: 7, gap: 10 },
+  timeRange:   { fontSize: 12, fontWeight: '600', marginBottom: 8 },
+  subtaskRow:  { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, gap: 10 },
   checkCircle: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   subtaskText: { flex: 1, fontSize: 14, fontWeight: '500' },
   coinBadge:   { fontSize: 11, fontWeight: '700', color: '#FDE68A' },
+  noSubtasks:  { fontSize: 13, fontStyle: 'italic', paddingVertical: 6 },
   actionRow:   { flexDirection: 'row', gap: 10, marginTop: 14 },
-  focusBtn:    { flex: 1, paddingVertical: 10, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  focusBtn:    { flex: 1, paddingVertical: 11, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   focusBtnText:{ fontWeight: '700', fontSize: 14 },
-  deleteBtn:   { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  deleteBtnText: { fontSize: 20 },
   fab:         { position: 'absolute', bottom: 90, right: 20, borderRadius: 28, shadowColor: '#6366F1', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.5, shadowRadius: 14, elevation: 12 },
   fabGradient: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
   fabIcon:     { color: '#fff', fontSize: 28, fontWeight: '300', lineHeight: 32 },
   emptyState:  { alignItems: 'center', paddingTop: 80, gap: 12 },
   emptyEmoji:  { fontSize: 48 },
-  emptyText:   { color: '#475569', fontSize: 16, fontWeight: '600' },
+  emptyText:   { fontSize: 16, fontWeight: '600' },
 });

@@ -25,7 +25,7 @@ const suggestFocusSession = tool(
         session_name: 'Focus Session',
         session_type: session_type || 'Focus',
         planned_minutes: planned_minutes || 25,
-        status: 'planned',
+        status: 'Pending',
       })
       .select()
       .single();

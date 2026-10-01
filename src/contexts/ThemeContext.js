@@ -74,6 +74,13 @@ export const ThemeProvider = ({ children }) => {
 
   const earnCoins = useCallback((amount) => amount && setState((prev) => ({ ...prev, coins: prev.coins + amount })), []);
 
+  // Deduct coins without going negative. Used when a user unchecks an
+  // already-completed item (subtask, task, habit).
+  const loseCoins = useCallback((amount) => {
+    if (!amount || amount <= 0) return;
+    setState((prev) => ({ ...prev, coins: Math.max(0, prev.coins - amount) }));
+  }, []);
+
   const unlockTheme = useCallback((id) => {
     if (state.unlockedThemes.includes(id)) return { ok: true };
     const preset = THEME_PRESETS[id];
@@ -112,9 +119,72 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => { const swap = async () => { if (!soundRef.current) return; await soundRef.current.stopAsync(); await soundRef.current.unloadAsync(); soundRef.current = null; setIsSoundPlaying(false); }; swap(); }, [state.selectedSoundId]);
 
-  const registerTaskCompletion = useCallback(() => { earnCoins(5); setState((prev) => ({ ...prev, stats: { ...prev.stats, tasksCompleted: prev.stats.tasksCompleted + 1 } })); }, [earnCoins]);
-  const registerSubtaskCompletion = useCallback(() => { earnCoins(1); setState((prev) => ({ ...prev, stats: { ...prev.stats, subtasksCompleted: prev.stats.subtasksCompleted + 1 } })); }, [earnCoins]);
-  const registerHabitCompletion = useCallback(() => { earnCoins(2); setState((prev) => ({ ...prev, stats: { ...prev.stats, habitCompletions: prev.stats.habitCompletions + 1, habitStreak: Math.min(prev.stats.habitStreak + 1, 3) } })); }, [earnCoins]);
+  // ---------------------------------------------------------
+  // STAT REGISTRATION — each register has a matching unregister
+  // ---------------------------------------------------------
+
+  const registerTaskCompletion = useCallback(() => {
+    earnCoins(5);
+    setState((prev) => ({
+      ...prev,
+      stats: { ...prev.stats, tasksCompleted: prev.stats.tasksCompleted + 1 },
+    }));
+  }, [earnCoins]);
+
+  const unregisterTaskCompletion = useCallback(() => {
+    loseCoins(5);
+    setState((prev) => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        tasksCompleted: Math.max(0, prev.stats.tasksCompleted - 1),
+      },
+    }));
+  }, [loseCoins]);
+
+  const registerSubtaskCompletion = useCallback(() => {
+    earnCoins(1);
+    setState((prev) => ({
+      ...prev,
+      stats: { ...prev.stats, subtasksCompleted: prev.stats.subtasksCompleted + 1 },
+    }));
+  }, [earnCoins]);
+
+  const unregisterSubtaskCompletion = useCallback(() => {
+    loseCoins(1);
+    setState((prev) => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        subtasksCompleted: Math.max(0, prev.stats.subtasksCompleted - 1),
+      },
+    }));
+  }, [loseCoins]);
+
+  const registerHabitCompletion = useCallback(() => {
+    earnCoins(2);
+    setState((prev) => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        habitCompletions: prev.stats.habitCompletions + 1,
+        habitStreak: Math.min(prev.stats.habitStreak + 1, 3),
+      },
+    }));
+  }, [earnCoins]);
+
+  const unregisterHabitCompletion = useCallback(() => {
+    loseCoins(2);
+    setState((prev) => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        habitCompletions: Math.max(0, prev.stats.habitCompletions - 1),
+        habitStreak: Math.max(0, prev.stats.habitStreak - 1),
+      },
+    }));
+  }, [loseCoins]);
+
   const addFocusMinutes = useCallback((minutes) => minutes && setState((prev) => ({ ...prev, stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes } })), []);
   const resetThemeData = useCallback(() => setState(defaultState), []);
 
@@ -126,8 +196,26 @@ export const ThemeProvider = ({ children }) => {
     titles, sounds: SOUND_PRESETS, coins: state.coins, stats: state.stats,
     unlockedThemes: state.unlockedThemes, selectedThemeId: state.selectedThemeId, unlockTheme, selectTheme,
     unlockedSounds: state.unlockedSounds, selectedSoundId: state.selectedSoundId, unlockSound, selectSound,
-    toggleSoundPlayback, isSoundPlaying, registerTaskCompletion, registerSubtaskCompletion, registerHabitCompletion, addFocusMinutes, earnCoins, resetThemeData,
-  }), [theme, titles, state, unlockTheme, selectTheme, unlockSound, selectSound, toggleSoundPlayback, isSoundPlaying, registerTaskCompletion, registerSubtaskCompletion, registerHabitCompletion, addFocusMinutes, earnCoins, resetThemeData]);
+    toggleSoundPlayback, isSoundPlaying,
+    registerTaskCompletion,
+    unregisterTaskCompletion,
+    registerSubtaskCompletion,
+    unregisterSubtaskCompletion,
+    registerHabitCompletion,
+    unregisterHabitCompletion,
+    addFocusMinutes,
+    earnCoins,
+    loseCoins,
+    resetThemeData,
+  }), [
+    theme, titles, state,
+    unlockTheme, selectTheme, unlockSound, selectSound,
+    toggleSoundPlayback, isSoundPlaying,
+    registerTaskCompletion, unregisterTaskCompletion,
+    registerSubtaskCompletion, unregisterSubtaskCompletion,
+    registerHabitCompletion, unregisterHabitCompletion,
+    addFocusMinutes, earnCoins, loseCoins, resetThemeData,
+  ]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

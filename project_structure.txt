@@ -113,9 +113,11 @@ fyp26/
 │   │       │   ├── pineconeClient.js
 │   │       │   └── retriever.js
 │   │       ├── tools/
+│   │       │   ├── assessmentTool.js
 │   │       │   ├── emotionTool.js
 │   │       │   ├── exerciseTool.js
 │   │       │   ├── focusTool.js
+│   │       │   ├── graph.js
 │   │       │   ├── habitTool.js
 │   │       │   ├── knowledgeTool.js
 │   │       │   ├── memoryTool.js
@@ -305,7 +307,10 @@ fyp26/
 │   ├── theme/
 │   │   └── colors.js
 │   ├── utils/
-│   │   └── formatTime.js
+│   │   ├── challengeNav.js
+│   │   ├── formatTime.js
+│   │   ├── reminders.js
+│   │   └── userDisplay.js
 │   └── SplashScreen.js
 ├── .gitignore
 ├── App.js

@@ -1,30 +1,32 @@
-// backend/services/ai/graph.js
+// backend/services/ai/tools/graph.js
 //
-// Replaces the hand-rolled "embed -> retrieve -> build prompt -> one LLM
-// call" flow in the old agent.js with a proper LangGraph ReAct agent: the
-// model can now call tools (possibly several, possibly in sequence) before
-// producing a final answer, instead of only ever answering from whatever
-// got stuffed into the prompt up front.
-//
-// NEEDS INSTALLING (not yet in your package.json as far as I know):
-//   npm install @langchain/core @langchain/langgraph @langchain/groq zod
-//
-// ASSUMPTION: your GROQ_API_KEY env var is already set (per your handoff
-// doc, it's in backend/.env). @langchain/groq reads it automatically from
-// that same env var name.
+// LangGraph ReAct agent with server-side context injection.
+// Assessment data is fetched BEFORE the model runs and formatted into the
+// templated context block the fine-tuned student was trained on. Action tools
+// (create_task, create_habit, suggest_*, search_knowledge_base,
+// remember_about_user) remain in the ReAct loop.
 
 const { ChatGroq } = require('@langchain/groq');
 const { createReactAgent } = require('@langchain/langgraph/prebuilt');
-const { SystemMessage, HumanMessage, AIMessage } = require('@langchain/core/messages');
+const {
+  SystemMessage,
+  HumanMessage,
+  AIMessage,
+} = require('@langchain/core/messages');
 
-const { createTask, listOpenTasks } = require('./tools/taskTool');
-const { createHabit, listHabits } = require('./tools/habitTool');
-const { suggestFocusSession } = require('./tools/focusTool');
-const { suggestEmotionExercise } = require('./tools/emotionTool');
-const { suggestExercise } = require('./tools/exerciseTool');
-const { searchKnowledgeBase } = require('./tools/knowledgeTool');
-const { rememberAboutUser } = require('./tools/memoryTool');
-const { getADHDScreeningSummary, getEFAssessmentSummary } = require('./tools/assessmentTool');
+const { createTask, updateTask, deleteTask, listOpenTasks } = require('./taskTool');
+const { createHabit, listHabits } = require('./habitTool');
+const { suggestFocusSession } = require('./focusTool');
+const { suggestEmotionExercise } = require('./emotionTool');
+const { suggestExercise } = require('./exerciseTool');
+const { searchKnowledgeBase } = require('./knowledgeTool');
+const { rememberAboutUser } = require('./memoryTool');
+
+// Assessment queries -- used server-side, not as ReAct tools.
+const {
+  fetchADHDScreening,
+  fetchEFSummary,
+} = require('./assessmentTool');
 
 const BASE_SYSTEM_PROMPT = `You are the Main ADHD Agent inside an ADHD support app.
 You are warm, concise, and practical -- you help with tasks, habits, focus,
@@ -33,18 +35,63 @@ sentences) unless the user asks for detail.
 
 You have tools for taking real actions (create_task, create_habit,
 suggest_focus_session, suggest_emotion_exercise, suggest_exercise), for
-looking up grounded research (search_knowledge_base), for checking what you
-know about this user (get_adhd_screening_summary, get_ef_assessment_summary),
-and for saving new durable facts about them (remember_about_user).
+looking up grounded research (search_knowledge_base), and for saving new
+durable facts about the user (remember_about_user).
 
 Call tools when they'd genuinely help -- don't narrate that you're "using a
 tool," just use it and respond naturally. Never invent clinical claims not
 supported by search_knowledge_base results. Never state or imply the user
-has ADHD or any diagnosis, even if screening/assessment tools return high
-scores -- those are self-reported, not diagnostic.`;
+has ADHD or any diagnosis, even if the context block shows a High screening
+level -- screening scores are self-reported, not diagnostic.`;
 
+// =========================================================
+// Context block formatting
+// ---------------------------------------------------------
+// MUST match, byte for byte, the template the fine-tuned student
+// was trained on. If training used different wording, change the
+// template here to match exactly.
+// =========================================================
+function formatContextBlock({ asrs_level, weak_ef_dimension, preference_style }) {
+  return (
+    `This user's ADHD screening level is: ${asrs_level}.\n` +
+    `Their most challenged executive function area is: ${weak_ef_dimension}.\n` +
+    `Their interaction preference is: ${preference_style}.`
+  );
+}
+
+async function buildSystemPrompt(userId) {
+  let asrs = 'Unknown';
+  let weakEf = 'Unknown';
+  const preference = 'Unknown'; // TODO: read from memory retrieval later
+
+  try {
+    const adhd = await fetchADHDScreening(userId);
+    if (adhd?.asrs_level) asrs = adhd.asrs_level;
+  } catch (e) {
+    console.warn('buildSystemPrompt: ADHD summary failed:', e.message);
+  }
+
+  try {
+    const ef = await fetchEFSummary(userId);
+    if (ef?.weak_ef_dimension) weakEf = ef.weak_ef_dimension;
+  } catch (e) {
+    console.warn('buildSystemPrompt: EF summary failed:', e.message);
+  }
+
+  return BASE_SYSTEM_PROMPT + '\n\n' + formatContextBlock({
+    asrs_level: asrs,
+    weak_ef_dimension: weakEf,
+    preference_style: preference,
+  });
+}
+
+// =========================================================
+// ReAct tool registry -- note: assessment tools NOT included.
+// =========================================================
 const tools = [
   createTask,
+  updateTask,
+  deleteTask,
   listOpenTasks,
   createHabit,
   listHabits,
@@ -53,8 +100,6 @@ const tools = [
   suggestExercise,
   searchKnowledgeBase,
   rememberAboutUser,
-  getADHDScreeningSummary,
-  getEFAssessmentSummary,
 ];
 
 const model = new ChatGroq({
@@ -62,32 +107,29 @@ const model = new ChatGroq({
   temperature: 0.4,
 });
 
-// createReactAgent builds the actual LangGraph StateGraph for you: a loop of
-// [call model -> if tool_calls present, run tools -> feed results back to
-// model -> repeat until a plain text answer comes back]. This IS a real
-// LangGraph graph under the hood -- just not hand-assembled node by node.
-const reactAgent = createReactAgent({
-  llm: model,
-  tools,
-});
+const reactAgent = createReactAgent({ llm: model, tools });
 
 /**
- * @param {{userId: string, conversationId: string, userMessage: string, history: {sender: string, message: string}[]}} params
+ * @param {{userId: string, conversationId: string, userMessage: string,
+ *          history: {sender: string, message: string}[]}} params
  * @returns {{reply: string, toolCalls: object[]}}
  */
-async function handleMessage({ userId, conversationId, userMessage, history = [] }) {
+async function handleMessage({
+  userId,
+  conversationId,
+  userMessage,
+  history = [],
+}) {
+  const systemPrompt = await buildSystemPrompt(userId);
+
   const messages = [
-    new SystemMessage(BASE_SYSTEM_PROMPT),
+    new SystemMessage(systemPrompt),
     ...history.map((m) =>
       m.sender === 'assistant' ? new AIMessage(m.message) : new HumanMessage(m.message)
     ),
     new HumanMessage(userMessage),
   ];
 
-  // userId flows through to every tool via config.configurable -- this is
-  // how taskTool/habitTool/etc. know which user's row to insert/query,
-  // without the model ever having to pass a user_id argument itself
-  // (which would be both redundant and a minor trust boundary risk).
   const result = await reactAgent.invoke(
     { messages },
     { configurable: { userId, conversationId } }
@@ -95,11 +137,14 @@ async function handleMessage({ userId, conversationId, userMessage, history = []
 
   const finalMessage = result.messages[result.messages.length - 1];
 
-  // Collect any tool calls that happened along the way, for logging to
-  // tool_execution_logs the same way routes/ai.js already logs retrieval.
   const toolCalls = result.messages
     .filter((m) => m._getType?.() === 'ai' && m.tool_calls?.length)
-    .flatMap((m) => m.tool_calls);
+    .flatMap((m) => m.tool_calls)
+    .map((tc) => ({
+      name: tc.name,
+      args: tc.args,
+      // tool result isn't on the tool_call object; pull from sibling tool messages
+    }));
 
   return {
     reply: finalMessage.content,

@@ -43,7 +43,7 @@ function HistoryCard({ task }) {
   const days = daysSince(task.completedAt);
   const daysLeft = 10 - days;
   const subtaskCount = task.subtasks?.length || 0;
-  const coinsEarned = subtaskCount * 3 + 5; // 3 per subtask + 5 completion bonus
+  const coinsEarned = subtaskCount * 1 + 5;
 
   return (
     <View style={styles.cardWrapper}>

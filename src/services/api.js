@@ -531,6 +531,17 @@ export async function sendChatMessage(conversationId, message) {
   });
 }
 
+export async function suggestSubtasks(title, { category, subject } = {}) {
+  return request('/api/ai/suggest-subtasks', {
+    method: 'POST',
+    body: JSON.stringify({
+      title,
+      category: category || null,
+      subject: subject || null,
+    }),
+  });
+}
+
 /* =========================================================
    ADHD ASSESSMENT
 ========================================================= */
