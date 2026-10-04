@@ -5,6 +5,7 @@ import { Audio } from 'expo-av';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useProductivity } from '../../contexts/ProductivityContext';
+import { useAppData } from '../../contexts/AppDataContext';
 import TimerRing from '../../components/focus/TimerRing';
 import ControlButtons from '../../components/focus/ControlButtons';
 import SoundBottomSheet from '../../components/focus/SoundBottomSheet';
@@ -20,15 +21,19 @@ const SOUND_OPTIONS = [
   { key: 'soft-beats', label: 'Soft Beats', emoji: '🌊', description: 'Ocean waves & soft tones', source: require('../../../assets/sounds/ocean.mp3') },
 ];
 
-export default function FocusScreen() {
-  const { theme, isDark } = useTheme();
+export default function FocusScreen({ route }) {
+  const { theme, isDark, addFocusMinutes } = useTheme();
   const { activeSessionTask } = useProductivity();
+  const { addFocusSession } = useAppData();
+  const selectedTask = route?.params?.task || activeSessionTask;
 
   const soundSheetRef = useRef(null);
   const timerIntervalRef = useRef(null);
   const timerEndAtRef = useRef(null);
   const activeSoundRef = useRef(null);
   const sessionStartTimeRef = useRef(null);
+  const sessionStartedAtRef = useRef(null);
+  const sessionTaskRef = useRef(null);
   const accumulatedSecondsRef = useRef(0);
 
   const [timeLeft, setTimeLeft] = useState(DEFAULT_TIMER_SECONDS);
@@ -69,23 +74,47 @@ export default function FocusScreen() {
     const elapsed = sessionStartTimeRef.current
       ? Math.floor((Date.now() - sessionStartTimeRef.current) / 1000)
       : DEFAULT_TIMER_SECONDS;
-    accumulatedSecondsRef.current += elapsed;
+    const actualSeconds = accumulatedSecondsRef.current + elapsed;
+    accumulatedSecondsRef.current = actualSeconds;
+    const sessionTask = sessionTaskRef.current || selectedTask;
+    const startedAt = sessionStartedAtRef.current || new Date(Date.now() - actualSeconds * 1000).toISOString();
+    const endedAt = new Date().toISOString();
     sessionStartTimeRef.current = null;
     timerEndAtRef.current = null;
+    sessionStartedAtRef.current = null;
     setIsRunning(false);
     setTimeLeft(0);
     setCompletedSessions((prev) => prev + 1);
     setTotalMinutes(Math.floor(accumulatedSecondsRef.current / 60));
     setCompletionMessage('Session complete! Amazing work 🎉');
+    const actualMinutes = Math.max(1, Math.ceil(actualSeconds / 60));
+    addFocusSession({
+      taskId: sessionTask?.id || null,
+      taskTitle: sessionTask?.title || 'Focus Session',
+      sessionName: sessionTask?.title ? `Focus: ${sessionTask.title}` : 'Focus Session',
+      sessionType: 'Focus',
+      plannedMinutes: 25,
+      actualMinutes,
+      startedAt,
+      endedAt,
+      status: 'Completed',
+      completed: true,
+    }).then(() => addFocusMinutes(actualMinutes)).catch((error) => {
+      Alert.alert('Session not saved', error?.message || 'Your completed session could not be added to the timeline.');
+    });
     Audio.Sound.createAsync(require('../../../assets/sounds/ocean.mp3'), { shouldPlay: true, isLooping: false })
       .then(({ sound }) => { setTimeout(() => sound.unloadAsync().catch(() => {}), 1600); })
       .catch(() => {});
     Alert.alert('Session Complete', 'Amazing work! Take a short break.');
-  }, [clearTimerInterval]);
+  }, [addFocusMinutes, addFocusSession, clearTimerInterval, selectedTask]);
 
   const startTimer = useCallback(() => {
     if (isRunning || timeLeft <= 0) return;
     setCompletionMessage('');
+    if (!sessionStartedAtRef.current) {
+      sessionStartedAtRef.current = new Date().toISOString();
+      sessionTaskRef.current = selectedTask;
+    }
     setIsRunning(true);
     sessionStartTimeRef.current = Date.now();
     timerEndAtRef.current = Date.now() + timeLeft * 1000;
@@ -102,7 +131,7 @@ export default function FocusScreen() {
       }
       if (nextSeconds <= 0) onTimerComplete();
     }, 250);
-  }, [clearTimerInterval, isRunning, onTimerComplete, timeLeft]);
+  }, [clearTimerInterval, isRunning, onTimerComplete, selectedTask, timeLeft]);
 
   const pauseTimer = useCallback(() => {
     if (!isRunning) return;
@@ -129,6 +158,8 @@ export default function FocusScreen() {
     timerEndAtRef.current = null;
     sessionStartTimeRef.current = null;
     accumulatedSecondsRef.current = 0;
+    sessionStartedAtRef.current = null;
+    sessionTaskRef.current = null;
     setIsRunning(false);
     setTimeLeft(DEFAULT_TIMER_SECONDS);
     setTotalMinutes(0);
@@ -195,14 +226,14 @@ export default function FocusScreen() {
               Stay present · One task at a time
             </Text>
 
-            {activeSessionTask ? (
+            {selectedTask ? (
               <View style={[
                 styles.taskPill,
                 { backgroundColor: isDark ? 'rgba(56,189,248,0.1)' : 'rgba(56,189,248,0.08)', borderColor: 'rgba(56,189,248,0.3)' }
               ]}>
                 <Text style={styles.taskPillDot}>⚡</Text>
                 <Text style={[styles.taskPillText, { color: isDark ? '#7DD3FC' : '#0284C7' }]} numberOfLines={1}>
-                  {activeSessionTask.title}
+                  {selectedTask.title}
                 </Text>
               </View>
             ) : (

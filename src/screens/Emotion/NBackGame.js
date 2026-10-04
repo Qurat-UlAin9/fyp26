@@ -1,19 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, SafeAreaView, Dimensions } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, withSpring } from 'react-native-reanimated';
 import { ChevronLeft, BrainCircuit } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { continueChallenge } from '../../utils/challengeNav';
 
 const { width } = Dimensions.get('window');
 const GRID_SIZE = 3; // 3x3 Grid
 const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
 
-export default function NBackGame({ navigation }) {
+export default function NBackGame({ navigation, route }) {
   const [sequence, setSequence] = useState([]);
   const [score, setScore] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [flashingIndex, setFlashingIndex] = useState(null);
   const [nValue, setNValue] = useState(1); // Default to 1-Back
+  const [isComplete, setIsComplete] = useState(false);
   
   const progressWidth = useSharedValue(0);
   const flashScale = useSharedValue(1);
@@ -23,6 +25,11 @@ export default function NBackGame({ navigation }) {
     let interval;
     if (isActive) {
       interval = setInterval(() => {
+        if (sequence.length >= 10) {
+          setIsActive(false);
+          setIsComplete(true);
+          return;
+        }
         const nextIndex = Math.floor(Math.random() * TOTAL_CELLS);
         
         // Trigger Animation
@@ -41,7 +48,7 @@ export default function NBackGame({ navigation }) {
       }, 2500); // New flash every 2.5 seconds
     }
     return () => clearInterval(interval);
-  }, [isActive]);
+  }, [isActive, sequence.length]);
 
   const handleMatch = () => {
     if (sequence.length <= nValue) return;
@@ -54,6 +61,11 @@ export default function NBackGame({ navigation }) {
     } else {
       setScore(s => Math.max(0, s - 50));
     }
+  };
+
+  const handleFinish = () => {
+    if (route?.params?.challenge) continueChallenge(navigation, route, score);
+    else navigation.goBack();
   };
 
   const progressStyle = useAnimatedStyle(() => ({
@@ -96,7 +108,11 @@ export default function NBackGame({ navigation }) {
 
         {/* Controls */}
         <View style={styles.footer}>
-          {!isActive ? (
+          {isComplete ? (
+            <Pressable style={styles.startBtn} onPress={handleFinish}>
+              <Text style={styles.startBtnText}>{route?.params?.challenge ? 'CONTINUE CHALLENGE' : 'FINISH ROUND'}</Text>
+            </Pressable>
+          ) : !isActive ? (
             <Pressable style={styles.startBtn} onPress={() => setIsActive(true)}>
               <Text style={styles.startBtnText}>START CHALLENGE</Text>
             </Pressable>

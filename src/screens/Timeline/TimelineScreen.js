@@ -62,7 +62,8 @@ const DAY_ABBR    = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const todayISO = () => new Date().toISOString().slice(0, 10);
+const localDateKey = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+const todayISO = () => localDateKey(new Date());
 
 function getWeekDays(base) {
   const d   = new Date(base);
@@ -72,7 +73,7 @@ function getWeekDays(base) {
   return Array.from({ length: 7 }, (_, i) => {
     const day = new Date(sun);
     day.setDate(sun.getDate() + i);
-    const isoKey = day.toISOString().slice(0, 10);
+    const isoKey = localDateKey(day);
     return {
       abbr   : DAY_ABBR[i],
       date   : day.getDate(),
@@ -121,7 +122,7 @@ function WeekPickerModal({ visible, currentBase, onSelect, onClose }) {
 
   const currentSun = new Date(currentBase);
   currentSun.setDate(currentBase.getDate() - currentBase.getDay());
-  const currentKey = currentSun.toISOString().slice(0, 10);
+  const currentKey = localDateKey(currentSun);
 
   return (
     <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
@@ -130,7 +131,7 @@ function WeekPickerModal({ visible, currentBase, onSelect, onClose }) {
           <Text style={styles.pickerTitle}>Select Week</Text>
           <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 340 }}>
             {options.map((opt) => {
-              const key = opt.sun.toISOString().slice(0, 10);
+              const key = localDateKey(opt.sun);
               const isSel = key === currentKey;
               const label = `${MONTH_SHORT[opt.sun.getMonth()]} ${opt.sun.getDate()} – ${MONTH_SHORT[opt.sat.getMonth()]} ${opt.sat.getDate()}, ${opt.sat.getFullYear()}`;
               return (
@@ -287,7 +288,7 @@ export default function TimelineScreen() {
   const handleEventPress = useCallback((event) => {
     const typeLabel =
       event.type === 'focus'
-        ? 'Focus session — start a timer from the Focus tab. Completed sessions appear here in purple.'
+        ? 'Completed focus session — timer sessions are added here in purple after they finish.'
         : event.type === 'habit'
         ? 'Habit block — scheduled from your Habits time slots (Morning, Noon, Evening, Night).'
         : 'Task — due/start time from Tasks.';
@@ -402,10 +403,19 @@ export default function TimelineScreen() {
                 : activeTab === 'Habits'
                 ? 'Add a habit — it will appear on the grid.'
                 : activeTab === 'Focus'
-                ? 'Start a timer on the Focus tab. When a session runs, it shows here in purple.'
+                ? 'Finish a timer session on the Focus tab. Completed sessions appear here in purple.'
                 : 'Tasks, focus sessions, and habits all appear on this grid.'}
             </Text>
           </View>
+        )}
+        {activeTab === 'Focus' && visibleEvents.length === 0 && (
+          <TouchableOpacity
+            style={styles.startFocusButton}
+            onPress={() => navigation.navigate('Focus')}
+            accessibilityRole="button"
+          >
+            <Text style={styles.startFocusButtonText}>Start Focus Session</Text>
+          </TouchableOpacity>
         )}
 
         {/* ── Week grid — ALWAYS rendered ──────────────────────────────────── */}
@@ -520,6 +530,8 @@ const styles = StyleSheet.create({
   emptyBanner:      { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#fff', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(15,23,42,0.08)', paddingHorizontal: 16, paddingVertical: 12, marginBottom: 10 },
   emptyBannerEmoji: { fontSize: 22 },
   emptyBannerText:  { flex: 1, fontSize: 13, color: '#64748B', fontWeight: '500', lineHeight: 18 },
+  startFocusButton: { alignSelf: 'flex-start', marginTop: -2, marginBottom: 12, backgroundColor: '#6D5BD0', borderRadius: 10, paddingHorizontal: 14, paddingVertical: 10 },
+  startFocusButtonText: { color: '#FFFFFF', fontSize: 13, fontWeight: '700' },
 
   // Grid card
   gridCard:     { backgroundColor: '#fff', borderRadius: 20, borderWidth: 1, borderColor: 'rgba(15,23,42,0.08)', overflow: 'hidden' },

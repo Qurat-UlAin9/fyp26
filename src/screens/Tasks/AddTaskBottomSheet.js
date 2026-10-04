@@ -8,10 +8,11 @@ import {
   TextInput,
   ActivityIndicator,
   ScrollView,
+  Modal,
 } from 'react-native';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
-import { X, Calendar, Bell, Sparkles } from 'lucide-react-native';
+import { X, Calendar, Bell, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { suggestSubtasks } from '../../services/api';
 import { showConfirm } from '../../utils/alert';
 
@@ -38,14 +39,18 @@ const getTheme = (id) => CARD_THEMES.find((t) => t.id === id) || CARD_THEMES[0];
 
 const toISODate = (val) => {
   if (!val) return '';
-  const d = new Date(val);
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(val)
+    ? new Date(`${val}T00:00:00`)
+    : new Date(val);
   if (isNaN(d)) return '';
-  return d.toISOString().slice(0, 10);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
 const formatDate = (iso) => {
   if (!iso) return '';
-  const d = new Date(iso);
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(iso)
+    ? new Date(`${iso}T00:00:00`)
+    : new Date(iso);
   if (isNaN(d)) return iso;
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
@@ -68,6 +73,8 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
   const [selectedTheme, setSelectedTheme] = useState('coral');
   const [priority, setPriority] = useState('Medium');
   const [generating, setGenerating] = useState(false);
+  const [calendarVisible, setCalendarVisible] = useState(false);
+  const [calendarMonth, setCalendarMonth] = useState(new Date());
 
   const cancelledRef = useRef(false);
 
@@ -79,12 +86,12 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
       setDueDate(toISODate(initialTask.dueDate || initialTask.due_date));
       setSelectedTheme(initialTask.themeId || 'coral');
       setPriority(initialTask.priority || 'Medium');
-      setNotifEnabled(false);
+      setNotifEnabled(Boolean(initialTask.notifEnabled ?? initialTask.metadata?.notifEnabled));
     } else {
       setTitle('');
       setCategory(null);
       setSubject('');
-      setDueDate('');
+      setDueDate(toISODate(new Date()));
       setSelectedTheme('coral');
       setPriority('Medium');
       setNotifEnabled(false);
@@ -95,11 +102,27 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
 
   const th = getTheme(selectedTheme);
 
+  const calendarDays = (() => {
+    const firstDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+    const start = new Date(firstDay);
+    start.setDate(firstDay.getDate() - firstDay.getDay());
+    return Array.from({ length: 42 }, (_, index) => {
+      const day = new Date(start);
+      day.setDate(start.getDate() + index);
+      return day;
+    });
+  })();
+
+  const chooseDate = (date) => {
+    setDueDate(toISODate(date));
+    setCalendarVisible(false);
+  };
+
   const reset = () => {
     setTitle('');
     setCategory(null);
     setSubject('');
-    setDueDate('');
+    setDueDate(toISODate(new Date()));
     setNotifEnabled(false);
     setSelectedTheme('coral');
     setPriority('Medium');
@@ -280,17 +303,87 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
         />
 
         <Text style={styles.label}>DUE DATE</Text>
-        <View style={styles.rowInput}>
+        <TouchableOpacity
+          style={styles.rowInput}
+          onPress={() => {
+            const selectedDate = dueDate ? new Date(`${dueDate}T00:00:00`) : new Date();
+            setCalendarMonth(selectedDate);
+            setCalendarVisible(true);
+          }}
+          disabled={generating}
+          accessibilityRole="button"
+          accessibilityLabel={`Due date ${formatDate(dueDate)}. Open calendar`}
+        >
           <Calendar size={17} color="#6366F1" />
-          <TextInput
-            style={styles.flexInput}
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor="#94A3B8"
-            value={dueDate}
-            onChangeText={setDueDate}
-            editable={!generating}
-          />
-        </View>
+          <Text style={[styles.flexInput, !dueDate && { color: '#94A3B8' }]}>
+            {dueDate ? formatDate(dueDate) : 'Select a due date'}
+          </Text>
+          <ChevronRight size={18} color="#94A3B8" />
+        </TouchableOpacity>
+
+        <Modal
+          visible={calendarVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setCalendarVisible(false)}
+        >
+          <View style={styles.calendarOverlay}>
+            <View style={styles.calendarModal}>
+              <View style={styles.calendarHeader}>
+                <TouchableOpacity
+                  onPress={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))}
+                  style={styles.calendarArrow}
+                  accessibilityLabel="Previous month"
+                >
+                  <ChevronLeft color="#CBD5E1" size={20} />
+                </TouchableOpacity>
+                <Text style={styles.calendarMonthTitle}>
+                  {calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))}
+                  style={styles.calendarArrow}
+                  accessibilityLabel="Next month"
+                >
+                  <ChevronRight color="#CBD5E1" size={20} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calendarGrid}>
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+                  <Text key={`${day}-${index}`} style={styles.calendarWeekday}>{day}</Text>
+                ))}
+                {calendarDays.map((day) => {
+                  const iso = toISODate(day);
+                  const isSelected = iso === dueDate;
+                  const inMonth = day.getMonth() === calendarMonth.getMonth();
+                  return (
+                    <TouchableOpacity
+                      key={iso}
+                      onPress={() => chooseDate(day)}
+                      style={[styles.calendarDay, isSelected && styles.calendarDaySelected]}
+                      accessibilityRole="button"
+                      accessibilityLabel={day.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    >
+                      <Text style={[
+                        styles.calendarDayText,
+                        !inMonth && styles.calendarDayOutside,
+                        isSelected && styles.calendarDayTextSelected,
+                      ]}>{day.getDate()}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <View style={styles.calendarFooter}>
+                <TouchableOpacity onPress={() => chooseDate(new Date())}>
+                  <Text style={styles.calendarToday}>Today</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCalendarVisible(false)}>
+                  <Text style={styles.calendarCancel}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
         <View style={styles.toggleRow}>
           <View style={styles.toggleLeft}>
@@ -404,7 +497,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
               <Sparkles color="#fff" size={18} />
             )}
             <Text style={styles.saveBtnText}>
-              {generating ? 'Generating…' : isEdit ? 'Save Changes' : 'Save Task'}
+              {generating ? 'Generating…' : isEdit ? 'Save Changes' : 'Add Task'}
             </Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -432,6 +525,21 @@ const styles = StyleSheet.create({
   input: { backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, padding: 14, fontSize: 15, color: '#F1F5F9', marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', minHeight: 52 },
   rowInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, paddingHorizontal: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', height: 52, gap: 10, marginBottom: 20 },
   flexInput: { flex: 1, color: '#F1F5F9', fontSize: 15 },
+  calendarOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: 'rgba(2,6,23,0.72)' },
+  calendarModal: { width: '100%', maxWidth: 380, padding: 20, borderRadius: 20, backgroundColor: '#1E293B', borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' },
+  calendarHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
+  calendarArrow: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.08)' },
+  calendarMonthTitle: { color: '#F1F5F9', fontSize: 17, fontWeight: '700' },
+  calendarGrid: { flexDirection: 'row', flexWrap: 'wrap' },
+  calendarWeekday: { width: '14.2857%', textAlign: 'center', color: '#94A3B8', fontSize: 12, fontWeight: '700', paddingBottom: 8 },
+  calendarDay: { width: '14.2857%', aspectRatio: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 20 },
+  calendarDaySelected: { backgroundColor: '#6366F1' },
+  calendarDayText: { color: '#E2E8F0', fontSize: 14 },
+  calendarDayOutside: { color: '#64748B' },
+  calendarDayTextSelected: { color: '#FFFFFF', fontWeight: '800' },
+  calendarFooter: { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 14, marginTop: 8, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.1)' },
+  calendarToday: { color: '#A5B4FC', fontSize: 14, fontWeight: '700' },
+  calendarCancel: { color: '#CBD5E1', fontSize: 14, fontWeight: '600' },
   categoryRow: { gap: 8, paddingBottom: 22, paddingRight: 8 },
   categoryChip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)', backgroundColor: 'rgba(255,255,255,0.04)' },
   categoryEmoji: { fontSize: 14 },

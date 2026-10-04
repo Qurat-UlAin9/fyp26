@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { User, Award, Settings, LogOut, Target, CheckCircle2, Brain, Flame, ClipboardList } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { getLatestADHDAssessment, getLatestEFAssessment } from '../../services/api';
 import { EF_DIMENSIONS_META } from '../../data/efQuestions';
+import { logoutUser } from '../../services/api';
+import { showAlert } from '../../utils/alert';
+import { displayUsername } from '../../utils/userDisplay';
 
 function StatCard({ icon, label, value, theme, isDark }) {
   return (
@@ -57,6 +60,22 @@ export default function ProfileScreen({ navigation }) {
   const onTimeRate = completedTasks ? Math.round((completedTasks / (completedTasks + tasks.length)) * 100) : 0;
   const achieved = titles.filter((t) => t.unlocked).length;
 
+  const handleLogout = () => showAlert('Logout?', 'Are you sure you want to sign out?', [
+    { text: 'Cancel', style: 'cancel' },
+    {
+      text: 'Logout',
+      style: 'destructive',
+      onPress: async () => {
+        try {
+          await logoutUser();
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+        } catch (error) {
+          Alert.alert('Logout failed', error?.message || 'Please try again.');
+        }
+      },
+    },
+  ]);
+
   const insight = useMemo(() => {
     if (stats.focusMinutes > 120) return 'Great momentum: your focus routine is becoming consistent.';
     if (habits.length > 0) return 'Nice progress: habit consistency will improve your executive function over time.';
@@ -69,7 +88,8 @@ export default function ProfileScreen({ navigation }) {
         <View style={[styles.avatarWrap, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#FFFFFF' }]}>
           <User color={theme.accentGradient[0]} size={52} />
         </View>
-        <Text style={[styles.name, { color: theme.text }]}>{profile.name}</Text>
+        <Text style={[styles.name, { color: theme.text }]}>{displayUsername(profile)}</Text>
+        <Text style={[styles.email, { color: theme.textSecondary }]}>{profile.email || 'Email not set'}</Text>
         <Text style={[styles.meta, { color: theme.textSecondary }]}>Mood: {profile.mood} • ADHD Screen: {profile.adhdScreening}</Text>
 
         <View style={styles.statsGrid}>
@@ -147,9 +167,10 @@ export default function ProfileScreen({ navigation }) {
           )}
         </View>
 
+        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.accentGradient[0] }]} onPress={() => navigation.navigate('EditProfile')}><User color="#FFFFFF" size={18} /><Text style={styles.actionText}>Edit Profile</Text></TouchableOpacity>
         <TouchableOpacity style={styles.actionBtn} onPress={() => navigation.navigate('Rewards')}><Award color="#FFFFFF" size={18} /><Text style={styles.actionText}>Rewards</Text></TouchableOpacity>
         <TouchableOpacity style={styles.actionBtn} onPress={() => navigation.navigate('Settings')}><Settings color="#FFFFFF" size={18} /><Text style={styles.actionText}>Settings</Text></TouchableOpacity>
-        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#EF4444' }]} onPress={() => navigation.replace('Login')}><LogOut color="#FFFFFF" size={18} /><Text style={styles.actionText}>Logout</Text></TouchableOpacity>
+        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#EF4444' }]} onPress={handleLogout}><LogOut color="#FFFFFF" size={18} /><Text style={styles.actionText}>Logout</Text></TouchableOpacity>
       </ScrollView>
     </LinearGradient>
   );
@@ -160,6 +181,7 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 20, alignItems: 'center', paddingTop: 22, paddingBottom: 120 },
   avatarWrap: { width: 110, height: 110, borderRadius: 55, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
   name: { fontSize: 28, fontWeight: '800' },
+  email: { marginTop: 3, fontSize: 14, fontWeight: '500' },
   meta: { marginTop: 4, marginBottom: 16, fontSize: 13, fontWeight: '600' },
   statsGrid: { width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 18 },
   statCard: { width: '48%', borderRadius: 16, paddingVertical: 12, paddingHorizontal: 12, borderWidth: 1 },

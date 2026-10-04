@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo, useState } from 'react';
+import React, { forwardRef, useMemo, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,24 +13,45 @@ const COLOR_OPTIONS = [
   { id: 'teal', colors: ['#4FD1C5', '#2CB1BC'] },
 ];
 
-const AddHabitBottomSheet = forwardRef(({ onSubmit }, ref) => {
+const AddHabitBottomSheet = forwardRef(({ onSubmit, initialHabit, onClose }, ref) => {
   const snapPoints = useMemo(() => ['85%'], []);
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0]);
   const [selectedSlots, setSelectedSlots] = useState(['Morning']);
+  const isEdit = Boolean(initialHabit);
+
+  useEffect(() => {
+    if (!initialHabit) {
+      setName('');
+      setSelectedColor(COLOR_OPTIONS[0]);
+      setSelectedSlots(['Morning']);
+      return;
+    }
+    setName(initialHabit.name || initialHabit.title || '');
+    setSelectedColor(COLOR_OPTIONS.find((color) => color.colors[0] === initialHabit.gradient?.[0]) || COLOR_OPTIONS[0]);
+    setSelectedSlots(Array.isArray(initialHabit.timeSlots) ? initialHabit.timeSlots : ['Morning']);
+  }, [initialHabit]);
 
   const handleSave = () => {
     if (!name.trim()) return;
+    const timeSlots = selectedSlots;
+    const completions = timeSlots.map((slot) => {
+      const previousIndex = initialHabit?.timeSlots?.indexOf(slot) ?? -1;
+      return previousIndex >= 0 ? Boolean(initialHabit.completions?.[previousIndex]) : false;
+    });
     onSubmit({
-      id: Date.now().toString(),
+      ...(initialHabit || {}),
+      id: initialHabit?.id || Date.now().toString(),
       name: name.trim(),
-      timeSlots: selectedSlots,
-      completions: new Array(selectedSlots.length).fill(false),
+      title: name.trim(),
+      timeSlots,
+      completions,
       gradient: selectedColor.colors,
-      reminder: 'Smart Reminder',
+      reminder: initialHabit?.reminder || 'Smart Reminder',
     });
     setName('');
     setSelectedSlots(['Morning']);
+    setSelectedColor(COLOR_OPTIONS[0]);
     ref.current?.close();
   };
 
@@ -42,10 +63,11 @@ const AddHabitBottomSheet = forwardRef(({ onSubmit }, ref) => {
       enablePanDownToClose
       keyboardBehavior="interactive" // Ensures sheet pushes above keyboard
       backgroundStyle={styles.sheetBg}
+      onChange={(index) => { if (index === -1) onClose?.(); }}
     >
       <BottomSheetScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>New Habit</Text>
+          <Text style={styles.title}>{isEdit ? 'Edit Habit' : 'New Habit'}</Text>
           <TouchableOpacity onPress={() => ref.current?.close()}><X color="#94A3B8" size={24} /></TouchableOpacity>
         </View>
 
@@ -88,7 +110,7 @@ const AddHabitBottomSheet = forwardRef(({ onSubmit }, ref) => {
 
         <TouchableOpacity onPress={handleSave} style={styles.submitContainer}>
           <LinearGradient colors={selectedColor.colors} style={styles.submitBtn}>
-            <Text style={styles.submitText}>Save Habit</Text>
+            <Text style={styles.submitText}>{isEdit ? 'Save Changes' : 'Add Habits'}</Text>
           </LinearGradient>
         </TouchableOpacity>
       </BottomSheetScrollView>

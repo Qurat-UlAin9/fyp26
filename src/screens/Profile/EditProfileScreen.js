@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { User, Mail, Camera } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -9,8 +9,32 @@ import ADHDButton from '../../components/common/ADHDButton';
 export default function EditProfileScreen({ navigation }) {
   const { theme } = useTheme();
   const { profile, updateProfile } = useAppData();
-  const [name, setName] = useState(profile.name);
+  const [username, setUsername] = useState(profile.username || profile.name || '');
   const [email, setEmail] = useState(profile.email);
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    const cleanUsername = username.trim();
+    const cleanEmail = email.trim();
+    if (!cleanUsername || !cleanEmail) {
+      Alert.alert('Profile incomplete', 'Enter both a username and email address.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      Alert.alert('Invalid email', 'Enter a valid email address.');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      await updateProfile({ username: cleanUsername, name: cleanUsername, email: cleanEmail });
+      navigation.goBack();
+    } catch (error) {
+      Alert.alert('Profile update failed', error?.message || 'Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
@@ -28,9 +52,9 @@ export default function EditProfileScreen({ navigation }) {
           <User color={theme.textSecondary} size={20} style={styles.icon} />
           <TextInput
             style={[styles.input, { color: theme.text, borderColor: theme.border }]}
-            value={name}
-            onChangeText={setName}
-            placeholder="Full Name"
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Username"
             placeholderTextColor={theme.textSecondary}
           />
         </View>
@@ -48,7 +72,8 @@ export default function EditProfileScreen({ navigation }) {
           />
         </View>
 
-        <ADHDButton title="Save Changes" onPress={() => { updateProfile({ name, email }); navigation.goBack(); }} style={styles.button} />
+        <ADHDButton title={saving ? 'Saving...' : 'Save Changes'} onPress={handleSave} style={styles.button} disabled={saving} />
+        {saving && <ActivityIndicator color={theme.accentGradient[0]} style={{ marginTop: 12 }} />}
       </View>
     </LinearGradient>
   );

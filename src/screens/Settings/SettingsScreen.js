@@ -1,28 +1,78 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, Switch, TouchableOpacity, StyleSheet, Alert, Modal, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Moon, Sun, Globe, Bell, Trash2, LogOut } from 'lucide-react-native';
+import { Moon, Sun, Globe, Bell, Trash2, LogOut, ClipboardList } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import GlassCard from '../../components/common/GlassCard';
+import { logoutUser } from '../../services/api';
+import {
+  cancelAllTaskReminders,
+  ensureNotificationPermission,
+  getNotificationsEnabled,
+  scheduleTaskReminder,
+  setNotificationsEnabled as persistNotificationsEnabled,
+} from '../../utils/reminders';
+import { getAssessmentOnStart, setAssessmentOnStart } from '../../utils/onboardingPreferences';
 
 export default function SettingsScreen({ navigation }) {
-  const { theme, isDark, toggleTheme } = useTheme();
-  const { tasks, habits, deleteTask, deleteHabit } = useAppData();
+  const { theme, isDark, toggleTheme, resetThemeData } = useTheme();
+  const { tasks, updateTask, resetAppData } = useAppData();
   
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [assessmentOnStart, setAssessmentOnStartState] = useState(true);
   const [silentHoursEnabled, setSilentHoursEnabled] = useState(false);
   const [silentHoursStart, setSilentHoursStart] = useState('22:00');
   const [silentHoursEnd, setSilentHoursEnd] = useState('08:00');
   const [resetModalVisible, setResetModalVisible] = useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
-  // Handle Notification Toggle
-  const handleNotificationToggle = useCallback((value) => {
-    setNotificationsEnabled(value);
-    // TODO: Sync with backend preferences
-    console.log('Notifications:', value ? 'Enabled' : 'Disabled');
+  useEffect(() => {
+    getNotificationsEnabled().then(setNotificationsEnabled).catch(() => undefined);
+    getAssessmentOnStart().then(setAssessmentOnStartState).catch(() => undefined);
   }, []);
+
+  const handleAssessmentToggle = useCallback((value) => {
+    setAssessmentOnStartState(value);
+    setAssessmentOnStart(value).catch((error) => {
+      Alert.alert('Setting could not be saved', error?.message || 'Please try again.');
+    });
+  }, []);
+
+  // Handle Notification Toggle
+  const handleNotificationToggle = useCallback(async (value) => {
+    try {
+      if (value) {
+        const allowed = await ensureNotificationPermission();
+        if (!allowed) {
+          Alert.alert('Notifications unavailable', 'Allow notifications in device settings to receive task reminders.');
+          return;
+        }
+      }
+
+      await persistNotificationsEnabled(value);
+      setNotificationsEnabled(value);
+
+      if (value) {
+        await Promise.all(tasks.filter((task) => task.notifEnabled || task.metadata?.notifEnabled).map(async (task) => {
+          const reminderNotificationId = await scheduleTaskReminder({
+            title: task.title,
+            dueDate: task.dueDate || task.due_date,
+            reminderAt: task.reminderAt || task.reminder_at,
+          });
+          if (reminderNotificationId) {
+            await updateTask(task.id, {
+              ...task,
+              reminderNotificationId,
+              metadata: { ...(task.metadata || {}), reminderNotificationId },
+            });
+          }
+        }));
+      }
+    } catch (error) {
+      Alert.alert('Notification setting failed', error?.message || 'Please try again.');
+    }
+  }, [tasks, updateTask]);
 
   // Handle Silent Hours Toggle
   const handleSilentHoursToggle = useCallback((value) => {
@@ -33,31 +83,22 @@ export default function SettingsScreen({ navigation }) {
   // Handle Reset Data
   const handleResetData = useCallback(async () => {
     try {
-      // Delete all tasks
-      for (const task of tasks) {
-        await deleteTask(task.id);
-      }
-      
-      // Delete all habits
-      for (const habit of habits) {
-        await deleteHabit(habit.id);
-      }
-      
+      await Promise.all([resetAppData(), cancelAllTaskReminders()]);
+      resetThemeData();
       Alert.alert('✅ Success', 'All data has been reset successfully.');
       setResetModalVisible(false);
     } catch (error) {
       Alert.alert('❌ Error', 'Failed to reset data. Please try again.');
       console.error('Reset error:', error);
     }
-  }, [tasks, habits, deleteTask, deleteHabit]);
+  }, [resetAppData, resetThemeData]);
 
   // Handle Logout
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
     try {
-      // TODO: Clear auth token from Supabase
-      // TODO: Clear local storage
+      await logoutUser();
       setLogoutModalVisible(false);
-      navigation.replace('Login');
+      navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
     } catch (error) {
       Alert.alert('❌ Error', 'Failed to logout. Please try again.');
       console.error('Logout error:', error);
@@ -98,6 +139,16 @@ export default function SettingsScreen({ navigation }) {
             label="Dark Mode" 
             value={isDark} 
             onValueChange={toggleTheme} 
+          />
+        </GlassCard>
+
+        <GlassCard style={styles.card}>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Onboarding</Text>
+          <SettingRow
+            icon={ClipboardList}
+            label="Start with assessment after sign-in"
+            value={assessmentOnStart}
+            onValueChange={handleAssessmentToggle}
           />
         </GlassCard>
 

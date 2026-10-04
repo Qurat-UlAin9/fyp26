@@ -109,6 +109,9 @@ export default function QuestionnaireScreen({ navigation }) {
           </Pressable>
 
           <Text style={[styles.progressText, { color: isDark ? '#CBD5E1' : '#475569' }]}>Question {currentIndex + 1} of 18</Text>
+          <Pressable onPress={() => navigation.replace('MainTabs')} accessibilityRole="button" hitSlop={8}>
+            <Text style={[styles.continueText, { color: isDark ? '#93C5FD' : '#4338CA' }]}>Continue</Text>
+          </Pressable>
         </View>
 
         <View style={[styles.progressTrack, { backgroundColor: isDark ? 'rgba(148,163,184,0.2)' : 'rgba(99, 102, 241, 0.16)' }]}>
@@ -189,6 +192,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  continueText: { fontSize: 14, fontWeight: '700' },
   progressTrack: {
     height: 10,
     borderRadius: 999,

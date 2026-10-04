@@ -187,6 +187,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   quoteOuter: {
+    width: '100%',
+    aspectRatio: 1.8,
     borderRadius: 24,
     padding: 4,
     marginBottom: 16,
@@ -197,7 +199,7 @@ const styles = StyleSheet.create({
     elevation: 8,
     overflow: 'hidden',
   },
-  quoteInner: { borderRadius: 20, minHeight: 220, justifyContent: 'flex-end', overflow: 'hidden' },
+  quoteInner: { flex: 1, borderRadius: 20, justifyContent: 'flex-end', overflow: 'hidden' },
   quoteImage: { borderRadius: 20, resizeMode: 'cover' },
   quoteOverlay: {
     margin: 14,

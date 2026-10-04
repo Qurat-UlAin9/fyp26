@@ -14,6 +14,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import ADHDButton from '../../components/common/ADHDButton';
 import { registerUser } from '../../services/api';
+import { getAssessmentOnStart } from '../../utils/onboardingPreferences';
 
 export default function RegisterScreen({ navigation }) {
   const { theme } = useTheme();
@@ -52,8 +53,8 @@ export default function RegisterScreen({ navigation }) {
         email: email.trim(),
         password: password.trim(),
       });
-      updateProfile({ name: name.trim() || 'Friend', email: email.trim() });
-      navigation.replace('Onboarding');
+      await updateProfile({ name: name.trim() || 'Friend', username: name.trim(), email: email.trim() });
+      navigation.replace(await getAssessmentOnStart() ? 'Questionnaire' : 'MainTabs');
     } catch (error) {
       Alert.alert(
         'Registration failed',

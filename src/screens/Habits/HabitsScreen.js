@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Animated as RNAnimated, View, Text, ScrollView, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Plus, Bell, Check, TrendingUp } from 'lucide-react-native';
+import { Plus, Bell, Check, TrendingUp, Pencil, Trash2 } from 'lucide-react-native';
 import Animated, { FadeInDown, LinearTransition } from 'react-native-reanimated';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
 import AddHabitBottomSheet from './AddHabitBottomSheet';
+import { showConfirm } from '../../utils/alert';
 
 const MOODS = [
   { emoji: '😌', label: 'Calm', color: '#60A5FA' },
@@ -33,7 +34,7 @@ function CoinFly({ tick }) {
   );
 }
 
-function HabitCard({ habit, onToggle, onDelete, theme }) {
+function HabitCard({ habit, onToggle, onDelete, onEdit }) {
   const doneCount = habit.completions.filter(Boolean).length;
   // Use the habit's theme color for a very light background tint
   const cardBgColor = habit.gradient[0] + '08'; // 5-8% opacity for a soft tint
@@ -41,7 +42,7 @@ function HabitCard({ habit, onToggle, onDelete, theme }) {
 
   return (
     <Animated.View entering={FadeInDown.duration(500)} layout={LinearTransition} style={[styles.card, { backgroundColor: cardBgColor, borderColor: borderColor }]}>
-      <TouchableOpacity onLongPress={() => onDelete(habit.id)} delayLongPress={800} activeOpacity={0.9}>
+      <View>
         <View style={styles.cardHeader}>
           <View>
             <Text style={styles.habitTitle}>{habit.name}</Text>
@@ -50,8 +51,16 @@ function HabitCard({ habit, onToggle, onDelete, theme }) {
               <Text style={styles.reminderText}>{habit.reminder || 'Smart Reminder'}</Text>
             </View>
           </View>
-          <View style={[styles.badge, { backgroundColor: habit.gradient[0] + '20' }]}>
-            <Text style={[styles.badgeText, { color: habit.gradient[0] }]}>{doneCount}/{habit.timeSlots.length}</Text>
+          <View style={styles.cardHeaderActions}>
+            <View style={[styles.badge, { backgroundColor: habit.gradient[0] + '20' }]}>
+              <Text style={[styles.badgeText, { color: habit.gradient[0] }]}>{doneCount}/{habit.timeSlots.length}</Text>
+            </View>
+            <TouchableOpacity onPress={() => onEdit(habit)} style={styles.cardIconButton} accessibilityRole="button" accessibilityLabel={`Edit ${habit.name}`}>
+              <Pencil size={16} color="#475569" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onDelete(habit.id)} style={styles.cardIconButton} accessibilityRole="button" accessibilityLabel={`Delete ${habit.name}`}>
+              <Trash2 size={16} color="#DC2626" />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.bubblesRow}>
@@ -72,23 +81,49 @@ function HabitCard({ habit, onToggle, onDelete, theme }) {
             </View>
           ))}
         </View>
-      </TouchableOpacity>
+      </View>
     </Animated.View>
   );
 }
 
 export default function HabitsScreen() {
   const { theme, registerHabitCompletion } = useTheme();
-  const { habits, addHabit, toggleHabitSlot, deleteHabit, habitStats } = useAppData();
+  const { habits, addHabit, updateHabit, toggleHabitSlot, deleteHabit, habitStats } = useAppData();
   const bottomSheetRef = useRef(null);
   const [selectedMood, setSelectedMood] = useState(null);
   const [coinFxTick, setCoinFxTick] = useState(0);
+  const [editingHabit, setEditingHabit] = useState(null);
 
   const handleToggle = (id, idx) => {
     const habit = habits.find((h) => h.id === id);
     if (!habit) return;
     if (!habit.completions[idx]) { setCoinFxTick((t) => t + 1); registerHabitCompletion(); }
     toggleHabitSlot(id, idx);
+  };
+
+  const handleDelete = async (habitId) => {
+    const habit = habits.find((item) => item.id === habitId);
+    if (!habit || !(await showConfirm('Delete habit?', `Remove "${habit.name}"?`, 'Delete'))) return;
+    try {
+      await deleteHabit(habitId);
+    } catch (error) {
+      Alert.alert('Could not delete habit', error?.message || 'Please try again.');
+    }
+  };
+
+  const handleEdit = (habit) => {
+    setEditingHabit(habit);
+    setTimeout(() => bottomSheetRef.current?.expand(), 60);
+  };
+
+  const handleHabitSubmit = async (habit) => {
+    try {
+      if (editingHabit) await updateHabit(editingHabit.id, habit);
+      else await addHabit(habit);
+      setEditingHabit(null);
+    } catch (error) {
+      Alert.alert('Could not save habit', error?.message || 'Please try again.');
+    }
   };
 
   return (
@@ -99,6 +134,17 @@ export default function HabitsScreen() {
           <Text style={styles.mainTitle}>Habits & Wellbeing</Text>
           <CoinBalancePill />
         </View>
+        <TouchableOpacity
+          style={styles.addHabitButton}
+          onPress={() => {
+            setEditingHabit(null);
+            bottomSheetRef.current?.expand();
+          }}
+          accessibilityRole="button"
+        >
+          <Plus color="#FFFFFF" size={18} />
+          <Text style={styles.addHabitButtonText}>Add Habit</Text>
+        </TouchableOpacity>
         
         {/* Emotion Section with soft background tint */}
         <View style={styles.feelingSection}>
@@ -137,19 +183,28 @@ export default function HabitsScreen() {
               key={h.id} 
               habit={h} 
               onToggle={handleToggle} 
-              onDelete={deleteHabit} 
+              onDelete={handleDelete}
+              onEdit={handleEdit}
             />
           ))
         )}
       </ScrollView>
 
-      <TouchableOpacity style={styles.fab} onPress={() => bottomSheetRef.current?.expand()}>
+      <TouchableOpacity style={styles.fab} onPress={() => {
+        setEditingHabit(null);
+        bottomSheetRef.current?.expand();
+      }}>
         <LinearGradient colors={['#4FD1C5', '#2CB1BC']} style={styles.fabGradient}>
           <Plus color="white" size={32} />
         </LinearGradient>
       </TouchableOpacity>
       
-      <AddHabitBottomSheet ref={bottomSheetRef} onSubmit={addHabit} />
+      <AddHabitBottomSheet
+        ref={bottomSheetRef}
+        onSubmit={handleHabitSubmit}
+        initialHabit={editingHabit}
+        onClose={() => setEditingHabit(null)}
+      />
     </SafeAreaView>
   );
 }
@@ -158,6 +213,8 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContent: { padding: 20, paddingBottom: 100 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+  addHabitButton: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#208F88', borderRadius: 10, paddingHorizontal: 14, paddingVertical: 10, marginTop: -10, marginBottom: 18 },
+  addHabitButtonText: { color: '#FFFFFF', fontSize: 14, fontWeight: '700' },
   mainTitle: { fontSize: 28, fontWeight: '800', color: '#1E293B' },
   
   feelingSection: { 
@@ -202,6 +259,8 @@ const styles = StyleSheet.create({
   },
   
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 22 },
+  cardHeaderActions: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  cardIconButton: { width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(255,255,255,0.75)', alignItems: 'center', justifyContent: 'center' },
   habitTitle: { fontSize: 20, fontWeight: '700', color: '#1E293B' },
   reminderRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
   reminderText: { fontSize: 13, color: '#64748B', fontWeight: '600' },

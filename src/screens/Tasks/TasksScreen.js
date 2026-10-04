@@ -18,6 +18,8 @@ import AddTaskBottomSheet from './AddTaskBottomSheet';
 import { useAppData } from '../../contexts/AppDataContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { showAlert } from '../../utils/alert';
+import { cancelTaskReminder, scheduleTaskReminder } from '../../utils/reminders';
+import { useProductivity } from '../../contexts/ProductivityContext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -37,7 +39,8 @@ const getThemeById = (id) => CARD_THEMES.find((t) => t.id === id) || CARD_THEMES
 
 const formatDate = (d) => {
   if (!d) return '';
-  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(d) ? new Date(`${d}T00:00:00`) : new Date(d);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 const daysSince = (iso) => Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
@@ -283,6 +286,7 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
 export default function TasksScreen() {
   const navigation = useNavigation();
   const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, completeTask } = useAppData();
+  const { setActiveSessionTask } = useProductivity();
   const {  coins,
   registerSubtaskCompletion,
   registerTaskCompletion,
@@ -379,12 +383,14 @@ export default function TasksScreen() {
               LayoutAnimation.configureNext(
                 LayoutAnimation.Presets.easeInEaseOut
               );
-              deleteTask(taskId);
-              Toast.show({
-                type: 'info',
-                text1: 'Task deleted',
-                text2: task.title,
-              });
+              cancelTaskReminder(task.reminderNotificationId || task.metadata?.reminderNotificationId)
+                .then(() => deleteTask(taskId))
+                .then(() => Toast.show({
+                  type: 'info',
+                  text1: 'Task deleted',
+                  text2: task.title,
+                }))
+                .catch(() => Toast.show({ type: 'error', text1: 'Could not delete task' }));
             },
           },
         ]
@@ -398,35 +404,58 @@ export default function TasksScreen() {
     setTimeout(() => addSheetRef.current?.expand(), 60);
   }, []);
 
-  const handleSheetSubmit = useCallback((taskObj) => {
-    if (editingTask) {
-      updateTask(editingTask.id, (t) => ({
-        ...t,
-        title: taskObj.title,
-        dueDate: taskObj.dueDate,
-        themeId: taskObj.themeId,
-        priority: taskObj.priority,
-        subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : t.subtasks,
-        metadata: {
-          ...(t.metadata || {}),
+  const handleSheetSubmit = useCallback(async (taskObj) => {
+    let reminderNotificationId = null;
+    try {
+      if (taskObj.notifEnabled) {
+        reminderNotificationId = await scheduleTaskReminder({
+          title: taskObj.title,
+          dueDate: taskObj.dueDate,
+        });
+      }
+
+      const oldReminderId = editingTask?.reminderNotificationId || editingTask?.metadata?.reminderNotificationId;
+      await cancelTaskReminder(oldReminderId);
+
+      if (editingTask) {
+        await updateTask(editingTask.id, (task) => ({
+          ...task,
+          title: taskObj.title,
+          dueDate: taskObj.dueDate,
           themeId: taskObj.themeId,
-          subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : t.subtasks,
-        },
-      }));
+          priority: taskObj.priority,
+          category: taskObj.category,
+          subject: taskObj.subject,
+          notifEnabled: taskObj.notifEnabled,
+          reminderNotificationId,
+          subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : task.subtasks,
+          metadata: {
+            ...(task.metadata || {}),
+            themeId: taskObj.themeId,
+            category: taskObj.category,
+            subject: taskObj.subject,
+            notifEnabled: taskObj.notifEnabled,
+            reminderNotificationId,
+            subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : task.subtasks,
+          },
+        }));
+        Toast.show({ type: 'success', text1: 'Task updated', text2: taskObj.title });
+      } else {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+        await addTask({
+          ...taskObj,
+          reminderNotificationId,
+          metadata: { notifEnabled: taskObj.notifEnabled, reminderNotificationId },
+        });
+        Toast.show({ type: 'success', text1: 'Task created', text2: taskObj.title });
+      }
       setEditingTask(null);
-      Toast.show({
-        type: 'success',
-        text1: 'Task updated',
-        text2: taskObj.title,
-      });
-    } else {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-      addTask(taskObj);
-      Toast.show({
-        type: 'success',
-        text1: 'Task created',
-        text2: taskObj.title,
-      });
+      if (taskObj.notifEnabled && !reminderNotificationId) {
+        Toast.show({ type: 'info', text1: 'Task saved', text2: 'Reminder unavailable: allow notifications and choose a future date.' });
+      }
+    } catch (error) {
+      await cancelTaskReminder(reminderNotificationId);
+      Toast.show({ type: 'error', text1: 'Task could not be saved', text2: error?.message });
     }
   }, [editingTask, updateTask, addTask]);
 
@@ -435,8 +464,9 @@ export default function TasksScreen() {
   }, []);
 
   const startFocus = useCallback((task) => {
+    setActiveSessionTask({ id: task.id, title: task.title });
     navigation.navigate('Focus', { task });
-  }, [navigation]);
+  }, [navigation, setActiveSessionTask]);
 
   const openHistory = useCallback(() => {
     const parentNav = navigation.getParent?.();

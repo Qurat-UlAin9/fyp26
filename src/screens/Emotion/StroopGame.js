@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, SafeAreaView, Dimensions } from 'rea
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence, withTiming } from 'react-native-reanimated';
 import { ChevronLeft, Heart } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { continueChallenge } from '../../utils/challengeNav';
 
 const { width } = Dimensions.get('window');
 const COLORS = [
@@ -12,7 +13,7 @@ const COLORS = [
   { name: 'YELLOW', hex: '#FBBF24' },
 ];
 
-export default function StroopGame({ navigation }) {
+export default function StroopGame({ navigation, route }) {
   const [target, setTarget] = useState({ text: '', color: '' });
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
@@ -36,8 +37,12 @@ export default function StroopGame({ navigation }) {
         setLives(l => l - 1);
         generateMatch();
       } else {
-        alert("Game Over! Score: " + score);
-        navigation.goBack();
+        if (route?.params?.challenge) {
+          continueChallenge(navigation, route, score);
+        } else {
+          alert("Game Over! Score: " + score);
+          navigation.goBack();
+        }
       }
     }
   };
