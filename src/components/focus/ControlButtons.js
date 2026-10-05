@@ -66,6 +66,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   playWrapper: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     shadowColor: '#60A5FA',
     shadowOpacity: 0.45,
     shadowRadius: 20,

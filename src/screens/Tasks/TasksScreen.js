@@ -1,4 +1,9 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import {
   Animated as RNAnimated,
   Dimensions,
@@ -12,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { scheduleTaskReminder, cancelTaskReminder } from '../../utils/reminders';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AddTaskBottomSheet from './AddTaskBottomSheet';
@@ -280,7 +286,7 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
 }
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
-export default function TasksScreen() {
+export default function TasksScreen({ route }) {
   const navigation = useNavigation();
   const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, completeTask } = useAppData();
   const {  coins,
@@ -341,6 +347,7 @@ export default function TasksScreen() {
           text1: 'Task complete! 🎉',
           text2: '+5 🪙',
         });
+        cancelTaskReminder(taskId);
         setTimeout(() => {
           completeTask(taskId);
           setExpandedIds((prev) => {
@@ -375,10 +382,11 @@ export default function TasksScreen() {
           {
             text: 'Delete',
             style: 'destructive',
-            onPress: () => {
+            onPress: async () => {
               LayoutAnimation.configureNext(
                 LayoutAnimation.Presets.easeInEaseOut
               );
+              await cancelTaskReminder(taskId);
               deleteTask(taskId);
               Toast.show({
                 type: 'info',
@@ -398,9 +406,9 @@ export default function TasksScreen() {
     setTimeout(() => addSheetRef.current?.expand(), 60);
   }, []);
 
-  const handleSheetSubmit = useCallback((taskObj) => {
+  const handleSheetSubmit = useCallback(async (taskObj) => {
     if (editingTask) {
-      updateTask(editingTask.id, (t) => ({
+      await updateTask(editingTask.id, (t) => ({
         ...t,
         title: taskObj.title,
         dueDate: taskObj.dueDate,
@@ -413,6 +421,17 @@ export default function TasksScreen() {
           subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : t.subtasks,
         },
       }));
+
+      // Reschedule the reminder against the new due date if the toggle was on
+      await cancelTaskReminder(editingTask.id);
+      if (taskObj.notifEnabled) {
+        await scheduleTaskReminder({
+          id: editingTask.id,
+          title: taskObj.title,
+          dueDate: taskObj.dueDate,
+        });
+      }
+
       setEditingTask(null);
       Toast.show({
         type: 'success',
@@ -421,7 +440,16 @@ export default function TasksScreen() {
       });
     } else {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-      addTask(taskObj);
+      const created = await addTask(taskObj);
+
+      if (created?.id && taskObj.notifEnabled) {
+        await scheduleTaskReminder({
+          id: created.id,
+          title: taskObj.title,
+          dueDate: taskObj.dueDate,
+        });
+      }
+
       Toast.show({
         type: 'success',
         text1: 'Task created',
@@ -429,6 +457,16 @@ export default function TasksScreen() {
       });
     }
   }, [editingTask, updateTask, addTask]);
+
+  // ---- Handle navigation param: expand a specific task ----
+  useEffect(() => {
+    const targetId = route?.params?.expandTaskId;
+    if (!targetId) return;
+
+    // Expand only this task; collapse everything else
+    setExpandedIds(new Set([targetId]));
+    navigation.setParams({ expandTaskId: undefined, _ts: undefined });
+  }, [route?.params?.expandTaskId, route?.params?._ts, navigation]);
 
   const handleSheetClose = useCallback(() => {
     setEditingTask(null);

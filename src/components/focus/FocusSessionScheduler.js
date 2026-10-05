@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppData } from '../../contexts/AppDataContext';
+import { useProductivity } from '../../contexts/ProductivityContext';
 
 const TRIGGER_WINDOW_MINS = 5;
 const DEFAULT_DURATION_MINS = 25;
@@ -150,6 +151,7 @@ function SessionPromptModal({ visible, task, onStart, onDismiss }) {
 
 export default function FocusSessionScheduler({ navigation, navigationRef }) {
   const { tasks, addFocusSession } = useAppData();
+  const { setActiveSessionTask } = useProductivity();
 
   const [promptTask, setPromptTask] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -212,18 +214,10 @@ export default function FocusSessionScheduler({ navigation, navigationRef }) {
     function() {
       if (!promptTask) return;
       setModalVisible(false);
-      var now = new Date();
-      addFocusSession({
-        taskId: promptTask.id,
-        taskTitle: promptTask.title,
-        isoKey: now.toISOString().slice(0, 10),
-        startHour: now.getHours(),
-        startMin: now.getMinutes(),
-        durationMins: DEFAULT_DURATION_MINS,
-      });
+      setActiveSessionTask(promptTask);
       navigate('Focus', { task: promptTask });
     },
-    [promptTask, addFocusSession, navigate]
+    [promptTask, setActiveSessionTask, navigate]
   );
 
   var handleDismiss = useCallback(function() {

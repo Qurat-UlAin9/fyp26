@@ -2,7 +2,10 @@ const { createUserCrudRouter } = require('../utils/crudRouteFactory');
 const { supabaseAdmin } = require('../config/supabase');
 const agent = require('../services/ai/tools/graph');
 const { generateSubtasks } = require('../services/ai/subtaskGenerator');
-
+const {
+  scheduleSubtasks,
+  computePreferredWorkHour,
+} = require('../services/ai/subtaskScheduler');
 const fields = ['title', 'status', 'summary', 'metadata'];
 
 // Existing generic CRUD for ai_conversations (list/create/update/delete)
@@ -143,16 +146,37 @@ router.post('/suggest-subtasks', async (req, res) => {
       return res.status(401).json({ error: 'Not authenticated.' });
     }
 
-    const { title, category, subject } = req.body || {};
+    const { title, category, subject, deadline } = req.body || {};
     if (!title || typeof title !== 'string' || !title.trim()) {
       return res.status(400).json({ error: 'title (string) is required.' });
     }
+    if (!deadline || typeof deadline !== 'string') {
+      return res.status(400).json({
+        error: 'deadline (YYYY-MM-DD) is required to schedule subtasks.',
+      });
+    }
 
-    const subtasks = await generateSubtasks(title.trim(), {
+    const titles = await generateSubtasks(title.trim(), {
       category: typeof category === 'string' ? category : undefined,
       subject: typeof subject === 'string' ? subject : undefined,
     });
-    return res.json({ data: { subtasks } });
+
+    const preferredHour = await computePreferredWorkHour(userId);
+    const scheduled = scheduleSubtasks(titles, deadline, { preferredHour });
+
+    return res.json({
+      data: {
+        subtasks: scheduled.map((s, i) => ({
+          id: `preview-${Date.now()}-${i}`,
+          title: s.title,
+          done: false,
+          scheduledDate: s.scheduledDate,
+          scheduledHour: s.scheduledHour,
+          durationMins: s.durationMins,
+        })),
+        preferredHour,
+      },
+    });
   } catch (error) {
     console.error('POST /api/ai/suggest-subtasks failed:', error);
     return res.status(500).json({ error: error.message || 'Failed.' });

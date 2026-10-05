@@ -151,7 +151,10 @@ export default function TaskHistoryScreen({ navigation, route }) {
   const historyTasks = route?.params?.historyTasks?.length ? route.params.historyTasks : taskHistory;
 
   // Filter to last 10 days only
-  const recent = historyTasks.filter((t) => daysSince(t.completedAt) <= 10);
+  const recent = historyTasks.filter((t) => {
+    if (!t.completedAt) return false;
+    return daysSince(t.completedAt) <= 10;
+  });
 
   return (
     <View style={styles.screen}>

@@ -19,7 +19,6 @@ import QuestionnaireScreen from '../screens/Detection/QuestionnaireScreen';
 import AssessmentResultScreen from '../screens/Detection/AssessmentResultScreen';
 import EFQuestionnaireScreen from '../screens/Detection/EFQuestionnaireScreen';
 import EFAssessmentResultScreen from '../screens/Detection/EFAssessmentResultScreen';
-
 import BalloonSession from '../screens/Emotion/BallonSession';
 import SplashSession from '../screens/Emotion/SplashSession';
 import GroundingSession from '../screens/Emotion/GroundingSession';
@@ -66,6 +65,7 @@ export default function AppNavigator() {
       <Stack.Screen name="MindfulGrowth" component={MindfulGrowthScreen} options={{ headerShown: false }} />
       <Stack.Screen name="CognitivePower" component={CognitivePowerScreen} options={{ headerShown: false }} />
       <Stack.Screen name="BalloonSession" component={BalloonSession} options={{ headerShown: false, animation: 'fade' }} />
+      
       <Stack.Screen name="SplashSession" component={SplashSession} options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="GroundingSession" component={GroundingSession} options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="HarmonicRipples" component={HarmonicRipples} options={{ headerShown: false, animation: 'fade' }} />

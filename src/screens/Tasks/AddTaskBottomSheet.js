@@ -12,6 +12,7 @@ import {
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { X, Calendar, Bell, Sparkles } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
 import { suggestSubtasks } from '../../services/api';
 import { showConfirm } from '../../utils/alert';
 
@@ -45,19 +46,37 @@ const toISODate = (val) => {
 
 const formatDate = (iso) => {
   if (!iso) return '';
-  const d = new Date(iso);
+  const d = new Date(`${iso}T00:00:00`);
   if (isNaN(d)) return iso;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return d.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
 };
 
-const FALLBACK_SUBTASKS = (title) => [
-  { id: `${Date.now()}-1`, title: `Research ${title}`, done: false },
-  { id: `${Date.now()}-2`, title: `Plan approach`, done: false },
-  { id: `${Date.now()}-3`, title: `Execute & review`, done: false },
-];
+const DEFAULT_DEADLINE_DAYS = 3;
+
+function defaultDeadline() {
+  const d = new Date();
+  d.setDate(d.getDate() + DEFAULT_DEADLINE_DAYS);
+  return toISODate(d);
+}
+
+function validateDeadline(iso) {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+    return 'Please enter a valid date (YYYY-MM-DD).';
+  }
+  const d = new Date(`${iso}T00:00:00`);
+  if (isNaN(d)) return 'Invalid date.';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (d.getTime() < today.getTime()) return 'Deadline cannot be in the past.';
+  return null;
+}
 
 const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) => {
-  const snapPoints = useMemo(() => ['90%'], []);
+  const snapPoints = useMemo(() => ['92%'], []);
   const isEdit = Boolean(initialTask);
 
   const [title, setTitle] = useState('');
@@ -68,6 +87,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
   const [selectedTheme, setSelectedTheme] = useState('coral');
   const [priority, setPriority] = useState('Medium');
   const [generating, setGenerating] = useState(false);
+  const [schedulePreview, setSchedulePreview] = useState(null);
 
   const cancelledRef = useRef(false);
 
@@ -84,13 +104,14 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
       setTitle('');
       setCategory(null);
       setSubject('');
-      setDueDate('');
+      setDueDate(defaultDeadline());
       setSelectedTheme('coral');
       setPriority('Medium');
       setNotifEnabled(false);
     }
     cancelledRef.current = false;
     setGenerating(false);
+    setSchedulePreview(null);
   }, [initialTask]);
 
   const th = getTheme(selectedTheme);
@@ -104,6 +125,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
     setSelectedTheme('coral');
     setPriority('Medium');
     setGenerating(false);
+    setSchedulePreview(null);
     cancelledRef.current = false;
   };
 
@@ -114,16 +136,23 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
     onClose?.();
   };
 
-  const generateFromAI = async (titleText) => {
+  const generateFromAI = async (titleText, deadline) => {
     try {
-      const response = await suggestSubtasks(titleText, { category, subject });
+      const response = await suggestSubtasks(titleText, {
+        category,
+        subject,
+        deadline,
+      });
       const returned = response?.data?.subtasks;
 
       if (Array.isArray(returned) && returned.length > 0) {
         return returned.map((s, i) => ({
-          id: `${Date.now()}-${i}`,
-          title: String(s),
+          id: s.id || `${Date.now()}-${i}`,
+          title: String(s.title || s),
           done: false,
+          scheduledDate: s.scheduledDate,
+          scheduledHour: s.scheduledHour,
+          durationMins: s.durationMins,
         }));
       }
       return null;
@@ -136,8 +165,20 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
   const handleSave = async () => {
     if (!title.trim()) return;
 
+    const deadlineError = validateDeadline(dueDate);
+    if (deadlineError) {
+      Toast.show({
+        type: 'error',
+        text1: 'Deadline required',
+        text2: deadlineError,
+        visibilityTime: 2400,
+      });
+      return;
+    }
+
     cancelledRef.current = false;
     setGenerating(true);
+    setSchedulePreview(null);
 
     const trimmedTitle = title.trim();
     const trimmedSubject = subject.trim();
@@ -149,15 +190,15 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
       initialTask.subtasks.length > 0
     ) {
       const oldTitle = (initialTask.title || '').trim();
-      const titleChanged =
-        oldTitle.toLowerCase() !== trimmedTitle.toLowerCase();
+      const oldDue = toISODate(initialTask.dueDate || initialTask.due_date);
+      const titleChanged = oldTitle.toLowerCase() !== trimmedTitle.toLowerCase();
+      const deadlineChanged = oldDue !== dueDate;
 
-      if (titleChanged) {
+      if (titleChanged || deadlineChanged) {
         setGenerating(false);
-
         const shouldRegen = await showConfirm(
-          'Regenerate subtasks?',
-          `The title changed. Generate new subtasks for "${trimmedTitle}"?`,
+          'Regenerate schedule?',
+          'Title or deadline changed. Regenerate subtasks and reschedule them?',
           'Regenerate',
           'Keep current'
         );
@@ -165,7 +206,8 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
         if (shouldRegen) {
           setGenerating(true);
           finalSubtasks =
-            (await generateFromAI(trimmedTitle)) || initialTask.subtasks;
+            (await generateFromAI(trimmedTitle, dueDate)) ||
+            initialTask.subtasks;
         } else {
           finalSubtasks = initialTask.subtasks;
         }
@@ -173,19 +215,24 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
         finalSubtasks = initialTask.subtasks;
       }
     } else {
-      finalSubtasks = (await generateFromAI(trimmedTitle)) || FALLBACK_SUBTASKS(trimmedTitle);
+      finalSubtasks = await generateFromAI(trimmedTitle, dueDate);
     }
 
     setGenerating(false);
 
     if (cancelledRef.current) return;
 
+    // Show preview if we generated subtasks
+    if (finalSubtasks && finalSubtasks.length > 0) {
+      setSchedulePreview(finalSubtasks);
+    }
+
     onSubmit({
       id: initialTask?.id || Date.now().toString(),
       title: trimmedTitle,
       category,
       subject: trimmedSubject || null,
-      dueDate: dueDate || new Date().toISOString().split('T')[0],
+      dueDate,
       themeId: selectedTheme,
       notifEnabled,
       priority,
@@ -194,11 +241,38 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
       expanded: false,
       completedRewarded: initialTask?.completedRewarded || false,
       completedAt: initialTask?.completedAt || null,
-      subtasks: finalSubtasks,
+      subtasks: finalSubtasks || [],
     });
 
     reset();
     ref.current?.close();
+  };
+
+  const renderSchedulePreview = () => {
+    if (!schedulePreview || schedulePreview.length === 0) return null;
+    return (
+      <View style={styles.previewScheduleWrap}>
+        <Text style={styles.label}>SCHEDULE</Text>
+        {schedulePreview.map((s, i) => (
+          <View key={s.id || i} style={styles.scheduleRow}>
+            <View style={[styles.scheduleDot, { backgroundColor: th.accent }]} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.scheduleTitle} numberOfLines={2}>
+                {s.title}
+              </Text>
+              {s.scheduledDate ? (
+                <Text style={styles.scheduleDate}>
+                  {formatDate(s.scheduledDate)}
+                  {s.scheduledHour != null
+                    ? ` · ${String(s.scheduledHour).padStart(2, '0')}:00`
+                    : ''}
+                </Text>
+              ) : null}
+            </View>
+          </View>
+        ))}
+      </View>
+    );
   };
 
   return (
@@ -217,8 +291,14 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={styles.sheetTitle}>{isEdit ? 'Edit Task' : 'New Task'}</Text>
-          <TouchableOpacity onPress={handleClose} style={styles.closeBtn} disabled={generating}>
+          <Text style={styles.sheetTitle}>
+            {isEdit ? 'Edit Task' : 'New Task'}
+          </Text>
+          <TouchableOpacity
+            onPress={handleClose}
+            style={styles.closeBtn}
+            disabled={generating}
+          >
             <X color="#64748B" size={20} />
           </TouchableOpacity>
         </View>
@@ -233,6 +313,23 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
           multiline
           editable={!generating}
         />
+
+        <Text style={styles.label}>DEADLINE (REQUIRED)</Text>
+        <View style={styles.rowInput}>
+          <Calendar size={17} color="#6366F1" />
+          <TextInput
+            style={styles.flexInput}
+            placeholder="YYYY-MM-DD"
+            placeholderTextColor="#94A3B8"
+            value={dueDate}
+            onChangeText={setDueDate}
+            editable={!generating}
+          />
+        </View>
+        <Text style={styles.helperText}>
+          We'll spread the steps across the days before this date so you're not
+          cramming at the last minute.
+        </Text>
 
         <Text style={styles.label}>CATEGORY</Text>
         <ScrollView
@@ -249,7 +346,10 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
                 onPress={() => setCategory(active ? null : c.id)}
                 style={[
                   styles.categoryChip,
-                  active && { borderColor: th.accent, backgroundColor: `${th.accent}22` },
+                  active && {
+                    borderColor: th.accent,
+                    backgroundColor: `${th.accent}22`,
+                  },
                 ]}
                 disabled={generating}
                 activeOpacity={0.75}
@@ -271,26 +371,13 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
         <Text style={styles.label}>SUBJECT / FOCUS (OPTIONAL)</Text>
         <TextInput
           style={styles.input}
-          placeholder="e.g. Neural networks survey, client presentation, chapter 5"
+          placeholder="e.g. Neural networks survey, client presentation"
           placeholderTextColor="#94A3B8"
           value={subject}
           onChangeText={setSubject}
           maxLength={80}
           editable={!generating}
         />
-
-        <Text style={styles.label}>DUE DATE</Text>
-        <View style={styles.rowInput}>
-          <Calendar size={17} color="#6366F1" />
-          <TextInput
-            style={styles.flexInput}
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor="#94A3B8"
-            value={dueDate}
-            onChangeText={setDueDate}
-            editable={!generating}
-          />
-        </View>
 
         <View style={styles.toggleRow}>
           <View style={styles.toggleLeft}>
@@ -317,10 +404,20 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
               <TouchableOpacity
                 key={level}
                 onPress={() => setPriority(level)}
-                style={[styles.priorityPill, active && { borderColor: th.accent, backgroundColor: `${th.accent}22` }]}
+                style={[
+                  styles.priorityPill,
+                  active && {
+                    borderColor: th.accent,
+                    backgroundColor: `${th.accent}22`,
+                  },
+                ]}
                 disabled={generating}
               >
-                <Text style={[styles.priorityText, active && { color: th.accent }]}>{level}</Text>
+                <Text
+                  style={[styles.priorityText, active && { color: th.accent }]}
+                >
+                  {level}
+                </Text>
               </TouchableOpacity>
             );
           })}
@@ -358,14 +455,18 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
           })}
         </View>
 
-        {title.length > 0 && !generating && (
+        {renderSchedulePreview()}
+
+        {title.length > 0 && !generating && !schedulePreview && (
           <LinearGradient
             colors={th.cardGradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.previewCard}
           >
-            <Text style={[styles.previewTitle, { color: th.textLight }]}>{title}</Text>
+            <Text style={[styles.previewTitle, { color: th.textLight }]}>
+              {title}
+            </Text>
             {subject ? (
               <Text style={[styles.previewSubject, { color: th.textLight }]}>
                 {subject}
@@ -382,7 +483,9 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
         {generating && (
           <View style={styles.generatingBox}>
             <ActivityIndicator size="small" color={th.accent} />
-            <Text style={styles.generatingText}>Breaking down into steps…</Text>
+            <Text style={styles.generatingText}>
+              Scheduling your steps…
+            </Text>
           </View>
         )}
 
@@ -396,7 +499,10 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
             colors={[th.accent, th.cardGradient[1]]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={[styles.saveBtn, (generating || !title.trim()) && { opacity: 0.6 }]}
+            style={[
+              styles.saveBtn,
+              (generating || !title.trim()) && { opacity: 0.6 },
+            ]}
           >
             {generating ? (
               <ActivityIndicator size="small" color="#fff" />
@@ -404,12 +510,20 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
               <Sparkles color="#fff" size={18} />
             )}
             <Text style={styles.saveBtnText}>
-              {generating ? 'Generating…' : isEdit ? 'Save Changes' : 'Save Task'}
+              {generating
+                ? 'Scheduling…'
+                : isEdit
+                ? 'Save Changes'
+                : 'Save & Schedule'}
             </Text>
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleClose} style={styles.cancelBtn} disabled={generating}>
+        <TouchableOpacity
+          onPress={handleClose}
+          style={styles.cancelBtn}
+          disabled={generating}
+        >
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
 
@@ -429,9 +543,10 @@ const styles = StyleSheet.create({
   sheetTitle: { fontSize: 22, fontWeight: '800', color: '#F1F5F9', letterSpacing: -0.3 },
   closeBtn: { width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' },
   label: { fontSize: 11, fontWeight: '800', color: '#64748B', letterSpacing: 1.2, marginBottom: 8, marginTop: 4, textTransform: 'uppercase' },
-  input: { backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, padding: 14, fontSize: 15, color: '#F1F5F9', marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', minHeight: 52 },
-  rowInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, paddingHorizontal: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', height: 52, gap: 10, marginBottom: 20 },
+  input: { backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, padding: 14, fontSize: 15, color: '#F1F5F9', marginBottom: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', minHeight: 52 },
+  rowInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, paddingHorizontal: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', height: 52, gap: 10, marginBottom: 8 },
   flexInput: { flex: 1, color: '#F1F5F9', fontSize: 15 },
+  helperText: { fontSize: 12, color: '#64748B', marginBottom: 18, lineHeight: 16, fontStyle: 'italic' },
   categoryRow: { gap: 8, paddingBottom: 22, paddingRight: 8 },
   categoryChip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)', backgroundColor: 'rgba(255,255,255,0.04)' },
   categoryEmoji: { fontSize: 14 },
@@ -446,13 +561,35 @@ const styles = StyleSheet.create({
   themeRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingVertical: 10, marginBottom: 20 },
   dotWrapper: { padding: 4 },
   themeDot: { width: 40, height: 40, borderRadius: 20 },
-  previewCard: { borderRadius: 16, padding: 16, marginBottom: 24, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 6 },
+  previewCard: { borderRadius: 16, padding: 16, marginBottom: 24 },
   previewTitle: { fontWeight: '700', fontSize: 16, marginBottom: 4 },
   previewSubject: { fontSize: 13, opacity: 0.85, marginBottom: 6, fontStyle: 'italic' },
   previewDate: { fontSize: 13, opacity: 0.82, fontWeight: '500' },
+  previewScheduleWrap: {
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+  scheduleRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    paddingVertical: 6,
+  },
+  scheduleDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginTop: 6,
+  },
+  scheduleTitle: { color: '#E2E8F0', fontSize: 13, fontWeight: '600' },
+  scheduleDate: { color: '#64748B', fontSize: 11, marginTop: 2, fontWeight: '500' },
   generatingBox: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: 14, marginBottom: 20 },
   generatingText: { color: '#CBD5E1', fontSize: 14, fontWeight: '600' },
-  saveBtnWrap: { borderRadius: 18, overflow: 'hidden', shadowColor: '#6366F1', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.45, shadowRadius: 14, elevation: 10, marginBottom: 14 },
+  saveBtnWrap: { borderRadius: 18, overflow: 'hidden', marginBottom: 14 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 16, borderRadius: 18 },
   saveBtnText: { color: '#fff', fontWeight: '800', fontSize: 16, letterSpacing: 0.2 },
   cancelBtn: { alignItems: 'center', paddingVertical: 10 },

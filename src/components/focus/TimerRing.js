@@ -1,40 +1,30 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import Animated, {
   Easing,
   cancelAnimation,
   interpolate,
-  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
 import { useTheme } from '../../contexts/ThemeContext';
 
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
-  const { theme, isDark } = useTheme();
+  const { isDark } = useTheme();
 
-  const size = 280;
+  const size = 260;
   const stroke = 14;
   const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
+  const progress = Math.max(0, Math.min(1, timeLeft / totalSeconds));
+  const progressPercent = Math.round((1 - progress) * 100);
 
-  const progress = useSharedValue(1);
   const pulse = useSharedValue(1);
   const glow = useSharedValue(0);
   const outerGlow = useSharedValue(0);
-
-  useEffect(() => {
-    progress.value = withTiming(timeLeft / totalSeconds, {
-      duration: 280,
-      easing: Easing.linear,
-    });
-  }, [progress, timeLeft, totalSeconds]);
 
   useEffect(() => {
     if (isRunning) {
@@ -63,28 +53,28 @@ export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
     }
   }, [glow, isRunning, outerGlow, pulse]);
 
-  const ringAnimatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: circumference * (1 - progress.value),
-  }));
-
   const pulseStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulse.value }],
   }));
 
   const innerGlowStyle = useAnimatedStyle(() => ({
-    shadowOpacity: interpolate(glow.value, [0, 1], [0.2, 0.65]),
-    elevation: interpolate(glow.value, [0, 1], [6, 20]),
+    shadowOpacity: interpolate(glow.value, [0, 1], [0.15, 0.5]),
+    elevation: interpolate(glow.value, [0, 1], [4, 14]),
   }));
 
   const outerGlowStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(outerGlow.value, [0, 1], [0, 0.6]),
+    opacity: interpolate(outerGlow.value, [0, 1], [0, 0.55]),
     transform: [{ scale: interpolate(outerGlow.value, [0, 1], [1, 1.06]) }],
   }));
 
   const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
   const seconds = (timeLeft % 60).toString().padStart(2, '0');
 
-  const progressPercent = Math.round((1 - timeLeft / totalSeconds) * 100);
+  // Border-based arc:
+  //   - base circle = translucent track
+  //   - overlay circle = gradient-colored arcs, rotated to indicate progress
+  //   - full circle rendered; a mask hides the "unfilled" section via rotation
+  const dashDeg = Math.max(0, Math.min(360, (1 - progress) * 360));
 
   return (
     <AnimatedView style={[styles.container, pulseStyle]}>
@@ -94,67 +84,61 @@ export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
           styles.outerGlow,
           outerGlowStyle,
           {
-            width: size + 40,
-            height: size + 40,
-            borderRadius: (size + 40) / 2,
-            backgroundColor: isDark ? 'rgba(56,189,248,0.06)' : 'rgba(59,130,246,0.06)',
+            width: size + 36,
+            height: size + 36,
+            borderRadius: (size + 36) / 2,
+            backgroundColor: isDark
+              ? 'rgba(56,189,248,0.06)'
+              : 'rgba(59,130,246,0.06)',
           },
         ]}
       />
 
-      {/* Mid glow */}
-      <AnimatedView
-        style={[
-          styles.outerGlow,
-          {
-            width: size + 16,
-            height: size + 16,
-            borderRadius: (size + 16) / 2,
-            backgroundColor: isDark ? 'rgba(56,189,248,0.08)' : 'rgba(59,130,246,0.08)',
-          },
-        ]}
+      {/* Track circle */}
+      <View
+        style={{
+          position: 'absolute',
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: stroke,
+          borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)',
+        }}
       />
 
-      <Svg width={size} height={size} style={styles.svg}>
-        <Defs>
-          <SvgGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0%" stopColor="#22D3EE" />
-            <Stop offset="40%" stopColor="#60A5FA" />
-            <Stop offset="80%" stopColor="#A78BFA" />
-            <Stop offset="100%" stopColor="#F472B6" />
-          </SvgGradient>
-          <SvgGradient id="trackGrad" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0%" stopColor={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)'} />
-            <Stop offset="100%" stopColor={isDark ? 'rgba(255,255,255,0.03)' : 'rgba(15,23,42,0.03)'} />
-          </SvgGradient>
-        </Defs>
-
-        {/* Track ring */}
-        <Circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={isDark ? 'rgba(255,255,255,0.07)' : 'rgba(15,23,42,0.07)'}
-          strokeWidth={stroke}
-          fill="none"
+      {/* Progress arcs — two half-rings, rotated to show progress */}
+      {/* Right half (0° to 180°) */}
+      <View
+        style={{
+          position: 'absolute',
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: stroke,
+          borderTopColor: 'transparent',
+          borderLeftColor: 'transparent',
+          borderRightColor: '#60A5FA',
+          borderBottomColor: 'transparent',
+          transform: [{ rotate: `${progress <= 0.5 ? progress * 360 : 180}deg` }],
+        }}
+      />
+      {/* Left half (180° to 360°) — only visible when progress > 0.5 */}
+      {progress > 0.5 && (
+        <View
+          style={{
+            position: 'absolute',
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            borderWidth: stroke,
+            borderTopColor: '#A78BFA',
+            borderRightColor: 'transparent',
+            borderLeftColor: '#22D3EE',
+            borderBottomColor: 'transparent',
+            transform: [{ rotate: `${(progress - 0.5) * 360}deg` }],
+          }}
         />
-
-        {/* Progress ring */}
-        <AnimatedCircle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke="url(#ringGrad)"
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          fill="none"
-          strokeDasharray={`${circumference} ${circumference}`}
-          animatedProps={ringAnimatedProps}
-          rotation={-90}
-          originX={size / 2}
-          originY={size / 2}
-        />
-      </Svg>
+      )}
 
       {/* Center content */}
       <AnimatedView
@@ -170,8 +154,17 @@ export default function TimerRing({ totalSeconds, timeLeft, isRunning }) {
         <Text style={[styles.timeText, { color: isDark ? '#E0F2FE' : '#0F172A' }]}>
           {`${minutes}:${seconds}`}
         </Text>
-        <Text style={[styles.progressLabel, { color: isDark ? '#334155' : '#94A3B8' }]}>
-          {isRunning ? `${progressPercent}% elapsed` : timeLeft === 0 ? 'Complete!' : 'Ready'}
+        <Text
+          style={[
+            styles.progressLabel,
+            { color: isDark ? '#334155' : '#94A3B8' },
+          ]}
+        >
+          {isRunning
+            ? `${progressPercent}% elapsed`
+            : timeLeft === 0
+              ? 'Complete!'
+              : 'Ready'}
         </Text>
       </AnimatedView>
     </AnimatedView>
@@ -182,29 +175,26 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 280,
-    height: 280,
+    width: 260,
+    height: 260,
   },
   outerGlow: {
     position: 'absolute',
   },
-  svg: {
-    position: 'absolute',
-  },
   centerContent: {
-    width: 184,
-    height: 184,
-    borderRadius: 92,
+    width: 172,
+    height: 172,
+    borderRadius: 86,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowRadius: 24,
+    shadowRadius: 20,
     shadowOffset: { width: 0, height: 0 },
-    elevation: 12,
+    elevation: 8,
   },
   timeText: {
-    fontSize: 48,
+    fontSize: 46,
     fontWeight: '800',
-    letterSpacing: 1.5,
+    letterSpacing: 1,
     includeFontPadding: false,
   },
   progressLabel: {

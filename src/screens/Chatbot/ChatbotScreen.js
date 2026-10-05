@@ -9,7 +9,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Send } from 'lucide-react-native';
+import { Send, Play } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { sendChatMessage } from '../../services/api';
@@ -17,6 +18,7 @@ import { sendChatMessage } from '../../services/api';
 export default function ChatbotScreen({ route }) {
   const { theme, isDark } = useTheme();
   const { profile, refreshData } = useAppData();
+  const navigation = useNavigation();
   const displayName = profile?.name || 'Friend';
   const mode = route?.params?.context;
 
@@ -59,23 +61,30 @@ export default function ChatbotScreen({ route }) {
 
     try {
       const response = await sendChatMessage(conversationId, userText);
-      const {
-        conversationId: returnedId,
-        reply,
-        toolCalls,
-      } = response.data;
+      const { conversationId: returnedId, reply, toolCalls } = response.data;
 
       if (!conversationId) setConversationId(returnedId);
 
+      // Extract focus action if the AI called start_focus_session
+      let focusAction = null;
+      if (Array.isArray(toolCalls)) {
+        const focusCall = toolCalls.find(
+          (tc) => tc.name === 'start_focus_session'
+        );
+        if (focusCall && focusCall.args) {
+          focusAction = {
+            minutes: focusCall.args.planned_minutes || 25,
+            taskTitle: focusCall.args.task_title || null,
+            sessionType: focusCall.args.session_type || 'Focus',
+          };
+        }
+      }
+
       setMessages((prev) => [
         ...prev,
-        { id: `${Date.now()}-ai`, role: 'ai', text: reply },
+        { id: `${Date.now()}-ai`, role: 'ai', text: reply, focusAction },
       ]);
 
-      // If the AI invoked any tools that write to the database
-      // (create_task, create_habit, suggest_focus_session, etc.),
-      // refresh app state so the user sees the change immediately
-      // without needing to navigate away and back.
       if (
         Array.isArray(toolCalls) &&
         toolCalls.length > 0 &&
@@ -91,6 +100,12 @@ export default function ChatbotScreen({ route }) {
     } finally {
       setSending(false);
     }
+  };
+
+  const handleStartFocus = (focusAction) => {
+    navigation.navigate('Focus', {
+      autoStartConfig: focusAction,
+    });
   };
 
   return (
@@ -126,6 +141,34 @@ export default function ChatbotScreen({ route }) {
             >
               {item.text}
             </Text>
+
+            {item.focusAction && (
+              <TouchableOpacity
+                onPress={() => handleStartFocus(item.focusAction)}
+                activeOpacity={0.85}
+                style={styles.focusChip}
+              >
+                <LinearGradient
+                  colors={['#A78BFA', '#7C3AED']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.focusChipGrad}
+                >
+                  <Play
+                    size={13}
+                    color="#FFF"
+                    fill="#FFF"
+                    style={{ marginRight: 6 }}
+                  />
+                  <Text style={styles.focusChipText} numberOfLines={1}>
+                    Start {item.focusAction.minutes}-min session
+                    {item.focusAction.taskTitle
+                      ? ` · ${item.focusAction.taskTitle}`
+                      : ''}
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
           </View>
         )}
         ListFooterComponent={
@@ -153,9 +196,7 @@ export default function ChatbotScreen({ route }) {
         style={[
           styles.inputRow,
           {
-            backgroundColor: isDark
-              ? 'rgba(15,23,42,0.9)'
-              : '#FFFFFF',
+            backgroundColor: isDark ? 'rgba(15,23,42,0.9)' : '#FFFFFF',
           },
         ]}
       >
@@ -196,6 +237,24 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 6,
     borderWidth: 1,
     borderColor: 'rgba(148,163,184,0.2)',
+  },
+  focusChip: {
+    marginTop: 12,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  focusChipGrad: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+  },
+  focusChipText: {
+    color: '#FFF',
+    fontWeight: '700',
+    fontSize: 13,
+    flexShrink: 1,
   },
   errorText: {
     color: '#EF4444',
