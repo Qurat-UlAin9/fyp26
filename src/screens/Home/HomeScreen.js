@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -12,7 +13,6 @@ import {
   Award,
   MessageCircle,
   Leaf,
-  ListChecks,
   Clock3,
   Flame,
   UserCircle2,
@@ -22,6 +22,9 @@ import {
   Target,
   Zap,
   Calendar,
+  AlertCircle,
+  RotateCcw,
+  LogIn,
 } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
@@ -35,9 +38,6 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-// ------------------------------------------------------------------
-// Metric pill for the row under the hero task card
-// ------------------------------------------------------------------
 function MetricPill({ icon: Icon, value, label, gradient, progress = 0 }) {
   return (
     <View style={styles.metricPillWrap}>
@@ -65,20 +65,17 @@ function MetricPill({ icon: Icon, value, label, gradient, progress = 0 }) {
   );
 }
 
-// ------------------------------------------------------------------
-// Assessment card — coloured with prominent Start button
-// ------------------------------------------------------------------
 function AssessmentCard({
   title,
   subtitle,
   taken,
   gradient,
   icon: Icon,
-  onPress,
-  isDark,
+  onPrimary,
+  onRetake,
 }) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.88} style={styles.assessWrap}>
+    <View style={styles.assessWrap}>
       <LinearGradient
         colors={gradient}
         start={{ x: 0, y: 0 }}
@@ -103,21 +100,33 @@ function AssessmentCard({
           {subtitle}
         </Text>
 
-        <View style={styles.assessCta}>
+        <TouchableOpacity
+          onPress={onPrimary}
+          activeOpacity={0.85}
+          style={styles.assessCta}
+        >
           <Text style={styles.assessCtaText}>
             {taken ? 'View result' : 'Start now'}
           </Text>
           <ChevronRight color="#FFFFFF" size={14} strokeWidth={3} />
-        </View>
+        </TouchableOpacity>
+
+        {taken && onRetake ? (
+          <TouchableOpacity
+            onPress={onRetake}
+            activeOpacity={0.75}
+            style={styles.assessRetake}
+          >
+            <RotateCcw color="rgba(255,255,255,0.9)" size={11} strokeWidth={3} />
+            <Text style={styles.assessRetakeText}>Retake</Text>
+          </TouchableOpacity>
+        ) : null}
       </LinearGradient>
-    </TouchableOpacity>
+    </View>
   );
 }
 
-// ------------------------------------------------------------------
-// Up Next hero card
-// ------------------------------------------------------------------
-function UpNextCard({ nextTask, onStartFocus, isDark, theme }) {
+function UpNextCard({ nextTask, onStartFocus, isDark }) {
   if (!nextTask) {
     return (
       <LinearGradient
@@ -128,11 +137,21 @@ function UpNextCard({ nextTask, onStartFocus, isDark, theme }) {
       >
         <View style={styles.allClearHeader}>
           <Sparkles color={isDark ? '#C4B5FD' : '#7C3AED'} size={22} />
-          <Text style={[styles.allClearTitle, { color: isDark ? '#E9D5FF' : '#4C1D95' }]}>
+          <Text
+            style={[
+              styles.allClearTitle,
+              { color: isDark ? '#E9D5FF' : '#4C1D95' },
+            ]}
+          >
             All clear
           </Text>
         </View>
-        <Text style={[styles.allClearSub, { color: isDark ? '#A5B4FC' : '#6D28D9' }]}>
+        <Text
+          style={[
+            styles.allClearSub,
+            { color: isDark ? '#A5B4FC' : '#6D28D9' },
+          ]}
+        >
           No active tasks right now. Ask your AI coach to help you plan.
         </Text>
       </LinearGradient>
@@ -145,12 +164,13 @@ function UpNextCard({ nextTask, onStartFocus, isDark, theme }) {
   const totalCount = subtasks.length;
   const progress = totalCount > 0 ? (doneCount / totalCount) * 100 : 0;
 
-  const dueLabel = task.dueDate || task.due_date
-    ? new Date(task.dueDate || task.due_date).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-    : null;
+  const dueLabel =
+    task.dueDate || task.due_date
+      ? new Date(task.dueDate || task.due_date).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+        })
+      : null;
 
   return (
     <LinearGradient
@@ -217,19 +237,18 @@ function UpNextCard({ nextTask, onStartFocus, isDark, theme }) {
   );
 }
 
-// ------------------------------------------------------------------
-// Main screen
-// ------------------------------------------------------------------
 export default function HomeScreen() {
   const { theme, isDark, stats } = useTheme();
   const {
     profile,
     tasks,
     focusSessions,
-    moodLogs,
     adhdAssessment,
     efAssessment,
     habitStats,
+    syncError,
+    sessionExpired,
+    refreshData,
   } = useAppData();
   const { setActiveSessionTask } = useProductivity();
   const navigation = useNavigation();
@@ -239,20 +258,19 @@ export default function HomeScreen() {
     hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
   const displayName = profile?.username || profile?.name || 'Friend';
-
   const today = todayISO();
 
-  // ---- Active tasks ----
   const activeTasks = useMemo(
-    () => tasks.filter((t) => t.status !== 'Completed' && t.status !== 'Cancelled'),
+    () =>
+      tasks.filter(
+        (t) => t.status !== 'Completed' && t.status !== 'Cancelled'
+      ),
     [tasks]
   );
 
-  // ---- Up Next: task with the soonest pending scheduled subtask ----
   const nextTask = useMemo(() => {
     if (activeTasks.length === 0) return null;
 
-    // 1. Prefer tasks with scheduled, undone subtasks
     const withScheduled = activeTasks
       .map((t) => {
         const pending = (t.subtasks || []).filter(
@@ -269,7 +287,6 @@ export default function HomeScreen() {
 
     if (withScheduled.length > 0) return withScheduled[0];
 
-    // 2. Fall back to earliest due date among tasks with pending subtasks
     const withDue = activeTasks
       .filter((t) => t.dueDate || t.due_date)
       .sort((a, b) => {
@@ -284,13 +301,11 @@ export default function HomeScreen() {
       return { task, nextSub };
     }
 
-    // 3. Fall back to first active task with pending subtask
     for (const t of activeTasks) {
       const nextSub = (t.subtasks || []).find((s) => !s.done);
       if (nextSub) return { task: t, nextSub };
     }
 
-    // 4. Last resort: first active task
     const t = activeTasks[0];
     const nextSub = (t.subtasks || [])[0];
     return { task: t, nextSub };
@@ -302,7 +317,6 @@ export default function HomeScreen() {
     navigation.navigate('Focus', { task: nextTask.task });
   };
 
-  // ---- Today's metrics ----
   const focusMinutesToday = useMemo(() => {
     return focusSessions
       .filter(
@@ -313,32 +327,37 @@ export default function HomeScreen() {
 
   const habitTarget = habitStats?.dailyTarget || 0;
   const habitDone = habitStats?.todayDone || 0;
-  const habitProgress =
-    habitTarget > 0 ? (habitDone / habitTarget) * 100 : 0;
+  const habitProgress = habitTarget > 0 ? (habitDone / habitTarget) * 100 : 0;
 
-  const tasksWithSubtasks = activeTasks.filter(
-    (t) => (t.subtasks || []).length > 0
-  );
-  const completedSubtasks = tasksWithSubtasks.reduce((sum, t) => {
-    const subs = t.subtasks || [];
-    return sum + subs.filter((s) => s.done).length;
-  }, 0);
-  const totalSubtasks = tasksWithSubtasks.reduce(
-    (sum, t) => sum + (t.subtasks || []).length,
-    0
-  );
-  const tasksProgress =
-    totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
-
-  // ---- Assessment text ----
   const adhdTaken = Boolean(adhdAssessment);
   const adhdSubtitle = adhdTaken
-    ? `${adhdAssessment.percentage ?? '—'}% · ${adhdAssessment.predicted_label || 'Recorded'}`
+    ? `${adhdAssessment.percentage ?? '—'}% · ${
+        adhdAssessment.predicted_label || 'Recorded'
+      }`
     : 'Not taken yet · 3 min';
+
   const efTaken = Boolean(efAssessment);
   const efSubtitle = efTaken
     ? 'Completed · view dimensions'
     : 'Not taken yet · 5 min';
+
+  const avatarSource = profile?.avatarUrl ? { uri: profile.avatarUrl } : null;
+
+  const handleRelogin = () => {
+    navigation.replace('Login');
+  };
+
+  const handleRetry = () => {
+    if (typeof refreshData === 'function') {
+      refreshData().catch(() => undefined);
+    }
+  };
+
+  const bannerKind = !syncError
+    ? null
+    : sessionExpired
+      ? 'session'
+      : 'network';
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background[0] }]}>
@@ -353,7 +372,6 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* ---------- Header ---------- */}
         <View style={styles.headerRow}>
           <View style={styles.greetingWrap}>
             <View style={styles.greetRow}>
@@ -363,8 +381,13 @@ export default function HomeScreen() {
                   styles.profileBtn,
                   { backgroundColor: isDark ? 'rgba(15,23,42,0.6)' : '#fff' },
                 ]}
+                activeOpacity={0.85}
               >
-                <UserCircle2 color={theme.accentGradient[0]} size={24} />
+                {avatarSource ? (
+                  <Image source={avatarSource} style={styles.profileBtnImage} />
+                ) : (
+                  <UserCircle2 color={theme.accentGradient[0]} size={24} />
+                )}
               </TouchableOpacity>
               <View style={styles.greetingText}>
                 <Text style={[styles.greeting, { color: theme.text }]}>
@@ -391,18 +414,61 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* ---------- Mood ---------- */}
+        {/* ═══════════ SYNC / SESSION BANNER ═══════════ */}
+        {bannerKind ? (
+          <View
+            style={[
+              styles.syncBanner,
+              {
+                backgroundColor:
+                  bannerKind === 'session' ? '#DC2626' : '#F59E0B',
+              },
+            ]}
+          >
+            <View style={styles.syncBannerIcon}>
+              <AlertCircle color="#FFFFFF" size={18} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.syncBannerTitle}>
+                {bannerKind === 'session'
+                  ? 'Session expired'
+                  : 'Sync issue'}
+              </Text>
+              <Text style={styles.syncBannerSub} numberOfLines={3}>
+                {syncError}
+              </Text>
+            </View>
+
+            {bannerKind === 'session' ? (
+              <TouchableOpacity
+                onPress={handleRelogin}
+                style={styles.syncBannerBtn}
+                activeOpacity={0.85}
+              >
+                <LogIn color="#FFFFFF" size={13} strokeWidth={3} />
+                <Text style={styles.syncBannerBtnText}>Log in</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={handleRetry}
+                style={styles.syncBannerBtn}
+                activeOpacity={0.85}
+              >
+                <RotateCcw color="#FFFFFF" size={13} strokeWidth={3} />
+                <Text style={styles.syncBannerBtnText}>Retry</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : null}
+
         <MoodCheckInCard />
 
-        {/* ---------- Up Next hero ---------- */}
         <UpNextCard
           nextTask={nextTask}
           onStartFocus={handleStartFocus}
           isDark={isDark}
-          theme={theme}
         />
 
-        {/* ---------- Today's metrics ---------- */}
         <View style={styles.metricsRow}>
           <MetricPill
             icon={Clock3}
@@ -425,7 +491,6 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* ---------- AI Chat ---------- */}
         <TouchableOpacity
           onPress={() => navigation.navigate('Chatbot')}
           activeOpacity={0.9}
@@ -449,7 +514,6 @@ export default function HomeScreen() {
           </LinearGradient>
         </TouchableOpacity>
 
-        {/* ---------- Assessments ---------- */}
         <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>
           YOUR ASSESSMENTS
         </Text>
@@ -460,11 +524,13 @@ export default function HomeScreen() {
             taken={adhdTaken}
             gradient={['#8B5CF6', '#6366F1']}
             icon={Sparkles}
-            isDark={isDark}
-            onPress={() =>
+            onPrimary={() =>
               adhdTaken
                 ? navigation.navigate('AssessmentResult')
                 : navigation.navigate('Questionnaire')
+            }
+            onRetake={
+              adhdTaken ? () => navigation.navigate('Questionnaire') : null
             }
           />
           <AssessmentCard
@@ -473,16 +539,17 @@ export default function HomeScreen() {
             taken={efTaken}
             gradient={['#06B6D4', '#0891B2']}
             icon={Target}
-            isDark={isDark}
-            onPress={() =>
+            onPrimary={() =>
               efTaken
                 ? navigation.navigate('EFAssessmentResult')
                 : navigation.navigate('EFQuestionnaire')
             }
+            onRetake={
+              efTaken ? () => navigation.navigate('EFQuestionnaire') : null
+            }
           />
         </View>
 
-        {/* ---------- Focus scheduler ---------- */}
         <FocusSessionScheduler navigation={navigation} />
       </ScrollView>
     </View>
@@ -497,7 +564,6 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
 
-  // Header
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -512,12 +578,9 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#312E81',
-    shadowOpacity: 0.18,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
+    overflow: 'hidden',
   },
+  profileBtnImage: { width: 44, height: 44, borderRadius: 22 },
   greetingText: { flex: 1 },
   greeting: { fontSize: 14, fontWeight: '600', opacity: 0.7 },
   greetingName: { fontSize: 22, fontWeight: '800', marginTop: -2 },
@@ -528,14 +591,64 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#312E81',
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
   },
 
-  // Up Next card
+  // Sync / session banner
+  syncBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 14,
+    shadowColor: '#000',
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+  },
+  syncBannerIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.22)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  syncBannerTitle: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '900',
+    letterSpacing: 0.1,
+  },
+  syncBannerSub: {
+    color: 'rgba(255,255,255,0.92)',
+    fontSize: 11.5,
+    fontWeight: '600',
+    marginTop: 2,
+    lineHeight: 15,
+  },
+  syncBannerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.22)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.32)',
+    flexShrink: 0,
+  },
+  syncBannerBtnText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 0.3,
+  },
+
+  // Up Next
   upNextCard: {
     borderRadius: 24,
     padding: 20,
@@ -575,11 +688,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 14,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
   },
   upNextStartText: {
     color: '#7C3AED',
@@ -593,7 +701,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     lineHeight: 26,
     marginBottom: 10,
-    letterSpacing: 0.1,
   },
   upNextSubRow: {
     flexDirection: 'row',
@@ -633,13 +740,8 @@ const styles = StyleSheet.create({
     color: '#F5F3FF',
     fontSize: 11,
     fontWeight: '700',
-    letterSpacing: 0.2,
   },
-  upNextMeta: {
-    flexDirection: 'row',
-    gap: 8,
-    flexWrap: 'wrap',
-  },
+  upNextMeta: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   upNextMetaChip: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -653,11 +755,9 @@ const styles = StyleSheet.create({
     color: '#F5F3FF',
     fontSize: 11,
     fontWeight: '700',
-    letterSpacing: 0.2,
     textTransform: 'capitalize',
   },
 
-  // All clear state
   allClearHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -665,18 +765,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   allClearTitle: { fontSize: 20, fontWeight: '800' },
-  allClearSub: {
-    fontSize: 13,
-    fontWeight: '600',
-    lineHeight: 18,
-  },
+  allClearSub: { fontSize: 13, fontWeight: '600', lineHeight: 18 },
 
-  // Metrics
-  metricsRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 16,
-  },
+  metricsRow: { flexDirection: 'row', gap: 10, marginBottom: 16 },
   metricPillWrap: { flex: 1 },
   metricPill: {
     borderRadius: 18,
@@ -684,18 +775,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 4,
     minHeight: 92,
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 5,
   },
   metricPillValue: {
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '900',
     marginTop: 4,
-    letterSpacing: 0.2,
   },
   metricPillLabel: {
     color: 'rgba(255,255,255,0.85)',
@@ -718,7 +803,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 
-  // AI Chat card
   heroChatCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -727,11 +811,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginBottom: 22,
     gap: 14,
-    shadowColor: '#7C3AED',
-    shadowOpacity: 0.3,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 8,
   },
   heroChatIconWrap: {
     width: 42,
@@ -748,13 +827,8 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginBottom: 2,
   },
-  heroChatSub: {
-    color: '#EDE9FE',
-    fontSize: 12,
-    fontWeight: '500',
-  },
+  heroChatSub: { color: '#EDE9FE', fontSize: 12, fontWeight: '500' },
 
-  // Section label
   sectionLabel: {
     fontSize: 11,
     fontWeight: '900',
@@ -763,23 +837,13 @@ const styles = StyleSheet.create({
     marginLeft: 2,
   },
 
-  // Assessment cards
-  assessmentRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 18,
-  },
+  assessmentRow: { flexDirection: 'row', gap: 12, marginBottom: 18 },
   assessWrap: { flex: 1 },
   assessCard: {
     borderRadius: 20,
     padding: 16,
-    minHeight: 158,
+    minHeight: 168,
     justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 7,
   },
   assessTopRow: {
     flexDirection: 'row',
@@ -813,7 +877,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     lineHeight: 19,
     marginBottom: 6,
-    letterSpacing: 0.1,
   },
   assessSub: {
     color: 'rgba(255,255,255,0.85)',
@@ -836,6 +899,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '900',
+    letterSpacing: 0.3,
+  },
+  assessRetake: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+    paddingVertical: 6,
+    marginTop: 6,
+  },
+  assessRetakeText: {
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: 11,
+    fontWeight: '800',
     letterSpacing: 0.3,
   },
 });

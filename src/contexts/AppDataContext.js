@@ -160,9 +160,7 @@ function normalizeTask(task) {
     reminderAt: task.reminder_at || null,
     repeatType: task.repeat_type || 'None',
     estimatedMinutes:
-      task.estimated_minutes != null
-        ? safeNumber(task.estimated_minutes)
-        : 0,
+      task.estimated_minutes != null ? safeNumber(task.estimated_minutes) : 0,
     actualMinutes:
       task.actual_minutes != null ? safeNumber(task.actual_minutes) : 0,
     progress: task.progress != null ? safeNumber(task.progress) : 0,
@@ -382,6 +380,7 @@ export function AppDataProvider({ children }) {
   const [hydrated, setHydrated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncError, setSyncError] = useState(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   const autoRescheduleRanRef = useRef(false);
 
@@ -396,105 +395,159 @@ export function AppDataProvider({ children }) {
   }, [tasks]);
 
   const loadFromBackend = useCallback(async () => {
+    let session = null;
     try {
-      const session = await getSession();
-      if (!session?.access_token) {
-        setHydrated(true);
-        return;
+      session = await getSession();
+    } catch (e) {
+      console.warn('getSession failed:', e?.message);
+    }
+
+    if (!session?.access_token) {
+      console.warn('loadFromBackend: no session token');
+      setHydrated(true);
+      return;
+    }
+
+    setLoading(true);
+    setSyncError(null);
+    setSessionExpired(false);
+
+    // All requests run in parallel; one failure does NOT kill the batch.
+    const results = await Promise.allSettled([
+      getProfile(),
+      getADHDProfile(),
+      getPreferences(),
+      getTasks(),
+      getHabits(),
+      getFocusSessions(),
+      getStatisticsSummary(),
+      apiGetMoodLogs({ days: 60, limit: 300 }).catch(() => ({ data: [] })),
+      getLatestADHDAssessment().catch(() => null),
+      getLatestEFAssessment().catch(() => null),
+    ]);
+
+    const labels = [
+      'profile',
+      'adhdProfile',
+      'preferences',
+      'tasks',
+      'habits',
+      'focusSessions',
+      'statistics',
+      'moodLogs',
+      'adhdAssessment',
+      'efAssessment',
+    ];
+
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.warn(
+          `loadFromBackend: ${labels[i]} failed:`,
+          r.reason?.message || r.reason
+        );
       }
+    });
 
-      setLoading(true);
-      setSyncError(null);
+    const ok = (i) => results[i]?.status === 'fulfilled';
+    const val = (i) => (ok(i) ? results[i].value : null);
 
-      const [
-        profileResponse,
-        adhdProfileResponse,
-        preferencesResponse,
-        tasksResponse,
-        habitsResponse,
-        focusResponse,
-        statisticsResponse,
-        moodResponse,
-        adhdAssessmentResult,
-        efAssessmentResult,
-      ] = await Promise.all([
-        getProfile(),
-        getADHDProfile(),
-        getPreferences(),
-        getTasks(),
-        getHabits(),
-        getFocusSessions(),
-        getStatisticsSummary(),
-        apiGetMoodLogs({ days: 60, limit: 300 }).catch(() => ({ data: [] })),
-        getLatestADHDAssessment().catch(() => null),
-        getLatestEFAssessment().catch(() => null),
-      ]);
+    // Auth failure detection — any of the failed requests has auth-shaped error
+    const anyAuthFailure = results.some((r) => {
+      if (r.status !== 'rejected') return false;
+      const m = String(r.reason?.message || '').toLowerCase();
+      return (
+        m.includes('invalid or expired') ||
+        m.includes('missing authorization') ||
+        m.includes('not authenticated')
+      );
+    });
 
-      const backendProfile = profileResponse?.data || {};
-      const backendADHD = adhdProfileResponse?.data || {};
-      const backendPreferences = preferencesResponse?.data || {};
+    if (anyAuthFailure) {
+      console.warn('loadFromBackend: auth failure; clearing session + data');
+      try {
+        await AsyncStorage.removeItem(APP_DATA_KEY);
+        await AsyncStorage.multiRemove(['aimdb_current_user', 'aimdb_session']);
+      } catch {}
+      setTasks([]);
+      setHabits([]);
+      setFocusSessions([]);
+      setMoodLogs([]);
+      setProfile(defaultProfile);
+      setStatistics(null);
+      setAdhdAssessment(null);
+      setEfAssessment(null);
+      setSyncError('Your session has expired. Please log in again.');
+      setSessionExpired(true);
+      setLoading(false);
+      setHydrated(true);
+      return;
+    }
 
-      setProfile({
+    // ---------- Apply successful responses individually ----------
+
+    if (ok(0)) {
+      const backendProfile = val(0)?.data || {};
+      const backendADHD = ok(1) ? val(1)?.data || {} : {};
+      const backendPreferences = ok(2) ? val(2)?.data || {} : {};
+
+      setProfile((prev) => ({
         ...defaultProfile,
-        name: backendProfile.full_name || 'Friend',
-        email: backendProfile.email || '',
-        username: backendProfile.username || '',
-        avatarUrl: backendProfile.avatar_url || null,
-        bio: backendProfile.bio || '',
-        dateOfBirth: backendProfile.date_of_birth || null,
-        gender: backendProfile.gender || null,
-        occupation: backendProfile.occupation || '',
-        country: backendProfile.country || '',
-        city: backendProfile.city || '',
-        timezone: backendProfile.timezone || 'UTC',
+        ...prev,
+        name: backendProfile.full_name || prev.name || 'Friend',
+        email: backendProfile.email || prev.email || '',
+        username: backendProfile.username || prev.username || '',
+        avatarUrl: backendProfile.avatar_url ?? prev.avatarUrl ?? null,
+        bio: backendProfile.bio || prev.bio || '',
+        dateOfBirth: backendProfile.date_of_birth ?? prev.dateOfBirth ?? null,
+        gender: backendProfile.gender ?? prev.gender ?? null,
+        occupation: backendProfile.occupation || prev.occupation || '',
+        country: backendProfile.country || prev.country || '',
+        city: backendProfile.city || prev.city || '',
+        timezone: backendProfile.timezone || prev.timezone || 'UTC',
         onboardingCompleted: Boolean(backendProfile.onboarding_completed),
         adhdProfile: backendADHD,
         preferences: backendPreferences,
-      });
-
-      const backendTasks = Array.isArray(tasksResponse?.data)
-        ? tasksResponse.data
-        : [];
-      setTasks(backendTasks.map(normalizeTask).filter(Boolean));
-
-      const backendHabits = Array.isArray(habitsResponse?.data)
-        ? habitsResponse.data
-        : [];
-      setHabits(backendHabits.map(normalizeHabit).filter(Boolean));
-
-      const backendFocusSessions = Array.isArray(focusResponse?.data)
-        ? focusResponse.data
-        : [];
-      setFocusSessions(
-        backendFocusSessions.map(normalizeFocusSession).filter(Boolean)
-      );
-
-      setStatistics(statisticsResponse?.data || null);
-      setMoodLogs(Array.isArray(moodResponse?.data) ? moodResponse.data : []);
-      setAdhdAssessment(adhdAssessmentResult || null);
-      setEfAssessment(efAssessmentResult || null);
-    } catch (error) {
-      console.error('Failed to load backend data:', error);
-      setSyncError(error?.message || 'Failed to synchronize with backend.');
-
-      try {
-        const raw = await AsyncStorage.getItem(APP_DATA_KEY);
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        setTasks(Array.isArray(parsed.tasks) ? parsed.tasks : []);
-        setHabits(Array.isArray(parsed.habits) ? parsed.habits : []);
-        setFocusSessions(
-          Array.isArray(parsed.focusSessions) ? parsed.focusSessions : []
-        );
-        setProfile({ ...defaultProfile, ...(parsed.profile || {}) });
-        setStatistics(parsed.statistics || null);
-      } catch (cacheError) {
-        console.warn('Failed to load local fallback:', cacheError);
-      }
-    } finally {
-      setLoading(false);
-      setHydrated(true);
+      }));
     }
+
+    if (ok(3)) {
+      const backendTasks = Array.isArray(val(3)?.data) ? val(3).data : [];
+      setTasks(backendTasks.map(normalizeTask).filter(Boolean));
+    }
+
+    if (ok(4)) {
+      const backendHabits = Array.isArray(val(4)?.data) ? val(4).data : [];
+      setHabits(backendHabits.map(normalizeHabit).filter(Boolean));
+    }
+
+    if (ok(5)) {
+      const backendFocus = Array.isArray(val(5)?.data) ? val(5).data : [];
+      setFocusSessions(backendFocus.map(normalizeFocusSession).filter(Boolean));
+    }
+
+    if (ok(6)) {
+      setStatistics(val(6)?.data || null);
+    }
+
+    if (ok(7)) {
+      setMoodLogs(Array.isArray(val(7)?.data) ? val(7).data : []);
+    }
+
+    if (ok(8)) setAdhdAssessment(val(8) || null);
+    if (ok(9)) setEfAssessment(val(9) || null);
+
+    // Partial failure notice
+    const failures = results.filter((r) => r.status === 'rejected').length;
+    if (failures > 0 && failures < results.length) {
+      setSyncError(
+        `Some data couldn't load (${failures} of ${results.length} requests failed).`
+      );
+    } else if (failures === results.length) {
+      setSyncError('Could not reach the backend. Check your connection.');
+    }
+
+    setLoading(false);
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
@@ -623,10 +676,20 @@ export function AppDataProvider({ children }) {
           ? updater(current)
           : { ...current, ...updater };
 
-      const response = await apiUpdateHabit(
-        habitId,
-        habitToApiPayload(updated)
-      );
+      let response;
+      try {
+        response = await apiUpdateHabit(habitId, habitToApiPayload(updated));
+      } catch (err) {
+        const msg = String(err?.message || '').toLowerCase();
+        if (msg.includes('not found') || msg.includes('cannot coerce')) {
+          console.warn(
+            `updateHabit: habit ${habitId} not found; removing locally.`
+          );
+          setHabits((prev) => prev.filter((h) => h.id !== habitId));
+          throw new Error('This habit no longer exists.');
+        }
+        throw err;
+      }
       const saved = normalizeHabit(response?.data);
       if (!saved) throw new Error('Backend did not return the updated habit.');
 
@@ -837,7 +900,6 @@ export function AppDataProvider({ children }) {
     });
   }, [hydrated, tasks, updateTask]);
 
-  // ---- Timeline events (subtasks grouped per day) ----
   const timelineEvents = useMemo(() => {
     const events = [];
 
@@ -854,7 +916,6 @@ export function AppDataProvider({ children }) {
         .filter((s) => s.scheduledDate);
 
       if (scheduledSubs.length > 0) {
-        // Group subtasks by their scheduled date
         const byDate = {};
         scheduledSubs.forEach((sub) => {
           if (!byDate[sub.scheduledDate]) byDate[sub.scheduledDate] = [];
@@ -865,7 +926,6 @@ export function AppDataProvider({ children }) {
           const remaining = group.filter((g) => !g.done);
           const allDone = remaining.length === 0;
 
-          // Order: by hour, then by original index
           const sorted = [...group].sort((a, b) => {
             const hA = a.scheduledHour ?? 9;
             const hB = b.scheduledHour ?? 9;
@@ -873,7 +933,6 @@ export function AppDataProvider({ children }) {
             return a.originalIndex - b.originalIndex;
           });
 
-          // Headline = next undone subtask (or first subtask if all done)
           const headlineSrc = allDone ? sorted[0] : remaining[0];
           const startHour = headlineSrc.scheduledHour ?? 9;
 
@@ -904,7 +963,6 @@ export function AppDataProvider({ children }) {
         return;
       }
 
-      // Legacy: no scheduled subtasks -> one block on the deadline
       const startDate = safeDate(task.start_date || task.startDate);
       const dueDate = safeDate(task.due_date || task.dueDate);
       const startParts = getDateParts(task.start_date || task.startDate);
@@ -1049,6 +1107,7 @@ export function AppDataProvider({ children }) {
       hydrated,
       loading,
       syncError,
+      sessionExpired,
       refreshData: loadFromBackend,
       addTask,
       updateTask,
@@ -1081,6 +1140,7 @@ export function AppDataProvider({ children }) {
       hydrated,
       loading,
       syncError,
+      sessionExpired,
       loadFromBackend,
       addTask,
       updateTask,
