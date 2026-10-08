@@ -33,6 +33,9 @@ import {
   getLatestEFAssessment,
 } from '../../services/api';
 import { EF_DIMENSIONS_META } from '../../data/efQuestions';
+import { logoutUser } from '../../services/api';
+import { showAlert } from '../../utils/alert';
+import { displayUsername } from '../../utils/userDisplay';
 
 function riskLabel(percentage) {
   if (percentage >= 70) return 'High likelihood';
@@ -125,6 +128,22 @@ export default function ProfileScreen({ navigation }) {
     ? Math.round((completedTasks / (completedTasks + tasks.length)) * 100)
     : 0;
   const achieved = titles.filter((t) => t.unlocked).length;
+
+  const handleLogout = () => showAlert('Logout?', 'Are you sure you want to sign out?', [
+    { text: 'Cancel', style: 'cancel' },
+    {
+      text: 'Logout',
+      style: 'destructive',
+      onPress: async () => {
+        try {
+          await logoutUser();
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+        } catch (error) {
+          Alert.alert('Logout failed', error?.message || 'Please try again.');
+        }
+      },
+    },
+  ]);
 
   const insight = useMemo(() => {
     if (stats.focusMinutes > 120)

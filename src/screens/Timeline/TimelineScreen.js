@@ -59,7 +59,8 @@ const DAY_ABBR = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const todayISO = () => new Date().toISOString().slice(0, 10);
+const localDateKey = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+const todayISO = () => localDateKey(new Date());
 
 function getWeekDays(base) {
   const d = new Date(base);
@@ -69,7 +70,7 @@ function getWeekDays(base) {
   return Array.from({ length: 7 }, (_, i) => {
     const day = new Date(sun);
     day.setDate(sun.getDate() + i);
-    const isoKey = day.toISOString().slice(0, 10);
+    const isoKey = localDateKey(day);
     return {
       abbr: DAY_ABBR[i],
       date: day.getDate(),
@@ -239,7 +240,7 @@ function WeekPickerModal({ visible, currentBase, onSelect, onClose }) {
 
   const currentSun = new Date(currentBase);
   currentSun.setDate(currentBase.getDate() - currentBase.getDay());
-  const currentKey = currentSun.toISOString().slice(0, 10);
+  const currentKey = localDateKey(currentSun);
 
   return (
     <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
@@ -248,7 +249,7 @@ function WeekPickerModal({ visible, currentBase, onSelect, onClose }) {
           <Text style={styles.pickerTitle}>Select Week</Text>
           <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 340 }}>
             {options.map((opt) => {
-              const key = opt.sun.toISOString().slice(0, 10);
+              const key = localDateKey(opt.sun);
               const isSel = key === currentKey;
               const label = `${MONTH_SHORT[opt.sun.getMonth()]} ${opt.sun.getDate()} – ${MONTH_SHORT[opt.sat.getMonth()]} ${opt.sat.getDate()}, ${opt.sat.getFullYear()}`;
               return (
@@ -653,6 +654,15 @@ export default function TimelineScreen() {
                 : emptyMessage}
             </Text>
           </View>
+        )}
+        {activeTab === 'Focus' && visibleEvents.length === 0 && (
+          <TouchableOpacity
+            style={styles.startFocusButton}
+            onPress={() => navigation.navigate('Focus')}
+            accessibilityRole="button"
+          >
+            <Text style={styles.startFocusButtonText}>Start Focus Session</Text>
+          </TouchableOpacity>
         )}
 
         <View style={styles.gridCard}>

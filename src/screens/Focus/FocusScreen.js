@@ -52,6 +52,8 @@ export default function FocusScreen({ route, navigation }) {
   const activeSoundRef = useRef(null);
   const chimeRef = useRef(null);
   const sessionStartTimeRef = useRef(null);
+  const sessionStartedAtRef = useRef(null);
+  const sessionTaskRef = useRef(null);
   const accumulatedSecondsRef = useRef(0);
   const lastPersistedSecondsRef = useRef(0);
   const sessionIdRef = useRef(null);
@@ -287,6 +289,7 @@ export default function FocusScreen({ route, navigation }) {
     accumulatedSecondsRef.current += elapsed;
     sessionStartTimeRef.current = null;
     timerEndAtRef.current = null;
+    sessionStartedAtRef.current = null;
     setIsRunning(false);
     setTimeLeft(0);
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -16,25 +16,22 @@ import Animated, {
 
 const PORTALS = [
   {
-    title: 'Immediate Relief',
-    subtitle: 'Short-term',
+    title: 'Initiate',
+    subtitle: 'Begin with a short calming practice',
     glowColor: 'rgba(96, 165, 250, 0.95)',
-    style: { top: 18, left: 26 },
-    routeTitle: 'Immediate Relief',
+    route: 'ImmediateRelief',
   },
   {
-    title: 'Mindful Growth',
-    subtitle: 'Long-term',
+    title: 'Leave Mindful Role',
+    subtitle: 'Build a steady long-term practice',
     glowColor: 'rgba(250, 204, 21, 0.95)',
-    style: { top: 188, right: 20 },
-    routeTitle: 'Mindful Growth',
+    route: 'MindfulGrowth',
   },
   {
     title: 'Cognitive Power',
-    subtitle: 'Training',
+    subtitle: 'Train attention, memory, and flexibility',
     glowColor: 'rgba(192, 132, 252, 0.95)',
-    style: { top: 282, left: 34 },
-    routeTitle: 'Cognitive Power',
+    route: 'CognitivePower',
   },
 ];
 
@@ -54,7 +51,7 @@ function Portal({ config, index, onPress, textColor, subtitleColor }) {
       true
     );
 
-    if (config.title === 'Immediate Relief') {
+    if (config.route === 'ImmediateRelief') {
       pulseScale.value = withRepeat(
         withSequence(
           withTiming(1.08, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
@@ -65,11 +62,11 @@ function Portal({ config, index, onPress, textColor, subtitleColor }) {
       );
     }
 
-    if (config.title === 'Mindful Growth') {
+    if (config.route === 'MindfulGrowth') {
       spin.value = withRepeat(withTiming(360, { duration: 8200, easing: Easing.linear }), -1, false);
     }
 
-    if (config.title === 'Cognitive Power') {
+    if (config.route === 'CognitivePower') {
       sparkle.value = withRepeat(
         withSequence(
           withTiming(1, { duration: 650, easing: Easing.inOut(Easing.ease) }),
@@ -79,7 +76,7 @@ function Portal({ config, index, onPress, textColor, subtitleColor }) {
         true
       );
     }
-  }, [config.title, floatOffset, index, pulseScale, sparkle, spin]);
+  }, [config.route, floatOffset, index, pulseScale, sparkle, spin]);
 
   const floatingStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: floatOffset.value }],
@@ -99,18 +96,18 @@ function Portal({ config, index, onPress, textColor, subtitleColor }) {
   }));
 
   return (
-    <Animated.View style={[styles.portalWrap, config.style, floatingStyle]}>
-      <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
+    <Animated.View style={[styles.portalWrap, floatingStyle]}>
+      <TouchableOpacity activeOpacity={0.9} onPress={onPress} accessibilityRole="button">
         <View style={styles.portalTouchableArea}>
-          {config.title === 'Immediate Relief' && (
+          {config.route === 'ImmediateRelief' && (
             <Animated.View style={[styles.pulseGlow, { borderColor: config.glowColor }, pulseStyle]} />
           )}
 
-          {config.title === 'Mindful Growth' && (
+          {config.route === 'MindfulGrowth' && (
             <Animated.View style={[styles.rotateGlow, { borderColor: config.glowColor }, spinStyle]} />
           )}
 
-          {config.title === 'Cognitive Power' && (
+          {config.route === 'CognitivePower' && (
             <>
               <Animated.View style={[styles.spark, styles.sparkTop, { backgroundColor: config.glowColor }, sparkleStyle]} />
               <Animated.View
@@ -160,16 +157,12 @@ export default function EmotionRegulationScreen({ navigation }) {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <View style={styles.meshBlobOne} />
-      <View style={styles.meshBlobTwo} />
-      <View style={styles.meshBlobThree} />
-
       <TouchableOpacity style={[styles.backBtn, { borderColor: theme.border }]} onPress={() => navigation.goBack()}>
         <ChevronLeft color={theme.text} size={20} />
       </TouchableOpacity>
       <Text style={[styles.header, { color: theme.text }]}>Explore your inner space, {profile.name || 'Friend'}</Text>
 
-      <View style={styles.portalsStage}>
+      <ScrollView style={styles.portalsStage} contentContainerStyle={styles.portalList} showsVerticalScrollIndicator={false}>
         {PORTALS.map((portal, index) => (
           <Portal
             key={portal.title}
@@ -177,16 +170,10 @@ export default function EmotionRegulationScreen({ navigation }) {
             index={index}
             textColor={theme.text}
             subtitleColor={theme.textSecondary}
-            onPress={() =>
-              portal.title === 'Immediate Relief'
-                ? navigation.navigate('ImmediateRelief')
-                : portal.title === 'Mindful Growth'
-                ? navigation.navigate('MindfulGrowth')
-                : navigation.navigate('CognitivePower')
-            }
+            onPress={() => navigation.navigate(portal.route)}
           />
         ))}
-      </View>
+      </ScrollView>
     </LinearGradient>
   );
 }
@@ -215,22 +202,25 @@ const styles = StyleSheet.create({
   },
   portalsStage: {
     flex: 1,
-    position: 'relative',
-    paddingTop: 6,
+  },
+  portalList: {
+    paddingTop: 4,
+    paddingBottom: 28,
+    gap: 22,
   },
   portalWrap: {
-    position: 'absolute',
+    width: '100%',
   },
   portalTouchableArea: {
-    width: 160,
-    height: 160,
+    width: '100%',
+    height: 108,
     alignItems: 'center',
     justifyContent: 'center',
   },
   portalGlass: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: '100%',
+    height: 100,
+    borderRadius: 18,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.35)',
@@ -238,9 +228,9 @@ const styles = StyleSheet.create({
   },
   portalGradient: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 22,
   },
   portalTitle: {
     color: '#F8FAFC',
@@ -256,9 +246,9 @@ const styles = StyleSheet.create({
   },
   pulseGlow: {
     position: 'absolute',
-    width: 174,
-    height: 174,
-    borderRadius: 87,
+    width: 104,
+    height: 104,
+    borderRadius: 18,
     borderWidth: 2,
     shadowColor: '#60A5FA',
     shadowOffset: { width: 0, height: 0 },
@@ -268,9 +258,9 @@ const styles = StyleSheet.create({
   },
   rotateGlow: {
     position: 'absolute',
-    width: 176,
-    height: 176,
-    borderRadius: 88,
+    width: 108,
+    height: 108,
+    borderRadius: 20,
     borderWidth: 2,
     borderStyle: 'dashed',
     shadowColor: '#FACC15',
@@ -293,31 +283,4 @@ const styles = StyleSheet.create({
   sparkTop: { top: 10, left: 84 },
   sparkRight: { top: 44, right: 14 },
   sparkLeft: { bottom: 38, left: 14 },
-  meshBlobOne: {
-    position: 'absolute',
-    top: 95,
-    left: -40,
-    width: 215,
-    height: 215,
-    borderRadius: 120,
-    backgroundColor: 'rgba(56, 189, 248, 0.14)',
-  },
-  meshBlobTwo: {
-    position: 'absolute',
-    bottom: 115,
-    right: -60,
-    width: 240,
-    height: 240,
-    borderRadius: 130,
-    backgroundColor: 'rgba(168, 85, 247, 0.16)',
-  },
-  meshBlobThree: {
-    position: 'absolute',
-    top: 290,
-    right: 48,
-    width: 120,
-    height: 120,
-    borderRadius: 80,
-    backgroundColor: 'rgba(251, 191, 36, 0.12)',
-  },
 });

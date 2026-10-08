@@ -15,6 +15,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import ADHDButton from '../../components/common/ADHDButton';
 import { getCurrentUser, loginUser } from '../../services/api';
 import { useAppData } from '../../contexts/AppDataContext';
+import { getAssessmentOnStart } from '../../utils/onboardingPreferences';
 
 export default function LoginScreen({ navigation }) {
   const { theme } = useTheme();
@@ -37,8 +38,14 @@ export default function LoginScreen({ navigation }) {
       setLoading(true);
       await loginUser({ username: loginValue, email: loginValue, password: password.trim() });
       const saved = await getCurrentUser();
-      if (saved) updateProfile({ name: saved.username || saved.full_name || loginValue, email: saved.email || '' });
-      navigation.replace('Onboarding');
+      if (saved) {
+        await updateProfile({
+          name: saved.username || saved.full_name || loginValue,
+          username: saved.username || '',
+          email: saved.email || '',
+        });
+      }
+      navigation.replace(await getAssessmentOnStart() ? 'Questionnaire' : 'MainTabs');
     } catch (error) {
       Alert.alert(
         'Login failed',

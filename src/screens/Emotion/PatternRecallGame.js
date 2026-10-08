@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import Animated from 'react-native-reanimated';
 import { View, Text, StyleSheet, Pressable, SafeAreaView, Dimensions } from 'react-native';
 import { ChevronLeft, Stars } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { continueChallenge } from '../../utils/challengeNav';
 
 const { width } = Dimensions.get('window');
 const BASE_POSITIONS = [
@@ -10,7 +12,7 @@ const BASE_POSITIONS = [
   { x: 0.1, y: 0.42 }, { x: 0.9, y: 0.56 }, { x: 0.32, y: 0.1 }, { x: 0.62, y: 0.9 },
 ];
 
-export default function PatternRecallGame({ navigation }) {
+export default function PatternRecallGame({ navigation, route }) {
   const [pattern, setPattern] = useState([]);
   const [userInput, setUserInput] = useState([]);
   const [isWatching, setIsWatching] = useState(true);
@@ -55,6 +57,10 @@ export default function PatternRecallGame({ navigation }) {
       if (nextInput.length === pattern.length) {
         // Level Complete
         setTimeout(() => {
+          if (route?.params?.challenge && level >= 3) {
+            continueChallenge(navigation, route, level * 100);
+            return;
+          }
           setLevel(l => l + 1);
           startLevel(level + 1);
         }, 1000);

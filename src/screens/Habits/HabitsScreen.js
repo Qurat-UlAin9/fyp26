@@ -405,6 +405,31 @@ export default function HabitsScreen({ navigation, route }) {
   const progressPct =
     totalTarget > 0 ? Math.min(100, (totalDone / totalTarget) * 100) : 0;
 
+  const handleDelete = async (habitId) => {
+    const habit = habits.find((item) => item.id === habitId);
+    if (!habit || !(await showConfirm('Delete habit?', `Remove "${habit.name}"?`, 'Delete'))) return;
+    try {
+      await deleteHabit(habitId);
+    } catch (error) {
+      Alert.alert('Could not delete habit', error?.message || 'Please try again.');
+    }
+  };
+
+  const handleEdit = (habit) => {
+    setEditingHabit(habit);
+    setTimeout(() => bottomSheetRef.current?.expand(), 60);
+  };
+
+  const handleHabitSubmit = async (habit) => {
+    try {
+      if (editingHabit) await updateHabit(editingHabit.id, habit);
+      else await addHabit(habit);
+      setEditingHabit(null);
+    } catch (error) {
+      Alert.alert('Could not save habit', error?.message || 'Please try again.');
+    }
+  };
+
   return (
     <View style={[styles.root, { backgroundColor: theme.background[0] }]}>
       <AnimatedOrbsBackground

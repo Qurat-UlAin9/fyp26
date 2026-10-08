@@ -54,6 +54,7 @@ export default function SettingsScreen({ navigation }) {
   const { tasks, habits, deleteTask, deleteHabit } = useAppData();
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [assessmentOnStart, setAssessmentOnStartState] = useState(true);
   const [silentHoursEnabled, setSilentHoursEnabled] = useState(false);
   const [resetModalVisible, setResetModalVisible] = useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
@@ -70,7 +71,7 @@ export default function SettingsScreen({ navigation }) {
       Alert.alert('❌ Error', 'Failed to reset data.');
       console.error(e);
     }
-  }, [tasks, habits, deleteTask, deleteHabit]);
+  }, [resetAppData, resetThemeData]);
 
   const handleLogout = useCallback(() => {
     setLogoutModalVisible(false);

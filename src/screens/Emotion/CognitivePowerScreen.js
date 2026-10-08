@@ -3,7 +3,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { BrainCircuit, ChevronLeft, Palette, Stars } from 'lucide-react-native';
+import { BrainCircuit, ChevronLeft, Palette, Stars, Workflow } from 'lucide-react-native';
 import Animated, {
   Easing,
   FadeInDown,
@@ -22,7 +22,10 @@ const GAMES = [
   { id: 'nback', title: 'N-Back Challenge', icon: BrainCircuit, route: 'NBackGame' },
   { id: 'memory', title: 'Memory Match', icon: Stars, route: 'PatternRecallGame' },
   { id: 'stroop', title: 'Stroop Challenge', icon: Palette, route: 'StroopGame' },
+  { id: 'end-to-end', title: 'End-to-End Challenge', icon: Workflow, route: null },
 ];
+
+const CHALLENGE_SEQUENCE = ['NBackGame', 'StroopGame', 'PatternRecallGame'];
 
 function PreviewPulse({ color = '#A78BFA' }) {
   const pulse = useSharedValue(0);
@@ -64,7 +67,7 @@ function PowerCard({ item, delay, onPress }) {
   );
 }
 
-export default function CognitivePowerScreen({ navigation }) {
+export default function CognitivePowerScreen({ navigation, route }) {
   const { theme } = useTheme();
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
@@ -82,9 +85,21 @@ export default function CognitivePowerScreen({ navigation }) {
 
         <View style={styles.grid}>
           {GAMES.map((game, index) => (
-            <PowerCard key={game.id} item={game} delay={50 + index * 70} onPress={() => navigation.navigate(game.route)} />
+            <PowerCard
+              key={game.id}
+              item={game}
+              delay={50 + index * 70}
+              onPress={() => game.id === 'end-to-end'
+                ? navigation.navigate('NBackGame', {
+                    challenge: { sequence: CHALLENGE_SEQUENCE, current: CHALLENGE_SEQUENCE[0], scores: {} },
+                  })
+                : navigation.navigate(game.route)}
+            />
           ))}
         </View>
+        {route?.params?.challengeResult && (
+          <Text style={styles.challengeResult}>Challenge complete · {Object.values(route.params.challengeResult).reduce((total, score) => total + score, 0)} points</Text>
+        )}
       </SafeAreaView>
     </LinearGradient>
   );
@@ -109,6 +124,7 @@ const styles = StyleSheet.create({
     minHeight: 210,
     alignSelf: 'center',
   },
+  challengeResult: { marginHorizontal: 20, marginTop: 18, color: '#EDE9FE', fontSize: 15, fontWeight: '700', textAlign: 'center' },
   cardPressable: { flex: 1 },
   cardBlur: {
     flex: 1,

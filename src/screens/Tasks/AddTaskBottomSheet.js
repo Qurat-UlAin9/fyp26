@@ -8,6 +8,7 @@ import {
   TextInput,
   ActivityIndicator,
   ScrollView,
+  Modal,
 } from 'react-native';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -39,9 +40,11 @@ const getTheme = (id) => CARD_THEMES.find((t) => t.id === id) || CARD_THEMES[0];
 
 const toISODate = (val) => {
   if (!val) return '';
-  const d = new Date(val);
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(val)
+    ? new Date(`${val}T00:00:00`)
+    : new Date(val);
   if (isNaN(d)) return '';
-  return d.toISOString().slice(0, 10);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
 const formatDate = (iso) => {
@@ -99,7 +102,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
       setDueDate(toISODate(initialTask.dueDate || initialTask.due_date));
       setSelectedTheme(initialTask.themeId || 'coral');
       setPriority(initialTask.priority || 'Medium');
-      setNotifEnabled(false);
+      setNotifEnabled(Boolean(initialTask.notifEnabled ?? initialTask.metadata?.notifEnabled));
     } else {
       setTitle('');
       setCategory(null);
@@ -116,11 +119,27 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
 
   const th = getTheme(selectedTheme);
 
+  const calendarDays = (() => {
+    const firstDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+    const start = new Date(firstDay);
+    start.setDate(firstDay.getDate() - firstDay.getDay());
+    return Array.from({ length: 42 }, (_, index) => {
+      const day = new Date(start);
+      day.setDate(start.getDate() + index);
+      return day;
+    });
+  })();
+
+  const chooseDate = (date) => {
+    setDueDate(toISODate(date));
+    setCalendarVisible(false);
+  };
+
   const reset = () => {
     setTitle('');
     setCategory(null);
     setSubject('');
-    setDueDate('');
+    setDueDate(toISODate(new Date()));
     setNotifEnabled(false);
     setSelectedTheme('coral');
     setPriority('Medium');

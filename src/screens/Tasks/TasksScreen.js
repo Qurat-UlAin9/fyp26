@@ -24,6 +24,8 @@ import AddTaskBottomSheet from './AddTaskBottomSheet';
 import { useAppData } from '../../contexts/AppDataContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { showAlert } from '../../utils/alert';
+import { cancelTaskReminder, scheduleTaskReminder } from '../../utils/reminders';
+import { useProductivity } from '../../contexts/ProductivityContext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -43,7 +45,8 @@ const getThemeById = (id) => CARD_THEMES.find((t) => t.id === id) || CARD_THEMES
 
 const formatDate = (d) => {
   if (!d) return '';
-  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(d) ? new Date(`${d}T00:00:00`) : new Date(d);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 const daysSince = (iso) => Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
@@ -289,6 +292,7 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
 export default function TasksScreen({ route }) {
   const navigation = useNavigation();
   const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, completeTask } = useAppData();
+  const { setActiveSessionTask } = useProductivity();
   const {  coins,
   registerSubtaskCompletion,
   registerTaskCompletion,
@@ -473,8 +477,9 @@ export default function TasksScreen({ route }) {
   }, []);
 
   const startFocus = useCallback((task) => {
+    setActiveSessionTask({ id: task.id, title: task.title });
     navigation.navigate('Focus', { task });
-  }, [navigation]);
+  }, [navigation, setActiveSessionTask]);
 
   const openHistory = useCallback(() => {
     const parentNav = navigation.getParent?.();

@@ -41,7 +41,7 @@ const APP_DATA_KEY = 'adhd_app_data_v2';
 
 const todayISO = () => {
   const date = new Date();
-  return date.toISOString().slice(0, 10);
+  return localDateKey(date);
 };
 
 const THEME_TO_COLOR_IDX = {
@@ -103,7 +103,9 @@ function safeNumber(value, fallback = 0) {
 
 function safeDate(value) {
   if (!value) return null;
-  const date = new Date(value);
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(value)
+    ? new Date(`${value}T00:00:00`)
+    : new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
@@ -111,7 +113,7 @@ function getDateParts(value) {
   const date = safeDate(value);
   if (!date) return { date: todayISO(), hour: 9, minute: 0 };
   return {
-    date: date.toISOString().slice(0, 10),
+    date: localDateKey(date),
     hour: date.getHours(),
     minute: date.getMinutes(),
   };
@@ -175,6 +177,8 @@ function normalizeTask(task) {
     themeId: metadata.themeId || task.themeId || 'coral',
     category: metadata.category || null,
     subject: metadata.subject || null,
+    notifEnabled: Boolean(metadata.notifEnabled),
+    reminderNotificationId: metadata.reminderNotificationId || null,
     subtasks,
   };
 }
@@ -188,6 +192,10 @@ function taskToApiPayload(task) {
   }
   if (task?.category !== undefined) metadata.category = task.category;
   if (task?.subject !== undefined) metadata.subject = task.subject;
+  if (task?.notifEnabled !== undefined) metadata.notifEnabled = Boolean(task.notifEnabled);
+  if (task?.reminderNotificationId !== undefined) {
+    metadata.reminderNotificationId = task.reminderNotificationId;
+  }
 
   return {
     parent_task_id: task?.parent_task_id ?? task?.parentTaskId ?? null,
@@ -329,7 +337,7 @@ function normalizeFocusSession(session) {
     userRating: session.user_rating ?? null,
     notes: session.notes || '',
     metadata,
-    isoKey: startedAt ? startedAt.toISOString().slice(0, 10) : todayISO(),
+    isoKey: startedAt ? localDateKey(startedAt) : todayISO(),
     startHour: startedAt ? startParts.hour : 9,
     startMin: startedAt ? startParts.minute : 0,
     durationMins: actualMinutes > 0 ? actualMinutes : plannedMinutes,
@@ -993,7 +1001,7 @@ export function AppDataProvider({ children }) {
         allDone: task.status === 'Completed',
         done: task.status === 'Completed',
         type: 'task',
-        isoKey: dueDate ? dueDate.toISOString().slice(0, 10) : todayISO(),
+        isoKey: dueDate ? dueParts.date : todayISO(),
         startHour,
         startMin,
         durationMins: Math.max(30, durationMins || 30),

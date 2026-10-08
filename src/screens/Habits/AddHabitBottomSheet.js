@@ -97,6 +97,7 @@ const AddHabitBottomSheet = forwardRef(({ onSubmit, initialHabit, onClose }, ref
       onClose={() => onClose?.()}
       keyboardBehavior="interactive"
       backgroundStyle={styles.sheetBg}
+      onChange={(index) => { if (index === -1) onClose?.(); }}
     >
       <BottomSheetScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
