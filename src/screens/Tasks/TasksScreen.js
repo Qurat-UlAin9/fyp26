@@ -1,4 +1,9 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import {
   Animated as RNAnimated,
   Dimensions,
@@ -12,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { scheduleTaskReminder, cancelTaskReminder } from '../../utils/reminders';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AddTaskBottomSheet from './AddTaskBottomSheet';
@@ -283,7 +289,7 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
 }
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
-export default function TasksScreen() {
+export default function TasksScreen({ route }) {
   const navigation = useNavigation();
   const { tasks, addTask, deleteTask, toggleSubtask, updateTask, taskHistory, completeTask } = useAppData();
   const { setActiveSessionTask } = useProductivity();
@@ -345,6 +351,7 @@ export default function TasksScreen() {
           text1: 'Task complete! 🎉',
           text2: '+5 🪙',
         });
+        cancelTaskReminder(taskId);
         setTimeout(() => {
           completeTask(taskId);
           setExpandedIds((prev) => {
@@ -379,18 +386,17 @@ export default function TasksScreen() {
           {
             text: 'Delete',
             style: 'destructive',
-            onPress: () => {
+            onPress: async () => {
               LayoutAnimation.configureNext(
                 LayoutAnimation.Presets.easeInEaseOut
               );
-              cancelTaskReminder(task.reminderNotificationId || task.metadata?.reminderNotificationId)
-                .then(() => deleteTask(taskId))
-                .then(() => Toast.show({
-                  type: 'info',
-                  text1: 'Task deleted',
-                  text2: task.title,
-                }))
-                .catch(() => Toast.show({ type: 'error', text1: 'Could not delete task' }));
+              await cancelTaskReminder(taskId);
+              deleteTask(taskId);
+              Toast.show({
+                type: 'info',
+                text1: 'Task deleted',
+                text2: task.title,
+              });
             },
           },
         ]
@@ -405,59 +411,66 @@ export default function TasksScreen() {
   }, []);
 
   const handleSheetSubmit = useCallback(async (taskObj) => {
-    let reminderNotificationId = null;
-    try {
-      if (taskObj.notifEnabled) {
-        reminderNotificationId = await scheduleTaskReminder({
-          title: taskObj.title,
-          dueDate: taskObj.dueDate,
-        });
-      }
-
-      const oldReminderId = editingTask?.reminderNotificationId || editingTask?.metadata?.reminderNotificationId;
-      await cancelTaskReminder(oldReminderId);
-
-      if (editingTask) {
-        await updateTask(editingTask.id, (task) => ({
-          ...task,
-          title: taskObj.title,
-          dueDate: taskObj.dueDate,
+    if (editingTask) {
+      await updateTask(editingTask.id, (t) => ({
+        ...t,
+        title: taskObj.title,
+        dueDate: taskObj.dueDate,
+        themeId: taskObj.themeId,
+        priority: taskObj.priority,
+        subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : t.subtasks,
+        metadata: {
+          ...(t.metadata || {}),
           themeId: taskObj.themeId,
-          priority: taskObj.priority,
-          category: taskObj.category,
-          subject: taskObj.subject,
-          notifEnabled: taskObj.notifEnabled,
-          reminderNotificationId,
-          subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : task.subtasks,
-          metadata: {
-            ...(task.metadata || {}),
-            themeId: taskObj.themeId,
-            category: taskObj.category,
-            subject: taskObj.subject,
-            notifEnabled: taskObj.notifEnabled,
-            reminderNotificationId,
-            subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : task.subtasks,
-          },
-        }));
-        Toast.show({ type: 'success', text1: 'Task updated', text2: taskObj.title });
-      } else {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-        await addTask({
-          ...taskObj,
-          reminderNotificationId,
-          metadata: { notifEnabled: taskObj.notifEnabled, reminderNotificationId },
+          subtasks: Array.isArray(taskObj.subtasks) ? taskObj.subtasks : t.subtasks,
+        },
+      }));
+
+      // Reschedule the reminder against the new due date if the toggle was on
+      await cancelTaskReminder(editingTask.id);
+      if (taskObj.notifEnabled) {
+        await scheduleTaskReminder({
+          id: editingTask.id,
+          title: taskObj.title,
+          dueDate: taskObj.dueDate,
         });
-        Toast.show({ type: 'success', text1: 'Task created', text2: taskObj.title });
       }
+
       setEditingTask(null);
-      if (taskObj.notifEnabled && !reminderNotificationId) {
-        Toast.show({ type: 'info', text1: 'Task saved', text2: 'Reminder unavailable: allow notifications and choose a future date.' });
+      Toast.show({
+        type: 'success',
+        text1: 'Task updated',
+        text2: taskObj.title,
+      });
+    } else {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+      const created = await addTask(taskObj);
+
+      if (created?.id && taskObj.notifEnabled) {
+        await scheduleTaskReminder({
+          id: created.id,
+          title: taskObj.title,
+          dueDate: taskObj.dueDate,
+        });
       }
-    } catch (error) {
-      await cancelTaskReminder(reminderNotificationId);
-      Toast.show({ type: 'error', text1: 'Task could not be saved', text2: error?.message });
+
+      Toast.show({
+        type: 'success',
+        text1: 'Task created',
+        text2: taskObj.title,
+      });
     }
   }, [editingTask, updateTask, addTask]);
+
+  // ---- Handle navigation param: expand a specific task ----
+  useEffect(() => {
+    const targetId = route?.params?.expandTaskId;
+    if (!targetId) return;
+
+    // Expand only this task; collapse everything else
+    setExpandedIds(new Set([targetId]));
+    navigation.setParams({ expandTaskId: undefined, _ts: undefined });
+  }, [route?.params?.expandTaskId, route?.params?._ts, navigation]);
 
   const handleSheetClose = useCallback(() => {
     setEditingTask(null);

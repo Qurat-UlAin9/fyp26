@@ -1,272 +1,254 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, Switch, TouchableOpacity, StyleSheet, Alert, Modal, ScrollView } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {
+  View, Text, Switch, TouchableOpacity, StyleSheet, Alert,
+  Modal, ScrollView, Platform,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Moon, Sun, Globe, Bell, Trash2, LogOut, ClipboardList } from 'lucide-react-native';
+import {
+  Moon, Sun, Bell, Trash2, LogOut, ChevronRight, ChevronLeft,
+  User as UserIcon, Palette, ClipboardList, Brain, Info, Shield,
+} from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
-import GlassCard from '../../components/common/GlassCard';
-import { logoutUser } from '../../services/api';
-import {
-  cancelAllTaskReminders,
-  ensureNotificationPermission,
-  getNotificationsEnabled,
-  scheduleTaskReminder,
-  setNotificationsEnabled as persistNotificationsEnabled,
-} from '../../utils/reminders';
-import { getAssessmentOnStart, setAssessmentOnStart } from '../../utils/onboardingPreferences';
+
+function SectionCard({ title, theme, children }) {
+  return (
+    <View style={styles.section}>
+      <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>{title}</Text>
+      <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
+        {children}
+      </View>
+    </View>
+  );
+}
+
+function Row({ icon: Icon, label, sub, right, onPress, danger, theme, isLast }) {
+  const RowWrap = onPress ? TouchableOpacity : View;
+  return (
+    <RowWrap
+      onPress={onPress}
+      activeOpacity={onPress ? 0.7 : 1}
+      style={[
+        styles.row,
+        !isLast && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: theme.border },
+      ]}
+    >
+      {Icon ? (
+        <View style={[styles.rowIconWrap, { backgroundColor: theme.border }]}>
+          <Icon size={17} color={danger ? '#EF4444' : theme.text} />
+        </View>
+      ) : null}
+      <View style={{ flex: 1 }}>
+        <Text style={[styles.rowLabel, { color: danger ? '#EF4444' : theme.text }]}>{label}</Text>
+        {sub ? <Text style={[styles.rowSub, { color: theme.textSecondary }]}>{sub}</Text> : null}
+      </View>
+      {right !== undefined ? right : onPress ? (
+        <ChevronRight size={18} color={theme.textSecondary} />
+      ) : null}
+    </RowWrap>
+  );
+}
 
 export default function SettingsScreen({ navigation }) {
-  const { theme, isDark, toggleTheme, resetThemeData } = useTheme();
-  const { tasks, updateTask, resetAppData } = useAppData();
-  
+  const { theme, isDark, themes, selectedThemeId } = useTheme();
+  const { tasks, habits, deleteTask, deleteHabit } = useAppData();
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [assessmentOnStart, setAssessmentOnStartState] = useState(true);
   const [silentHoursEnabled, setSilentHoursEnabled] = useState(false);
-  const [silentHoursStart, setSilentHoursStart] = useState('22:00');
-  const [silentHoursEnd, setSilentHoursEnd] = useState('08:00');
   const [resetModalVisible, setResetModalVisible] = useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
-  useEffect(() => {
-    getNotificationsEnabled().then(setNotificationsEnabled).catch(() => undefined);
-    getAssessmentOnStart().then(setAssessmentOnStartState).catch(() => undefined);
-  }, []);
+  const currentThemeName = themes.find((t) => t.id === selectedThemeId)?.name ?? 'Default';
 
-  const handleAssessmentToggle = useCallback((value) => {
-    setAssessmentOnStartState(value);
-    setAssessmentOnStart(value).catch((error) => {
-      Alert.alert('Setting could not be saved', error?.message || 'Please try again.');
-    });
-  }, []);
-
-  // Handle Notification Toggle
-  const handleNotificationToggle = useCallback(async (value) => {
-    try {
-      if (value) {
-        const allowed = await ensureNotificationPermission();
-        if (!allowed) {
-          Alert.alert('Notifications unavailable', 'Allow notifications in device settings to receive task reminders.');
-          return;
-        }
-      }
-
-      await persistNotificationsEnabled(value);
-      setNotificationsEnabled(value);
-
-      if (value) {
-        await Promise.all(tasks.filter((task) => task.notifEnabled || task.metadata?.notifEnabled).map(async (task) => {
-          const reminderNotificationId = await scheduleTaskReminder({
-            title: task.title,
-            dueDate: task.dueDate || task.due_date,
-            reminderAt: task.reminderAt || task.reminder_at,
-          });
-          if (reminderNotificationId) {
-            await updateTask(task.id, {
-              ...task,
-              reminderNotificationId,
-              metadata: { ...(task.metadata || {}), reminderNotificationId },
-            });
-          }
-        }));
-      }
-    } catch (error) {
-      Alert.alert('Notification setting failed', error?.message || 'Please try again.');
-    }
-  }, [tasks, updateTask]);
-
-  // Handle Silent Hours Toggle
-  const handleSilentHoursToggle = useCallback((value) => {
-    setSilentHoursEnabled(value);
-    // TODO: Sync with backend preferences
-  }, []);
-
-  // Handle Reset Data
   const handleResetData = useCallback(async () => {
     try {
-      await Promise.all([resetAppData(), cancelAllTaskReminders()]);
-      resetThemeData();
-      Alert.alert('✅ Success', 'All data has been reset successfully.');
+      for (const task of tasks) await deleteTask(task.id);
+      for (const habit of habits) await deleteHabit(habit.id);
+      Alert.alert('✅ Success', 'All data has been reset.');
       setResetModalVisible(false);
-    } catch (error) {
-      Alert.alert('❌ Error', 'Failed to reset data. Please try again.');
-      console.error('Reset error:', error);
+    } catch (e) {
+      Alert.alert('❌ Error', 'Failed to reset data.');
+      console.error(e);
     }
   }, [resetAppData, resetThemeData]);
 
-  // Handle Logout
-  const handleLogout = useCallback(async () => {
-    try {
-      await logoutUser();
-      setLogoutModalVisible(false);
-      navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
-    } catch (error) {
-      Alert.alert('❌ Error', 'Failed to logout. Please try again.');
-      console.error('Logout error:', error);
-    }
+  const handleLogout = useCallback(() => {
+    setLogoutModalVisible(false);
+    navigation.replace('Login');
   }, [navigation]);
-
-  const SettingRow = ({ icon: Icon, label, value, onValueChange, type = 'switch', showValue }) => (
-    <View style={styles.settingRow}>
-      <Icon color={theme.text} size={22} />
-      <Text style={[styles.settingLabel, { color: theme.text }]}>{label}</Text>
-      {type === 'switch' ? (
-        <Switch 
-          value={value} 
-          onValueChange={onValueChange}
-          thumbColor={value ? theme.accentGradient[0] : '#cbd5e1'}
-          trackColor={{ true: theme.accentGradient[0] + '40', false: '#e2e8f0' }}
-        />
-      ) : (
-        <TouchableOpacity onPress={onValueChange} style={styles.selectButton}>
-          <Text style={[styles.selectButtonText, { color: theme.accentGradient[0] }]}>
-            {showValue || 'Click'}
-          </Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.header, { color: theme.text }]}>⚙️ Settings</Text>
-        
-        {/* Theme Section */}
-        <GlassCard style={styles.card}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Display</Text>
-          <SettingRow 
-            icon={isDark ? Moon : Sun} 
-            label="Dark Mode" 
-            value={isDark} 
-            onValueChange={toggleTheme} 
-          />
-        </GlassCard>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.headerRow}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={[styles.backBtn, { backgroundColor: theme.card, borderColor: theme.border }]}
+          >
+            <ChevronLeft size={22} color={theme.text} />
+          </TouchableOpacity>
+          <Text style={[styles.screenTitle, { color: theme.text }]}>Settings</Text>
+          <View style={styles.backBtn} />
+        </View>
 
-        <GlassCard style={styles.card}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Onboarding</Text>
-          <SettingRow
-            icon={ClipboardList}
-            label="Start with assessment after sign-in"
-            value={assessmentOnStart}
-            onValueChange={handleAssessmentToggle}
+        {/* Account */}
+        <SectionCard title="ACCOUNT" theme={theme}>
+          <Row
+            icon={UserIcon}
+            label="Profile"
+            sub="Name, mood, assessments"
+            theme={theme}
+            onPress={() => navigation.navigate('Profile')}
           />
-        </GlassCard>
+          <Row
+            icon={Palette}
+            label="Appearance"
+            sub={currentThemeName}
+            theme={theme}
+            onPress={() => navigation.navigate('Rewards')}
+            isLast
+          />
+        </SectionCard>
 
-        {/* Notifications Section */}
-        <GlassCard style={styles.card}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Notifications</Text>
-          <SettingRow 
-            icon={Bell} 
-            label="Enable Notifications" 
-            value={notificationsEnabled} 
-            onValueChange={handleNotificationToggle} 
-          />
-          
-          {notificationsEnabled && (
-            <View style={styles.nestedSetting}>
-              <SettingRow 
-                icon={Bell} 
-                label="Silent Hours" 
-                value={silentHoursEnabled} 
-                onValueChange={handleSilentHoursToggle} 
+        {/* Notifications */}
+        <SectionCard title="NOTIFICATIONS" theme={theme}>
+          <Row
+            icon={Bell}
+            label="Enable notifications"
+            theme={theme}
+            right={
+              <Switch
+                value={notificationsEnabled}
+                onValueChange={setNotificationsEnabled}
+                thumbColor={notificationsEnabled ? theme.accentGradient[0] : '#cbd5e1'}
+                trackColor={{ true: theme.accentGradient[0] + '55', false: theme.border }}
               />
-              
-              {silentHoursEnabled && (
-                <View style={styles.silentHoursDetail}>
-                  <Text style={[styles.detailText, { color: theme.textSecondary }]}>
-                    🌙 {silentHoursStart} - {silentHoursEnd}
-                  </Text>
-                </View>
-              )}
-            </View>
+            }
+            isLast={!notificationsEnabled}
+          />
+          {notificationsEnabled && (
+            <Row
+              icon={Moon}
+              label="Silent hours"
+              sub="22:00 – 08:00"
+              theme={theme}
+              right={
+                <Switch
+                  value={silentHoursEnabled}
+                  onValueChange={setSilentHoursEnabled}
+                  thumbColor={silentHoursEnabled ? theme.accentGradient[0] : '#cbd5e1'}
+                  trackColor={{ true: theme.accentGradient[0] + '55', false: theme.border }}
+                />
+              }
+              isLast
+            />
           )}
-        </GlassCard>
+        </SectionCard>
 
-        {/* Data & Privacy Section */}
-        <GlassCard style={styles.card}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Data & Privacy</Text>
-          <TouchableOpacity 
+        {/* Assessments */}
+        <SectionCard title="ASSESSMENTS" theme={theme}>
+          <Row
+            icon={ClipboardList}
+            label="ADHD screening"
+            sub="Retake or view results"
+            theme={theme}
+            onPress={() => navigation.navigate('Questionnaire')}
+          />
+          <Row
+            icon={Brain}
+            label="Executive function"
+            sub="Retake or view dimensions"
+            theme={theme}
+            onPress={() => navigation.navigate('EFQuestionnaire')}
+            isLast
+          />
+        </SectionCard>
+
+        {/* Data */}
+        <SectionCard title="DATA & PRIVACY" theme={theme}>
+          <Row
+            icon={Shield}
+            label="Privacy policy"
+            theme={theme}
+            onPress={() => Alert.alert('Privacy', 'We store your data securely with Supabase.')}
+          />
+          <Row
+            icon={Trash2}
+            label="Reset all data"
+            sub="Delete all tasks and habits"
+            danger
+            theme={theme}
             onPress={() => setResetModalVisible(true)}
-            style={[styles.dangerRow, { borderBottomColor: theme.border }]}
-          >
-            <Trash2 color="#EF4444" size={22} />
-            <Text style={[styles.dangerLabel, { color: theme.text }]}>Reset All Data</Text>
-            <Text style={styles.dangerArrow}>›</Text>
-          </TouchableOpacity>
-        </GlassCard>
+            isLast
+          />
+        </SectionCard>
 
-        {/* Account Section */}
-        <GlassCard style={styles.card}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Account</Text>
-          <TouchableOpacity 
-            onPress={() => setLogoutModalVisible(true)}
-            style={styles.dangerRow}
-          >
-            <LogOut color="#F59E0B" size={22} />
-            <Text style={[styles.dangerLabel, { color: theme.text }]}>Logout</Text>
-            <Text style={styles.dangerArrow}>›</Text>
-          </TouchableOpacity>
-        </GlassCard>
+        {/* About */}
+        <SectionCard title="ABOUT" theme={theme}>
+          <Row icon={Info} label="Version" theme={theme} right={<Text style={{ color: theme.textSecondary }}>1.0.0</Text>} isLast />
+        </SectionCard>
 
-        <View style={styles.spacer} />
+        {/* Logout */}
+        <TouchableOpacity
+          onPress={() => setLogoutModalVisible(true)}
+          style={[styles.logoutBtn, { borderColor: '#EF4444' }]}
+          activeOpacity={0.8}
+        >
+          <LogOut size={18} color="#EF4444" />
+          <Text style={styles.logoutBtnText}>Log out</Text>
+        </TouchableOpacity>
+
+        <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* Reset Data Modal */}
-      <Modal
-        visible={resetModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setResetModalVisible(false)}
-      >
+      {/* Reset modal */}
+      <Modal visible={resetModalVisible} transparent animationType="fade" onRequestClose={() => setResetModalVisible(false)}>
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: theme.background[0] }]}>
-            <Text style={[styles.modalTitle, { color: theme.text }]}>🗑️ Reset All Data?</Text>
+          <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>Reset all data?</Text>
             <Text style={[styles.modalMessage, { color: theme.textSecondary }]}>
-              This will permanently delete all your tasks and habits. This action cannot be undone.
+              This permanently deletes every task and habit. This cannot be undone.
             </Text>
-            <View style={styles.modalButtonRow}>
-              <TouchableOpacity 
+            <View style={styles.modalRow}>
+              <TouchableOpacity
                 onPress={() => setResetModalVisible(false)}
-                style={[styles.modalButton, { borderColor: theme.border }]}
+                style={[styles.modalBtn, { borderColor: theme.border }]}
               >
-                <Text style={[styles.modalButtonText, { color: theme.text }]}>Cancel</Text>
+                <Text style={[styles.modalBtnText, { color: theme.text }]}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={handleResetData}
-                style={[styles.modalButton, styles.modalButtonDanger]}
+                style={[styles.modalBtn, { backgroundColor: '#EF4444', borderColor: '#EF4444' }]}
               >
-                <Text style={styles.modalButtonDangerText}>Delete All</Text>
+                <Text style={[styles.modalBtnText, { color: '#fff' }]}>Delete all</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
 
-      {/* Logout Modal */}
-      <Modal
-        visible={logoutModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setLogoutModalVisible(false)}
-      >
+      {/* Logout modal */}
+      <Modal visible={logoutModalVisible} transparent animationType="fade" onRequestClose={() => setLogoutModalVisible(false)}>
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: theme.background[0] }]}>
-            <Text style={[styles.modalTitle, { color: theme.text }]}>🚪 Logout?</Text>
+          <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>Log out?</Text>
             <Text style={[styles.modalMessage, { color: theme.textSecondary }]}>
-              Are you sure you want to sign out from this device?
+              You'll need to sign back in to access your data.
             </Text>
-            <View style={styles.modalButtonRow}>
-              <TouchableOpacity 
+            <View style={styles.modalRow}>
+              <TouchableOpacity
                 onPress={() => setLogoutModalVisible(false)}
-                style={[styles.modalButton, { borderColor: theme.border }]}
+                style={[styles.modalBtn, { borderColor: theme.border }]}
               >
-                <Text style={[styles.modalButtonText, { color: theme.text }]}>Cancel</Text>
+                <Text style={[styles.modalBtnText, { color: theme.text }]}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={handleLogout}
-                style={[styles.modalButton, styles.modalButtonWarning]}
+                style={[styles.modalBtn, { backgroundColor: '#EF4444', borderColor: '#EF4444' }]}
               >
-                <Text style={styles.modalButtonWarningText}>Logout</Text>
+                <Text style={[styles.modalBtnText, { color: '#fff' }]}>Log out</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -278,59 +260,32 @@ export default function SettingsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { padding: 20 },
-  header: { fontSize: 28, fontWeight: '700', marginBottom: 24 },
-  card: { padding: 0, marginBottom: 16 },
-  sectionTitle: { fontSize: 16, fontWeight: '700', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
-  settingRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingVertical: 14, 
-    paddingHorizontal: 16,
-    borderBottomWidth: 1, 
-    borderBottomColor: 'rgba(0,0,0,0.05)' 
+  content: { padding: 20, paddingTop: Platform.OS === 'ios' ? 40 : 30 },
+
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 },
+  backBtn: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  screenTitle: { fontSize: 24, fontWeight: '800' },
+
+  section: { marginBottom: 18 },
+  sectionLabel: { fontSize: 11, fontWeight: '800', letterSpacing: 1.4, marginBottom: 8, marginLeft: 4 },
+  card: { borderRadius: 18, borderWidth: 1, overflow: 'hidden' },
+
+  row: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 14, gap: 12 },
+  rowIconWrap: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  rowLabel: { fontSize: 15, fontWeight: '600' },
+  rowSub: { fontSize: 12, marginTop: 2 },
+
+  logoutBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 8, paddingVertical: 14, borderRadius: 16, borderWidth: 1, marginTop: 6,
   },
-  settingLabel: { flex: 1, marginLeft: 12, fontSize: 16, fontWeight: '500' },
-  selectButton: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
-  selectButtonText: { fontSize: 14, fontWeight: '600' },
-  nestedSetting: { paddingLeft: 50, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.03)' },
-  silentHoursDetail: { paddingHorizontal: 16, paddingVertical: 12, backgroundColor: 'rgba(0,0,0,0.02)', borderRadius: 8, marginHorizontal: 16, marginVertical: 8 },
-  detailText: { fontSize: 14, fontWeight: '500' },
-  dangerRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingVertical: 14, 
-    paddingHorizontal: 16,
-    borderBottomWidth: 1
-  },
-  dangerLabel: { flex: 1, marginLeft: 12, fontSize: 16, fontWeight: '500' },
-  dangerArrow: { fontSize: 20, color: '#94A3B8' },
-  spacer: { height: 40 },
-  
-  // Modal Styles
-  modalOverlay: { 
-    flex: 1, 
-    backgroundColor: 'rgba(0,0,0,0.5)', 
-    justifyContent: 'center', 
-    alignItems: 'center',
-    padding: 20
-  },
-  modalContent: { 
-    borderRadius: 20, 
-    padding: 24, 
-    width: '100%',
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 10
-  },
-  modalTitle: { fontSize: 20, fontWeight: '700', marginBottom: 12 },
-  modalMessage: { fontSize: 15, lineHeight: 22, marginBottom: 24 },
-  modalButtonRow: { flexDirection: 'row', gap: 10 },
-  modalButton: { flex: 1, paddingVertical: 12, borderRadius: 12, alignItems: 'center', borderWidth: 1 },
-  modalButtonText: { fontSize: 15, fontWeight: '600' },
-  modalButtonDanger: { backgroundColor: '#EF4444', borderColor: '#EF4444' },
-  modalButtonDangerText: { fontSize: 15, fontWeight: '600', color: '#FFFFFF' },
-  modalButtonWarning: { backgroundColor: '#F59E0B', borderColor: '#F59E0B' },
-  modalButtonWarningText: { fontSize: 15, fontWeight: '600', color: '#FFFFFF' },
+  logoutBtnText: { color: '#EF4444', fontSize: 15, fontWeight: '700' },
+
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)', justifyContent: 'center', alignItems: 'center', padding: 20 },
+  modalContent: { borderRadius: 20, padding: 22, width: '100%' },
+  modalTitle: { fontSize: 18, fontWeight: '800', marginBottom: 10 },
+  modalMessage: { fontSize: 14, lineHeight: 20, marginBottom: 22 },
+  modalRow: { flexDirection: 'row', gap: 10 },
+  modalBtn: { flex: 1, paddingVertical: 12, borderRadius: 12, alignItems: 'center', borderWidth: 1 },
+  modalBtnText: { fontSize: 14, fontWeight: '700' },
 });

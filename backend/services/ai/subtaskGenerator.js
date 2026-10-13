@@ -1,7 +1,7 @@
 // backend/services/ai/subtaskGenerator.js
 //
 // Breaks a task title (+ optional category/subject) into concrete subtasks.
-// Not a LangChain tool -- just a focused generation call.
+// Returns an array of strings. Scheduling happens in the caller.
 
 const { ChatGroq } = require('@langchain/groq');
 
@@ -50,7 +50,8 @@ function parseSubtasks(raw) {
   try {
     const parsed = JSON.parse(cleaned);
     if (Array.isArray(parsed)) return parsed.map(String);
-    if (parsed && Array.isArray(parsed.subtasks)) return parsed.subtasks.map(String);
+    if (parsed && Array.isArray(parsed.subtasks))
+      return parsed.subtasks.map(String);
   } catch (_) {}
 
   const match = cleaned.match(/\[[\s\S]*\]/);

@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -11,32 +12,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   getSession,
-
   getProfile,
   updateProfile as apiUpdateProfile,
-
   getADHDProfile,
   updateADHDProfile as apiUpdateADHDProfile,
-
   getPreferences,
   updatePreferences as apiUpdatePreferences,
-
   getTasks,
   createTask as apiCreateTask,
   updateTask as apiUpdateTask,
   deleteTask as apiDeleteTask,
-
   getHabits,
   createHabit as apiCreateHabit,
   updateHabit as apiUpdateHabit,
   deleteHabit as apiDeleteHabit,
-
   getFocusSessions,
   createFocusSession as apiCreateFocusSession,
   updateFocusSession as apiUpdateFocusSession,
   deleteFocusSession as apiDeleteFocusSession,
-
   getStatisticsSummary,
+  createMoodLog as apiCreateMoodLog,
+  getMoodLogs as apiGetMoodLogs,
+  getLatestADHDAssessment,
+  getLatestEFAssessment,
 } from '../services/api';
 
 const APP_DATA_KEY = 'adhd_app_data_v2';
@@ -45,14 +43,6 @@ const todayISO = () => {
   const date = new Date();
   return localDateKey(date);
 };
-
-function localDateKey(date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-}
-
-/* =========================================================
-   UI CONSTANTS
-========================================================= */
 
 const THEME_TO_COLOR_IDX = {
   coral: 0,
@@ -70,18 +60,11 @@ const HABIT_COLOR_TO_IDX = {
   teal: 1,
 };
 
-const SLOT_TO_HOUR = {
-  Morning: 7,
-  Noon: 12,
-  Evening: 18,
-  Night: 21,
-};
+const SLOT_TO_HOUR = { Morning: 7, Noon: 12, Evening: 18, Night: 21 };
+const SLOT_DURATION_MINS = 15;
 
-const SLOT_DURATION_MINS = 30;
-
-/* =========================================================
-   DEFAULT VALUES
-========================================================= */
+const TASK_ARCHIVE_DAYS = 10;
+const FOCUS_ARCHIVE_DAYS = 30;
 
 const defaultProfile = {
   name: 'Friend',
@@ -113,10 +96,6 @@ const defaultHabitStats = {
 
 const AppDataContext = createContext(null);
 
-/* =========================================================
-   HELPER FUNCTIONS
-========================================================= */
-
 function safeNumber(value, fallback = 0) {
   const number = Number(value);
   return Number.isFinite(number) ? number : fallback;
@@ -132,9 +111,7 @@ function safeDate(value) {
 
 function getDateParts(value) {
   const date = safeDate(value);
-  if (!date) {
-    return { date: todayISO(), hour: 9, minute: 0 };
-  }
+  if (!date) return { date: todayISO(), hour: 9, minute: 0 };
   return {
     date: localDateKey(date),
     hour: date.getHours(),
@@ -142,9 +119,12 @@ function getDateParts(value) {
   };
 }
 
-/* =========================================================
-   TASK MAPPERS
-========================================================= */
+function daysSince(isoString) {
+  if (!isoString) return Infinity;
+  const d = new Date(isoString);
+  if (Number.isNaN(d.getTime())) return Infinity;
+  return (Date.now() - d.getTime()) / 86400000;
+}
 
 function normalizeTask(task) {
   if (!task) return null;
@@ -182,17 +162,10 @@ function normalizeTask(task) {
     reminderAt: task.reminder_at || null,
     repeatType: task.repeat_type || 'None',
     estimatedMinutes:
-      task.estimated_minutes !== null && task.estimated_minutes !== undefined
-        ? safeNumber(task.estimated_minutes)
-        : 0,
+      task.estimated_minutes != null ? safeNumber(task.estimated_minutes) : 0,
     actualMinutes:
-      task.actual_minutes !== null && task.actual_minutes !== undefined
-        ? safeNumber(task.actual_minutes)
-        : 0,
-    progress:
-      task.progress !== null && task.progress !== undefined
-        ? safeNumber(task.progress)
-        : 0,
+      task.actual_minutes != null ? safeNumber(task.actual_minutes) : 0,
+    progress: task.progress != null ? safeNumber(task.progress) : 0,
     energyRequired: task.energy_required || 'Variable',
     createdByAI: Boolean(task.created_by_ai),
     createdSource: task.created_source || 'User',
@@ -249,28 +222,20 @@ function taskToApiPayload(task) {
   };
 }
 
-/* =========================================================
-   HABIT MAPPERS
-========================================================= */
-
 function normalizeHabit(habit) {
   if (!habit) return null;
-
   const metadata =
     habit.metadata && typeof habit.metadata === 'object' ? habit.metadata : {};
-
   const timeSlots = Array.isArray(metadata.timeSlots)
     ? metadata.timeSlots
     : Array.isArray(habit.timeSlots)
       ? habit.timeSlots
       : ['Morning'];
-
   const completions = Array.isArray(metadata.completions)
     ? metadata.completions
     : Array.isArray(habit.completions)
       ? habit.completions
       : [];
-
   const gradient = Array.isArray(metadata.gradient)
     ? metadata.gradient
     : Array.isArray(habit.gradient)
@@ -297,12 +262,13 @@ function normalizeHabit(habit) {
     timeSlots,
     completions,
     gradient,
+    targetDays: metadata.targetDays ?? null,
+    streak: metadata.streak ?? 0,
   };
 }
 
 function habitToApiPayload(habit) {
   const metadata = { ...(habit?.metadata || {}) };
-
   if (habit?.timeSlots !== undefined) {
     metadata.timeSlots = Array.isArray(habit.timeSlots) ? habit.timeSlots : [];
   }
@@ -331,30 +297,20 @@ function habitToApiPayload(habit) {
   };
 }
 
-/* =========================================================
-   FOCUS SESSION MAPPERS
-========================================================= */
-
 function normalizeFocusSession(session) {
   if (!session) return null;
-
   const metadata =
     session.metadata && typeof session.metadata === 'object'
       ? session.metadata
       : {};
-
   const startedAt = safeDate(session.started_at);
   const startParts = getDateParts(session.started_at);
-
   const plannedMinutes =
-    session.planned_minutes !== null && session.planned_minutes !== undefined
+    session.planned_minutes != null
       ? safeNumber(session.planned_minutes, 25)
       : 25;
-
   const actualMinutes =
-    session.actual_minutes !== null && session.actual_minutes !== undefined
-      ? safeNumber(session.actual_minutes, 0)
-      : 0;
+    session.actual_minutes != null ? safeNumber(session.actual_minutes, 0) : 0;
 
   return {
     ...session,
@@ -394,7 +350,8 @@ function focusSessionToApiPayload(session) {
 
   return {
     task_id: session?.task_id ?? session?.taskId ?? null,
-    session_name: session?.session_name ?? session?.sessionName ?? 'Focus Session',
+    session_name:
+      session?.session_name ?? session?.sessionName ?? 'Focus Session',
     session_type: session?.session_type ?? session?.sessionType ?? 'Focus',
     planned_minutes: session?.planned_minutes ?? session?.plannedMinutes ?? 25,
     actual_minutes: session?.actual_minutes ?? session?.actualMinutes ?? 0,
@@ -419,179 +376,224 @@ function focusSessionToApiPayload(session) {
   };
 }
 
-/* =========================================================
-   PROVIDER
-========================================================= */
-
 export function AppDataProvider({ children }) {
   const [tasks, setTasks] = useState([]);
   const [habits, setHabits] = useState([]);
   const [focusSessions, setFocusSessions] = useState([]);
+  const [moodLogs, setMoodLogs] = useState([]);
+  const [adhdAssessment, setAdhdAssessment] = useState(null);
+  const [efAssessment, setEfAssessment] = useState(null);
   const [profile, setProfile] = useState(defaultProfile);
   const [statistics, setStatistics] = useState(null);
   const [hydrated, setHydrated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncError, setSyncError] = useState(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
-  /* =======================================================
-     TASK HISTORY (derived from tasks with status Completed)
-  ======================================================= */
+  const autoRescheduleRanRef = useRef(false);
 
   const taskHistory = useMemo(() => {
     return tasks
       .filter((t) => t.status === 'Completed')
-      .map((t) => ({
-        ...t,
-        completedAt: t.completed_at || t.completedAt,
-      }))
+      .map((t) => ({ ...t, completedAt: t.completed_at || t.completedAt }))
+      .filter((t) => daysSince(t.completedAt) <= TASK_ARCHIVE_DAYS)
       .sort(
         (a, b) => new Date(b.completedAt || 0) - new Date(a.completedAt || 0)
       );
   }, [tasks]);
 
-  /* =======================================================
-     LOAD BACKEND DATA
-  ======================================================= */
-
   const loadFromBackend = useCallback(async () => {
+    let session = null;
     try {
-      const session = await getSession();
+      session = await getSession();
+    } catch (e) {
+      console.warn('getSession failed:', e?.message);
+    }
 
-      if (!session?.access_token) {
-        setHydrated(true);
-        return;
+    if (!session?.access_token) {
+      console.warn('loadFromBackend: no session token');
+      setHydrated(true);
+      return;
+    }
+
+    setLoading(true);
+    setSyncError(null);
+    setSessionExpired(false);
+
+    // All requests run in parallel; one failure does NOT kill the batch.
+    const results = await Promise.allSettled([
+      getProfile(),
+      getADHDProfile(),
+      getPreferences(),
+      getTasks(),
+      getHabits(),
+      getFocusSessions(),
+      getStatisticsSummary(),
+      apiGetMoodLogs({ days: 60, limit: 300 }).catch(() => ({ data: [] })),
+      getLatestADHDAssessment().catch(() => null),
+      getLatestEFAssessment().catch(() => null),
+    ]);
+
+    const labels = [
+      'profile',
+      'adhdProfile',
+      'preferences',
+      'tasks',
+      'habits',
+      'focusSessions',
+      'statistics',
+      'moodLogs',
+      'adhdAssessment',
+      'efAssessment',
+    ];
+
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.warn(
+          `loadFromBackend: ${labels[i]} failed:`,
+          r.reason?.message || r.reason
+        );
       }
+    });
 
-      setLoading(true);
-      setSyncError(null);
+    const ok = (i) => results[i]?.status === 'fulfilled';
+    const val = (i) => (ok(i) ? results[i].value : null);
 
-      const [
-        profileResponse,
-        adhdProfileResponse,
-        preferencesResponse,
-        tasksResponse,
-        habitsResponse,
-        focusResponse,
-        statisticsResponse,
-      ] = await Promise.all([
-        getProfile(),
-        getADHDProfile(),
-        getPreferences(),
-        getTasks(),
-        getHabits(),
-        getFocusSessions(),
-        getStatisticsSummary(),
-      ]);
+    // Auth failure detection — any of the failed requests has auth-shaped error
+    const anyAuthFailure = results.some((r) => {
+      if (r.status !== 'rejected') return false;
+      const m = String(r.reason?.message || '').toLowerCase();
+      return (
+        m.includes('invalid or expired') ||
+        m.includes('missing authorization') ||
+        m.includes('not authenticated')
+      );
+    });
 
-      const backendProfile = profileResponse?.data || {};
-      const backendADHD = adhdProfileResponse?.data || {};
-      const backendPreferences = preferencesResponse?.data || {};
+    if (anyAuthFailure) {
+      console.warn('loadFromBackend: auth failure; clearing session + data');
+      try {
+        await AsyncStorage.removeItem(APP_DATA_KEY);
+        await AsyncStorage.multiRemove(['aimdb_current_user', 'aimdb_session']);
+      } catch {}
+      setTasks([]);
+      setHabits([]);
+      setFocusSessions([]);
+      setMoodLogs([]);
+      setProfile(defaultProfile);
+      setStatistics(null);
+      setAdhdAssessment(null);
+      setEfAssessment(null);
+      setSyncError('Your session has expired. Please log in again.');
+      setSessionExpired(true);
+      setLoading(false);
+      setHydrated(true);
+      return;
+    }
 
-      setProfile({
+    // ---------- Apply successful responses individually ----------
+
+    if (ok(0)) {
+      const backendProfile = val(0)?.data || {};
+      const backendADHD = ok(1) ? val(1)?.data || {} : {};
+      const backendPreferences = ok(2) ? val(2)?.data || {} : {};
+
+      setProfile((prev) => ({
         ...defaultProfile,
-        name: backendProfile.full_name || 'Friend',
-        email: backendProfile.email || '',
-        username: backendProfile.username || '',
-        avatarUrl: backendProfile.avatar_url || null,
-        bio: backendProfile.bio || '',
-        dateOfBirth: backendProfile.date_of_birth || null,
-        gender: backendProfile.gender || null,
-        occupation: backendProfile.occupation || '',
-        country: backendProfile.country || '',
-        city: backendProfile.city || '',
-        timezone: backendProfile.timezone || 'UTC',
+        ...prev,
+        name: backendProfile.full_name || prev.name || 'Friend',
+        email: backendProfile.email || prev.email || '',
+        username: backendProfile.username || prev.username || '',
+        avatarUrl: backendProfile.avatar_url ?? prev.avatarUrl ?? null,
+        bio: backendProfile.bio || prev.bio || '',
+        dateOfBirth: backendProfile.date_of_birth ?? prev.dateOfBirth ?? null,
+        gender: backendProfile.gender ?? prev.gender ?? null,
+        occupation: backendProfile.occupation || prev.occupation || '',
+        country: backendProfile.country || prev.country || '',
+        city: backendProfile.city || prev.city || '',
+        timezone: backendProfile.timezone || prev.timezone || 'UTC',
         onboardingCompleted: Boolean(backendProfile.onboarding_completed),
         adhdProfile: backendADHD,
         preferences: backendPreferences,
-      });
-
-      const backendTasks = Array.isArray(tasksResponse?.data)
-        ? tasksResponse.data
-        : [];
-      setTasks(backendTasks.map(normalizeTask).filter(Boolean));
-
-      const backendHabits = Array.isArray(habitsResponse?.data)
-        ? habitsResponse.data
-        : [];
-      setHabits(backendHabits.map(normalizeHabit).filter(Boolean));
-
-      const backendFocusSessions = Array.isArray(focusResponse?.data)
-        ? focusResponse.data
-        : [];
-      setFocusSessions(backendFocusSessions.map(normalizeFocusSession).filter(Boolean));
-
-      setStatistics(statisticsResponse?.data || null);
-    } catch (error) {
-      console.error('Failed to load backend data:', error);
-      setSyncError(error?.message || 'Failed to synchronize with backend.');
-
-      try {
-        const raw = await AsyncStorage.getItem(APP_DATA_KEY);
-        if (!raw) return;
-
-        const parsed = JSON.parse(raw);
-
-        setTasks(Array.isArray(parsed.tasks) ? parsed.tasks : []);
-        setHabits(Array.isArray(parsed.habits) ? parsed.habits : []);
-        setFocusSessions(
-          Array.isArray(parsed.focusSessions) ? parsed.focusSessions : []
-        );
-        setProfile({
-          ...defaultProfile,
-          ...(parsed.profile || {}),
-        });
-        setStatistics(parsed.statistics || null);
-      } catch (cacheError) {
-        console.warn('Failed to load local fallback:', cacheError);
-      }
-    } finally {
-      setLoading(false);
-      setHydrated(true);
+      }));
     }
-  }, []);
 
-  /* =======================================================
-     INITIAL LOAD
-  ======================================================= */
+    if (ok(3)) {
+      const backendTasks = Array.isArray(val(3)?.data) ? val(3).data : [];
+      setTasks(backendTasks.map(normalizeTask).filter(Boolean));
+    }
+
+    if (ok(4)) {
+      const backendHabits = Array.isArray(val(4)?.data) ? val(4).data : [];
+      setHabits(backendHabits.map(normalizeHabit).filter(Boolean));
+    }
+
+    if (ok(5)) {
+      const backendFocus = Array.isArray(val(5)?.data) ? val(5).data : [];
+      setFocusSessions(backendFocus.map(normalizeFocusSession).filter(Boolean));
+    }
+
+    if (ok(6)) {
+      setStatistics(val(6)?.data || null);
+    }
+
+    if (ok(7)) {
+      setMoodLogs(Array.isArray(val(7)?.data) ? val(7).data : []);
+    }
+
+    if (ok(8)) setAdhdAssessment(val(8) || null);
+    if (ok(9)) setEfAssessment(val(9) || null);
+
+    // Partial failure notice
+    const failures = results.filter((r) => r.status === 'rejected').length;
+    if (failures > 0 && failures < results.length) {
+      setSyncError(
+        `Some data couldn't load (${failures} of ${results.length} requests failed).`
+      );
+    } else if (failures === results.length) {
+      setSyncError('Could not reach the backend. Check your connection.');
+    }
+
+    setLoading(false);
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
     loadFromBackend();
   }, [loadFromBackend]);
 
-  /* =======================================================
-     LOCAL CACHE
-     Note: taskHistory is intentionally NOT persisted -- it
-     is derived from `tasks` on every render.
-  ======================================================= */
-
   useEffect(() => {
     if (!hydrated) return;
+    const snapshot = { tasks, habits, focusSessions, profile, statistics };
+    AsyncStorage.setItem(APP_DATA_KEY, JSON.stringify(snapshot)).catch(
+      () => undefined
+    );
 
-    AsyncStorage.setItem(
-      APP_DATA_KEY,
-      JSON.stringify({
-        tasks,
-        habits,
-        focusSessions,
-        profile,
-        statistics,
-      })
-    ).catch(() => undefined);
+    const bgSnapshot = {
+      tasks: tasks.map((t) => ({
+        id: t.id,
+        title: t.title,
+        status: t.status,
+        dueDate: t.dueDate || t.due_date || null,
+      })),
+      habits: habits.map((h) => ({
+        id: h.id,
+        name: h.name || h.title || 'Habit',
+        timeSlots: h.timeSlots || [],
+        completions: h.completions || [],
+      })),
+      updatedAt: Date.now(),
+    };
+    AsyncStorage.setItem('@bg_snapshot_v1', JSON.stringify(bgSnapshot)).catch(
+      () => undefined
+    );
   }, [tasks, habits, focusSessions, profile, statistics, hydrated]);
-
-  /* =======================================================
-     TASKS
-  ======================================================= */
 
   const addTask = useCallback(async (taskObj) => {
     const payload = taskToApiPayload(taskObj);
     const response = await apiCreateTask(payload);
     const created = normalizeTask(response?.data);
-
-    if (!created) {
-      throw new Error('Backend did not return the created task.');
-    }
-
+    if (!created) throw new Error('Backend did not return the created task.');
     setTasks((prev) => [created, ...prev]);
     return created;
   }, []);
@@ -599,10 +601,7 @@ export function AppDataProvider({ children }) {
   const updateTask = useCallback(
     async (taskId, updater) => {
       const current = tasks.find((task) => task.id === taskId);
-
-      if (!current) {
-        throw new Error('Task not found.');
-      }
+      if (!current) throw new Error('Task not found.');
 
       const updated =
         typeof updater === 'function'
@@ -611,15 +610,11 @@ export function AppDataProvider({ children }) {
 
       const response = await apiUpdateTask(taskId, taskToApiPayload(updated));
       const saved = normalizeTask(response?.data);
-
-      if (!saved) {
-        throw new Error('Backend did not return the updated task.');
-      }
+      if (!saved) throw new Error('Backend did not return the updated task.');
 
       setTasks((prev) =>
         prev.map((task) => (task.id === taskId ? saved : task))
       );
-
       return saved;
     },
     [tasks]
@@ -634,7 +629,6 @@ export function AppDataProvider({ children }) {
     async (taskId) => {
       const current = tasks.find((t) => t.id === taskId);
       if (!current) return;
-
       await updateTask(taskId, {
         ...current,
         status: 'Completed',
@@ -652,7 +646,6 @@ export function AppDataProvider({ children }) {
     async (taskId, subtaskId) => {
       const current = tasks.find((task) => task.id === taskId);
       if (!current) return;
-
       const subtasks = Array.isArray(current.subtasks) ? current.subtasks : [];
       const target = subtasks.find((item) => item.id === subtaskId);
       if (!target) return;
@@ -673,18 +666,10 @@ export function AppDataProvider({ children }) {
     [tasks, updateTask]
   );
 
-  /* =======================================================
-     HABITS
-  ======================================================= */
-
   const addHabit = useCallback(async (habitObj) => {
     const response = await apiCreateHabit(habitToApiPayload(habitObj));
     const created = normalizeHabit(response?.data);
-
-    if (!created) {
-      throw new Error('Backend did not return the created habit.');
-    }
-
+    if (!created) throw new Error('Backend did not return the created habit.');
     setHabits((prev) => [...prev, created]);
     return created;
   }, []);
@@ -692,29 +677,33 @@ export function AppDataProvider({ children }) {
   const updateHabit = useCallback(
     async (habitId, updater) => {
       const current = habits.find((habit) => habit.id === habitId);
-      if (!current) {
-        throw new Error('Habit not found.');
-      }
+      if (!current) throw new Error('Habit not found.');
 
       const updated =
         typeof updater === 'function'
           ? updater(current)
           : { ...current, ...updater };
 
-      const response = await apiUpdateHabit(
-        habitId,
-        habitToApiPayload(updated)
-      );
-      const saved = normalizeHabit(response?.data);
-
-      if (!saved) {
-        throw new Error('Backend did not return the updated habit.');
+      let response;
+      try {
+        response = await apiUpdateHabit(habitId, habitToApiPayload(updated));
+      } catch (err) {
+        const msg = String(err?.message || '').toLowerCase();
+        if (msg.includes('not found') || msg.includes('cannot coerce')) {
+          console.warn(
+            `updateHabit: habit ${habitId} not found; removing locally.`
+          );
+          setHabits((prev) => prev.filter((h) => h.id !== habitId));
+          throw new Error('This habit no longer exists.');
+        }
+        throw err;
       }
+      const saved = normalizeHabit(response?.data);
+      if (!saved) throw new Error('Backend did not return the updated habit.');
 
       setHabits((prev) =>
         prev.map((habit) => (habit.id === habitId ? saved : habit))
       );
-
       return saved;
     },
     [habits]
@@ -724,17 +713,12 @@ export function AppDataProvider({ children }) {
     async (habitId, slotIndex) => {
       const current = habits.find((habit) => habit.id === habitId);
       if (!current) return;
-
       const completions = [...(current.completions || [])];
       completions[slotIndex] = !completions[slotIndex];
-
       await updateHabit(habitId, {
         ...current,
         completions,
-        metadata: {
-          ...(current.metadata || {}),
-          completions,
-        },
+        metadata: { ...(current.metadata || {}), completions },
       });
     },
     [habits, updateHabit]
@@ -745,20 +729,13 @@ export function AppDataProvider({ children }) {
     setHabits((prev) => prev.filter((habit) => habit.id !== habitId));
   }, []);
 
-  /* =======================================================
-     FOCUS SESSIONS
-  ======================================================= */
-
   const addFocusSession = useCallback(async (session) => {
     const response = await apiCreateFocusSession(
       focusSessionToApiPayload(session)
     );
     const created = normalizeFocusSession(response?.data);
-
-    if (!created) {
+    if (!created)
       throw new Error('Backend did not return the created focus session.');
-    }
-
     setFocusSessions((prev) => [created, ...prev]);
     return created;
   }, []);
@@ -766,29 +743,21 @@ export function AppDataProvider({ children }) {
   const updateFocusSession = useCallback(
     async (sessionId, updater) => {
       const current = focusSessions.find((session) => session.id === sessionId);
-      if (!current) {
-        throw new Error('Focus session not found.');
-      }
-
+      if (!current) throw new Error('Focus session not found.');
       const updated =
         typeof updater === 'function'
           ? updater(current)
           : { ...current, ...updater };
-
       const response = await apiUpdateFocusSession(
         sessionId,
         focusSessionToApiPayload(updated)
       );
       const saved = normalizeFocusSession(response?.data);
-
-      if (!saved) {
+      if (!saved)
         throw new Error('Backend did not return the updated focus session.');
-      }
-
       setFocusSessions((prev) =>
         prev.map((session) => (session.id === sessionId ? saved : session))
       );
-
       return saved;
     },
     [focusSessions]
@@ -801,9 +770,17 @@ export function AppDataProvider({ children }) {
     );
   }, []);
 
-  /* =======================================================
-     PROFILE
-  ======================================================= */
+  const addMoodLog = useCallback(
+    async ({ mood, note, source = 'manual', context = {} }) => {
+      const response = await apiCreateMoodLog({ mood, note, source, context });
+      const created = response?.data;
+      if (!created)
+        throw new Error('Backend did not return the created mood log.');
+      setMoodLogs((prev) => [created, ...prev]);
+      return created;
+    },
+    []
+  );
 
   const updateProfile = useCallback(
     async (updates) => {
@@ -811,52 +788,24 @@ export function AppDataProvider({ children }) {
         updates || {};
 
       const profilePayload = {};
-
-      if (profileUpdates.full_name !== undefined) {
-        profilePayload.full_name = profileUpdates.full_name;
-      }
+      if (profileUpdates.full_name !== undefined) profilePayload.full_name = profileUpdates.full_name;
       if (name !== undefined) profilePayload.full_name = name;
-      if (profileUpdates.username !== undefined) {
-        profilePayload.username = profileUpdates.username;
-      }
-      if (profileUpdates.email !== undefined) {
-        profilePayload.email = profileUpdates.email;
-      }
+      if (profileUpdates.username !== undefined) profilePayload.username = profileUpdates.username;
+      if (profileUpdates.email !== undefined) profilePayload.email = profileUpdates.email;
       if (avatarUrl !== undefined) profilePayload.avatar_url = avatarUrl;
-      if (profileUpdates.avatar_url !== undefined) {
-        profilePayload.avatar_url = profileUpdates.avatar_url;
-      }
+      if (profileUpdates.avatar_url !== undefined) profilePayload.avatar_url = profileUpdates.avatar_url;
       if (profileUpdates.bio !== undefined) profilePayload.bio = profileUpdates.bio;
-      if (profileUpdates.date_of_birth !== undefined) {
-        profilePayload.date_of_birth = profileUpdates.date_of_birth;
-      }
-      if (profileUpdates.dateOfBirth !== undefined) {
-        profilePayload.date_of_birth = profileUpdates.dateOfBirth;
-      }
-      if (profileUpdates.gender !== undefined) {
-        profilePayload.gender = profileUpdates.gender;
-      }
-      if (profileUpdates.occupation !== undefined) {
-        profilePayload.occupation = profileUpdates.occupation;
-      }
-      if (profileUpdates.country !== undefined) {
-        profilePayload.country = profileUpdates.country;
-      }
-      if (profileUpdates.city !== undefined) {
-        profilePayload.city = profileUpdates.city;
-      }
-      if (profileUpdates.timezone !== undefined) {
-        profilePayload.timezone = profileUpdates.timezone;
-      }
-      if (profileUpdates.onboarding_completed !== undefined) {
-        profilePayload.onboarding_completed = profileUpdates.onboarding_completed;
-      }
-      if (profileUpdates.onboardingCompleted !== undefined) {
-        profilePayload.onboarding_completed = profileUpdates.onboardingCompleted;
-      }
+      if (profileUpdates.date_of_birth !== undefined) profilePayload.date_of_birth = profileUpdates.date_of_birth;
+      if (profileUpdates.dateOfBirth !== undefined) profilePayload.date_of_birth = profileUpdates.dateOfBirth;
+      if (profileUpdates.gender !== undefined) profilePayload.gender = profileUpdates.gender;
+      if (profileUpdates.occupation !== undefined) profilePayload.occupation = profileUpdates.occupation;
+      if (profileUpdates.country !== undefined) profilePayload.country = profileUpdates.country;
+      if (profileUpdates.city !== undefined) profilePayload.city = profileUpdates.city;
+      if (profileUpdates.timezone !== undefined) profilePayload.timezone = profileUpdates.timezone;
+      if (profileUpdates.onboarding_completed !== undefined) profilePayload.onboarding_completed = profileUpdates.onboarding_completed;
+      if (profileUpdates.onboardingCompleted !== undefined) profilePayload.onboarding_completed = profileUpdates.onboardingCompleted;
 
       let savedProfile = profile;
-
       if (Object.keys(profilePayload).length > 0) {
         const response = await apiUpdateProfile(profilePayload);
         savedProfile = response?.data || savedProfile;
@@ -913,22 +862,115 @@ export function AppDataProvider({ children }) {
         apiDeleteFocusSession(session.id).catch(() => undefined)
       ),
     ]);
-
     setTasks([]);
     setHabits([]);
     setFocusSessions([]);
+    setMoodLogs([]);
     setStatistics(null);
     await AsyncStorage.removeItem(APP_DATA_KEY);
   }, [tasks, habits, focusSessions]);
 
-  /* =======================================================
-     TIMELINE
-  ======================================================= */
+  useEffect(() => {
+    if (!hydrated) return;
+    if (autoRescheduleRanRef.current) return;
+    autoRescheduleRanRef.current = true;
+
+    const today = todayISO();
+
+    tasks.forEach((task) => {
+      if (task.status === 'Completed' || task.status === 'Cancelled') return;
+      const subs = Array.isArray(task.subtasks) ? task.subtasks : [];
+      if (subs.length === 0) return;
+
+      let changed = false;
+      const updated = subs.map((s) => {
+        if (s.done) return s;
+        if (!s.scheduledDate) return s;
+        if (s.scheduledDate >= today) return s;
+        changed = true;
+        return {
+          ...s,
+          scheduledDate: today,
+          rescheduledAt: new Date().toISOString(),
+          rescheduledReason: 'missed',
+        };
+      });
+
+      if (changed) {
+        updateTask(task.id, {
+          ...task,
+          subtasks: updated,
+          metadata: { ...(task.metadata || {}), subtasks: updated },
+        }).catch((e) =>
+          console.warn('Auto-reschedule update failed:', e?.message)
+        );
+      }
+    });
+  }, [hydrated, tasks, updateTask]);
 
   const timelineEvents = useMemo(() => {
     const events = [];
 
     tasks.forEach((task) => {
+      if (task.status === 'Cancelled') return;
+      if (task.status === 'Completed') {
+        const completedAt = task.completed_at || task.completedAt;
+        if (daysSince(completedAt) > TASK_ARCHIVE_DAYS) return;
+      }
+
+      const subs = Array.isArray(task.subtasks) ? task.subtasks : [];
+      const scheduledSubs = subs
+        .map((s, idx) => ({ ...s, originalIndex: idx }))
+        .filter((s) => s.scheduledDate);
+
+      if (scheduledSubs.length > 0) {
+        const byDate = {};
+        scheduledSubs.forEach((sub) => {
+          if (!byDate[sub.scheduledDate]) byDate[sub.scheduledDate] = [];
+          byDate[sub.scheduledDate].push(sub);
+        });
+
+        Object.entries(byDate).forEach(([date, group]) => {
+          const remaining = group.filter((g) => !g.done);
+          const allDone = remaining.length === 0;
+
+          const sorted = [...group].sort((a, b) => {
+            const hA = a.scheduledHour ?? 9;
+            const hB = b.scheduledHour ?? 9;
+            if (hA !== hB) return hA - hB;
+            return a.originalIndex - b.originalIndex;
+          });
+
+          const headlineSrc = allDone ? sorted[0] : remaining[0];
+          const startHour = headlineSrc.scheduledHour ?? 9;
+
+          const totalMins = allDone
+            ? group.reduce((sum, g) => sum + (g.durationMins ?? 30), 0)
+            : remaining.reduce((sum, g) => sum + (g.durationMins ?? 30), 0);
+
+          const remainingAfter = Math.max(0, remaining.length - 1);
+
+          events.push({
+            id: `task-${task.id}-${date}`,
+            title: task.title,
+            subtitle: headlineSrc.title,
+            remainingCount: remainingAfter,
+            totalInGroup: group.length,
+            doneCount: group.filter((g) => g.done).length,
+            allDone,
+            done: allDone,
+            type: 'task',
+            isoKey: date,
+            startHour,
+            startMin: 0,
+            durationMins: Math.max(15, totalMins),
+            colorIdx: THEME_TO_COLOR_IDX[task.themeId] ?? 0,
+            taskId: task.id,
+          });
+        });
+        return;
+      }
+
       const startDate = safeDate(task.start_date || task.startDate);
       const dueDate = safeDate(task.due_date || task.dueDate);
       const startParts = getDateParts(task.start_date || task.startDate);
@@ -937,11 +979,14 @@ export function AppDataProvider({ children }) {
       const startHour = startDate
         ? startParts.hour
         : safeNumber(task.startHour, 9);
-      const startMin = startDate ? startParts.minute : safeNumber(task.startMin, 0);
-      const endHour = dueDate ? dueParts.hour : safeNumber(task.endHour, startHour + 1);
+      const startMin = startDate
+        ? startParts.minute
+        : safeNumber(task.startMin, 0);
+      const endHour = dueDate
+        ? dueParts.hour
+        : safeNumber(task.endHour, startHour + 1);
 
       let durationMins = (endHour - startHour) * 60;
-
       if (dueDate && startDate) {
         durationMins = Math.round(
           (dueDate.getTime() - startDate.getTime()) / 60000
@@ -951,12 +996,17 @@ export function AppDataProvider({ children }) {
       events.push({
         id: `task-${task.id}`,
         title: task.title,
+        subtitle: null,
+        remainingCount: 0,
+        allDone: task.status === 'Completed',
+        done: task.status === 'Completed',
         type: 'task',
         isoKey: dueDate ? dueParts.date : todayISO(),
         startHour,
         startMin,
         durationMins: Math.max(30, durationMins || 30),
         colorIdx: THEME_TO_COLOR_IDX[task.themeId] ?? 0,
+        taskId: task.id,
       });
     });
 
@@ -965,82 +1015,76 @@ export function AppDataProvider({ children }) {
     habits.forEach((habit) => {
       const gradientFirst = (habit.gradient?.[0] || '').toLowerCase();
       let colorIdx = 1;
-
-      if (gradientFirst.includes('ff9a') || gradientFirst.includes('ff6a')) {
+      if (gradientFirst.includes('ff9a') || gradientFirst.includes('ff6a'))
         colorIdx = HABIT_COLOR_TO_IDX.coral;
-      } else if (
-        gradientFirst.includes('5dae') ||
-        gradientFirst.includes('3a8d')
-      ) {
+      else if (gradientFirst.includes('5dae') || gradientFirst.includes('3a8d'))
         colorIdx = HABIT_COLOR_TO_IDX.blue;
-      } else if (
-        gradientFirst.includes('6ee7') ||
-        gradientFirst.includes('34d3')
-      ) {
+      else if (gradientFirst.includes('6ee7') || gradientFirst.includes('34d3'))
         colorIdx = HABIT_COLOR_TO_IDX.green;
-      } else if (
-        gradientFirst.includes('a78b') ||
-        gradientFirst.includes('7c3a')
-      ) {
+      else if (gradientFirst.includes('a78b') || gradientFirst.includes('7c3a'))
         colorIdx = HABIT_COLOR_TO_IDX.purple;
-      } else if (
-        gradientFirst.includes('4fd1') ||
-        gradientFirst.includes('2cb1')
-      ) {
+      else if (gradientFirst.includes('4fd1') || gradientFirst.includes('2cb1'))
         colorIdx = HABIT_COLOR_TO_IDX.teal;
-      }
 
       (habit.timeSlots || []).forEach((slot, index) => {
         events.push({
           id: `habit-${habit.id}-${index}`,
           title: habit.name || habit.title || 'Habit',
+          subtitle: null,
+          remainingCount: 0,
+          allDone: false,
+          done: Boolean(habit.completions?.[index]),
           type: 'habit',
           isoKey: today,
           startHour: SLOT_TO_HOUR[slot] ?? 8,
           startMin: 0,
           durationMins: SLOT_DURATION_MINS,
           colorIdx,
+          habitId: habit.id,
+          slotIndex: index,
         });
       });
     });
 
     focusSessions.forEach((session) => {
+      const sessionDate = session.started_at || session.startedAt;
+      if (daysSince(sessionDate) > FOCUS_ARCHIVE_DAYS) return;
+
       events.push({
         id: `focus-${session.id}`,
-        title: session.taskTitle ? `Focus: ${session.taskTitle}` : 'Focus Session',
+        title: session.taskTitle
+          ? `Focus: ${session.taskTitle}`
+          : 'Focus Session',
+        subtitle: null,
+        remainingCount: 0,
+        allDone: false,
+        done: false,
         type: 'focus',
         isoKey: session.isoKey || todayISO(),
         startHour: safeNumber(session.startHour, 9),
         startMin: safeNumber(session.startMin, 0),
         durationMins: Math.max(1, safeNumber(session.durationMins, 25)),
         colorIdx: 2,
+        sessionId: session.id,
       });
     });
 
     return events;
   }, [tasks, habits, focusSessions]);
 
-  /* =======================================================
-     HABIT STATISTICS
-  ======================================================= */
-
   const habitStats = useMemo(() => {
     const today = todayISO();
-
     const slotsPerDay = habits.reduce(
       (total, habit) => total + (habit.timeSlots?.length || 0),
       0
     );
-
     const todayDone = habits.reduce(
       (total, habit) =>
         total + (habit.completions?.filter(Boolean).length || 0),
       0
     );
-
     const rollingThreeDayTarget = slotsPerDay * 3;
     const rollingThreeDayDone = todayDone;
-
     const streakDays =
       slotsPerDay > 0
         ? Math.min(3, Math.floor(todayDone / slotsPerDay))
@@ -1057,43 +1101,37 @@ export function AppDataProvider({ children }) {
     };
   }, [habits]);
 
-  /* =======================================================
-     CONTEXT VALUE
-  ======================================================= */
-
   const value = useMemo(
     () => ({
       tasks,
       habits,
       focusSessions,
+      moodLogs,
       taskHistory,
       profile,
       statistics,
-
+      adhdAssessment,
+      efAssessment,
       hydrated,
       loading,
       syncError,
-
+      sessionExpired,
       refreshData: loadFromBackend,
-
       addTask,
       updateTask,
       deleteTask,
       completeTask,
       toggleSubtask,
-
       addHabit,
       updateHabit,
       toggleHabitSlot,
       deleteHabit,
-
       addFocusSession,
       updateFocusSession,
       deleteFocusSession,
-
+      addMoodLog,
       updateProfile,
       resetAppData,
-
       timelineEvents,
       habitStats,
     }),
@@ -1101,34 +1139,32 @@ export function AppDataProvider({ children }) {
       tasks,
       habits,
       focusSessions,
+      moodLogs,
       taskHistory,
       profile,
       statistics,
-
+      adhdAssessment,
+      efAssessment,
       hydrated,
       loading,
       syncError,
-
+      sessionExpired,
       loadFromBackend,
-
       addTask,
       updateTask,
       deleteTask,
       completeTask,
       toggleSubtask,
-
       addHabit,
       updateHabit,
       toggleHabitSlot,
       deleteHabit,
-
       addFocusSession,
       updateFocusSession,
       deleteFocusSession,
-
+      addMoodLog,
       updateProfile,
       resetAppData,
-
       timelineEvents,
       habitStats,
     ]
@@ -1141,10 +1177,6 @@ export function AppDataProvider({ children }) {
 
 export function useAppData() {
   const ctx = useContext(AppDataContext);
-
-  if (!ctx) {
-    throw new Error('useAppData must be used inside <AppDataProvider>');
-  }
-
+  if (!ctx) throw new Error('useAppData must be used inside <AppDataProvider>');
   return ctx;
 }

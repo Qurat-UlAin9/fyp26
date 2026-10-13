@@ -2,25 +2,39 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 
-export default function QuestionCard({ questionNumber, questionText }) {
-  const { isDark } = useTheme();
+export default function QuestionCard({
+  questionNumber,
+  totalQuestions = 18,
+  questionText,
+  kicker = 'SELF-CHECK',
+}) {
+  const { theme } = useTheme();
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.kicker, { color: isDark ? '#A5B4FC' : '#3730A3' }]}>ADHD Self-Check</Text>
-      <Text style={[styles.counter, { color: isDark ? '#CBD5E1' : '#475569' }]}>Question {questionNumber} of 18</Text>
-      <Text style={[styles.question, { color: isDark ? '#F8FAFC' : '#0F172A' }]}>{questionText}</Text>
+      <Text
+        style={[
+          styles.kicker,
+          { color: theme.accentGradient?.[0] || '#8B5CF6' },
+        ]}
+      >
+        {kicker}
+      </Text>
+      <Text style={[styles.counter, { color: theme.textSecondary }]}>
+        Question {questionNumber} of {totalQuestions}
+      </Text>
+      <Text style={[styles.question, { color: theme.text }]}>
+        {questionText}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 24,
-  },
+  container: { marginBottom: 24 },
   kicker: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 8,

@@ -4,11 +4,15 @@ import { Audio } from 'expo-av';
 
 const STORAGE_KEY = 'app_rewards_theme_state_v3';
 
+// Music tracks unlocked via Rewards. Keys are stable IDs referenced
+// from SOUND_PRESETS below.
 const SOUND_LIBRARY = {
-  rain: require('../../assets/sounds/rain.mp3'),
-  ocean: require('../../assets/sounds/ocean.mp3'),
-  forest: require('../../assets/sounds/forest.mp3'),
-  white: require('../../assets/sounds/analog-beats.mp3'),
+  lofi_study: require('../../assets/sounds/music/lofi_study.mp3'),
+  mozart_andante: require('../../assets/sounds/music/mozart_andante.mp3'),
+  classical_mountain: require('../../assets/sounds/music/classical_mountain.mp3'),
+  night_drift: require('../../assets/sounds/music/night_drift.mp3'),
+  amity_fall: require('../../assets/sounds/music/amity_fall.mp3'),
+  deep_focus_mountain: require('../../assets/sounds/music/deep_focus_mountain.mp3'),
 };
 
 const THEME_PRESETS = {
@@ -33,19 +37,87 @@ const THEME_PRESETS = {
     border: 'rgba(16,185,129,0.24)', glow: '#10B981', tabGradient: ['#D1FAE5', '#CFFAFE'],
     quoteImage: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1400&q=80',
   },
-  forestLight: { id: 'forestLight', name: 'Forest Light', mode: 'light', cost: 120, background: ['#eef9ee', '#f9f5eb', '#ffffff'], card: 'rgba(238, 248, 236, 0.7)', text: '#1f3d24', textSecondary: '#3f5c43', accentGradient: ['#84cc16', '#22c55e'], border: 'rgba(74, 124, 89, 0.2)', glow: '#65a30d', tabGradient: ['#eff9ef', '#f8f3e7'], quoteImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=80' },
-  galaxyDark: { id: 'galaxyDark', name: 'Galaxy Dark', mode: 'dark', cost: 140, background: ['#120026', '#1d0f45', '#08112f'], card: 'rgba(18, 22, 54, 0.58)', text: '#f8fafc', textSecondary: '#c4b5fd', accentGradient: ['#6366f1', '#22d3ee'], border: 'rgba(129,140,248,0.3)', glow: '#60a5fa', tabGradient: ['#11183b', '#1a1352'], quoteImage: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1400&q=80' },
-  midnightDark: { id: 'midnightDark', name: 'Midnight Dark', mode: 'dark', cost: 150, background: ['#050505', '#111827', '#1f2937'], card: 'rgba(23, 23, 23, 0.75)', text: '#f8fafc', textSecondary: '#d1d5db', accentGradient: ['#a16207', '#facc15'], border: 'rgba(250,204,21,0.22)', glow: '#fcd34d', tabGradient: ['#0f0f10', '#1f2932'], quoteImage: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80' },
+  forestLight: {
+    id: 'forestLight', name: 'Forest Light', mode: 'light', cost: 120,
+    background: ['#eef9ee', '#f9f5eb', '#ffffff'], card: 'rgba(238, 248, 236, 0.7)',
+    text: '#1f3d24', textSecondary: '#3f5c43', accentGradient: ['#84cc16', '#22c55e'],
+    border: 'rgba(74, 124, 89, 0.2)', glow: '#65a30d', tabGradient: ['#eff9ef', '#f8f3e7'],
+    quoteImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=80',
+  },
+  galaxyDark: {
+    id: 'galaxyDark', name: 'Galaxy Dark', mode: 'dark', cost: 140,
+    background: ['#120026', '#1d0f45', '#08112f'], card: 'rgba(18, 22, 54, 0.58)',
+    text: '#f8fafc', textSecondary: '#c4b5fd', accentGradient: ['#6366f1', '#22d3ee'],
+    border: 'rgba(129,140,248,0.3)', glow: '#60a5fa', tabGradient: ['#11183b', '#1a1352'],
+    quoteImage: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1400&q=80',
+  },
+  midnightDark: {
+    id: 'midnightDark', name: 'Midnight Dark', mode: 'dark', cost: 150,
+    background: ['#050505', '#111827', '#1f2937'], card: 'rgba(23, 23, 23, 0.75)',
+    text: '#f8fafc', textSecondary: '#d1d5db', accentGradient: ['#a16207', '#facc15'],
+    border: 'rgba(250,204,21,0.22)', glow: '#fcd34d', tabGradient: ['#0f0f10', '#1f2932'],
+    quoteImage: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80',
+  },
 };
 
 const TITLES = [
-  { id: 'focus-beginner', name: 'Focus Beginner', icon: '🧠', condition: (s) => s.focusMinutes >= 30 },
-  { id: 'consistency-king', name: 'Consistency King', icon: '🔥', condition: (s) => s.habitStreak >= 7 },
-  { id: 'task-warrior', name: 'Task Warrior', icon: '⚔️', condition: (s) => s.tasksCompleted >= 10 },
-  { id: 'habit-master', name: 'Habit Master', icon: '🌱', condition: (s) => s.habitCompletions >= 20 },
-  { id: 'deep-work-legend', name: 'Deep Work Legend', icon: '🌌', condition: (s) => s.focusMinutes >= 300 },
+  { id: 'first-step', name: 'First Step', icon: '👣',
+    description: 'Complete your first task',
+    condition: (s) => s.tasksCompleted >= 1,
+    progress: (s) => s.tasksCompleted / 1 },
+  { id: 'task-warrior', name: 'Task Warrior', icon: '⚔️',
+    description: 'Complete 10 tasks',
+    condition: (s) => s.tasksCompleted >= 10,
+    progress: (s) => s.tasksCompleted / 10 },
+  { id: 'task-master', name: 'Task Master', icon: '✅',
+    description: 'Complete 50 tasks',
+    condition: (s) => s.tasksCompleted >= 50,
+    progress: (s) => s.tasksCompleted / 50 },
+  { id: 'centurion', name: 'Centurion', icon: '💯',
+    description: 'Complete 100 tasks',
+    condition: (s) => s.tasksCompleted >= 100,
+    progress: (s) => s.tasksCompleted / 100 },
+  { id: 'warming-up', name: 'Warming Up', icon: '🔥',
+    description: '3-day habit streak',
+    condition: (s) => s.habitStreak >= 3,
+    progress: (s) => s.habitStreak / 3 },
+  { id: 'consistency-king', name: 'Consistency King', icon: '⚡',
+    description: '7-day habit streak',
+    condition: (s) => s.habitStreak >= 7,
+    progress: (s) => s.habitStreak / 7 },
+  { id: 'habit-master', name: 'Habit Master', icon: '🌱',
+    description: '20 habit completions',
+    condition: (s) => s.habitCompletions >= 20,
+    progress: (s) => s.habitCompletions / 20 },
+  { id: 'unstoppable', name: 'Unstoppable', icon: '🏆',
+    description: '30-day habit streak',
+    condition: (s) => s.habitStreak >= 30,
+    progress: (s) => s.habitStreak / 30 },
+  { id: 'focus-beginner', name: 'Focus Beginner', icon: '🧠',
+    description: '30 minutes of focus',
+    condition: (s) => s.focusMinutes >= 30,
+    progress: (s) => s.focusMinutes / 30 },
+  { id: 'deep-work-legend', name: 'Deep Work', icon: '🌌',
+    description: '300 minutes of focus',
+    condition: (s) => s.focusMinutes >= 300,
+    progress: (s) => s.focusMinutes / 300 },
+  { id: 'monk-mode', name: 'Monk Mode', icon: '🧘',
+    description: '1000 minutes of focus',
+    condition: (s) => s.focusMinutes >= 1000,
+    progress: (s) => s.focusMinutes / 1000 },
 ];
-const SOUND_PRESETS = [{ id: 'rain', name: 'Rain', cost: 0 }, { id: 'ocean', name: 'Ocean Waves', cost: 50 }, { id: 'forest', name: 'Forest Ambience', cost: 50 }, { id: 'white', name: 'White Noise', cost: 75 }];
+
+// Music presets — replace the old ambient sounds.
+const SOUND_PRESETS = [
+  { id: 'lofi_study', name: 'Lofi Study', artist: 'Zephira Music', cost: 0, genre: 'Lo-fi' },
+  { id: 'classical_mountain', name: 'Classical Mountain', artist: 'The Mountain', cost: 40, genre: 'Classical' },
+  { id: 'night_drift', name: 'Night Drift', artist: 'Two Times', cost: 50, genre: 'Ambient' },
+  { id: 'amity_fall', name: 'Amity Fall', artist: 'Sonder House', cost: 60, genre: 'Ambient' },
+  { id: 'mozart_andante', name: 'Mozart — Andante', artist: 'Nesrality', cost: 80, genre: 'Classical' },
+  { id: 'deep_focus_mountain', name: 'Deep Focus', artist: 'The Mountain', cost: 100, genre: 'Ambient' },
+  { id: 'binaural_gamma_40hz', name: 'Binaural Gamma 40 Hz', artist: 'Pure Binaural', cost: 120, genre: 'Focus Tone' },
+];
+
 const ThemeContext = createContext(null);
 
 const defaultState = {
@@ -53,7 +125,8 @@ const defaultState = {
   selectedThemeId: 'vibrantLight',
   unlockedThemes: ['vibrantLight', 'sereneBlueDark', 'auroraLight'],
   selectedSoundId: null,
-  unlockedSounds: ['rain'],
+  unlockedSounds: ['lofi_study'],   // Lo-fi Study is free by default
+  featuredBadgeId: null,            // Badge shown on profile — locked by default
   stats: { tasksCompleted: 0, subtasksCompleted: 0, habitCompletions: 0, habitStreak: 0, focusMinutes: 0 },
 };
 
@@ -62,9 +135,17 @@ export const ThemeProvider = ({ children }) => {
   const [isSoundPlaying, setIsSoundPlaying] = useState(false);
   const soundRef = useRef(null);
 
-  useEffect(() => { AsyncStorage.getItem(STORAGE_KEY).then((raw) => raw && setState((p) => ({ ...p, ...JSON.parse(raw) }))).catch(() => undefined); }, []);
-  useEffect(() => { AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => undefined); }, [state]);
-  useEffect(() => () => { soundRef.current?.unloadAsync(); }, []);
+  useEffect(() => {
+    AsyncStorage.getItem(STORAGE_KEY)
+      .then((raw) => raw && setState((p) => ({ ...p, ...JSON.parse(raw) })))
+      .catch(() => undefined);
+  }, []);
+  useEffect(() => {
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => undefined);
+  }, [state]);
+  useEffect(() => () => {
+    soundRef.current?.unloadAsync();
+  }, []);
 
   const spendCoins = useCallback((amount) => {
     if (state.coins < amount) return false;
@@ -72,10 +153,11 @@ export const ThemeProvider = ({ children }) => {
     return true;
   }, [state.coins]);
 
-  const earnCoins = useCallback((amount) => amount && setState((prev) => ({ ...prev, coins: prev.coins + amount })), []);
+  const earnCoins = useCallback(
+    (amount) => amount && setState((prev) => ({ ...prev, coins: prev.coins + amount })),
+    []
+  );
 
-  // Deduct coins without going negative. Used when a user unchecks an
-  // already-completed item (subtask, task, habit).
   const loseCoins = useCallback((amount) => {
     if (!amount || amount <= 0) return;
     setState((prev) => ({ ...prev, coins: Math.max(0, prev.coins - amount) }));
@@ -90,7 +172,11 @@ export const ThemeProvider = ({ children }) => {
     return { ok: true };
   }, [spendCoins, state.unlockedThemes]);
 
-  const selectTheme = useCallback((id) => setState((prev) => (prev.unlockedThemes.includes(id) ? { ...prev, selectedThemeId: id } : prev)), []);
+  const selectTheme = useCallback(
+    (id) => setState((prev) => (prev.unlockedThemes.includes(id) ? { ...prev, selectedThemeId: id } : prev)),
+    []
+  );
+
   const unlockSound = useCallback((id) => {
     if (state.unlockedSounds.includes(id)) return { ok: true };
     const preset = SOUND_PRESETS.find((item) => item.id === id);
@@ -99,29 +185,45 @@ export const ThemeProvider = ({ children }) => {
     setState((prev) => ({ ...prev, unlockedSounds: [...prev.unlockedSounds, id] }));
     return { ok: true };
   }, [spendCoins, state.unlockedSounds]);
-  const selectSound = useCallback((id) => setState((prev) => (prev.unlockedSounds.includes(id) ? { ...prev, selectedSoundId: id } : prev)), []);
+
+  const selectSound = useCallback(
+    (id) => setState((prev) => (prev.unlockedSounds.includes(id) ? { ...prev, selectedSoundId: id } : prev)),
+    []
+  );
 
   const toggleSoundPlayback = useCallback(async () => {
     if (!state.selectedSoundId) return;
     try {
       if (!soundRef.current) {
-        const { sound } = await Audio.Sound.createAsync(SOUND_LIBRARY[state.selectedSoundId], { isLooping: true, shouldPlay: true, volume: 0.5 });
+        const { sound } = await Audio.Sound.createAsync(SOUND_LIBRARY[state.selectedSoundId], {
+          isLooping: true,
+          shouldPlay: true,
+          volume: 0.5,
+        });
         soundRef.current = sound;
         setIsSoundPlaying(true);
         return;
       }
-      if (isSoundPlaying) await soundRef.current.pauseAsync(); else await soundRef.current.playAsync();
+      if (isSoundPlaying) await soundRef.current.pauseAsync();
+      else await soundRef.current.playAsync();
       setIsSoundPlaying((prev) => !prev);
     } catch {
       setIsSoundPlaying(false);
     }
   }, [isSoundPlaying, state.selectedSoundId]);
 
-  useEffect(() => { const swap = async () => { if (!soundRef.current) return; await soundRef.current.stopAsync(); await soundRef.current.unloadAsync(); soundRef.current = null; setIsSoundPlaying(false); }; swap(); }, [state.selectedSoundId]);
+  useEffect(() => {
+    const swap = async () => {
+      if (!soundRef.current) return;
+      await soundRef.current.stopAsync();
+      await soundRef.current.unloadAsync();
+      soundRef.current = null;
+      setIsSoundPlaying(false);
+    };
+    swap();
+  }, [state.selectedSoundId]);
 
-  // ---------------------------------------------------------
-  // STAT REGISTRATION — each register has a matching unregister
-  // ---------------------------------------------------------
+  // ------ STAT REGISTRATION ------
 
   const registerTaskCompletion = useCallback(() => {
     earnCoins(5);
@@ -135,10 +237,7 @@ export const ThemeProvider = ({ children }) => {
     loseCoins(5);
     setState((prev) => ({
       ...prev,
-      stats: {
-        ...prev.stats,
-        tasksCompleted: Math.max(0, prev.stats.tasksCompleted - 1),
-      },
+      stats: { ...prev.stats, tasksCompleted: Math.max(0, prev.stats.tasksCompleted - 1) },
     }));
   }, [loseCoins]);
 
@@ -154,10 +253,7 @@ export const ThemeProvider = ({ children }) => {
     loseCoins(1);
     setState((prev) => ({
       ...prev,
-      stats: {
-        ...prev.stats,
-        subtasksCompleted: Math.max(0, prev.stats.subtasksCompleted - 1),
-      },
+      stats: { ...prev.stats, subtasksCompleted: Math.max(0, prev.stats.subtasksCompleted - 1) },
     }));
   }, [loseCoins]);
 
@@ -185,37 +281,81 @@ export const ThemeProvider = ({ children }) => {
     }));
   }, [loseCoins]);
 
-  const addFocusMinutes = useCallback((minutes) => minutes && setState((prev) => ({ ...prev, stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes } })), []);
+  const addFocusMinutes = useCallback(
+    (minutes) => minutes && setState((prev) => ({
+      ...prev,
+      stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes },
+    })),
+    []
+  );
+
   const resetThemeData = useCallback(() => setState(defaultState), []);
 
-  const titles = useMemo(() => TITLES.map((item) => ({ ...item, unlocked: item.condition(state.stats) })), [state.stats]);
+  // Featured badge: only settable if unlocked
+  const setFeaturedBadge = useCallback((badgeId) => {
+    setState((prev) => ({ ...prev, featuredBadgeId: badgeId || null }));
+  }, []);
+
+  const titles = useMemo(
+    () =>
+      TITLES.map((item) => {
+        const unlocked = item.condition(state.stats);
+        const raw = item.progress ? item.progress(state.stats) : (unlocked ? 1 : 0);
+        return {
+          ...item,
+          unlocked,
+          progress: Math.max(0, Math.min(1, raw)),
+        };
+      }),
+    [state.stats]
+  );
+
   const theme = THEME_PRESETS[state.selectedThemeId] || THEME_PRESETS.vibrantLight;
 
-  const value = useMemo(() => ({
-    theme, colors: theme, isDark: theme.mode === 'dark', themes: Object.values(THEME_PRESETS),
-    titles, sounds: SOUND_PRESETS, coins: state.coins, stats: state.stats,
-    unlockedThemes: state.unlockedThemes, selectedThemeId: state.selectedThemeId, unlockTheme, selectTheme,
-    unlockedSounds: state.unlockedSounds, selectedSoundId: state.selectedSoundId, unlockSound, selectSound,
-    toggleSoundPlayback, isSoundPlaying,
-    registerTaskCompletion,
-    unregisterTaskCompletion,
-    registerSubtaskCompletion,
-    unregisterSubtaskCompletion,
-    registerHabitCompletion,
-    unregisterHabitCompletion,
-    addFocusMinutes,
-    earnCoins,
-    loseCoins,
-    resetThemeData,
-  }), [
-    theme, titles, state,
-    unlockTheme, selectTheme, unlockSound, selectSound,
-    toggleSoundPlayback, isSoundPlaying,
-    registerTaskCompletion, unregisterTaskCompletion,
-    registerSubtaskCompletion, unregisterSubtaskCompletion,
-    registerHabitCompletion, unregisterHabitCompletion,
-    addFocusMinutes, earnCoins, loseCoins, resetThemeData,
-  ]);
+  const value = useMemo(
+    () => ({
+      theme,
+      colors: theme,
+      isDark: theme.mode === 'dark',
+      themes: Object.values(THEME_PRESETS),
+      titles,
+      sounds: SOUND_PRESETS,
+      coins: state.coins,
+      stats: state.stats,
+      unlockedThemes: state.unlockedThemes,
+      selectedThemeId: state.selectedThemeId,
+      unlockTheme,
+      selectTheme,
+      unlockedSounds: state.unlockedSounds,
+      selectedSoundId: state.selectedSoundId,
+      unlockSound,
+      selectSound,
+      toggleSoundPlayback,
+      isSoundPlaying,
+      featuredBadgeId: state.featuredBadgeId,
+      setFeaturedBadge,
+      registerTaskCompletion,
+      unregisterTaskCompletion,
+      registerSubtaskCompletion,
+      unregisterSubtaskCompletion,
+      registerHabitCompletion,
+      unregisterHabitCompletion,
+      addFocusMinutes,
+      earnCoins,
+      loseCoins,
+      resetThemeData,
+    }),
+    [
+      theme, titles, state,
+      unlockTheme, selectTheme, unlockSound, selectSound,
+      toggleSoundPlayback, isSoundPlaying,
+      setFeaturedBadge,
+      registerTaskCompletion, unregisterTaskCompletion,
+      registerSubtaskCompletion, unregisterSubtaskCompletion,
+      registerHabitCompletion, unregisterHabitCompletion,
+      addFocusMinutes, earnCoins, loseCoins, resetThemeData,
+    ]
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

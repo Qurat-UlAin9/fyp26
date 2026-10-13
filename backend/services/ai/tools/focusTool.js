@@ -1,55 +1,51 @@
 // backend/services/ai/tools/focusTool.js
 //
-// IMPORTANT ASSUMPTION: the actual timer/countdown lives entirely on the
-// frontend (TimerRing.js, ControlButtons.js). This tool cannot "start" a
-// timer server-side -- it creates a `focus_sessions` row with status
-// 'planned' (matching focusSessionToApiPayload() shape from
-// AppDataContext.js). Your frontend needs a small addition to actually act
-// on this: e.g. FocusScreen.js polling/subscribing for a new 'planned'
-// session belonging to the user and offering to start it. Tell me if you
-// want that wiring built too -- it's a frontend change, not a tool change.
+// The tool does NOT write to focus_sessions. It returns a signal that the
+// frontend reads from `toolCalls` and turns into an action chip in the chat.
+// FocusScreen remains the single owner of focus_sessions rows.
 
 const { tool } = require('@langchain/core/tools');
 const { z } = require('zod');
-const { supabaseAdmin } = require('../../../config/supabase');
 
-const suggestFocusSession = tool(
-  async ({ planned_minutes, session_type, reason }, config) => {
+const startFocusSession = tool(
+  async ({ planned_minutes, task_title, session_type, reason }, config) => {
     const userId = config?.configurable?.userId;
     if (!userId) return 'Error: no authenticated user in context.';
 
-    const { data, error } = await supabaseAdmin
-      .from('focus_sessions')
-      .insert({
-        user_id: userId,
-        session_name: 'Focus Session',
-        session_type: session_type || 'Focus',
-        planned_minutes: planned_minutes || 25,
-        status: 'Pending',
-      })
-      .select()
-      .single();
+    const minutes = planned_minutes || 25;
+    const typePart =
+      session_type && session_type !== 'Focus' ? ` (${session_type})` : '';
+    const taskPart = task_title ? ` on "${task_title}"` : '';
 
-    if (error) return `Error creating focus session suggestion: ${error.message}`;
     return (
-      `Suggested a ${data.planned_minutes}-minute ${data.session_type} session (id: ${data.id}).` +
-      (reason ? ` Reason: ${reason}` : '') +
-      ' Tell the user to open the Focus tab to start it.'
+      `Ready to start a ${minutes}-minute focus session${taskPart}${typePart}. ` +
+      `The app will show a Start button below this message.` +
+      (reason ? ` Reason: ${reason}` : '')
     );
   },
   {
-    name: 'suggest_focus_session',
+    name: 'start_focus_session',
     description:
-      'Suggest the user start a focus session with a specific duration and type. Use this when ' +
-      'the user says they need to concentrate, are struggling to start a task, or ask for help ' +
-      'focusing. This does NOT start a live timer -- it just queues a suggestion the user opens ' +
-      'in the Focus tab.',
+      'Prepare a focus session for the user. Use when the user says they want to focus, ' +
+      'start a timer, do deep work, or asks for help concentrating. Include task_title if ' +
+      'they mention a specific task; otherwise omit it for a general session. The timer ' +
+      'runs on-device -- this just configures and offers to start it.',
     schema: z.object({
-      planned_minutes: z.number().optional().describe('Session length in minutes, e.g. 25 for a standard pomodoro'),
+      planned_minutes: z
+        .number()
+        .optional()
+        .describe('Session length in minutes. Default 25 if unspecified.'),
+      task_title: z
+        .string()
+        .optional()
+        .describe(
+          'Exact or partial title of the task to focus on. Only set if the user ' +
+          'named a specific task, e.g. "start a 15 minute focus on the report".'
+        ),
       session_type: z.enum(['Focus', 'Deep Work', 'Study']).optional(),
-      reason: z.string().optional().describe('Why you suggested this, e.g. "user has a 6pm assignment deadline"'),
+      reason: z.string().optional(),
     }),
   }
 );
 
-module.exports = { suggestFocusSession };
+module.exports = { startFocusSession };

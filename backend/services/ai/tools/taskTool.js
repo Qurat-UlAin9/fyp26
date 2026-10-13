@@ -1,11 +1,13 @@
 // backend/services/ai/tools/taskTool.js
-//
-// Column names match Migration 05 (tasks).
-// Subtasks and theme live in `metadata` (JSONB) to match frontend shape.
 
 const { tool } = require('@langchain/core/tools');
 const { z } = require('zod');
 const { supabaseAdmin } = require('../../../config/supabase');
+const { generateSubtasks } = require('../subtaskGenerator');
+const {
+  scheduleSubtasks,
+  computePreferredWorkHour,
+} = require('../subtaskScheduler');
 
 const COLOR_ENUM = ['coral', 'sky', 'mint', 'lavender', 'teal'];
 
@@ -32,13 +34,39 @@ const createTask = tool(
     const userId = config?.configurable?.userId;
     if (!userId) return 'Error: no authenticated user in context.';
 
+    if (!due_date) {
+      return (
+        'Error: due_date is required. Ask the user when this needs to be done ' +
+        'before creating the task.'
+      );
+    }
+
     const metadata = {};
 
-    if (Array.isArray(subtasks) && subtasks.length > 0) {
-      metadata.subtasks = subtasks.map((s, i) => ({
+    // Determine subtask titles (from AI, or auto-generate if not provided)
+    let titles = Array.isArray(subtasks)
+      ? subtasks.map((s) => (typeof s === 'string' ? s : String(s.title || s)))
+      : [];
+
+    if (titles.length === 0) {
+      titles = await generateSubtasks(title, { category, subject });
+    }
+
+    // Schedule
+    let scheduled = [];
+    if (titles.length > 0) {
+      const preferredHour = await computePreferredWorkHour(userId);
+      scheduled = scheduleSubtasks(titles, due_date, { preferredHour });
+    }
+
+    if (scheduled.length > 0) {
+      metadata.subtasks = scheduled.map((s, i) => ({
         id: `${Date.now()}-${i}`,
-        title: typeof s === 'string' ? s : String(s.title || s),
-        done: typeof s === 'string' ? false : Boolean(s.done),
+        title: s.title,
+        done: false,
+        scheduledDate: s.scheduledDate,
+        scheduledHour: s.scheduledHour,
+        durationMins: s.durationMins,
       }));
     }
 
@@ -55,7 +83,7 @@ const createTask = tool(
         status: 'Pending',
         priority: priority || 'Medium',
         difficulty: difficulty || 'Medium',
-        due_date: due_date || null,
+        due_date,
         estimated_minutes: estimated_minutes || null,
         created_by_ai: true,
         created_source: 'AI',
@@ -67,22 +95,27 @@ const createTask = tool(
 
     if (error) return `Error creating task: ${error.message}`;
 
-    const subNote =
+    const subNote = metadata.subtasks?.length
+      ? ` with ${metadata.subtasks.length} scheduled subtask(s)`
+      : '';
+
+    const scheduleNote =
       metadata.subtasks?.length
-        ? ` with ${metadata.subtasks.length} subtask(s)`
+        ? ` Steps spread across the days leading to ${due_date}.`
         : '';
-    return `Created task "${data.title}"${subNote} (id: ${data.id}).`;
+
+    return `Created task "${data.title}"${subNote} (id: ${data.id}, due ${due_date}).${scheduleNote}`;
   },
   {
     name: 'create_task',
     description:
-      'Create a new task for the user. Use when the user asks you to remind them to do ' +
-      'something, break a bigger goal into concrete actions, or when you decide a task is ' +
-      'the right way to help. You CAN provide subtasks in the same call -- use this instead ' +
-      'of creating multiple sibling tasks. You CAN set a category (academic/work/health/home/' +
-      'social/finance/creative/personal) and a short subject string to give the task more ' +
-      'context. You CAN set a color (coral/sky/mint/lavender/teal) if the user has expressed ' +
-      'a preference or to make the task visually distinct.',
+      'Create a new task. due_date is REQUIRED -- if the user has not told you ' +
+      'when it needs to be done, ask them BEFORE calling this tool. Subtasks ' +
+      'are automatically scheduled across the days between now and the deadline ' +
+      'so the user works on the goal in small pieces. Do NOT schedule subtasks ' +
+      'yourself; just provide titles and the system spreads them. You can set a ' +
+      'category (academic/work/health/home/social/finance/creative/personal) and ' +
+      'a short subject string. You can set a color (coral/sky/mint/lavender/teal).',
     schema: z.object({
       title: z.string().describe('Short, action-oriented task title'),
       description: z.string().optional(),
@@ -90,8 +123,7 @@ const createTask = tool(
         .array(z.string())
         .optional()
         .describe(
-          'If this is a bigger goal, provide 2-5 concrete steps as separate strings. ' +
-          'They become checkable subtasks under this ONE task.'
+          'Optional 2-5 concrete steps. If omitted, the system generates them.'
         ),
       category: z
         .enum([
@@ -104,32 +136,19 @@ const createTask = tool(
           'creative',
           'personal',
         ])
-        .optional()
-        .describe(
-          'Domain this task belongs to. Infer from the user\'s message when ' +
-          'clear; omit if ambiguous. Not a category label to show the user -- ' +
-          'just helps group and adapt.'
-        ),
-      subject: z
-        .string()
-        .optional()
-        .describe(
-          'Specific focus within the category, e.g. "Neural networks survey", ' +
-          '"presentation to client", "chapter 5 problems". Only set if the ' +
-          'user gave a specific subject; do not invent one.'
-        ),
-      color: z
-        .enum(COLOR_ENUM)
-        .optional()
-        .describe('Card color; only set if the user asked for a specific one or has a stated preference'),
+        .optional(),
+      subject: z.string().optional(),
+      color: z.enum(COLOR_ENUM).optional(),
       priority: z.enum(['Low', 'Medium', 'High']).optional(),
       difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional(),
       due_date: z
         .string()
-        .optional()
-        .describe('ISO date string, e.g. "2026-10-12", if the user gave a deadline'),
+        .describe(
+          'REQUIRED. ISO date (YYYY-MM-DD). If the user has not provided one, ' +
+          'do not call this tool -- reply asking when the task is due.'
+        ),
       estimated_minutes: z.number().optional(),
-      reason: z.string().optional().describe('One sentence: why you created this task'),
+      reason: z.string().optional(),
     }),
   }
 );
@@ -159,7 +178,6 @@ const updateTask = tool(
     const userId = config?.configurable?.userId;
     if (!userId) return 'Error: no authenticated user in context.';
 
-    // Fetch existing row to merge metadata correctly
     const { data: existing, error: fetchError } = await supabaseAdmin
       .from('tasks')
       .select('*')
@@ -171,7 +189,6 @@ const updateTask = tool(
     if (!existing) return `Error: task ${task_id} not found for this user.`;
 
     const patch = {};
-
     if (title !== undefined) patch.title = title;
     if (description !== undefined) patch.description = description;
     if (status !== undefined) patch.status = status;
@@ -184,18 +201,35 @@ const updateTask = tool(
 
     const metadata = { ...(existing.metadata || {}) };
 
-    if (Array.isArray(subtasks)) {
-      // Preserve done-state for matching titles where possible
-      const prior = Array.isArray(metadata.subtasks) ? metadata.subtasks : [];
-      metadata.subtasks = subtasks.map((s, i) => {
-        const title = typeof s === 'string' ? s : String(s.title || s);
-        const match = prior.find((p) => p.title === title);
-        return {
-          id: match?.id || `${task_id}-sub-${i}-${Date.now()}`,
-          title,
-          done: match?.done || false,
-        };
-      });
+    // If new subtasks provided OR title changed and we have a deadline,
+    // re-schedule.
+    const shouldRegenSubtasks =
+      Array.isArray(subtasks) && subtasks.length > 0;
+
+    if (shouldRegenSubtasks) {
+      const effectiveDeadline = due_date || existing.due_date;
+      if (effectiveDeadline) {
+        const preferredHour = await computePreferredWorkHour(userId);
+        const scheduled = scheduleSubtasks(subtasks, effectiveDeadline, {
+          preferredHour,
+        });
+
+        const prior = Array.isArray(metadata.subtasks)
+          ? metadata.subtasks
+          : [];
+
+        metadata.subtasks = scheduled.map((s, i) => {
+          const match = prior.find((p) => p.title === s.title);
+          return {
+            id: match?.id || `${task_id}-sub-${i}-${Date.now()}`,
+            title: s.title,
+            done: match?.done || false,
+            scheduledDate: s.scheduledDate,
+            scheduledHour: s.scheduledHour,
+            durationMins: s.durationMins,
+          };
+        });
+      }
     }
 
     if (color !== undefined) metadata.themeId = color;
@@ -222,19 +256,14 @@ const updateTask = tool(
   {
     name: 'update_task',
     description:
-      'Modify an existing task. Use this when the user wants to change a task\'s title, add ' +
-      'or replace its subtasks, change its color/priority/status, or set a due date. ' +
-      'IMPORTANT: prefer this over creating a new sibling task. If the user says "break down ' +
-      'the task I just made into steps", call update_task with subtasks=[...] on the existing ' +
-      'task_id, NOT create_task again.',
+      'Modify an existing task. Use this when the user wants to change a title, ' +
+      'add/replace subtasks, change color/priority/status, or set a due date. ' +
+      'Prefer this over creating a sibling task.',
     schema: z.object({
-      task_id: z.string().describe('The UUID of the task to update'),
+      task_id: z.string(),
       title: z.string().optional(),
       description: z.string().optional(),
-      subtasks: z
-        .array(z.string())
-        .optional()
-        .describe('Replaces the task\'s subtask list. Preserves done-state for matching titles.'),
+      subtasks: z.array(z.string()).optional(),
       category: z
         .enum([
           'academic',
@@ -249,7 +278,9 @@ const updateTask = tool(
         .optional(),
       subject: z.string().optional(),
       color: z.enum(COLOR_ENUM).optional(),
-      status: z.enum(['Pending', 'In Progress', 'Paused', 'Completed', 'Cancelled']).optional(),
+      status: z
+        .enum(['Pending', 'In Progress', 'Paused', 'Completed', 'Cancelled'])
+        .optional(),
       priority: z.enum(['Low', 'Medium', 'High', 'Critical']).optional(),
       difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional(),
       due_date: z.string().optional(),
@@ -283,10 +314,8 @@ const deleteTask = tool(
   {
     name: 'delete_task',
     description:
-      'Delete a task permanently. Only use when the user explicitly asks to delete or remove a task.',
-    schema: z.object({
-      task_id: z.string().describe('The UUID of the task to delete'),
-    }),
+      'Delete a task permanently. Only use when the user explicitly asks.',
+    schema: z.object({ task_id: z.string() }),
   }
 );
 
@@ -308,13 +337,16 @@ const listOpenTasks = tool(
       .limit(15);
 
     if (error) return `Error listing tasks: ${error.message}`;
-    if (!data || data.length === 0) return 'The user has no open tasks right now.';
+    if (!data || data.length === 0)
+      return 'The user has no open tasks right now.';
 
     return data
       .map((t) => {
         const subs = t.metadata?.subtasks || [];
         const done = subs.filter((s) => s.done).length;
-        const subInfo = subs.length ? ` [${done}/${subs.length} subtasks]` : '';
+        const subInfo = subs.length
+          ? ` [${done}/${subs.length} subtasks]`
+          : '';
         const due = t.due_date
           ? ` (due ${String(t.due_date).slice(0, 10)})`
           : '';
@@ -325,9 +357,8 @@ const listOpenTasks = tool(
   {
     name: 'list_open_tasks',
     description:
-      'List the user\'s open (non-completed) tasks, with their UUIDs and current subtask ' +
-      'progress. Use this before calling update_task or delete_task so you have the right ' +
-      'task_id, or when the user asks what they need to do.',
+      'List open tasks with UUIDs and subtask progress. Use before update_task ' +
+      'or delete_task, or when the user asks what to do next.',
     schema: z.object({}),
   }
 );

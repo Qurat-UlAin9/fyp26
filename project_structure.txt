@@ -95,6 +95,7 @@ fyp26/
 │   │   ├── habits.js
 │   │   ├── health.js
 │   │   ├── knowledge.js
+│   │   ├── moodLogs.js
 │   │   ├── notifications.js
 │   │   ├── profiles.js
 │   │   ├── statistics.js
@@ -124,7 +125,8 @@ fyp26/
 │   │       │   └── taskTool.js
 │   │       ├── agent.js
 │   │       ├── llmClient.js
-│   │       └── promptBuilder.js
+│   │       ├── promptBuilder.js
+│   │       └── subtaskGenerator.js
 │   ├── tests/
 │   │   ├── conftest.py
 │   │   ├── test_auth.py
@@ -138,6 +140,7 @@ fyp26/
 │   ├── requirements.txt
 │   ├── schema.sql
 │   ├── server.js
+│   ├── smoke_test_tools.js
 │   ├── test_sample.py
 │   └── train_model.py
 ├── rag/
@@ -270,6 +273,7 @@ fyp26/
 │   │   │   ├── MindfulGrowthScreen.js
 │   │   │   ├── NBackGame.js
 │   │   │   ├── PatternRecallGame.js
+│   │   │   ├── RabbitHunterScreen.js
 │   │   │   ├── SoundscapesScreen.js
 │   │   │   ├── SplashSession.js
 │   │   │   └── StroopGame.js
@@ -281,6 +285,7 @@ fyp26/
 │   │   │   └── HabitsScreen.js
 │   │   ├── Home/
 │   │   │   ├── HomeScreen.js
+│   │   │   ├── MoodCheckInCard.js
 │   │   │   ├── ProfileScreen.js
 │   │   │   └── SettingsScreen.js
 │   │   ├── Profile/
@@ -307,9 +312,13 @@ fyp26/
 │   ├── theme/
 │   │   └── colors.js
 │   ├── utils/
+│   │   ├── alert.js
+│   │   ├── backgroundCheck.js
 │   │   ├── challengeNav.js
 │   │   ├── formatTime.js
+│   │   ├── notificationSetup.js
 │   │   ├── reminders.js
+│   │   ├── toastConfig.js
 │   │   └── userDisplay.js
 │   └── SplashScreen.js
 ├── .gitignore

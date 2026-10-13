@@ -459,6 +459,29 @@ export async function getExercises() {
 }
 
 /* =========================================================
+   MOOD LOGS
+========================================================= */
+
+export async function createMoodLog({ mood, note, source, context }) {
+  return request('/api/mood-logs', {
+    method: 'POST',
+    body: JSON.stringify({ mood, note, source, context }),
+  });
+}
+
+export async function getMoodLogs({ days = 30, limit = 200 } = {}) {
+  return request(`/api/mood-logs?days=${days}&limit=${limit}`);
+}
+
+export async function getMoodSummary(days = 30) {
+  return request(`/api/mood-logs/summary?days=${days}`);
+}
+
+export async function deleteMoodLog(id) {
+  return request(`/api/mood-logs/${id}`, { method: 'DELETE' });
+}
+
+/* =========================================================
    KNOWLEDGE / RAG
 ========================================================= */
 
@@ -531,13 +554,14 @@ export async function sendChatMessage(conversationId, message) {
   });
 }
 
-export async function suggestSubtasks(title, { category, subject } = {}) {
+export async function suggestSubtasks(title, { category, subject, deadline } = {}) {
   return request('/api/ai/suggest-subtasks', {
     method: 'POST',
     body: JSON.stringify({
       title,
       category: category || null,
       subject: subject || null,
+      deadline: deadline || null,
     }),
   });
 }
