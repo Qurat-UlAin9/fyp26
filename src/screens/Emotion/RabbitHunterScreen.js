@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../../contexts/ThemeContext';
+import { coinsForGameScore } from '../../utils/gameRewards';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -100,11 +101,14 @@ function HunterHand({ color }) {
 // ------------------------------------------------------------------
 
 export default function RabbitHunterScreen({ navigation }) {
-  const { theme } = useTheme();
+  const { theme, earnCoins } = useTheme();
   const [running, setRunning] = useState(false);
   const [cycle, setCycle] = useState(0);
   const [scienceOpen, setScienceOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const cycleRef = useRef(0);
+  const rewardedRef = useRef(false);
+  const swapTimeoutRef = useRef(null);
 
   // swap = false → left = rabbit, right = hunter
   // swap = true  → left = hunter, right = rabbit
@@ -118,7 +122,7 @@ export default function RabbitHunterScreen({ navigation }) {
   useEffect(() => {
     if (!running) return undefined;
 
-    const runCycle = async () => {
+    const runCycle = () => {
       // Hunter recoil
       hunterRecoil.value = withSequence(
         withTiming(-14, { duration: 180, easing: Easing.out(Easing.quad) }),
@@ -132,7 +136,7 @@ export default function RabbitHunterScreen({ navigation }) {
       );
 
       // Swap roles after a beat
-      setTimeout(() => {
+      swapTimeoutRef.current = setTimeout(() => {
         swapFade.value = withSequence(
           withTiming(0.3, { duration: 120 }),
           withTiming(1, { duration: 220 })
@@ -141,46 +145,58 @@ export default function RabbitHunterScreen({ navigation }) {
       }, 550);
     };
 
-    let count = cycle;
-
     runCycle();
 
     const interval = setInterval(() => {
-      count += 1;
-      if (count >= TOTAL_CYCLES) {
+      const nextCycle = cycleRef.current + 1;
+      cycleRef.current = nextCycle;
+      setCycle(nextCycle);
+      if (nextCycle >= TOTAL_CYCLES) {
         clearInterval(interval);
         setRunning(false);
-        setCycle(TOTAL_CYCLES);
         setCompleted(true);
+        const score = nextCycle * 10;
+        const reward = coinsForGameScore(score);
+        if (!rewardedRef.current) {
+          rewardedRef.current = true;
+          earnCoins(reward);
+        }
         Toast.show({
           type: 'success',
-          text1: 'Exercise complete! 🎉',
-          text2: `${TOTAL_CYCLES} cycles · great coordination`,
+          text1: 'Exercise complete!',
+          text2: `${score} points · ${reward} coins earned`,
           visibilityTime: 3000,
         });
         return;
       }
-      setCycle(count);
       runCycle();
     }, CYCLE_MS);
 
-    return () => clearInterval(interval);
-  }, [running]);
+    return () => {
+      clearInterval(interval);
+      if (swapTimeoutRef.current) clearTimeout(swapTimeoutRef.current);
+    };
+  }, [running, earnCoins, hunterRecoil, rabbitBounce, swapFade]);
 
   const handleStart = () => {
     if (completed) {
+      cycleRef.current = 0;
       setCycle(0);
       setCompleted(false);
       setSwap(false);
+      rewardedRef.current = false;
     }
     setRunning(true);
   };
 
   const handleReset = () => {
     setRunning(false);
+    cycleRef.current = 0;
     setCycle(0);
     setSwap(false);
     setCompleted(false);
+    rewardedRef.current = false;
+    if (swapTimeoutRef.current) clearTimeout(swapTimeoutRef.current);
     hunterRecoil.value = 0;
     rabbitBounce.value = 0;
     swapFade.value = 1;
@@ -230,7 +246,7 @@ export default function RabbitHunterScreen({ navigation }) {
           />
         </View>
         <Text style={[styles.progressLabel, { color: theme.textSecondary }]}>
-          {cycle} / {TOTAL_CYCLES} cycles
+          {cycle} / {TOTAL_CYCLES} cycles · {cycle * 10} points
         </Text>
       </View>
 

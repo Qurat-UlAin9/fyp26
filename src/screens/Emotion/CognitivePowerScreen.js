@@ -20,7 +20,8 @@ const CARD_WIDTH = width * 0.4;
 
 const GAMES = [
   { id: 'nback', title: 'N-Back Challenge', icon: BrainCircuit, route: 'NBackGame' },
-  { id: 'memory', title: 'Memory Match', icon: Stars, route: 'PatternRecallGame' },
+  { id: 'memory', title: 'Pattern Recall', icon: Stars, route: 'PatternRecallGame' },
+  { id: 'rabbit', title: 'Rabbit & Hunter', icon: Stars, route: 'RabbitHunter' },
   { id: 'stroop', title: 'Stroop Challenge', icon: Palette, route: 'StroopGame' },
 ];
 

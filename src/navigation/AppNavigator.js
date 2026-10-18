@@ -25,6 +25,7 @@ import GroundingSession from '../screens/Emotion/GroundingSession';
 import HarmonicRipples from '../screens/Emotion/HarmonicRipples';
 import MeditationSession from '../screens/Emotion/MeditationSession';
 import NBackGame from '../screens/Emotion/NBackGame';
+import RabbitHunterScreen from '../screens/Emotion/RabbitHunterScreen';
 import StroopGame from '../screens/Emotion/StroopGame';
 import PatternRecallGame from '../screens/Emotion/PatternRecallGame';
 import SoundscapesScreen from '../screens/Emotion/SoundscapesScreen';
@@ -72,6 +73,7 @@ export default function AppNavigator() {
       <Stack.Screen name="MeditationSession" component={MeditationSession} options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="Soundscapes" component={SoundscapesScreen} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="NBackGame" component={NBackGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+      <Stack.Screen name="RabbitHunter" component={RabbitHunterScreen} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="StroopGame" component={StroopGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="PatternRecallGame" component={PatternRecallGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="TaskHistory" component={TaskHistoryScreen} options={{ headerShown: false }} />

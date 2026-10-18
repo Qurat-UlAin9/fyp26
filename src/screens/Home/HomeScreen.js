@@ -25,6 +25,7 @@ import {
   AlertCircle,
   RotateCcw,
   LogIn,
+  Wind,
 } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
@@ -492,6 +493,31 @@ export default function HomeScreen() {
         </View>
 
         <TouchableOpacity
+          accessibilityRole="button"
+          onPress={() => navigation.navigate('EmotionRegulation')}
+          activeOpacity={0.85}
+          style={styles.emotionRegulationButton}
+        >
+          <View
+            style={[
+              styles.emotionRegulationIcon,
+              { backgroundColor: `${theme.accentGradient[0]}20` },
+            ]}
+          >
+            <Wind color={theme.accentGradient[0]} size={20} />
+          </View>
+          <View style={styles.emotionRegulationText}>
+            <Text style={[styles.emotionRegulationTitle, { color: theme.text }]}>
+              Emotional Regulation
+            </Text>
+            <Text style={[styles.emotionRegulationSubtitle, { color: theme.textSecondary }]}>
+              Quick relief, mindfulness & cognitive games
+            </Text>
+          </View>
+          <ChevronRight color={theme.textSecondary} size={20} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => navigation.navigate('Chatbot')}
           activeOpacity={0.9}
         >
@@ -802,6 +828,27 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: '#FFFFFF',
   },
+  emotionRegulationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    marginBottom: 16,
+    borderRadius: 18,
+    backgroundColor: 'rgba(148,163,184,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(148,163,184,0.22)',
+  },
+  emotionRegulationIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emotionRegulationText: { flex: 1 },
+  emotionRegulationTitle: { fontSize: 15, fontWeight: '800' },
+  emotionRegulationSubtitle: { fontSize: 11, fontWeight: '500', marginTop: 3 },
 
   heroChatCard: {
     flexDirection: 'row',
