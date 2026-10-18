@@ -28,6 +28,7 @@ import NBackGame from '../screens/Emotion/NBackGame';
 import RabbitHunterScreen from '../screens/Emotion/RabbitHunterScreen';
 import StroopGame from '../screens/Emotion/StroopGame';
 import PatternRecallGame from '../screens/Emotion/PatternRecallGame';
+import TongueTwisterGame from '../screens/Emotion/TongueTwisterGame';
 import SoundscapesScreen from '../screens/Emotion/SoundscapesScreen';
 import TaskHistoryScreen from '../screens/Tasks/TaskHistoryScreen';
 import ThemedBackButton from '../components/common/ThemedBackButton';
@@ -76,6 +77,7 @@ export default function AppNavigator() {
       <Stack.Screen name="RabbitHunter" component={RabbitHunterScreen} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="StroopGame" component={StroopGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="PatternRecallGame" component={PatternRecallGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+      <Stack.Screen name="TongueTwisterGame" component={TongueTwisterGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="TaskHistory" component={TaskHistoryScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Chatbot" component={ChatbotScreen} options={{ title: 'AI Coach' }} />
       <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} options={{ headerShown: false }} />

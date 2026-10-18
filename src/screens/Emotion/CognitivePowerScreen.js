@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { BrainCircuit, ChevronLeft, Palette, Stars } from 'lucide-react-native';
+import { BrainCircuit, ChevronLeft, MessageCircle, Palette, Stars } from 'lucide-react-native';
 import Animated, {
   Easing,
   FadeInDown,
@@ -22,6 +22,7 @@ const GAMES = [
   { id: 'nback', title: 'N-Back Challenge', icon: BrainCircuit, route: 'NBackGame' },
   { id: 'memory', title: 'Pattern Recall', icon: Stars, route: 'PatternRecallGame' },
   { id: 'rabbit', title: 'Rabbit & Hunter', icon: Stars, route: 'RabbitHunter' },
+  { id: 'tongue-twister', title: 'Tongue Twisters', icon: MessageCircle, route: 'TongueTwisterGame' },
   { id: 'stroop', title: 'Stroop Challenge', icon: Palette, route: 'StroopGame' },
 ];
 
@@ -81,11 +82,15 @@ export default function CognitivePowerScreen({ navigation }) {
           <Text style={styles.title}>Cognitive Power</Text>
         </Animated.View>
 
-        <View style={styles.grid}>
+        <ScrollView
+          style={styles.gamesScroll}
+          contentContainerStyle={styles.grid}
+          showsVerticalScrollIndicator
+        >
           {GAMES.map((game, index) => (
             <PowerCard key={game.id} item={game} delay={50 + index * 70} onPress={() => navigation.navigate(game.route)} />
           ))}
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -94,6 +99,7 @@ export default function CognitivePowerScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   safeArea: { flex: 1, paddingTop: 14 },
+  gamesScroll: { flex: 1 },
   headerRow: { paddingHorizontal: 20, marginBottom: 8 },
   backButton: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 12 },
   backText: { color: '#F5F3FF', fontSize: 15 },
@@ -104,6 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     paddingTop: 12,
     rowGap: 14,
+    paddingBottom: 28,
   },
   cardWrap: {
     width: CARD_WIDTH,

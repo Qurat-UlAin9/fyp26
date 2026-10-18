@@ -510,7 +510,6 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
   },
-
   scienceCard: {
     marginHorizontal: 20,
     marginBottom: 30,
