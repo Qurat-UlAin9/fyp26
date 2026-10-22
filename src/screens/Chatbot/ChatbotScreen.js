@@ -15,6 +15,46 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { sendChatMessage } from '../../services/api';
 
+// Lightweight Markdown parser for bold, italics, and bullets
+function MarkdownText({ text, style }) {
+  if (!text) return null;
+  
+  const lines = text.split('\n');
+
+  return (
+    <View>
+      {lines.map((line, i) => {
+        if (!line.trim()) return <View key={i} style={{ height: 8 }} />;
+
+        const isBullet = line.trim().startsWith('* ') || line.trim().startsWith('- ');
+        let cleanLine = isBullet ? line.trim().substring(2) : line;
+
+        // Parse bold (**text**)
+        const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
+        const renderedParts = parts.map((part, j) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            return (
+              <Text key={j} style={{ fontWeight: 'bold' }}>
+                {part.slice(2, -2)}
+              </Text>
+            );
+          }
+          return <Text key={j}>{part}</Text>;
+        });
+
+        return (
+          <View key={i} style={{ flexDirection: 'row', marginBottom: 6 }}>
+            {isBullet && <Text style={style}>• </Text>}
+            <Text style={[style, { flex: 1, lineHeight: 22 }]}>
+              {renderedParts}
+            </Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+}
+
 export default function ChatbotScreen({ route }) {
   const { theme, isDark } = useTheme();
   const { profile, refreshData } = useAppData();
@@ -65,7 +105,6 @@ export default function ChatbotScreen({ route }) {
 
       if (!conversationId) setConversationId(returnedId);
 
-      // Extract focus action if the AI called start_focus_session
       let focusAction = null;
       if (Array.isArray(toolCalls)) {
         const focusCall = toolCalls.find(
@@ -133,14 +172,16 @@ export default function ChatbotScreen({ route }) {
                   ],
             ]}
           >
-            <Text
-              style={{
-                color: item.role === 'user' ? '#FFFFFF' : theme.text,
-                fontSize: 14,
-              }}
-            >
-              {item.text}
-            </Text>
+            {item.role === 'user' ? (
+              <Text style={{ color: '#FFFFFF', fontSize: 14 }}>
+                {item.text}
+              </Text>
+            ) : (
+              <MarkdownText
+                text={item.text}
+                style={{ color: theme.text, fontSize: 14 }}
+              />
+            )}
 
             {item.focusAction && (
               <TouchableOpacity

@@ -15,6 +15,8 @@ const { suggestEmotionExercise } = require('./emotionTool');
 const { suggestExercise } = require('./exerciseTool');
 const { searchKnowledgeBase } = require('./knowledgeTool');
 const { rememberAboutUser } = require('./memoryTool');
+
+// Import the plain async functions (not the tools) for context injection
 const { fetchADHDScreening, fetchEFSummary } = require('./assessmentTool');
 
 const BASE_SYSTEM_PROMPT = `You are the Main ADHD Agent inside an ADHD support app.
