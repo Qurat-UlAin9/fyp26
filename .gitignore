@@ -54,3 +54,4 @@ rag/.env.example
 
 generate_structure.py
 setupStructure.js
+rag/scripts/clean_pinecone_orphans.py

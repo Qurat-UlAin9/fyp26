@@ -16,6 +16,13 @@ fyp26/
 │   │   │   ├── guzheng-soundtrack-cinematic-fantasy-_-ancient-asia-film-score-7-471790.mp3
 │   │   │   ├── pojeng-epic-happy-love-guzheng-412659.mp3
 │   │   │   └── vprodmusic_asia_bgm-mystical-guzheng-journey-143598.mp3
+│   │   ├── music/
+│   │   │   ├── amity_fall.mp3
+│   │   │   ├── classical_mountain.mp3
+│   │   │   ├── deep_focus_mountain.mp3
+│   │   │   ├── lofi_study.mp3
+│   │   │   ├── mozart_andante.mp3
+│   │   │   └── night_drift.mp3
 │   │   ├── Notes/
 │   │   │   ├── Ripple1.mp3
 │   │   │   ├── Ripple2.mp3
@@ -126,7 +133,8 @@ fyp26/
 │   │       ├── agent.js
 │   │       ├── llmClient.js
 │   │       ├── promptBuilder.js
-│   │       └── subtaskGenerator.js
+│   │       ├── subtaskGenerator.js
+│   │       └── subtaskScheduler.js
 │   ├── tests/
 │   │   ├── conftest.py
 │   │   ├── test_auth.py
@@ -185,10 +193,13 @@ fyp26/
 │   │       └── wfadhd_school_psychologists.pdf
 │   └── scripts/
 │       ├── chunk_documents.py
+│       ├── clean_pinecone_orphans.py
 │       ├── config.py
 │       ├── create_pinecone_index.py
 │       ├── embed_and_upsert.py
 │       ├── extract_text.py
+│       ├── inject_custom_chunks.py
+│       ├── link_chunks_to_supabase.py
 │       ├── query_test.py
 │       ├── reddit_adhd_cleaning.py
 │       └── requirements.txt
@@ -218,6 +229,7 @@ fyp26/
 │   │   │   ├── ThemedBackButton.js
 │   │   │   └── ThemeProvider.js
 │   │   ├── detection/
+│   │   │   ├── CircularProgress.js
 │   │   │   ├── OptionCard.js
 │   │   │   └── QuestionCard.js
 │   │   ├── emotion/
@@ -226,14 +238,18 @@ fyp26/
 │   │   ├── focus/
 │   │   │   ├── ControlButtons.js
 │   │   │   ├── FocusSessionScheduler.js
+│   │   │   ├── SessionReflectionModal.js
 │   │   │   ├── SoundBottomSheet.js
 │   │   │   ├── SoundCard.js
 │   │   │   ├── StatsSection.js
+│   │   │   ├── TaskPickerSheet.js
 │   │   │   ├── TimerRing.js
 │   │   │   └── UnlockMusicCard.js
 │   │   ├── habits/
 │   │   │   ├── AddHabitBottomSheet.js
 │   │   │   └── StreakBar.js
+│   │   ├── home/
+│   │   │   └── MoodCheckInCard.js
 │   │   └── tasks/
 │   │       ├── AddTaskBottomSheet.js
 │   │       └── TaskCard.js
@@ -276,7 +292,8 @@ fyp26/
 │   │   │   ├── RabbitHunterScreen.js
 │   │   │   ├── SoundscapesScreen.js
 │   │   │   ├── SplashSession.js
-│   │   │   └── StroopGame.js
+│   │   │   ├── StroopGame.js
+│   │   │   └── TongueTwisterGame.js
 │   │   ├── Focus/
 │   │   │   ├── FocusScreen.js
 │   │   │   └── SessionSummaryScreen.js
@@ -284,17 +301,13 @@ fyp26/
 │   │   │   ├── AddHabitBottomSheet.js
 │   │   │   └── HabitsScreen.js
 │   │   ├── Home/
-│   │   │   ├── HomeScreen.js
-│   │   │   ├── MoodCheckInCard.js
-│   │   │   ├── ProfileScreen.js
-│   │   │   └── SettingsScreen.js
+│   │   │   └── HomeScreen.js
 │   │   ├── Profile/
 │   │   │   ├── EditProfileScreen.js
 │   │   │   └── ProfileScreen.js
 │   │   ├── Reports/
 │   │   │   └── ReportsScreen.js
 │   │   ├── Rewards/
-│   │   │   ├── BadgesScreen.js
 │   │   │   └── RewardsScreen.js
 │   │   ├── Settings/
 │   │   │   └── SettingsScreen.js
@@ -316,6 +329,7 @@ fyp26/
 │   │   ├── backgroundCheck.js
 │   │   ├── challengeNav.js
 │   │   ├── formatTime.js
+│   │   ├── gameRewards.js
 │   │   ├── notificationSetup.js
 │   │   ├── reminders.js
 │   │   ├── toastConfig.js
