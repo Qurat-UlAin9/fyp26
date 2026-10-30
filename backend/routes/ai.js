@@ -1,6 +1,7 @@
 const { createUserCrudRouter } = require('../utils/crudRouteFactory');
 const { supabaseAdmin } = require('../config/supabase');
 const agent = require('../services/ai/tools/graph');
+const { analyzeMessage } = require('../services/ai/perception');
 const { generateSubtasks } = require('../services/ai/subtaskGenerator');
 const {
   scheduleSubtasks,
@@ -32,13 +33,29 @@ router.post('/chat', async (req, res) => {
       return res.status(400).json({ error: 'message (string) is required.' });
     }
 
+    // Layer 1 (Perception): length check, crisis check, language/intent/urgency hints.
+    const perception = analyzeMessage(message);
+
+    // Too long: answer politely without calling the LLM or saving anything.
+    if (!perception.ok && perception.reason === 'too_long') {
+      return res.json({
+        data: {
+          conversationId: conversationId || null,
+          reply: perception.reply,
+          toolCalls: [],
+          rejected: 'too_long',
+        },
+      });
+    }
+
     // Create a conversation if this is the first message
     if (!conversationId) {
       const { data: conv, error: convError } = await supabaseAdmin
         .from('ai_conversations')
         .insert({
           user_id: userId,
-          title: message.slice(0, 60),
+          // Do not copy a crisis message into the conversation title.
+          title: perception.crisis ? 'Chat' : message.slice(0, 60),
           status: 'active',
         })
         .select()
@@ -76,12 +93,38 @@ router.post('/chat', async (req, res) => {
       });
     if (userMsgError) throw userMsgError;
 
+    // Crisis: send the fixed, human-written supportive reply. The LLM agent and
+    // its tools are NOT called for this turn. The reply is saved like a normal
+    // assistant message, so the next turn continues normally with this context.
+    if (perception.crisis) {
+      console.warn(`[perception] crisis keywords matched; fixed reply sent (conversation ${conversationId})`);
+
+      const { error: crisisMsgError } = await supabaseAdmin
+        .from('ai_messages')
+        .insert({
+          conversation_id: conversationId,
+          sender: 'assistant',
+          message: perception.reply,
+        });
+      if (crisisMsgError) throw crisisMsgError;
+
+      return res.json({
+        data: {
+          conversationId,
+          reply: perception.reply,
+          toolCalls: [],
+          crisis: true,
+        },
+      });
+    }
+
     // Run the LangGraph ReAct agent (context injection + tool calling)
     const { reply, toolCalls } = await agent.handleMessage({
       userId,
       conversationId,
       userMessage: message.trim(),
       history,
+      hints: perception.hints,
     });
 
     // Save the assistant's reply

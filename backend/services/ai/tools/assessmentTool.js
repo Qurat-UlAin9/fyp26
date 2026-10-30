@@ -98,4 +98,66 @@ const getEFAssessmentSummary = tool(
   }
 );
 
-module.exports = { getADHDScreeningSummary, getEFAssessmentSummary };
+// ---------------------------------------------------------------------------
+// Plain async functions (NOT LangChain tools) used by graph.js to inject
+// context into the system prompt. graph.js was importing fetchADHDScreening /
+// fetchEFSummary from this file, but they did not exist, so the screening
+// context was always "Unknown".
+//
+// Both throw on a database error (graph.js catches and falls back) and
+// return null when the user has not completed the assessment.
+// ---------------------------------------------------------------------------
+
+async function fetchADHDScreening(userId) {
+  const { data, error } = await supabaseAdmin
+    .from('assessments')
+    .select('score, max_score, percentage, predicted_label, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data || null;
+}
+
+/**
+ * @returns {Promise<null | {
+ *   created_at: string,
+ *   dimensions: { key: string, label: string, pct: number, status: 'exact' | 'partial' }[]
+ * }>}
+ *
+ * Dimensions are returned in a FIXED order (the order of EF_DIMENSION_LABELS),
+ * never sorted by score, so nothing downstream can accidentally present a
+ * "weakest" or "strongest" area. There is intentionally no overall score.
+ */
+async function fetchEFSummary(userId) {
+  const { data, error } = await supabaseAdmin
+    .from('ef_assessments')
+    .select('dimension_scores, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  if (!data || !data.dimension_scores) return null;
+
+  const dimensions = Object.keys(EF_DIMENSION_LABELS)
+    .filter((key) => Number.isFinite(data.dimension_scores[key]?.normalized0to100))
+    .map((key) => ({
+      key,
+      label: EF_DIMENSION_LABELS[key],
+      pct: Math.round(data.dimension_scores[key].normalized0to100),
+      status: data.dimension_scores[key].status === 'exact' ? 'exact' : 'partial',
+    }));
+
+  return { created_at: data.created_at, dimensions };
+}
+
+module.exports = {
+  getADHDScreeningSummary,
+  getEFAssessmentSummary,
+  fetchADHDScreening,
+  fetchEFSummary,
+};

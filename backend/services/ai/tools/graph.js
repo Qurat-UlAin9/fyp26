@@ -19,6 +19,9 @@ const { rememberAboutUser } = require('./memoryTool');
 // Import the plain async functions (not the tools) for context injection
 const { fetchADHDScreening, fetchEFSummary } = require('./assessmentTool');
 
+// Layer 1 helper: turns language/intent/urgency hints into a prompt block
+const { formatHintsForPrompt } = require('../perception');
+
 const BASE_SYSTEM_PROMPT = `You are the Main ADHD Agent inside the Manas app.
 You are warm, concise, and practical.
 
@@ -29,11 +32,14 @@ Users will often send messy, emotional messages. You must:
 3. EDUCATE using \`search_knowledge_base\` if they ask "how" or "why".
 
 # TOOLS & KNOWLEDGE BASE
-You have \`search_knowledge_base\` which MUST be used for factual/advice questions. Filter by category:
-- If the user asks "how do I stop procrastinating/start a task", search category: "coping_strategy".
-- If the user asks "why does my brain do this", search category: "behavioral_therapy".
-- If the user asks about medication or clinical evidence, search category: "exercise", "habit_formation", or "emotion_regulation".
-- If the user is panicking or having a meltdown, use the tool \`suggest_emotion_exercise\` (do not search the RAG).
+You have \`search_knowledge_base\` which MUST be used for factual/advice questions.
+Usually leave \`category\` empty so every source is searched. Only filter when the topic is clearly one of these:
+- practical tips for starting a task or stopping procrastination: "coping_strategy"
+- thought patterns and behaviour techniques ("why does my brain do this"): "behavioral_therapy"
+- diagnosis, assessment, medication or treatment questions: "diagnosis_treatment_guideline"
+- exercise: "exercise"; habits: "habit_formation"; emotions: "emotion_regulation"
+- If the user is panicking or having a meltdown, use \`suggest_emotion_exercise\` first (do not search the knowledge base).
+- Use \`remember_about_user\` only for durable preferences or challenges the user states.
 
 # CREATING TASKS
 - due_date is REQUIRED for create_task.
@@ -41,45 +47,66 @@ You have \`search_knowledge_base\` which MUST be used for factual/advice questio
 - Break tasks into small subtasks.
 
 # FORMATTING
-- Base your answers STRICTLY on the text returned by the knowledge base.
+- For factual or clinical claims, base your answer strictly on the text returned by the knowledge base.
 - Use Markdown formatting (bold, bullets).
-- Do not narrate that you are using a tool.`;
+- Do not narrate that you are using a tool.
 
-function formatContextBlock({ asrs_level, weak_ef_dimension, preference_style }) {
-  return (
-    `This user's ADHD screening level is: ${asrs_level}.\n` +
-    `Their most challenged executive function area is: ${weak_ef_dimension}.\n` +
-    `Their interaction preference is: ${preference_style}.`
-  );
+# SAFETY & LIMITS
+- This is a support and self-reflection app, NOT a diagnostic tool. Never state or imply that the user has ADHD or any condition, even if the context below shows a high screening result.
+- Screening and executive-function numbers are self-reported context only. Never present them as clinical findings; use them only to choose a gentler or more structured approach.
+- Never invent clinical claims. If the knowledge base has nothing relevant, say so plainly and suggest talking to a doctor or other professional for anything clinical.
+- Do not give medication advice (starting, stopping or changing doses); point the user to their doctor.
+- If the user talks about harming themselves or not wanting to live, respond with warmth, encourage them to reach a trusted person or local emergency services, and do not use task, habit or focus tools.`;
+
+// EF scores are shown with their status only. There is deliberately NO
+// "weakest area": only Organization of Tasks is an exact score, the other six
+// are approximate recoveries, and no overall EF score exists.
+function formatContextBlock({ adhd, ef }) {
+  let block = 'USER CONTEXT (self-reported, NOT a diagnosis):\n';
+
+  if (adhd) {
+    block +=
+      `- ADHD self-screening (ASRS-based): ${adhd.percentage}% ` +
+      `(${adhd.score}/${adhd.max_score}), model output: ${adhd.predicted_label}. ` +
+      'Use only to adjust tone and structure.\n';
+  } else {
+    block += '- ADHD self-screening: not completed or unavailable.\n';
+  }
+
+  if (ef && ef.dimensions.length > 0) {
+    block += '- Executive-function self-assessment (higher % = fewer self-reported difficulties):\n';
+    ef.dimensions.forEach((d) => {
+      block += `  - ${d.label}: ${d.pct}% (${d.status === 'exact' ? 'exact' : 'approximate'})\n`;
+    });
+    block +=
+      'EF RULES: Only "Organization of Tasks" is an exact score; the other dimensions are ' +
+      'approximate. There is no overall EF score. Do NOT rank the areas or call any of them ' +
+      'the weakest, worst, best or strongest, and never compute or mention an overall score. ' +
+      'Never quote these numbers back as clinical results.\n';
+  } else {
+    block += '- Executive-function self-assessment: not completed or unavailable.\n';
+  }
+
+  return block;
 }
 
-async function buildSystemPrompt(userId) {
-  let asrs = 'Unknown';
-  let weakEf = 'Unknown';
-  const preference = 'Unknown';
-
-  try {
-    const adhd = await fetchADHDScreening(userId);
-    if (adhd?.asrs_level) asrs = adhd.asrs_level;
-  } catch (e) {
-    console.warn('buildSystemPrompt: ADHD summary failed:', e.message);
-  }
-
-  try {
-    const ef = await fetchEFSummary(userId);
-    if (ef?.weak_ef_dimension) weakEf = ef.weak_ef_dimension;
-  } catch (e) {
-    console.warn('buildSystemPrompt: EF summary failed:', e.message);
-  }
+async function buildSystemPrompt(userId, hints) {
+  const [adhd, ef] = await Promise.all([
+    fetchADHDScreening(userId).catch((e) => {
+      console.warn('buildSystemPrompt: ADHD summary failed:', e.message);
+      return null;
+    }),
+    fetchEFSummary(userId).catch((e) => {
+      console.warn('buildSystemPrompt: EF summary failed:', e.message);
+      return null;
+    }),
+  ]);
 
   return (
     BASE_SYSTEM_PROMPT +
     '\n\n' +
-    formatContextBlock({
-      asrs_level: asrs,
-      weak_ef_dimension: weakEf,
-      preference_style: preference,
-    })
+    formatContextBlock({ adhd, ef }) +
+    formatHintsForPrompt(hints)
   );
 }
 
@@ -111,8 +138,9 @@ async function handleMessage({
   conversationId,
   userMessage,
   history = [],
+  hints = null,
 }) {
-  const systemPrompt = await buildSystemPrompt(userId);
+  const systemPrompt = await buildSystemPrompt(userId, hints);
 
   const messages = [
     new SystemMessage(systemPrompt),
