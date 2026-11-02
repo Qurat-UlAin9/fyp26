@@ -152,6 +152,9 @@ fyp26/
 │   ├── test_sample.py
 │   └── train_model.py
 ├── rag/
+│   ├── data/
+│   │   ├── gap_finder.py
+│   │   └── YES_TRUE_FINAL_v2.csv
 │   ├── output/
 │   │   ├── chunks/
 │   │   │   ├── ef_interventions_systematic_review_chunks.json
@@ -191,18 +194,19 @@ fyp26/
 │   │   │   └── habit_formation_dbci_review.pdf
 │   │   └── tier4_applied/
 │   │       └── wfadhd_school_psychologists.pdf
-│   └── scripts/
-│       ├── chunk_documents.py
-│       ├── clean_pinecone_orphans.py
-│       ├── config.py
-│       ├── create_pinecone_index.py
-│       ├── embed_and_upsert.py
-│       ├── extract_text.py
-│       ├── inject_custom_chunks.py
-│       ├── link_chunks_to_supabase.py
-│       ├── query_test.py
-│       ├── reddit_adhd_cleaning.py
-│       └── requirements.txt
+│   ├── scripts/
+│   │   ├── chunk_documents.py
+│   │   ├── clean_pinecone_orphans.py
+│   │   ├── config.py
+│   │   ├── create_pinecone_index.py
+│   │   ├── embed_and_upsert.py
+│   │   ├── extract_text.py
+│   │   ├── inject_custom_chunks.py
+│   │   ├── link_chunks_to_supabase.py
+│   │   ├── query_test.py
+│   │   ├── reddit_adhd_cleaning.py
+│   │   └── requirements.txt
+│   └── requirements.txt
 ├── src/
 │   ├── assets/
 │   │   ├── animations/
