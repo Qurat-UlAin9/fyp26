@@ -23,7 +23,7 @@ const rememberAboutUser = tool(
       title: title || null,
       content,
       importance: importance ?? 3,
-      source: 'conversation',
+      memory_source: 'conversation',
     });
 
     if (error) return `Error saving memory: ${error.message}`;

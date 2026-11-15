@@ -2,6 +2,7 @@ const { createUserCrudRouter } = require('../utils/crudRouteFactory');
 const { supabaseAdmin } = require('../config/supabase');
 const agent = require('../services/ai/tools/graph');
 const { analyzeMessage } = require('../services/ai/perception');
+const { checkReply } = require('../services/ai/outputGuard');
 const { generateSubtasks } = require('../services/ai/subtaskGenerator');
 const {
   scheduleSubtasks,
@@ -119,13 +120,24 @@ router.post('/chat', async (req, res) => {
     }
 
     // Run the LangGraph ReAct agent (context injection + tool calling)
-    const { reply, toolCalls } = await agent.handleMessage({
+    const { reply: agentReply, toolCalls } = await agent.handleMessage({
       userId,
       conversationId,
       userMessage: message.trim(),
       history,
       hints: perception.hints,
     });
+
+    // Layer 5 (Output safety): never send a diagnosis, medication advice or EF
+    // ranking. If a rule fires, the reply is swapped for a fixed safe reply.
+    // Only the rule names are logged, never the reply text.
+    const guard = checkReply(agentReply);
+    if (!guard.ok) {
+      console.warn(
+        `[outputGuard] reply replaced (rules: ${guard.flags.join(', ')}; conversation ${conversationId})`
+      );
+    }
+    const reply = guard.reply;
 
     // Save the assistant's reply
     const { data: aiMsg, error: aiMsgError } = await supabaseAdmin
@@ -227,3 +239,4 @@ router.post('/suggest-subtasks', async (req, res) => {
 });
 
 module.exports = router;
+

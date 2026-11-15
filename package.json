@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "backend": "node backend/server.js",
-    "backend:check": "node -c backend/server.js"
+    "backend:check": "node -c backend/server.js",
+    "test": "node --test"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.122.0",

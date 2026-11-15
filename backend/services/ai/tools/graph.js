@@ -22,6 +22,9 @@ const { fetchADHDScreening, fetchEFSummary } = require('./assessmentTool');
 // Layer 1 helper: turns language/intent/urgency hints into a prompt block
 const { formatHintsForPrompt } = require('../perception');
 
+// Layer 2 helpers: load this user's saved memories and format them for the prompt
+const { fetchUserMemories, formatMemoryBlock } = require('../memory/memoryRetrieval');
+
 const BASE_SYSTEM_PROMPT = `You are the Main ADHD Agent inside the Manas app.
 You are warm, concise, and practical.
 
@@ -91,7 +94,7 @@ function formatContextBlock({ adhd, ef }) {
 }
 
 async function buildSystemPrompt(userId, hints) {
-  const [adhd, ef] = await Promise.all([
+  const [adhd, ef, memories] = await Promise.all([
     fetchADHDScreening(userId).catch((e) => {
       console.warn('buildSystemPrompt: ADHD summary failed:', e.message);
       return null;
@@ -100,12 +103,18 @@ async function buildSystemPrompt(userId, hints) {
       console.warn('buildSystemPrompt: EF summary failed:', e.message);
       return null;
     }),
+    // Best-effort: a failed memory lookup must never break the chat.
+    fetchUserMemories(userId).catch((e) => {
+      console.warn('buildSystemPrompt: memory lookup failed:', e.message);
+      return [];
+    }),
   ]);
 
   return (
     BASE_SYSTEM_PROMPT +
     '\n\n' +
     formatContextBlock({ adhd, ef }) +
+    formatMemoryBlock(memories) +
     formatHintsForPrompt(hints)
   );
 }
