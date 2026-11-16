@@ -2,8 +2,12 @@
 inject_custom_chunks.py — idempotent, traceable RAG ingestion.
 
 Usage:
-  python inject_custom_chunks.py              # Runs ALL files in the strategies/ folder
-  python inject_custom_chunks.py my_file.json # Runs ONLY my_file.json
+  python inject_custom_chunks.py                        # Runs ALL files in the strategies/ folder
+  python inject_custom_chunks.py my_file.json           # Runs ONLY my_file.json
+  python inject_custom_chunks.py my_file.json --dry-run # Checks the file, writes nothing
+
+Safety: a chunk's old Supabase row is only deleted AFTER its new vector was
+upserted to Pinecone successfully, so a failed run never removes existing rows.
 """
 
 from __future__ import annotations
@@ -40,6 +44,8 @@ HEADERS = {
 
 PARENT_SOURCE_NAME = "manas_curated_strategies"
 PARENT_DOC_TITLE   = "Manas Curated Coping & Behavioral Strategies"
+
+REQUIRED_KEYS = ("id", "category", "trust_score", "text")
 
 
 def sb(method: str, path: str, *, params=None, json_body=None, prefer=None) -> Any:
@@ -89,28 +95,43 @@ def get_or_create_document(source_id: str) -> str:
     return created[0]["id"]
 
 
+def read_json_file(filepath: str) -> list[dict]:
+    """Reads a JSON array file. Also accepts JSON Lines (one object per line)."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+    try:
+        data = json.loads(raw)
+        return data if isinstance(data, list) else [data]
+    except json.JSONDecodeError:
+        return [json.loads(line) for line in raw.splitlines() if line.strip()]
+
+
 def load_chunks():
     """Loads either all files in the strategies folder, or just the one specified in sys.argv."""
     custom_chunks = []
-    strategies_dir = os.path.join(os.path.dirname(__file__), "strategies")
-    
-    # If a filename was passed in the command line, load only that file
-    if len(sys.argv) > 1 and sys.argv[1] != "--dry-run":
-        target_file = sys.argv[1]
+    strategies_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "strategies")
+
+    # First argument that is not a flag is the file name
+    file_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+
+    if file_args:
+        target_file = file_args[0]
         filepath = os.path.join(strategies_dir, target_file)
         if not os.path.exists(filepath):
             sys.exit(f"ERROR: File not found {filepath}")
-        with open(filepath, "r", encoding="utf-8") as f:
-            custom_chunks = json.load(f)
+        custom_chunks = read_json_file(filepath)
         print(f"Loaded {len(custom_chunks)} chunks from {target_file}")
     else:
-        # Otherwise, load all JSON files
-        for filepath in glob.glob(os.path.join(strategies_dir, "*.json")):
-            with open(filepath, "r", encoding="utf-8") as f:
-                custom_chunks.extend(json.load(f))
+        for filepath in sorted(glob.glob(os.path.join(strategies_dir, "*.json"))):
+            custom_chunks.extend(read_json_file(filepath))
         print(f"Loaded {len(custom_chunks)} total chunks from all files in {strategies_dir}")
-        
+
     return custom_chunks
+
+
+def clean(d: dict) -> dict:
+    """Pinecone rejects null metadata values, so drop None fields."""
+    return {k: v for k, v in d.items() if v is not None}
 
 
 def main() -> None:
@@ -121,31 +142,37 @@ def main() -> None:
 
     CUSTOM_CHUNKS = load_chunks()
 
+    # Check every chunk up front, before anything is written
+    seen_ids: set[str] = set()
+    problems = []
+    for c in CUSTOM_CHUNKS:
+        missing = [k for k in REQUIRED_KEYS if c.get(k) in (None, "")]
+        if not (c.get("title") or c.get("document_title")):
+            missing.append("title")
+        if missing:
+            problems.append(f"{c.get('id', '?')}: missing {missing}")
+        if c.get("id") in seen_ids:
+            problems.append(f"{c.get('id')}: duplicate id in this run")
+        seen_ids.add(c.get("id"))
+    if problems:
+        print("\n".join(problems), file=sys.stderr)
+        sys.exit("ERROR: fix the problems above. Nothing was written.")
+
     model = SentenceTransformer(EMBEDDING_MODEL_NAME)
     pc = Pinecone(api_key=PINECONE_KEY)
     index = pc.Index(PINECONE_INDEX_NAME)
 
-    start_index = 0
-    
+    next_index = 0
+    doc_id = None
+
     if dry_run:
-        doc_id = None
-        print("[dry-run] Skipping Supabase writes.")
+        print("[dry-run] Skipping Pinecone and Supabase writes.")
     else:
         source_id = get_or_create_source()
         doc_id = get_or_create_document(source_id)
         print(f"parent source_id={source_id}  document_id={doc_id}")
 
-        # 1. Delete the chunks that are currently being processed.
-        chunk_ids = [c["id"] for c in CUSTOM_CHUNKS]
-        if chunk_ids:
-            ids_str = ",".join([f'"{cid}"' for cid in chunk_ids])
-            sb("DELETE", "knowledge_chunks", params={
-                "document_id": f"eq.{doc_id}",
-                "external_vector_id": f"in.({ids_str})"
-            })
-            print(f"Deleted existing Supabase rows for these {len(chunk_ids)} IDs.")
-
-        # 2. Find the highest existing chunk_index so we don't violate the unique constraint
+        # Find the highest existing chunk_index so we don't violate the unique constraint
         max_idx_rows = sb("GET", "knowledge_chunks", params={
             "document_id": f"eq.{doc_id}",
             "select": "chunk_index",
@@ -153,43 +180,55 @@ def main() -> None:
             "limit": 1
         })
         if max_idx_rows:
-            start_index = max_idx_rows[0]["chunk_index"] + 1
-        print(f"Next available chunk_index starts at: {start_index}")
-
+            next_index = max_idx_rows[0]["chunk_index"] + 1
+        print(f"Next available chunk_index starts at: {next_index}")
 
     results: list[dict] = []
-    for i, chunk in enumerate(CUSTOM_CHUNKS):
+    for chunk in CUSTOM_CHUNKS:
         cid = chunk["id"]
         try:
             text = chunk["text"].strip()
             if not text:
                 raise ValueError("empty text")
 
+            title = chunk.get("title") or chunk.get("document_title")
+
             emb = model.encode(text, normalize_embeddings=True).tolist()
             if len(emb) != 768:
                 raise ValueError(f"expected 768-dim embedding, got {len(emb)}")
 
-            metadata = {
+            metadata = clean({
                 "text":            text,
                 "category":        chunk["category"],
-                "document_title":  chunk["title"],
+                "document_title":  title,
                 "trust_score":     chunk["trust_score"],
                 "source_url":      chunk.get("source_url"),
                 "source_citation": chunk.get("source_citation"),
-            }
+                "ef_dimension":    chunk.get("ef_dimension"),
+                "tier":            chunk.get("tier"),
+                "batch":           chunk.get("batch"),
+            })
 
             if not dry_run:
+                # 1. Pinecone first. If this fails, nothing else is touched.
                 index.upsert(
                     vectors=[{"id": cid, "values": emb, "metadata": metadata}],
                     namespace=PINECONE_NAMESPACE,
                 )
 
+                # 2. Only now replace this one chunk's Supabase row (if it exists).
+                sb("DELETE", "knowledge_chunks", params={
+                    "document_id": f"eq.{doc_id}",
+                    "external_vector_id": f"eq.{cid}",
+                })
+
+                # 3. Insert the new row.
                 sb(
                     "POST", "knowledge_chunks",
-                    json_body={
+                    json_body=clean({
                         "document_id":        doc_id,
-                        "chunk_index":        start_index + i, # Safely increments
-                        "title":              chunk["title"],
+                        "chunk_index":        next_index,
+                        "title":              title,
                         "chunk_type":         chunk["category"],
                         "content":            text,
                         "external_vector_id": cid,
@@ -200,9 +239,10 @@ def main() -> None:
                         "source_url":         chunk.get("source_url"),
                         "source_citation":    chunk.get("source_citation"),
                         "trust_score":        chunk["trust_score"],
-                    },
+                    }),
                     prefer="return=minimal",
                 )
+                next_index += 1
 
             print(f"[ok]  {cid}  trust={chunk['trust_score']}  cat={chunk['category']}")
             results.append({"id": cid, "status": "ok"})
