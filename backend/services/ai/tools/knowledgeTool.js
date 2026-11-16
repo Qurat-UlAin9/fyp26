@@ -5,8 +5,18 @@ const { z } = require('zod');
 const { embedQuery } = require('../rag/embeddings');
 const { queryKnowledge } = require('../rag/pineconeClient');
 
-const SIMILARITY_THRESHOLD = 0.72; 
-const TOP_K = 5;
+const SIMILARITY_THRESHOLD = 0.72;
+const RAW_TOP_K = 15;       // pull more candidates than we deliver
+const PAPER_SLOTS = 3;      // always reserve for peer-reviewed
+const CUSTOM_SLOTS = 2;     // remaining slots for practitioner chunks
+
+// Custom chunk source types (everything else = paper)
+const CUSTOM_SOURCE_TYPES = new Set([
+  'curated_strategy',
+  'psychology_lens',
+  'motivation',
+  'clinical_framework',
+]);
 
 const searchKnowledgeBase = tool(
   async ({ query, category }, config) => {
@@ -14,14 +24,14 @@ const searchKnowledgeBase = tool(
 
     try {
       const vector = await embedQuery(query);
-      
-      // Build Pinecone metadata filter
+
       let filter = {};
       if (category && category !== 'all') {
         filter = { category: { $eq: category } };
       }
 
-      const matches = await queryKnowledge(vector, TOP_K, filter);
+      // Pull more candidates so we can enforce the quota
+      const matches = await queryKnowledge(vector, RAW_TOP_K, filter);
 
       if (!matches || matches.length === 0) {
         console.log(`   ⚠️ [RAG] Pinecone returned 0 matches.`);
@@ -29,20 +39,36 @@ const searchKnowledgeBase = tool(
       }
 
       const relevant = matches.filter((m) => (m.score ?? 0) >= SIMILARITY_THRESHOLD);
-      
-      relevant.forEach((m, i) => {
-        const title = m.metadata?.document_title || 'Unknown Document';
-        const cat = m.metadata?.category || 'unknown';
-        const trust = m.metadata?.trust_score ? m.metadata.trust_score.toFixed(2) : 'unknown';
-        console.log(`   [${i + 1}] ✅ PASS (score: ${m.score.toFixed(3)}) [${cat}] (Trust: ${trust}) - ${title}`);
-      });
-
       if (relevant.length === 0) {
+        console.log(`   ⚠️ [RAG] 0 chunks passed threshold ${SIMILARITY_THRESHOLD}`);
         return 'No highly relevant research or strategies found for this exact query.';
       }
 
-      // FIXED: Now passing Trust Score, Citation, and Category so the AI knows what it is reading
-      return relevant
+      const papers = relevant.filter((m) => !CUSTOM_SOURCE_TYPES.has(m.metadata?.source_type));
+      const custom = relevant.filter((m) => CUSTOM_SOURCE_TYPES.has(m.metadata?.source_type));
+
+      let selPapers = papers.slice(0, PAPER_SLOTS);
+      let selCustom = custom.slice(0, CUSTOM_SLOTS);
+
+      // Fallback if one bucket is thin
+      if (selPapers.length < PAPER_SLOTS) {
+        selCustom = custom.slice(0, CUSTOM_SLOTS + (PAPER_SLOTS - selPapers.length));
+      }
+      if (selCustom.length < CUSTOM_SLOTS) {
+        selPapers = papers.slice(0, PAPER_SLOTS + (CUSTOM_SLOTS - selCustom.length));
+      }
+
+      const combined = [...selPapers, ...selCustom].sort((a, b) => b.score - a.score);
+
+      combined.forEach((m, i) => {
+        const title = m.metadata?.document_title || 'Unknown Document';
+        const cat = m.metadata?.category || 'unknown';
+        const st = m.metadata?.source_type || 'unknown';
+        const trust = m.metadata?.trust_score ? m.metadata.trust_score.toFixed(2) : 'unknown';
+        console.log(`   [${i + 1}] ✅ (${m.score.toFixed(3)}) [${cat}|${st}] trust=${trust} - ${title}`);
+      });
+
+      return combined
         .map((m, i) => {
           const md = m.metadata || {};
           const trust = md.trust_score !== undefined ? md.trust_score : 'Unknown';
@@ -50,7 +76,6 @@ const searchKnowledgeBase = tool(
           return `[${i + 1}] (Type: ${md.category || 'unknown'}, Trust Score: ${trust}/1.0, Source: ${md.document_title || 'Unknown'})${citation}\nText: ${md.text || ''}`;
         })
         .join('\n\n');
-        
     } catch (error) {
       console.error(`   ❌ [RAG] Search failed:`, error.message);
       return 'Knowledge base search failed.';
@@ -68,18 +93,20 @@ const searchKnowledgeBase = tool(
     schema: z.object({
       query: z.string().describe('The specific question or topic'),
       category: z.enum([
-        'all', 
-        'coping_strategy', 
-        'behavioral_therapy', 
+        'all',
+        'coping_strategy',
+        'behavioral_therapy',
         'behavioral_strategy',
-        'exercise', 
-        'habit_formation', 
-        'emotion_regulation', 
-        'executive_function_interventions', 
+        'psychology_lens',
+        'motivation',
+        'exercise',
+        'habit_formation',
+        'emotion_regulation',
+        'executive_function_interventions',
         'diagnosis_treatment_guideline',
         'diagnostic_practice_synthesis',
         'college_student_consensus',
-        'misinformation_correction_school_practice'
+        'misinformation_correction_school_practice',
       ]).optional().default('all')
         .describe('Optional: The category of knowledge to search. Leave blank to search everything.'),
     }),
