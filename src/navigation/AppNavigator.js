@@ -32,6 +32,7 @@ import TongueTwisterGame from '../screens/Emotion/TongueTwisterGame';
 import SoundscapesScreen from '../screens/Emotion/SoundscapesScreen';
 import TaskHistoryScreen from '../screens/Tasks/TaskHistoryScreen';
 import ThemedBackButton from '../components/common/ThemedBackButton';
+import BackToCoachChip from '../components/common/BackToCoachChip';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +43,12 @@ export default function AppNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="Splash"
+      screenLayout={({ route, navigation, children }) => (
+        <>
+          {children}
+          <BackToCoachChip route={route} navigation={navigation} />
+        </>
+      )}
       screenOptions={{
         headerTintColor: theme.text,
         headerTitleStyle: { fontWeight: '700' },

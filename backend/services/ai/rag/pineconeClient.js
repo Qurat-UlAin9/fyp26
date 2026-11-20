@@ -117,4 +117,21 @@ async function queryKnowledge(vector, topK = 5, filter = undefined) {
   throw lastError;
 }
 
-module.exports = { queryKnowledge };
+const EXEMPLAR_NS = 'exemplars';
+
+async function upsertExemplar({ id, vector, metadata }) {
+  await getIndex().namespace(EXEMPLAR_NS).upsert({ records: [{ id, values: vector, metadata }] });}
+
+async function deleteExemplar(id) {
+  await getIndex().namespace(EXEMPLAR_NS).deleteOne({ id });}
+
+async function queryExemplars(vector, topK = 2) {
+  const result = await getIndex().namespace(EXEMPLAR_NS).query({
+    vector,
+    topK,
+    includeMetadata: true,
+  });
+  return result.matches || [];
+}
+
+module.exports = { queryKnowledge, upsertExemplar, deleteExemplar, queryExemplars };

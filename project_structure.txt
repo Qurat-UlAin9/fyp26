@@ -98,6 +98,7 @@ fyp26/
 │   │   ├── auth.js
 │   │   ├── executiveFunction.js
 │   │   ├── exercises.js
+│   │   ├── feedback.js
 │   │   ├── focusSessions.js
 │   │   ├── habits.js
 │   │   ├── health.js
@@ -111,11 +112,20 @@ fyp26/
 │   │   ├── EF_scoring_audit_report.md
 │   │   ├── executive_function_scoring.py
 │   │   └── executiveFunctionScoring.js
+│   ├── scripts/
+│   │   └── seedExemplars.js
 │   ├── services/
 │   │   └── ai/
+│   │       ├── context/
+│   │       │   └── moodContext.js
+│   │       ├── exemplars/
+│   │       │   ├── exemplarRetrieval.js
+│   │       │   └── promoteToBank.js
 │   │       ├── memory/
 │   │       │   ├── memoryRetrieval.js
 │   │       │   └── memoryStore.js
+│   │       ├── prompts/
+│   │       │   └── promptService.js
 │   │       ├── rag/
 │   │       │   ├── embeddings.js
 │   │       │   ├── pineconeClient.js
@@ -129,14 +139,23 @@ fyp26/
 │   │       │   ├── habitTool.js
 │   │       │   ├── knowledgeTool.js
 │   │       │   ├── memoryTool.js
+│   │       │   ├── optionsTool.js
 │   │       │   └── taskTool.js
 │   │       ├── agent.js
+│   │       ├── coachLinks.js
 │   │       ├── llmClient.js
+│   │       ├── llmProvider.js
+│   │       ├── outputGuard.js
+│   │       ├── perception.js
 │   │       ├── promptBuilder.js
 │   │       ├── subtaskGenerator.js
 │   │       └── subtaskScheduler.js
 │   ├── tests/
 │   │   ├── conftest.py
+│   │   ├── efScoring.test.js
+│   │   ├── memory.test.js
+│   │   ├── outputGuard.test.js
+│   │   ├── perception.test.js
 │   │   ├── test_auth.py
 │   │   ├── test_health.py
 │   │   └── test_prediction.py
@@ -195,6 +214,14 @@ fyp26/
 │   │   └── tier4_applied/
 │   │       └── wfadhd_school_psychologists.pdf
 │   ├── scripts/
+│   │   ├── strategies/
+│   │   │   ├── chunks_emotions.json
+│   │   │   ├── chunks_tier1.json
+│   │   │   ├── chunks_tier2_3.json
+│   │   │   ├── cleaned_monitoring_emotions_chunks.json
+│   │   │   ├── core_strategies.json
+│   │   │   ├── monitoring-responsibilities.json
+│   │   │   └── rsd_and_paralysis.json
 │   │   ├── chunk_documents.py
 │   │   ├── clean_pinecone_orphans.py
 │   │   ├── config.py
@@ -222,6 +249,7 @@ fyp26/
 │   │   │   ├── ADHDButton.js
 │   │   │   ├── ADHDCard.js
 │   │   │   ├── AnimatedOrbsBackground.js
+│   │   │   ├── BackToCoachChip.js
 │   │   │   ├── ButtonPrimary.js
 │   │   │   ├── CoinBalancePill.js
 │   │   │   ├── ErrorBoundary.js
@@ -332,6 +360,7 @@ fyp26/
 │   │   ├── alert.js
 │   │   ├── backgroundCheck.js
 │   │   ├── challengeNav.js
+│   │   ├── coachNav.js
 │   │   ├── formatTime.js
 │   │   ├── gameRewards.js
 │   │   ├── notificationSetup.js
@@ -339,6 +368,8 @@ fyp26/
 │   │   ├── toastConfig.js
 │   │   └── userDisplay.js
 │   └── SplashScreen.js
+├── supabase/
+│   └── schema_reference.md
 ├── .gitignore
 ├── App.js
 ├── app.json
@@ -356,4 +387,5 @@ fyp26/
 ├── README.md
 ├── recover_ef_scoring.py
 ├── setupStructure.js
+├── start-all.bat
 └── supabase_assessments.sql

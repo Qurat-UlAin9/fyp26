@@ -1,43 +1,84 @@
+const express = require('express');
+const router = express.Router();
+const { requireAuth } = require('../middleware/auth');
 const { createUserCrudRouter } = require('../utils/crudRouteFactory');
 const { supabaseAdmin } = require('../config/supabase');
 const agent = require('../services/ai/tools/graph');
 const { analyzeMessage } = require('../services/ai/perception');
 const { checkReply } = require('../services/ai/outputGuard');
 const { generateSubtasks } = require('../services/ai/subtaskGenerator');
+const { extractLinks } = require('../services/ai/coachLinks');
 const {
   scheduleSubtasks,
   computePreferredWorkHour,
 } = require('../services/ai/subtaskScheduler');
-const fields = ['title', 'status', 'summary', 'metadata'];
 
-// Existing generic CRUD for ai_conversations (list/create/update/delete)
-const router = createUserCrudRouter({
-  table: 'ai_conversations',
-  allowedInsert: fields,
-  allowedUpdate: fields,
+// Apply Auth Middleware to EVERYTHING in this file
+router.use(requireAuth);
+
+// ============================================================================
+// 1. CUSTOM ROUTES (Must be defined before the CRUD router's /:id)
+// ============================================================================
+
+// GET /api/ai/history
+router.get('/history', async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Not authenticated.' });
+
+    const { data: conv, error: convError } = await supabaseAdmin
+      .from('ai_conversations')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (convError) throw convError;
+    if (!conv) return res.json({ data: { conversationId: null, messages: [] } });
+
+    const { data: messages, error: msgError } = await supabaseAdmin
+      .from('ai_messages')
+      .select('id, sender, message, created_at, metadata')
+      .eq('conversation_id', conv.id)
+      .order('created_at', { ascending: true });
+
+    if (msgError) throw msgError;
+
+    const ids = (messages || []).map((m) => m.id);
+    let ratingById = {};
+    if (ids.length) {
+      const { data: fb } = await supabaseAdmin
+        .from('feedback_events').select('message_id, rating')
+        .eq('user_id', userId).in('message_id', ids);
+      ratingById = Object.fromEntries((fb || []).map((f) => [f.message_id, f.rating]));
+    }
+    return res.json({
+      data: {
+        conversationId: conv.id,
+        messages: (messages || []).map((m) => ({ ...m, rating: ratingById[m.id] ?? null })),
+      },
+    });
+  } catch (error) {
+    console.error('GET /api/ai/history failed:', error);
+    return res.status(500).json({ error: 'Failed to load history.' });
+  }
 });
 
 // POST /api/ai/chat
-// Body: { conversationId?: string, message: string }
-// If conversationId is omitted, a new conversation is created.
 router.post('/chat', async (req, res) => {
   try {
     const userId = req.user?.id;
-    if (!userId) {
-      return res.status(401).json({ error: 'Not authenticated.' });
-    }
-
-    const { message } = req.body || {};
+    const { message, fromOption, context } = req.body || {};
     let { conversationId } = req.body || {};
 
     if (!message || typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({ error: 'message (string) is required.' });
     }
 
-    // Layer 1 (Perception): length check, crisis check, language/intent/urgency hints.
     const perception = analyzeMessage(message);
 
-    // Too long: answer politely without calling the LLM or saving anything.
     if (!perception.ok && perception.reason === 'too_long') {
       return res.json({
         data: {
@@ -49,13 +90,11 @@ router.post('/chat', async (req, res) => {
       });
     }
 
-    // Create a conversation if this is the first message
     if (!conversationId) {
       const { data: conv, error: convError } = await supabaseAdmin
         .from('ai_conversations')
         .insert({
           user_id: userId,
-          // Do not copy a crisis message into the conversation title.
           title: perception.crisis ? 'Chat' : message.slice(0, 60),
           status: 'active',
         })
@@ -66,39 +105,34 @@ router.post('/chat', async (req, res) => {
       conversationId = conv.id;
     }
 
-    // Load recent history for this conversation (last 20 messages,
-    // excluding the one we're about to save).
     const { data: historyRows, error: historyError } = await supabaseAdmin
       .from('ai_messages')
       .select('sender, message, created_at')
       .eq('conversation_id', conversationId)
-      .order('created_at', { ascending: true })
-      .limit(20);
+      .order('created_at', { ascending: false })
+      .limit(8);
 
     if (historyError) {
       console.warn('Failed to load chat history:', historyError.message);
     }
 
-    const history = (historyRows || []).map((row) => ({
+    const history = (historyRows || []).reverse().map((row) => ({
       sender: row.sender,
       message: row.message,
     }));
 
-    // Save the user's message
     const { error: userMsgError } = await supabaseAdmin
       .from('ai_messages')
       .insert({
         conversation_id: conversationId,
         sender: 'user',
+        metadata: fromOption ? { fromOption: true } : {},
         message: message.trim(),
       });
     if (userMsgError) throw userMsgError;
 
-    // Crisis: send the fixed, human-written supportive reply. The LLM agent and
-    // its tools are NOT called for this turn. The reply is saved like a normal
-    // assistant message, so the next turn continues normally with this context.
     if (perception.crisis) {
-      console.warn(`[perception] crisis keywords matched; fixed reply sent (conversation ${conversationId})`);
+      console.warn(`[perception] crisis keywords matched (conversation ${conversationId})`);
 
       const { error: crisisMsgError } = await supabaseAdmin
         .from('ai_messages')
@@ -119,48 +153,90 @@ router.post('/chat', async (req, res) => {
       });
     }
 
-    // Run the LangGraph ReAct agent (context injection + tool calling)
-    const { reply: agentReply, toolCalls } = await agent.handleMessage({
+    // DEV ONLY: UI testing without spending model tokens
+    if (process.env.AI_MOCK === '1') {
+      const mockReply = "I hear you, that's a lot. Want to sort it out together?";
+      const mockOptions = ["Yes, let's sort it", 'Show my tasks', 'Just vent'];
+      const { data: mockMsg, error: mockErr } = await supabaseAdmin
+        .from('ai_messages')
+        .insert({ conversation_id: conversationId, sender: 'assistant', message: mockReply, metadata: { options: mockOptions } })
+        .select().single();
+      if (mockErr) throw mockErr;
+      return res.json({ data: { conversationId, reply: mockReply, toolCalls: [], messageId: mockMsg.id, options: mockOptions } });
+    }
+
+    // Run Agent
+    const { reply: agentReply, toolCalls, retrievedChunkIds, promptVersionId } = await agent.handleMessage({
       userId,
       conversationId,
       userMessage: message.trim(),
       history,
       hints: perception.hints,
+      focusContext: context,
     });
 
-    // Layer 5 (Output safety): never send a diagnosis, medication advice or EF
-    // ranking. If a rule fires, the reply is swapped for a fixed safe reply.
-    // Only the rule names are logged, never the reply text.
-    const guard = checkReply(agentReply);
+    const guard = checkReply(agentReply || 'What would you like to do next?');
     if (!guard.ok) {
       console.warn(
         `[outputGuard] reply replaced (rules: ${guard.flags.join(', ')}; conversation ${conversationId})`
       );
     }
-    const reply = guard.reply;
+    // Tappable options: the model ends its reply with [[options: A | B | C]].
+    // We cut that marker out of the text and return it as buttons.
+    const rawReply = String(guard.reply || '');
+    const optMatch = rawReply.match(/\[\[\s*options\s*:([\s\S]*?)\]\]/i);
+    const parsedOptions = optMatch
+      ? optMatch[1].split('|').map((o) => o.trim()).filter(Boolean).map((o) => o.slice(0, 40)).slice(0, 4)
+      : [];
+    // Screen links: [[link: Key | Label]] -> buttons that open an app screen
+    const links = extractLinks(rawReply);
+    const reply =
+      rawReply
+        .replace(/\[\[\s*options\s*:[\s\S]*?\]\]/gi, '')
+        .replace(/\[\[\s*link\s*:[\s\S]*?\]\]/gi, '')
+        .replace(/\[\[[^\]]*$/, '') // an unfinished marker at the very end
+        .trim() || 'What would you like to do next?';
 
-    // Save the assistant's reply
+    // Older tool-based options still work as a fallback (present_options tool)
+    const optionsCall = [...(toolCalls || [])].reverse().find((tc) => tc.name === 'present_options');
+    const options = parsedOptions.length
+      ? parsedOptions
+      : Array.isArray(optionsCall?.args?.options)
+        ? optionsCall.args.options.map((o) => String(o).slice(0, 40)).slice(0, 4)
+        : [];
+
+    console.log(
+      '[chat] tools:', (toolCalls || []).map((t) => t.name),
+      '| options:', options,
+      '| links:', links.map((l) => l.key),
+      '| tail:', JSON.stringify(rawReply.slice(-100))
+    );
+
+    // Save assistant reply WITH retrieved chunk IDs AND prompt version ID
     const { data: aiMsg, error: aiMsgError } = await supabaseAdmin
       .from('ai_messages')
       .insert({
         conversation_id: conversationId,
         sender: 'assistant',
         message: reply,
+        retrieved_chunk_ids: retrievedChunkIds || [],
+        prompt_version_id: promptVersionId,
+        metadata: {
+          ...(options.length ? { options } : {}),
+          ...(links.length ? { links } : {}),
+        },
       })
       .select()
       .single();
     if (aiMsgError) throw aiMsgError;
 
-    // Log every tool call that happened during this turn.
-    // Execution time is not currently tracked per-tool in graph.js;
-    // leave execution_time_ms null for now, or add timing later.
     if (Array.isArray(toolCalls) && toolCalls.length > 0) {
       const logs = toolCalls.map((tc) => ({
         conversation_id: conversationId,
         message_id: aiMsg.id,
         tool_name: tc.name,
         tool_input: tc.args || {},
-        tool_output: {}, // populated later if we capture tool results per-call
+        tool_output: {},
         execution_time_ms: null,
         success: true,
       }));
@@ -179,28 +255,24 @@ router.post('/chat', async (req, res) => {
         conversationId,
         reply,
         toolCalls: Array.isArray(toolCalls) ? toolCalls : [],
+        messageId: aiMsg.id,
+        options,
+        links,
       },
     });
   } catch (error) {
     console.error('POST /api/ai/chat failed:', error);
+    if (error?.status === 429 || error?.status === 503) {
+      return res.status(429).json({ error: 'The coach is busy for a moment. Please try again in about 30 seconds.' });
+    }
     return res.status(500).json({ error: error.message || 'Chat failed.' });
   }
 });
 
 // POST /api/ai/suggest-subtasks
-// Body: { title: string }
-// Returns: { data: { subtasks: string[] } }
-//
-// Used by the Add Task sheet to generate meaningful subtasks instead of
-// the generic research/plan/execute template. Falls back to the generic
-// template if the LLM is unreachable.
 router.post('/suggest-subtasks', async (req, res) => {
   try {
     const userId = req.user?.id;
-    if (!userId) {
-      return res.status(401).json({ error: 'Not authenticated.' });
-    }
-
     const { title, category, subject, deadline } = req.body || {};
     if (!title || typeof title !== 'string' || !title.trim()) {
       return res.status(400).json({ error: 'title (string) is required.' });
@@ -238,5 +310,18 @@ router.post('/suggest-subtasks', async (req, res) => {
   }
 });
 
-module.exports = router;
+// ============================================================================
+// 2. GENERIC CRUD ROUTES
+// ============================================================================
 
+const fields = ['title', 'status', 'summary', 'metadata'];
+const crudRouter = createUserCrudRouter({
+  table: 'ai_conversations',
+  allowedInsert: fields,
+  allowedUpdate: fields,
+});
+
+// Mount the CRUD router after our custom routes.
+router.use('/', crudRouter);
+
+module.exports = router;

@@ -1,203 +1,128 @@
-// backend/services/ai/tools/graph.js
-
-const { ChatGroq } = require('@langchain/groq');
+const { createChatModel } = require('../llmProvider');
 const { createReactAgent } = require('@langchain/langgraph/prebuilt');
-const {
-  SystemMessage,
-  HumanMessage,
-  AIMessage,
-} = require('@langchain/core/messages');
+const { SystemMessage, HumanMessage, AIMessage } = require('@langchain/core/messages');
 
-const { createTask, updateTask, deleteTask, listOpenTasks } = require('./taskTool');
-const { createHabit, updateHabit, deleteHabit, listHabits } = require('./habitTool');
+const { createTask, updateTask, deleteTask, listOpenTasks, completeSubtask, getTaskDetails } = require('./taskTool');
+const { createHabit, updateHabit, deleteHabit, listHabits,} = require('./habitTool');
 const { startFocusSession } = require('./focusTool');
 const { suggestEmotionExercise } = require('./emotionTool');
 const { suggestExercise } = require('./exerciseTool');
 const { searchKnowledgeBase } = require('./knowledgeTool');
+const { presentOptions } = require('./optionsTool');
 const { rememberAboutUser } = require('./memoryTool');
-
-// Import the plain async functions (not the tools) for context injection
 const { fetchADHDScreening, fetchEFSummary } = require('./assessmentTool');
-
-// Layer 1 helper: turns language/intent/urgency hints into a prompt block
 const { formatHintsForPrompt } = require('../perception');
-
-// Layer 2 helpers: load this user's saved memories and format them for the prompt
 const { fetchUserMemories, formatMemoryBlock } = require('../memory/memoryRetrieval');
 
-const BASE_SYSTEM_PROMPT = `You are the Main ADHD Agent inside the Manas app.
-You are warm, concise, and practical.
+// Phase 2 Addition: Dynamic Prompts
+const { getActivePrompt } = require('../prompts/promptService');
+const { fetchExemplars, formatExemplarBlock } = require('../exemplars/exemplarRetrieval');
 
-# TRIAGE PROTOCOL
-Users will often send messy, emotional messages. You must:
-1. VALIDATE their feeling in one short sentence.
-2. TAKE ACTION using your tools if they are stuck.
-3. EDUCATE using \`search_knowledge_base\` if they ask "how" or "why".
-
-# TOOLS & KNOWLEDGE BASE
-
-You have \`search_knowledge_base\` which MUST be used for factual, "how do I", or "why does my brain" questions.
-
-## Default behavior (most important rule)
-ALWAYS leave category as "all" (or omit it). The retriever searches every source type and reranks by relevance, so ANY category filter silently removes relevant chunks. Only set a category in the rare cases below — otherwise let similarity decide.
-
-## When you MAY filter (be conservative)
-Only filter when the user explicitly asks for a specific source type, using their own words:
-- "give me a clinical guideline / paper / study" → "diagnosis_treatment_guideline"
-- "just practical tips, not research" → "coping_strategy" OR "behavioral_strategy" (either works)
-- "what do the studies say about exercise / habits / emotions" → "exercise", "habit_formation", or "emotion_regulation"
-- "CBT / DBT / therapy technique" → "behavioral_therapy"
-
-If the user just describes a problem and asks for help, DO NOT filter.
-
-## What's in each category (for your own judgement)
-- "coping_strategy" — short tactical tips (2-minute rule, body doubling, checklists)
-- "behavioral_strategy" — concrete strategies for specific problems: interrupting, tidying, deadlines, proofreading, decisions, staying on task
-- "behavioral_therapy" — CBT/DBT-style cognitive work, RSD coping, thought patterns, "why" questions
-- "psychology_lens" — popular psychological framings (LOW trust; treat as metaphor, not evidence)
-- "motivation" — poetry, quotes, book ideas (LOW trust; use for encouragement only, never as factual claim)
-- "diagnosis_treatment_guideline" — clinical guidelines, medication, assessment, treatment
-- "diagnostic_practice_synthesis" / "college_student_consensus" — diagnostic practice papers
-- "misinformation_correction_school_practice" — what schools get wrong about ADHD
-- "exercise" / "habit_formation" / "emotion_regulation" / "executive_function_interventions" — research on that domain
-
-## Never filter on these
-Do NOT filter to "coping_strategy" just because the user asks a practical question. Many of the best practical strategies live under "behavioral_strategy" too. Let the retriever find them across both.
-
-## Trust and safety
-- Chunks with trust_score < 0.4 (psychology_lens, motivation) are popular framings, not research. Never present their content as clinical evidence. If you use one, say plainly it's a popular idea, not a study.
-- Chunks with trust_score 0.5–0.7 are practitioner advice. Fine to suggest, but hedge ("a common strategy is...").
-- Chunks with trust_score ≥ 0.7 are evidence-based. Safe to cite as research.
-
-## Other tools
-- If the user is panicking or having a meltdown, use \`suggest_emotion_exercise\` FIRST (do not search the knowledge base in that turn).
-- Use \`remember_about_user\` only for durable preferences or challenges the user states (e.g., "I work night shifts", "I hate long lists").
-
-# CREATING TASKS
-- due_date is REQUIRED for create_task.
-- If missing, ask "when does this need to be done?" before creating the task.
-- Break tasks into small subtasks.
-
-# FORMATTING
-- For factual or clinical claims, base your answer on what the knowledge base returned, but write it in your own words — do not paste chunks verbatim.
-- Retrieved chunks contain labeled sections such as "Recognize it when:", "How:", "Why it helps:", "Try saying:", and "If it does not work:". These are internal scaffolding for your reasoning, NOT output templates. NEVER reproduce these labels in your reply, and do not copy sentences word-for-word. Adapt the content into warm, natural conversational prose.
-- When a chunk offers a "Try saying:" line, you may suggest it to the user (e.g., "You could try saying: ..."), but paraphrase it into their situation rather than quoting it as a script.
-- Do not output source markers like "[1]" or "(Source: ...)" unless the user explicitly asks where the information came from. Speak as one assistant, not as a research report.
-- Use Markdown formatting (bold, bullets).
-- Do not narrate that you are using a tool.
-
-# SAFETY & LIMITS
-- This is a support and self-reflection app, NOT a diagnostic tool. Never state or imply that the user has ADHD or any condition, even if the context below shows a high screening result.
-- Screening and executive-function numbers are self-reported context only. Never present them as clinical findings; use them only to choose a gentler or more structured approach.
-- Never invent clinical claims. If the knowledge base has nothing relevant, say so plainly and suggest talking to a doctor or other professional for anything clinical.
-- Do not give medication advice (starting, stopping or changing doses); point the user to their doctor.
-- If the user talks about harming themselves or not wanting to live, respond with warmth, encourage them to reach a trusted person or local emergency services, and do not use task, habit or focus tools.`;
-
-// EF scores are shown with their status only. There is deliberately NO
-// "weakest area": only Organization of Tasks is an exact score, the other six
-// are approximate recoveries, and no overall EF score exists.
 function formatContextBlock({ adhd, ef }) {
   let block = 'USER CONTEXT (self-reported, NOT a diagnosis):\n';
-
   if (adhd) {
-    block +=
-      `- ADHD self-screening (ASRS-based): ${adhd.percentage}% ` +
-      `(${adhd.score}/${adhd.max_score}), model output: ${adhd.predicted_label}. ` +
-      'Use only to adjust tone and structure.\n';
+    block += `- ADHD self-screening: ${adhd.percentage}% (${adhd.score}/${adhd.max_score}). Use only to adjust tone and structure.\n`;
   } else {
-    block += '- ADHD self-screening: not completed or unavailable.\n';
+    block += '- ADHD self-screening: not completed.\n';
   }
-
   if (ef && ef.dimensions.length > 0) {
-    block += '- Executive-function self-assessment (higher % = fewer self-reported difficulties):\n';
+    block += '- Executive-function self-assessment:\n';
     ef.dimensions.forEach((d) => {
       block += `  - ${d.label}: ${d.pct}% (${d.status === 'exact' ? 'exact' : 'approximate'})\n`;
     });
-    block +=
-      'EF RULES: Only "Organization of Tasks" is an exact score; the other dimensions are ' +
-      'approximate. There is no overall EF score. Do NOT rank the areas or call any of them ' +
-      'the weakest, worst, best or strongest, and never compute or mention an overall score. ' +
-      'Never quote these numbers back as clinical results.\n';
+    block += 'EF RULES: Do NOT rank the areas or call any of them the weakest. Never quote these numbers back as clinical results.\n';
   } else {
-    block += '- Executive-function self-assessment: not completed or unavailable.\n';
+    block += '- Executive-function self-assessment: not completed.\n';
   }
-
   return block;
 }
 
-async function buildSystemPrompt(userId, hints) {
-  const [adhd, ef, memories] = await Promise.all([
-    fetchADHDScreening(userId).catch((e) => {
-      console.warn('buildSystemPrompt: ADHD summary failed:', e.message);
-      return null;
-    }),
-    fetchEFSummary(userId).catch((e) => {
-      console.warn('buildSystemPrompt: EF summary failed:', e.message);
-      return null;
-    }),
-    // Best-effort: a failed memory lookup must never break the chat.
-    fetchUserMemories(userId).catch((e) => {
-      console.warn('buildSystemPrompt: memory lookup failed:', e.message);
-      return [];
-    }),
-  ]);
+const STYLE_RULES = `
 
+CHAT STYLE RULES (always follow; they override anything above about length or format):
+- You are a warm friend working WITH the user, not an instructor. Say "let's" and "we".
+- Keep every reply to 1-3 short sentences. Never write long paragraphs or long lists.
+- Do NOT use markdown headings (#), horizontal rules (---) or tables. At most one **bold** phrase per reply.
+- Ask only ONE question per reply.
+- When the user has a choice to make, call the present_options tool with 2-4 short options (max 5 words each) and do NOT write the options in your text. Then stop and wait.
+- Offer options instead of giving orders ("Want to start now?" with options, never "Create a task").
+- Never dump several steps at once. Give one small step, then offer options for what comes next.
+- If the user is overwhelmed, acknowledge it in one sentence first, then offer options.`;
+
+const TASK_COACHING_RULES = `
+
+TASK COACHING (how we work through tasks together):
+- Before creating a task, call list_open_tasks. If a matching task exists, use it. Never create duplicates.
+- If the user is overwhelmed or says they have too much work: if tasks exist, acknowledge it in one line, name the ONE most urgent step, and offer options (start this step / pick another / just talk). If none exist, ask what the work is and when it is due, then create it.
+- After creating a task, say the first step in one motivating sentence and offer options like "Start step 1 now" / "Later today".
+- Work on ONE step at a time. For a step about choosing or brainstorming a topic: offer 2-4 areas as options (for example concepts vs how/why questions), then after each pick offer narrower options plus "Go deeper" and "I'm done searching". When they are done, ask which topic they liked and wait for them to type its name.
+- When the user names the result (e.g. the topic), call complete_subtask with note = that result. Then celebrate in one sentence (it is a real milestone), say when the NEXT step is scheduled (bold the day and time), and offer options (start next step now / take a break / stop for today).
+- If the user says they finished a step, call complete_subtask. If you only suspect they finished, ask with options ("Yes, done" / "Not yet") first. Never tick a step without confirmation.
+- Never order the user to do things ("create a task", "add a habit"). Offer it as options and do it with them.
+- Get ids from list_open_tasks / get_task_details. Never invent ids.`;
+
+function formatFocusContext(ctx) {
+  if (!ctx || typeof ctx !== 'object') return '';
+  const s = (v) => String(v || '').slice(0, 200);
   return (
-    BASE_SYSTEM_PROMPT +
-    '\n\n' +
-    formatContextBlock({ adhd, ef }) +
-    formatMemoryBlock(memories) +
-    formatHintsForPrompt(hints)
+    `\n\nCURRENT FOCUS (the user tapped "Ask coach" on this step): task "${s(ctx.taskTitle)}" (task_id: ${s(ctx.taskId)}), ` +
+    `step "${s(ctx.subtaskTitle)}" (subtask_id: ${s(ctx.subtaskId)}). ` +
+    'Open with one motivating sentence about why this step matters, then offer 2-4 options for how to tackle it together.\n'
   );
 }
 
+async function buildSystemPrompt(userId, hints, userMessage, focusContext) {
+  // Fetch the dynamic prompt variant for this user
+  const [promptData, adhd, ef, memories, exemplars] = await Promise.all([
+    getActivePrompt(userId),
+    fetchADHDScreening(userId).catch((e) => { console.warn('ADHD fetch failed:', e.message); return null; }),
+    fetchEFSummary(userId).catch((e) => { console.warn('EF fetch failed:', e.message); return null; }),
+    fetchUserMemories(userId).catch((e) => { console.warn('Memory fetch failed:', e.message); return []; }),
+    fetchExemplars(userMessage).catch((e) => { console.warn('Exemplar fetch failed:', e.message); return []; }),  ]);
+
+  const finalPromptText = 
+    promptData.text +
+    '\n\n' +
+    formatContextBlock({ adhd, ef }) +
+    formatMemoryBlock(memories) +
+    formatExemplarBlock(exemplars) +
+    formatHintsForPrompt(hints) +
+    STYLE_RULES +
+    TASK_COACHING_RULES +
+    formatFocusContext(focusContext);
+
+  return { promptVersionId: promptData.id, promptText: finalPromptText };
+}
+
 const tools = [
-  createTask,
-  updateTask,
-  deleteTask,
-  listOpenTasks,
-  createHabit,
-  updateHabit,
-  deleteHabit,
-  listHabits,
-  startFocusSession,
-  suggestEmotionExercise,
-  suggestExercise,
-  searchKnowledgeBase,
-  rememberAboutUser,
+  createTask, updateTask, deleteTask, listOpenTasks,
+  createHabit, updateHabit, deleteHabit, listHabits,
+  startFocusSession, suggestEmotionExercise, suggestExercise,
+  searchKnowledgeBase, rememberAboutUser, presentOptions,
 ];
 
-const model = new ChatGroq({
-  model: 'openai/gpt-oss-120b',
-  temperature: 0.4,
-});
-
+const model = createChatModel({ temperature: 0.4, maxTokens: 1024 });
 const reactAgent = createReactAgent({ llm: model, tools });
 
-async function handleMessage({
-  userId,
-  conversationId,
-  userMessage,
-  history = [],
-  hints = null,
-}) {
-  const systemPrompt = await buildSystemPrompt(userId, hints);
+async function handleMessage({ userId, conversationId, userMessage, history = [], hints = null, focusContext = null }) {  const { promptVersionId, promptText } = await buildSystemPrompt(userId, hints, userMessage, focusContext);
+  console.log(`[prompt] ~${Math.round(promptText.length / 4)} tokens in the system prompt`);
+
+  const cleanHistory = [];
+  for (const m of history) {
+    if (!cleanHistory.length && m.sender === 'assistant') continue;
+    const last = cleanHistory[cleanHistory.length - 1];
+    if (last && last.sender === m.sender) last.message += '\n' + m.message;
+    else cleanHistory.push({ sender: m.sender, message: m.message });
+  }
 
   const messages = [
-    new SystemMessage(systemPrompt),
-    ...history.map((m) =>
-      m.sender === 'assistant'
-        ? new AIMessage(m.message)
-        : new HumanMessage(m.message)
-    ),
+    new SystemMessage(promptText),
+    ...cleanHistory.map((m) => m.sender === 'assistant' ? new AIMessage(m.message) : new HumanMessage(m.message)),
     new HumanMessage(userMessage),
   ];
 
-  const result = await reactAgent.invoke(
-    { messages },
-    { configurable: { userId, conversationId } }
-  );
-
+  const runConfig = { configurable: { userId, conversationId, retrievedChunkIds: [] } };
+  const result = await reactAgent.invoke({ messages }, runConfig);
   const finalMessage = result.messages[result.messages.length - 1];
 
   const toolCalls = result.messages
@@ -205,7 +130,14 @@ async function handleMessage({
     .flatMap((m) => m.tool_calls)
     .map((tc) => ({ name: tc.name, args: tc.args }));
 
-  return { reply: finalMessage.content, toolCalls };
+  return {
+    reply: Array.isArray(finalMessage.content)
+      ? finalMessage.content.map((p) => (typeof p === 'string' ? p : p?.text || '')).join('')
+      : finalMessage.content,
+    toolCalls,
+    retrievedChunkIds: runConfig.configurable.retrievedChunkIds,
+    promptVersionId, // <-- Returned for tracking!
+  };
 }
 
 module.exports = { handleMessage };

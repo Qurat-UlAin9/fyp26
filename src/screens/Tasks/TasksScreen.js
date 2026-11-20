@@ -116,8 +116,7 @@ const CoinPill = React.forwardRef(({ coins, onHistoryPress }, ref) => (
 ));
 
 // ─── Task Card ────────────────────────────────────────────────────────────────
-function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, onDelete, onEdit, onCoinFly }) {
-  const th        = getThemeById(task.themeId);
+function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, onDelete, onEdit, onCoinFly, onAskCoach }) {  const th        = getThemeById(task.themeId);
   const scaleAnim = useRef(new RNAnimated.Value(1)).current;
   const cardRef   = useRef(null);
 
@@ -261,6 +260,11 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
                   ]}>
                     {sub.title}
                   </Text>
+                  {!sub.done && !subtasks.slice(0, index).some((s) => !s.done) && (
+                    <TouchableOpacity onPress={() => onAskCoach(task, sub)} style={styles.askBtn} hitSlop={6}>
+                      <Text style={styles.askBtnText}>💬 Ask coach</Text>
+                    </TouchableOpacity>
+                  )}
                   {sub.done && <Text style={styles.coinBadge}>+1🪙</Text>}
                 </TouchableOpacity>
               ))
@@ -476,6 +480,13 @@ export default function TasksScreen({ route }) {
     navigation.navigate('Focus', { task });
   }, [navigation]);
 
+  const askCoach = useCallback((task, sub) => {
+    navigation.navigate('Chatbot', {
+      coachContext: { taskId: task.id, taskTitle: task.title, subtaskId: sub.id, subtaskTitle: sub.title },
+      _ts: Date.now(),
+    });
+  }, [navigation]);
+
   const openHistory = useCallback(() => {
     const parentNav = navigation.getParent?.();
     if (parentNav) parentNav.navigate('TaskHistory', { historyTasks: history });
@@ -515,6 +526,7 @@ export default function TasksScreen({ route }) {
             onDelete={handleDelete}
             onEdit={handleEdit}
             onCoinFly={fireCoins}
+            onAskCoach={askCoach}
           />
         )}
         ListEmptyComponent={
@@ -543,6 +555,8 @@ export default function TasksScreen({ route }) {
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
+  askBtn: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.28)' },
+  askBtnText: { fontSize: 11, fontWeight: '700', color: '#FFFFFF' },
   screen: { flex: 1, backgroundColor: '#0F172A' },
   header: {
     flexDirection: 'row',

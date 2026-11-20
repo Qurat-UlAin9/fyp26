@@ -11,6 +11,19 @@ const {
 
 const COLOR_ENUM = ['coral', 'sky', 'mint', 'lavender', 'teal'];
 
+const fmtHour = (h) => {
+  const n = Number(h);
+  if (!Number.isFinite(n)) return '';
+  const hh = Math.floor(n);
+  const mm = Math.round((n - hh) * 60);
+  return `${hh}:${String(mm).padStart(2, '0')}`;
+};
+
+const describeSub = (s, i) =>
+  `${i + 1}. [${s.done ? 'done' : 'todo'}] ${s.title}` +
+  `${s.note ? ` (result: ${s.note})` : ''} — subtask_id: ${s.id}` +
+  `${s.scheduledDate ? `, scheduled ${s.scheduledDate} at ${fmtHour(s.scheduledHour)}` : ''}`;
+
 // ---------------------------------------------------------
 // create_task
 // ---------------------------------------------------------
@@ -104,8 +117,11 @@ const createTask = tool(
         ? ` Steps spread across the days leading to ${due_date}.`
         : '';
 
-    return `Created task "${data.title}"${subNote} (id: ${data.id}, due ${due_date}).${scheduleNote}`;
-  },
+    const subList = (metadata.subtasks || []).map(describeSub).join('\n');
+    return (
+      `Created task "${data.title}"${subNote} (task_id: ${data.id}, due ${due_date}).${scheduleNote}` +
+      (subList ? `\nSubtasks:\n${subList}` : '')
+    );  },
   {
     name: 'create_task',
     description:
@@ -363,7 +379,123 @@ const listOpenTasks = tool(
   }
 );
 
+// ---------------------------------------------------------
+// get_task_details
+// ---------------------------------------------------------
+const getTaskDetails = tool(
+  async ({ task_id }, config) => {
+    const userId = config?.configurable?.userId;
+    if (!userId) return 'Error: no authenticated user in context.';
+
+    const { data, error } = await supabaseAdmin
+      .from('tasks')
+      .select('id, title, status, due_date, metadata')
+      .eq('id', task_id)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) return `Error fetching task: ${error.message}`;
+    if (!data) return `Task ${task_id} not found.`;
+
+    const subs = data.metadata?.subtasks || [];
+    return (
+      `Task "${data.title}" (task_id: ${data.id}, status ${data.status}, due ${String(data.due_date || '').slice(0, 10)}).\n` +
+      (subs.length ? subs.map(describeSub).join('\n') : 'No subtasks.')
+    );
+  },
+  {
+    name: 'get_task_details',
+    description: 'Get one task with its subtasks, their ids, done state and scheduled times.',
+    schema: z.object({ task_id: z.string() }),
+  }
+);
+
+// ---------------------------------------------------------
+// complete_subtask
+// ---------------------------------------------------------
+const completeSubtask = tool(
+  async ({ task_id, subtask_id, subtask_title, note }, config) => {
+    const userId = config?.configurable?.userId;
+    if (!userId) return 'Error: no authenticated user in context.';
+
+    const { data: task, error } = await supabaseAdmin
+      .from('tasks')
+      .select('id, title, status, metadata')
+      .eq('id', task_id)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) return `Error fetching task: ${error.message}`;
+    if (!task) return `Error: task ${task_id} not found.`;
+
+    const subs = Array.isArray(task.metadata?.subtasks) ? [...task.metadata.subtasks] : [];
+    let idx = -1;
+    if (subtask_id) idx = subs.findIndex((s) => s.id === subtask_id);
+    if (idx < 0 && subtask_title) {
+      const q = subtask_title.toLowerCase();
+      idx = subs.findIndex((s) => String(s.title).toLowerCase().includes(q));
+    }
+    if (idx < 0) return 'Error: subtask not found. Call get_task_details to get the right subtask_id.';
+
+    if (subs[idx].done) return `Subtask "${subs[idx].title}" is already done.`;
+
+    const earlier = subs.slice(0, idx).find((s) => !s.done);
+    if (earlier) {
+      return `Not done: the earlier step "${earlier.title}" is still open. Steps must be finished in order. Offer to work on that step first.`;
+    }
+
+    const cleanNote = note ? String(note).trim().slice(0, 80) : '';
+    const baseTitle = subs[idx].title;
+    subs[idx] = {
+      ...subs[idx],
+      done: true,
+      note: cleanNote || subs[idx].note,
+      title: cleanNote && !baseTitle.includes(cleanNote) ? `${baseTitle}: ${cleanNote}` : baseTitle,
+      completedAt: new Date().toISOString(),
+      completedVia: 'ai',
+    };
+
+    const allDone = subs.every((s) => s.done);
+    const patch = { metadata: { ...(task.metadata || {}), subtasks: subs } };
+    if (allDone) {
+      patch.status = 'Completed';
+      patch.completed_at = new Date().toISOString();
+    }
+
+    const { error: upErr } = await supabaseAdmin
+      .from('tasks')
+      .update(patch)
+      .eq('id', task_id)
+      .eq('user_id', userId);
+    if (upErr) return `Error updating task: ${upErr.message}`;
+
+    const next = subs.find((s) => !s.done);
+    if (allDone) return `Marked "${baseTitle}" done. That was the LAST step, so the whole task "${task.title}" is now complete. Celebrate it.`;
+    return (
+      `Marked "${baseTitle}" done${cleanNote ? ` (result saved: ${cleanNote})` : ''}. ` +
+      `Next step: "${next.title}" (subtask_id: ${next.id})` +
+      `${next.scheduledDate ? `, scheduled ${next.scheduledDate} at ${fmtHour(next.scheduledHour)}` : ''}. ` +
+      `${subs.filter((s) => s.done).length}/${subs.length} steps done.`
+    );
+  },
+  {
+    name: 'complete_subtask',
+    description:
+      'Mark ONE subtask as done, optionally saving its result (e.g. the topic the user picked) in note. ' +
+      'Only call after the user has confirmed they finished it. Steps must be completed in order. ' +
+      'Get ids from list_open_tasks, get_task_details or create_task; never invent them.',
+    schema: z.object({
+      task_id: z.string(),
+      subtask_id: z.string().optional(),
+      subtask_title: z.string().optional().describe('Only if you do not have the id'),
+      note: z.string().optional().describe('The result of the step, e.g. the chosen topic name'),
+    }),
+  }
+);
+
 module.exports = {
+  completeSubtask,
+  getTaskDetails,
   createTask,
   updateTask,
   deleteTask,

@@ -25,6 +25,14 @@ router.post('/login', async (req, res) => {
   return res.json({ user: data.user, session: data.session });
 });
 
+router.post('/refresh', async (req, res) => {
+  const { refresh_token } = req.body || {};
+  if (!refresh_token) return res.status(400).json({ error: 'refresh_token is required' });
+  const { data, error } = await supabase.auth.refreshSession({ refresh_token });
+  if (error || !data?.session) return res.status(401).json({ error: 'Refresh failed. Please log in again.' });
+  return res.json({ user: data.user, session: data.session });
+});
+
 router.get('/me', requireAuth, async (req, res) => res.json({ user: req.user }));
 
 module.exports = router;

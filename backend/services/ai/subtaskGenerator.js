@@ -3,23 +3,24 @@
 // Breaks a task title (+ optional category/subject) into concrete subtasks.
 // Returns an array of strings. Scheduling happens in the caller.
 
-const { ChatGroq } = require('@langchain/groq');
+const { createChatModel } = require('./llmProvider');
 
 const FALLBACK_SUBTASKS = (title) => [
-  `Research ${title}`,
-  'Plan approach',
-  'Execute & review',
+  `Write down 5 ideas for: ${title}`,
+  'Pick the best idea and write one sentence about it',
+  'Spend 15 minutes on the first piece, then check it',
 ];
 
-const model = new ChatGroq({
-  model: 'openai/gpt-oss-120b',
-  temperature: 0.6,
-});
+const model = createChatModel({ temperature: 0.6, maxTokens: 512 });
 
 const SYSTEM_PROMPT = `You break down tasks into concrete, actionable subtasks for someone with ADHD.
 
 Rules:
-- Return 3 to 5 subtasks.
+- Return 4 to 6 subtasks.
+- Each subtask takes 10-25 minutes and produces ONE visible result (a list, a decision, a draft, a file).
+- The FIRST subtask must be tiny and easy to start (under 5 minutes of effort).
+- If the task involves choosing a topic, include "Brainstorm 5 possible topics" followed by "Pick one topic and write its name".
+- Never use vague verbs like "research", "work on", "prepare" or "plan" without saying exactly what to produce.
 - Each is a short, specific action (max 12 words).
 - Order them in the sequence they should be done.
 - Use specific verbs and nouns from the task title, category, and subject.
@@ -102,7 +103,7 @@ async function generateSubtasks(
     const parsed = parseSubtasks(raw);
 
     if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed.slice(0, 5);
+      return parsed.slice(0, 6);
     }
 
     return FALLBACK_SUBTASKS(cleanTitle);

@@ -116,7 +116,38 @@ async function clearSession() {
    GENERIC REQUEST
 ========================================================= */
 
-async function request(path, options = {}) {
+
+let refreshPromise = null;
+
+async function refreshAccessToken() {
+  // Only one refresh at a time (loadFromBackend fires many requests together)
+  if (refreshPromise) return refreshPromise;
+  refreshPromise = (async () => {
+    try {
+      const session = await getStoredSession();
+      if (!session?.refresh_token) return null;
+      const res = await fetch(`${API_URL}/api/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: session.refresh_token }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data?.session) {
+        await saveSession(data.session);
+        return data.session.access_token;
+      }
+      return null;
+    } catch {
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+  return refreshPromise;
+}
+
+async function request(path, options = {}, isRetry = false) {
   const token = await getAccessToken();
 
   const headers = {
@@ -163,6 +194,11 @@ async function request(path, options = {}) {
      * If token expired, remove local authentication.
      */
     if (response.status === 401) {
+      const isAuthEndpoint = path.startsWith('/api/auth/login') || path.startsWith('/api/auth/register');
+      if (!isRetry && !isAuthEndpoint) {
+        const newToken = await refreshAccessToken();
+        if (newToken) return request(path, options, true);
+      }
       await clearSession();
     }
 
@@ -547,10 +583,10 @@ export async function deleteAIConversation(id) {
 }
 
 
-export async function sendChatMessage(conversationId, message) {
+export async function sendChatMessage(conversationId, message, fromOption = false, context = null) {
   return request('/api/ai/chat', {
     method: 'POST',
-    body: JSON.stringify({ conversationId, message }),
+    body: JSON.stringify({ conversationId, message, fromOption, context }),
   });
 }
 
@@ -609,6 +645,20 @@ export async function getEFAssessments() {
 export async function getLatestEFAssessment() {
   const { data } = await getEFAssessments();
   return Array.isArray(data) && data.length > 0 ? data[0] : null;
+}
+
+// Remove the old submitFeedback and fetchChatHistory that used "api.post" and "api.get"
+// Replace them with this:
+
+export async function submitFeedback(messageId, rating) {
+  return request('/api/feedback', {
+    method: 'POST',
+    body: JSON.stringify({ messageId, rating }),
+  });
+}
+
+export async function fetchChatHistory() {
+  return request('/api/ai/history');
 }
 
 /* =========================================================
