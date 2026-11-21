@@ -3,13 +3,31 @@
 const { tool } = require('@langchain/core/tools');
 const { z } = require('zod');
 const { supabaseAdmin } = require('../../../config/supabase');
-const { generateSubtasks } = require('../subtaskGenerator');
-const {
-  scheduleSubtasks,
-  computePreferredWorkHour,
-} = require('../subtaskScheduler');
+const { pushAppAction } = require('./appActions');
+const rewards = require('../../rewards/rewardsService');
+const time = require('../context/timeContext');
+const { getPlanningContext, planSteps, scheduleSteps } = require('../subtaskPlanner');
 
 const COLOR_ENUM = ['coral', 'sky', 'mint', 'lavender', 'teal'];
+const CATEGORY_COLOR = {
+  academic: 'sky', work: 'lavender', health: 'mint', home: 'teal',
+  social: 'coral', finance: 'teal', creative: 'lavender', personal: 'mint',
+};
+
+// The model rarely picks a color, so every card came out coral. Choose one in code:
+// the category's color, unless one of the user's last two tasks already uses it.
+async function pickColor(userId, category, asked) {
+  if (COLOR_ENUM.includes(asked)) return asked;
+  let recent = [];
+  try {
+    const { data } = await supabaseAdmin
+      .from('tasks').select('metadata').eq('user_id', userId).order('created_at', { ascending: false }).limit(2);
+    recent = (data || []).map((t) => t.metadata?.themeId).filter(Boolean);
+  } catch (_) { /* no history */ }
+  const preferred = CATEGORY_COLOR[category];
+  if (preferred && !recent.includes(preferred)) return preferred;
+  return COLOR_ENUM.find((c) => !recent.includes(c)) || COLOR_ENUM[0];
+}
 
 const fmtHour = (h) => {
   const n = Number(h);
@@ -54,36 +72,59 @@ const createTask = tool(
       );
     }
 
+    // Dates are decided in code, in the user's timezone (the model cannot know today's date)
+    const tz = config?.configurable?.timezone || (await time.getUserTimezone(userId));
+    const dueISO = time.resolveDueDate(due_date, tz);
+    const now = time.nowInTz(tz);
+    if (!dueISO) {
+      return `Error: I could not understand the due date "${due_date}". Ask the user for the exact day.`;
+    }
+    if (dueISO < now.iso) {
+      return `Error: ${dueISO} is already in the past (today is ${now.iso}). Ask the user which day they meant.`;
+    }
+
     const metadata = {};
 
-    // Determine subtask titles (from AI, or auto-generate if not provided)
-    let titles = Array.isArray(subtasks)
-      ? subtasks.map((s) => (typeof s === 'string' ? s : String(s.title || s)))
+    // Plan the steps: small, with a time cap, done together with the coach.
+    // Only use the model's own list when the user dictated the steps.
+    const plan = await getPlanningContext(userId, tz);
+    const daysLeft = time.diffDaysISO(now.iso, dueISO);
+    let steps;
+    const userSteps = Array.isArray(subtasks)
+      ? subtasks.map((x) => (typeof x === 'string' ? x : String(x.title || x))).filter(Boolean)
       : [];
-
-    if (titles.length === 0) {
-      titles = await generateSubtasks(title, { category, subject });
+    if (userSteps.length > 0) {
+      steps = userSteps.map((t) => ({ title: t, minutes: Math.min(15, plan.maxSession), kind: 'do' }));
+    } else {
+      steps = await planSteps(
+        { title, description, category, subject, difficulty, daysLeft, availableMinutes: Math.max(0, daysLeft + 1) * 90 },
+        plan.maxSession
+      );
     }
 
-    // Schedule
-    let scheduled = [];
-    if (titles.length > 0) {
-      const preferredHour = await computePreferredWorkHour(userId);
-      scheduled = scheduleSubtasks(titles, due_date, { preferredHour });
-    }
+    const sched = scheduleSteps(steps, {
+      today: now.iso,
+      nowHour: now.hour + now.minute / 60,
+      deadline: dueISO,
+      preferredHour: plan.preferredHour,
+      busy: plan.busy,
+    });
+    const scheduled = sched.items;
+    const totalMinutes = sched.neededMinutes;
 
     if (scheduled.length > 0) {
       metadata.subtasks = scheduled.map((s, i) => ({
         id: `${Date.now()}-${i}`,
         title: s.title,
         done: false,
+        kind: s.kind,
         scheduledDate: s.scheduledDate,
         scheduledHour: s.scheduledHour,
         durationMins: s.durationMins,
       }));
     }
 
-    if (color) metadata.themeId = color;
+    metadata.themeId = await pickColor(userId, category, color);
     if (category) metadata.category = category;
     if (subject) metadata.subject = subject;
 
@@ -96,8 +137,8 @@ const createTask = tool(
         status: 'Pending',
         priority: priority || 'Medium',
         difficulty: difficulty || 'Medium',
-        due_date,
-        estimated_minutes: estimated_minutes || null,
+        due_date: dueISO,
+        estimated_minutes: estimated_minutes || totalMinutes || null,
         created_by_ai: true,
         created_source: 'AI',
         ai_reason: reason || null,
@@ -108,28 +149,30 @@ const createTask = tool(
 
     if (error) return `Error creating task: ${error.message}`;
 
-    const subNote = metadata.subtasks?.length
-      ? ` with ${metadata.subtasks.length} scheduled subtask(s)`
+    const planLines = scheduled.map(
+      (s, i) =>
+        `${i + 1}. [${s.durationMins} min, ${s.kind}] ${s.title} — ${time.friendlyDate(s.scheduledDate, now.iso)}, ${time.friendlyTime(s.scheduledHour)}`
+    );
+    const tightNote = sched.tight
+      ? `\nHEADS UP: this is tight (about ${sched.neededMinutes} min of work and little free time before ${time.friendlyDate(dueISO, now.iso)}). Say so honestly and offer a later deadline or fewer steps.`
       : '';
-
-    const scheduleNote =
-      metadata.subtasks?.length
-        ? ` Steps spread across the days leading to ${due_date}.`
-        : '';
-
-    const subList = (metadata.subtasks || []).map(describeSub).join('\n');
     return (
-      `Created task "${data.title}"${subNote} (task_id: ${data.id}, due ${due_date}).${scheduleNote}` +
-      (subList ? `\nSubtasks:\n${subList}` : '')
-    );  },
+      `Created task "${data.title}" (task_id: ${data.id}), due ${time.friendlyDate(dueISO, now.iso)} (${dueISO}).\n` +
+      `Plan: ${scheduled.length} steps, about ${totalMinutes} min in total, each at most ${plan.maxSession} min, ` +
+      `spread over the days with a spare day before the deadline. Times are the user's local time:\n` +
+      planLines.join('\n') +
+      tightNote +
+      `\nSubtask ids are in get_task_details. Read dates and times to the user exactly as written above. ` +
+      `Steps marked "learn" are taught by you in chat; offer to start the first step right now.`
+    );
+  },
   {
     name: 'create_task',
     description:
       'Create a new task. due_date is REQUIRED -- if the user has not told you ' +
       'when it needs to be done, ask them BEFORE calling this tool. Subtasks ' +
-      'are automatically scheduled across the days between now and the deadline ' +
-      'so the user works on the goal in small pieces. Do NOT schedule subtasks ' +
-      'yourself; just provide titles and the system spreads them. You can set a ' +
+      'are planned and scheduled by the system (small steps with a time cap, spread over free days). ' +
+      'Do NOT write or schedule subtasks yourself. You can set a ' +
       'category (academic/work/health/home/social/finance/creative/personal) and ' +
       'a short subject string. You can set a color (coral/sky/mint/lavender/teal).',
     schema: z.object({
@@ -139,7 +182,7 @@ const createTask = tool(
         .array(z.string())
         .optional()
         .describe(
-          'Optional 2-5 concrete steps. If omitted, the system generates them.'
+          'Leave this out. The planner writes the steps. Only pass it if the user dictated their own steps.'
         ),
       category: z
         .enum([
@@ -160,8 +203,8 @@ const createTask = tool(
       due_date: z
         .string()
         .describe(
-          'REQUIRED. ISO date (YYYY-MM-DD). If the user has not provided one, ' +
-          'do not call this tool -- reply asking when the task is due.'
+          'REQUIRED. YYYY-MM-DD from the calendar in your context (or the user\'s words like "monday" or "in 3 days"). ' +
+          'If the user has not said when it is due, do not call this tool: ask.'
         ),
       estimated_minutes: z.number().optional(),
       reason: z.string().optional(),
@@ -210,41 +253,68 @@ const updateTask = tool(
     if (status !== undefined) patch.status = status;
     if (priority !== undefined) patch.priority = priority;
     if (difficulty !== undefined) patch.difficulty = difficulty;
-    if (due_date !== undefined) patch.due_date = due_date;
+    // Dates are decided in code, in the user's timezone
+    const tz = config?.configurable?.timezone || (await time.getUserTimezone(userId));
+    const now = time.nowInTz(tz);
+    let dueISO = null;
+    if (due_date !== undefined) {
+      dueISO = time.resolveDueDate(due_date, tz);
+      if (!dueISO) return `Error: I could not understand the due date "${due_date}". Ask the user for the exact day.`;
+      if (dueISO < now.iso) return `Error: ${dueISO} is already in the past (today is ${now.iso}). Ask the user which day they meant.`;
+      patch.due_date = dueISO;
+    }
     if (estimated_minutes !== undefined)
       patch.estimated_minutes = estimated_minutes;
     if (reason !== undefined) patch.ai_reason = reason;
 
     const metadata = { ...(existing.metadata || {}) };
 
-    // If new subtasks provided OR title changed and we have a deadline,
-    // re-schedule.
-    const shouldRegenSubtasks =
-      Array.isArray(subtasks) && subtasks.length > 0;
+    // New deadline, or the user dictated a new list: re-plan the steps that are not done yet
+    const oldDue = String(existing.due_date || '').slice(0, 10);
+    const dueChanged = !!dueISO && dueISO !== oldDue;
+    const hasNewList = Array.isArray(subtasks) && subtasks.length > 0;
+    let moveNote = '';
 
-    if (shouldRegenSubtasks) {
-      const effectiveDeadline = due_date || existing.due_date;
-      if (effectiveDeadline) {
-        const preferredHour = await computePreferredWorkHour(userId);
-        const scheduled = scheduleSubtasks(subtasks, effectiveDeadline, {
-          preferredHour,
+    if (dueChanged || hasNewList) {
+      const deadline = dueISO || oldDue;
+      if (deadline) {
+        const plan = await getPlanningContext(userId, tz, { excludeTaskId: task_id });
+        const prior = Array.isArray(metadata.subtasks) ? metadata.subtasks : [];
+        const doneOnes = prior.filter((p) => p.done);
+        const titlesOf = (list) => list.map((x) => (typeof x === 'string' ? x : String(x.title || x))).filter(Boolean);
+
+        const todo = hasNewList
+          ? titlesOf(subtasks)
+              .filter((t) => !doneOnes.some((d) => d.title === t))
+              .map((t) => ({ title: t, minutes: Math.min(15, plan.maxSession), kind: 'do' }))
+          : prior.filter((p) => !p.done).map((p) => ({ title: p.title, minutes: p.durationMins || 15, kind: p.kind || 'do' }));
+
+        const sched = scheduleSteps(todo, {
+          today: now.iso,
+          nowHour: now.hour + now.minute / 60,
+          deadline: deadline < now.iso ? now.iso : deadline,
+          preferredHour: plan.preferredHour,
+          busy: plan.busy,
         });
 
-        const prior = Array.isArray(metadata.subtasks)
-          ? metadata.subtasks
-          : [];
-
-        metadata.subtasks = scheduled.map((s, i) => {
-          const match = prior.find((p) => p.title === s.title);
-          return {
-            id: match?.id || `${task_id}-sub-${i}-${Date.now()}`,
+        metadata.subtasks = [
+          ...doneOnes,
+          ...sched.items.map((s, i) => ({
+            id: prior.find((p) => p.title === s.title)?.id || `${task_id}-sub-${i}-${Date.now()}`,
             title: s.title,
-            done: match?.done || false,
+            done: false,
+            kind: s.kind,
             scheduledDate: s.scheduledDate,
             scheduledHour: s.scheduledHour,
             durationMins: s.durationMins,
-          };
-        });
+          })),
+        ];
+        moveNote =
+          `\nRe-planned the remaining steps:\n` +
+          sched.items
+            .map((s, i) => `${i + 1}. ${s.title} — ${time.friendlyDate(s.scheduledDate, now.iso)}, ${time.friendlyTime(s.scheduledHour)}`)
+            .join('\n') +
+          (sched.tight ? '\nHEADS UP: this is tight. Say so honestly.' : '');
       }
     }
 
@@ -267,7 +337,7 @@ const updateTask = tool(
     const fields = Object.keys(patch).filter((k) => k !== 'metadata');
     return `Updated task "${data.title}" (fields changed: ${
       fields.length ? fields.join(', ') : 'metadata only'
-    }).`;
+    }).${moveNote}`;
   },
   {
     name: 'update_task',
@@ -469,10 +539,21 @@ const completeSubtask = tool(
       .eq('user_id', userId);
     if (upErr) return `Error updating task: ${upErr.message}`;
 
+    // Award the same coins a manual tick gives (saved on the server), and tell the app to refresh
+    let earned = 0;
+    try {
+      earned += (await rewards.applyEvent(userId, { kind: 'subtask' })).delta;
+      if (allDone) earned += (await rewards.applyEvent(userId, { kind: 'task' })).delta;
+      if (earned > 0) pushAppAction(config, { type: 'rewards_changed', earned });
+    } catch (e) {
+      console.warn('[rewards] step coins failed:', e.message);
+    }
+    const coinNote = earned > 0 ? ` The user earned ${earned} coins.` : '';
+
     const next = subs.find((s) => !s.done);
-    if (allDone) return `Marked "${baseTitle}" done. That was the LAST step, so the whole task "${task.title}" is now complete. Celebrate it.`;
+    if (allDone) return `Marked "${baseTitle}" done. That was the LAST step, so the whole task "${task.title}" is now complete.${coinNote} Celebrate it.`;
     return (
-      `Marked "${baseTitle}" done${cleanNote ? ` (result saved: ${cleanNote})` : ''}. ` +
+      `Marked "${baseTitle}" done${cleanNote ? ` (result saved: ${cleanNote})` : ''}.${coinNote} ` +
       `Next step: "${next.title}" (subtask_id: ${next.id})` +
       `${next.scheduledDate ? `, scheduled ${next.scheduledDate} at ${fmtHour(next.scheduledHour)}` : ''}. ` +
       `${subs.filter((s) => s.done).length}/${subs.length} steps done.`

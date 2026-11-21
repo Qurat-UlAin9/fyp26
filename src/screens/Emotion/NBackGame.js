@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../../contexts/ThemeContext';
 import { coinsForGameScore } from '../../utils/gameRewards';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 const GRID_SIZE = 3;
 const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
@@ -108,6 +109,7 @@ export default function NBackGame({ navigation }) {
       text2: `${scoreRef.current} points · ${reward} coins earned`,
       visibilityTime: 3000,
     });
+    reportExerciseDone('NBackGame', { summary: `${scoreRef.current} points` });
   };
 
   useEffect(() => {

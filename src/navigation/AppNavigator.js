@@ -33,6 +33,7 @@ import SoundscapesScreen from '../screens/Emotion/SoundscapesScreen';
 import TaskHistoryScreen from '../screens/Tasks/TaskHistoryScreen';
 import ThemedBackButton from '../components/common/ThemedBackButton';
 import BackToCoachChip from '../components/common/BackToCoachChip';
+import CoachDoneCard from '../components/common/CoachDoneCard';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Stack = createNativeStackNavigator();
@@ -47,6 +48,7 @@ export default function AppNavigator() {
         <>
           {children}
           <BackToCoachChip route={route} navigation={navigation} />
+          <CoachDoneCard route={route} navigation={navigation} />
         </>
       )}
       screenOptions={{

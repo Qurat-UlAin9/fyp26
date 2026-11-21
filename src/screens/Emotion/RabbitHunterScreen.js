@@ -22,6 +22,7 @@ import Animated, {
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../../contexts/ThemeContext';
 import { coinsForGameScore } from '../../utils/gameRewards';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -167,6 +168,7 @@ export default function RabbitHunterScreen({ navigation }) {
           text2: `${score} points · ${reward} coins earned`,
           visibilityTime: 3000,
         });
+        reportExerciseDone('RabbitHunter', { summary: `${score} points` });
         return;
       }
       runCycle();

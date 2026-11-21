@@ -12,6 +12,7 @@ import { ArrowLeft, ArrowRight, Eye, EyeOff, RotateCcw, Sparkles } from 'lucide-
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../../contexts/ThemeContext';
 import { coinsForGameScore } from '../../utils/gameRewards';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 const PROMPTS = {
   gentle: [
@@ -81,6 +82,7 @@ export default function TongueTwisterGame({ navigation }) {
       text2: `${prompts.length} prompts tried · ${reward} coins earned`,
       visibilityTime: 3000,
     });
+    reportExerciseDone('TongueTwisterGame', { summary: `${prompts.length} prompts tried` });
   };
 
   const handleNext = () => {

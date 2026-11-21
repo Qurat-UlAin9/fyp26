@@ -6,12 +6,9 @@ const { supabaseAdmin } = require('../config/supabase');
 const agent = require('../services/ai/tools/graph');
 const { analyzeMessage } = require('../services/ai/perception');
 const { checkReply } = require('../services/ai/outputGuard');
-const { generateSubtasks } = require('../services/ai/subtaskGenerator');
+const time = require('../services/ai/context/timeContext');
+const { getPlanningContext, planSteps, scheduleSteps } = require('../services/ai/subtaskPlanner');
 const { extractLinks } = require('../services/ai/coachLinks');
-const {
-  scheduleSubtasks,
-  computePreferredWorkHour,
-} = require('../services/ai/subtaskScheduler');
 
 // Apply Auth Middleware to EVERYTHING in this file
 router.use(requireAuth);
@@ -166,7 +163,7 @@ router.post('/chat', async (req, res) => {
     }
 
     // Run Agent
-    const { reply: agentReply, toolCalls, retrievedChunkIds, promptVersionId } = await agent.handleMessage({
+    const { reply: agentReply, toolCalls, retrievedChunkIds, promptVersionId, appActions } = await agent.handleMessage({
       userId,
       conversationId,
       userMessage: message.trim(),
@@ -258,6 +255,7 @@ router.post('/chat', async (req, res) => {
         messageId: aiMsg.id,
         options,
         links,
+        appActions: Array.isArray(appActions) ? appActions : [],
       },
     });
   } catch (error) {
@@ -283,25 +281,44 @@ router.post('/suggest-subtasks', async (req, res) => {
       });
     }
 
-    const titles = await generateSubtasks(title.trim(), {
-      category: typeof category === 'string' ? category : undefined,
-      subject: typeof subject === 'string' ? subject : undefined,
-    });
+    // Same planner the coach uses: small steps with a time cap, spread over free days
+    const tz = await time.getUserTimezone(userId);
+    const now = time.nowInTz(tz);
+    let dueISO = time.resolveDueDate(deadline, tz);
+    if (!dueISO) return res.status(400).json({ error: 'deadline could not be understood.' });
+    if (dueISO < now.iso) dueISO = now.iso;
 
-    const preferredHour = await computePreferredWorkHour(userId);
-    const scheduled = scheduleSubtasks(titles, deadline, { preferredHour });
+    const plan = await getPlanningContext(userId, tz);
+    const steps = await planSteps(
+      {
+        title: title.trim(),
+        category: typeof category === 'string' ? category : undefined,
+        subject: typeof subject === 'string' ? subject : undefined,
+        daysLeft: time.diffDaysISO(now.iso, dueISO),
+      },
+      plan.maxSession
+    );
+    const sched = scheduleSteps(steps, {
+      today: now.iso,
+      nowHour: now.hour + now.minute / 60,
+      deadline: dueISO,
+      preferredHour: plan.preferredHour,
+      busy: plan.busy,
+    });
 
     return res.json({
       data: {
-        subtasks: scheduled.map((s, i) => ({
+        subtasks: sched.items.map((s, i) => ({
           id: `preview-${Date.now()}-${i}`,
           title: s.title,
           done: false,
+          kind: s.kind,
           scheduledDate: s.scheduledDate,
           scheduledHour: s.scheduledHour,
           durationMins: s.durationMins,
         })),
-        preferredHour,
+        preferredHour: plan.preferredHour,
+        tight: sched.tight,
       },
     });
   } catch (error) {

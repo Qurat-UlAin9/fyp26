@@ -7,7 +7,8 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { sendChatMessage, fetchChatHistory } from '../../services/api';
 import MessageBubble from '../../components/chatbot/MessageBubble';
-import { setCoachReturn, openCoachLink } from '../../utils/coachNav';
+import Toast from 'react-native-toast-message';
+import { setCoachReturn, openCoachLink, takeCoachEvent, subscribeCoachEvent } from '../../utils/coachNav';
 
 const STARTER_OPTIONS = ["I'm overwhelmed", 'Help me start a task', "I'm feeling low", 'Just chatting'];
 
@@ -15,7 +16,10 @@ const STARTER_OPTIONS = ["I'm overwhelmed", 'Help me start a task', "I'm feeling
 const globalCoachKey = { current: null };
 
 export default function ChatbotScreen({ route }) {
-  const { theme, isDark } = useTheme();
+  const themeCtx = useTheme();
+  const { theme, isDark } = themeCtx;
+  const themeRef = useRef(themeCtx); // latest rewards state, readable from async code
+  themeRef.current = themeCtx;
   const { profile, refreshData } = useAppData();
   const navigation = useNavigation();
   const displayName = profile?.name || 'Friend';
@@ -70,6 +74,32 @@ export default function ChatbotScreen({ route }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // The coach changed rewards on the server (earned coins, bought or switched something):
+  // reload them, show what happened, and start music if asked to
+  const handleRewardsChanged = async (changes) => {
+    await themeRef.current.refreshRewards();
+    const earned = changes.reduce((sum, c) => sum + (c.earned || 0), 0);
+    const unlocked = changes.find((c) => c.unlocked)?.unlocked;
+    const song = changes.find((c) => c.play);
+    if (earned > 0) {
+      Toast.show({ type: 'success', text1: `+${earned} 🪙 earned`, text2: 'Added by your coach' });
+    }
+    if (unlocked) {
+      setTimeout(() => {
+        Toast.show({ type: 'success', text1: `Unlocked: ${unlocked.name} 🎉`, text2: `-${unlocked.cost} 🪙` });
+      }, earned > 0 ? 2400 : 0);
+    }
+    if (song) {
+      // wait for the new track to be selected; do not pause a track that is already playing
+      setTimeout(() => {
+        const t = themeRef.current;
+        if (t.selectedSoundId !== song.soundId) return;
+        if (t.isSoundPlaying) return;
+        t.toggleSoundPlayback();
+      }, 700);
+    }
+  };
+
   // overrideText is set when the user taps an option chip
   const sendMessage = async (overrideText, fromOption = false, context = null) => {
     const userText = (typeof overrideText === 'string' ? overrideText : input).trim();
@@ -83,7 +113,7 @@ export default function ChatbotScreen({ route }) {
 
     try {
       const response = await sendChatMessage(conversationId, userText, fromOption, context);
-      const { conversationId: returnedId, reply, toolCalls, messageId, options, links } = response.data;
+      const { conversationId: returnedId, reply, toolCalls, messageId, options, links, appActions } = response.data;
 
       if (!conversationId) setConversationId(returnedId);
 
@@ -112,6 +142,12 @@ export default function ChatbotScreen({ route }) {
         },
       ]);
 
+      // The coach earned coins / bought / switched something for the user (saved on the server)
+      const rewardChanges = Array.isArray(appActions) ? appActions.filter((a) => a.type === 'rewards_changed') : [];
+      if (rewardChanges.length > 0) {
+        handleRewardsChanged(rewardChanges).catch(() => undefined);
+      }
+
       const changedData =
         Array.isArray(toolCalls) && toolCalls.some((tc) => tc.name !== 'present_options');
       if (changedData && typeof refreshData === 'function') {
@@ -124,6 +160,28 @@ export default function ChatbotScreen({ route }) {
       setSending(false);
     }
   };
+
+  // An exercise (or other screen) left a message for the coach: send it as soon as the chat is shown
+  const sendRef = useRef(null);
+  sendRef.current = sendMessage;
+  useEffect(() => {
+    if (loadingHistory) return undefined;
+    const deliver = () => {
+      const ev = takeCoachEvent();
+      if (ev && sendRef.current) sendRef.current(ev, true);
+    };
+    deliver();
+    const offFocus = navigation.addListener('focus', deliver);
+    // e.g. the badge celebration asks the coach to congratulate while the chat is already open
+    const offEvent = subscribeCoachEvent(() => {
+      if (navigation.isFocused()) deliver();
+    });
+    return () => {
+      offFocus();
+      offEvent();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingHistory]);
 
   // Back on the chat: the floating "Back to coach" chip is no longer needed
   useEffect(() => {

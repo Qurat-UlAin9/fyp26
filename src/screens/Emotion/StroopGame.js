@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, SafeAreaView, Dimensions } from 'rea
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence, withTiming } from 'react-native-reanimated';
 import { ChevronLeft, Heart } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 const { width } = Dimensions.get('window');
 const COLORS = [
@@ -36,8 +37,7 @@ export default function StroopGame({ navigation }) {
         setLives(l => l - 1);
         generateMatch();
       } else {
-        alert("Game Over! Score: " + score);
-        navigation.goBack();
+        reportExerciseDone('StroopGame', { summary: `Score ${score}`, goBackOnDismiss: true });
       }
     }
   };

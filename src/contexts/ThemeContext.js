@@ -1,6 +1,10 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
+import {
+  fetchRewards, importRewards, sendRewardEvent, unlockRewardApi, selectRewardApi,
+  setFeaturedBadgeApi, markBadgesCelebratedApi,
+} from '../services/api';
 
 const STORAGE_KEY = 'app_rewards_theme_state_v3';
 
@@ -115,7 +119,6 @@ const SOUND_PRESETS = [
   { id: 'amity_fall', name: 'Amity Fall', artist: 'Sonder House', cost: 60, genre: 'Ambient' },
   { id: 'mozart_andante', name: 'Mozart — Andante', artist: 'Nesrality', cost: 80, genre: 'Classical' },
   { id: 'deep_focus_mountain', name: 'Deep Focus', artist: 'The Mountain', cost: 100, genre: 'Ambient' },
-  { id: 'binaural_gamma_40hz', name: 'Binaural Gamma 40 Hz', artist: 'Pure Binaural', cost: 120, genre: 'Focus Tone' },
 ];
 
 const ThemeContext = createContext(null);
@@ -127,18 +130,26 @@ const defaultState = {
   selectedSoundId: null,
   unlockedSounds: ['lofi_study'],   // Lo-fi Study is free by default
   featuredBadgeId: null,            // Badge shown on profile — locked by default
+  celebratedBadges: [],             // badges whose confetti was already shown
+  ownerEmail: null,                 // whose rewards this phone copy belongs to
   stats: { tasksCompleted: 0, subtasksCompleted: 0, habitCompletions: 0, habitStreak: 0, focusMinutes: 0 },
 };
 
 export const ThemeProvider = ({ children }) => {
   const [state, setState] = useState(defaultState);
   const [isSoundPlaying, setIsSoundPlaying] = useState(false);
+  const [hydrated, setHydrated] = useState(false); // saved rewards loaded from the phone
+  const [rewardsSynced, setRewardsSynced] = useState(false); // rewards loaded from the server at least once
   const soundRef = useRef(null);
+  const stateRef = useRef(defaultState);
+  stateRef.current = state;
+  const queueRef = useRef(Promise.resolve());
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
       .then((raw) => raw && setState((p) => ({ ...p, ...JSON.parse(raw) })))
-      .catch(() => undefined);
+      .catch(() => undefined)
+      .finally(() => setHydrated(true));
   }, []);
   useEffect(() => {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => undefined);
@@ -147,16 +158,92 @@ export const ThemeProvider = ({ children }) => {
     soundRef.current?.unloadAsync();
   }, []);
 
+  // ------ SERVER SYNC ------
+  // The server (user_rewards table) is the source of truth. Screens still update the phone copy
+  // right away so the app feels instant, then the server's answer replaces it.
+
+  // habitStreak is NOT taken from the server: it is derived from the habits (syncHabitStreak)
+  const applyServerState = useCallback((srv) => {
+    if (!srv) return;
+    setState((prev) => ({
+      ...prev,
+      coins: srv.coins,
+      unlockedThemes: srv.unlockedThemes,
+      unlockedSounds: srv.unlockedSounds,
+      selectedThemeId: srv.selectedThemeId || prev.selectedThemeId,
+      selectedSoundId: srv.selectedSoundId ?? null,
+      featuredBadgeId: srv.featuredBadgeId ?? null,
+      celebratedBadges: srv.celebratedBadges || [],
+      stats: {
+        ...prev.stats,
+        tasksCompleted: srv.stats.tasksCompleted,
+        subtasksCompleted: srv.stats.subtasksCompleted,
+        habitCompletions: srv.stats.habitCompletions,
+        focusMinutes: srv.stats.focusMinutes,
+      },
+    }));
+  }, []);
+
+  // Server calls run one after another, so "unlock" always lands before "select"
+  const serverCall = useCallback((fn) => {
+    queueRef.current = queueRef.current
+      .then(fn)
+      .then((res) => applyServerState(res?.data?.state))
+      .catch((e) => console.warn('[rewards] server sync failed:', e?.message || e));
+  }, [applyServerState]);
+
+  // Load rewards from the server. The first time, the phone's old local rewards are copied up
+  // (only if they belong to this account), so nothing the user already earned is lost.
+  const refreshRewards = useCallback(async (email) => {
+    try {
+      const res = await fetchRewards();
+      let srv = res?.data?.state;
+      if (!srv) return false;
+      const local = stateRef.current;
+      if (!srv.imported) {
+        const mine = !local.ownerEmail || !email || local.ownerEmail === email;
+        const payload = mine
+          ? {
+              coins: local.coins,
+              stats: local.stats,
+              unlockedThemes: local.unlockedThemes,
+              unlockedSounds: local.unlockedSounds,
+              selectedThemeId: local.selectedThemeId,
+              selectedSoundId: local.selectedSoundId,
+              featuredBadgeId: local.featuredBadgeId,
+              celebratedBadges: local.celebratedBadges,
+            }
+          : {};
+        const imp = await importRewards(payload);
+        srv = imp?.data?.state || srv;
+      }
+      applyServerState(srv);
+      if (email) setState((p) => (p.ownerEmail === email ? p : { ...p, ownerEmail: email }));
+      setRewardsSynced(true);
+      return true;
+    } catch (e) {
+      console.warn('[rewards] could not load from server:', e?.message || e);
+      return false;
+    }
+  }, [applyServerState]);
+
   const spendCoins = useCallback((amount) => {
     if (state.coins < amount) return false;
     setState((prev) => ({ ...prev, coins: prev.coins - amount }));
     return true;
   }, [state.coins]);
 
-  const earnCoins = useCallback(
+  const earnCoinsLocal = useCallback(
     (amount) => amount && setState((prev) => ({ ...prev, coins: prev.coins + amount })),
     []
   );
+
+  // Coins from a brain game (the server caps this at 20)
+  const earnCoins = useCallback((amount) => {
+    if (!amount || amount <= 0) return;
+    earnCoinsLocal(amount);
+    serverCall(() => sendRewardEvent({ kind: 'game', amount }));
+  }, [earnCoinsLocal, serverCall]);
 
   const loseCoins = useCallback((amount) => {
     if (!amount || amount <= 0) return;
@@ -169,12 +256,16 @@ export const ThemeProvider = ({ children }) => {
     if (!preset) return { ok: false, reason: 'Theme not found' };
     if (!spendCoins(preset.cost)) return { ok: false, reason: 'Not enough coins' };
     setState((prev) => ({ ...prev, unlockedThemes: [...prev.unlockedThemes, id] }));
+    serverCall(() => unlockRewardApi('theme', id));
     return { ok: true };
-  }, [spendCoins, state.unlockedThemes]);
+  }, [spendCoins, state.unlockedThemes, serverCall]);
 
   const selectTheme = useCallback(
-    (id) => setState((prev) => (prev.unlockedThemes.includes(id) ? { ...prev, selectedThemeId: id } : prev)),
-    []
+    (id) => {
+      setState((prev) => (prev.unlockedThemes.includes(id) ? { ...prev, selectedThemeId: id } : prev));
+      serverCall(() => selectRewardApi('theme', id));
+    },
+    [serverCall]
   );
 
   const unlockSound = useCallback((id) => {
@@ -183,12 +274,16 @@ export const ThemeProvider = ({ children }) => {
     if (!preset) return { ok: false, reason: 'Sound not found' };
     if (!spendCoins(preset.cost)) return { ok: false, reason: 'Not enough coins' };
     setState((prev) => ({ ...prev, unlockedSounds: [...prev.unlockedSounds, id] }));
+    serverCall(() => unlockRewardApi('sound', id));
     return { ok: true };
-  }, [spendCoins, state.unlockedSounds]);
+  }, [spendCoins, state.unlockedSounds, serverCall]);
 
   const selectSound = useCallback(
-    (id) => setState((prev) => (prev.unlockedSounds.includes(id) ? { ...prev, selectedSoundId: id } : prev)),
-    []
+    (id) => {
+      setState((prev) => (prev.unlockedSounds.includes(id) ? { ...prev, selectedSoundId: id } : prev));
+      serverCall(() => selectRewardApi('sound', id));
+    },
+    [serverCall]
   );
 
   const toggleSoundPlayback = useCallback(async () => {
@@ -223,15 +318,16 @@ export const ThemeProvider = ({ children }) => {
     swap();
   }, [state.selectedSoundId]);
 
-  // ------ STAT REGISTRATION ------
+  // ------ STAT REGISTRATION (the server awards the coins: task 5, step 1, habit 2) ------
 
   const registerTaskCompletion = useCallback(() => {
-    earnCoins(5);
+    earnCoinsLocal(5);
     setState((prev) => ({
       ...prev,
       stats: { ...prev.stats, tasksCompleted: prev.stats.tasksCompleted + 1 },
     }));
-  }, [earnCoins]);
+    serverCall(() => sendRewardEvent({ kind: 'task' }));
+  }, [earnCoinsLocal, serverCall]);
 
   const unregisterTaskCompletion = useCallback(() => {
     loseCoins(5);
@@ -239,15 +335,17 @@ export const ThemeProvider = ({ children }) => {
       ...prev,
       stats: { ...prev.stats, tasksCompleted: Math.max(0, prev.stats.tasksCompleted - 1) },
     }));
-  }, [loseCoins]);
+    serverCall(() => sendRewardEvent({ kind: 'task', undo: true }));
+  }, [loseCoins, serverCall]);
 
   const registerSubtaskCompletion = useCallback(() => {
-    earnCoins(1);
+    earnCoinsLocal(1);
     setState((prev) => ({
       ...prev,
       stats: { ...prev.stats, subtasksCompleted: prev.stats.subtasksCompleted + 1 },
     }));
-  }, [earnCoins]);
+    serverCall(() => sendRewardEvent({ kind: 'subtask' }));
+  }, [earnCoinsLocal, serverCall]);
 
   const unregisterSubtaskCompletion = useCallback(() => {
     loseCoins(1);
@@ -255,46 +353,59 @@ export const ThemeProvider = ({ children }) => {
       ...prev,
       stats: { ...prev.stats, subtasksCompleted: Math.max(0, prev.stats.subtasksCompleted - 1) },
     }));
-  }, [loseCoins]);
+    serverCall(() => sendRewardEvent({ kind: 'subtask', undo: true }));
+  }, [loseCoins, serverCall]);
 
   const registerHabitCompletion = useCallback(() => {
-    earnCoins(2);
+    earnCoinsLocal(2);
     setState((prev) => ({
       ...prev,
-      stats: {
-        ...prev.stats,
-        habitCompletions: prev.stats.habitCompletions + 1,
-        habitStreak: Math.min(prev.stats.habitStreak + 1, 3),
-      },
+      stats: { ...prev.stats, habitCompletions: prev.stats.habitCompletions + 1 },
     }));
-  }, [earnCoins]);
+    serverCall(() => sendRewardEvent({ kind: 'habit' }));
+  }, [earnCoinsLocal, serverCall]);
 
   const unregisterHabitCompletion = useCallback(() => {
     loseCoins(2);
     setState((prev) => ({
       ...prev,
-      stats: {
-        ...prev.stats,
-        habitCompletions: Math.max(0, prev.stats.habitCompletions - 1),
-        habitStreak: Math.max(0, prev.stats.habitStreak - 1),
-      },
+      stats: { ...prev.stats, habitCompletions: Math.max(0, prev.stats.habitCompletions - 1) },
     }));
-  }, [loseCoins]);
+    serverCall(() => sendRewardEvent({ kind: 'habit', undo: true }));
+  }, [loseCoins, serverCall]);
+
+  // The real streak = the longest CURRENT streak among the user's habits (kept in the habits data).
+  const syncHabitStreak = useCallback((days) => {
+    const n = Math.max(0, Math.floor(Number(days) || 0));
+    setState((prev) => (prev.stats.habitStreak === n ? prev : { ...prev, stats: { ...prev.stats, habitStreak: n } }));
+  }, []);
 
   const addFocusMinutes = useCallback(
-    (minutes) => minutes && setState((prev) => ({
-      ...prev,
-      stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes },
-    })),
-    []
+    (minutes) => {
+      if (!minutes) return;
+      setState((prev) => ({
+        ...prev,
+        stats: { ...prev.stats, focusMinutes: prev.stats.focusMinutes + minutes },
+      }));
+      serverCall(() => sendRewardEvent({ kind: 'focus', minutes }));
+    },
+    [serverCall]
   );
+
+  // Remember which badge confetti was shown (also on the server, so a new phone does not repeat it)
+  const markCelebrated = useCallback((ids) => {
+    if (!Array.isArray(ids) || ids.length === 0) return;
+    setState((prev) => ({ ...prev, celebratedBadges: [...new Set([...(prev.celebratedBadges || []), ...ids])] }));
+    serverCall(() => markBadgesCelebratedApi(ids));
+  }, [serverCall]);
 
   const resetThemeData = useCallback(() => setState(defaultState), []);
 
   // Featured badge: only settable if unlocked
   const setFeaturedBadge = useCallback((badgeId) => {
     setState((prev) => ({ ...prev, featuredBadgeId: badgeId || null }));
-  }, []);
+    serverCall(() => setFeaturedBadgeApi(badgeId || null));
+  }, [serverCall]);
 
   const titles = useMemo(
     () =>
@@ -343,10 +454,17 @@ export const ThemeProvider = ({ children }) => {
       addFocusMinutes,
       earnCoins,
       loseCoins,
+      syncHabitStreak,
+      refreshRewards,
+      markCelebrated,
+      rewardsSynced,
+      celebratedBadges: state.celebratedBadges,
+      hydrated,
+      playableSoundIds: Object.keys(SOUND_LIBRARY),
       resetThemeData,
     }),
     [
-      theme, titles, state,
+      theme, titles, state, hydrated, rewardsSynced, refreshRewards, markCelebrated, syncHabitStreak,
       unlockTheme, selectTheme, unlockSound, selectSound,
       toggleSoundPlayback, isSoundPlaying,
       setFeaturedBadge,

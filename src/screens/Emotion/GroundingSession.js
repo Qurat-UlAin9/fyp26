@@ -13,6 +13,7 @@ import { Eye, Hand, Ear, Flower2, ChefHat } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../contexts/ThemeContext';
 import { ChevronLeft } from 'lucide-react-native';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 const SENSE_STEPS = [
   { key: 'see', count: 5, label: 'things you can See', icon: Eye, color: '#A5F3FC' },
@@ -48,7 +49,7 @@ export default function GroundingSession({ navigation, onClose }) {
     if (stepIndex < SENSE_STEPS.length - 1) {
       setStepIndex(prev => prev + 1);
     } else {
-      if (onClose) onClose(); else navigation.goBack();
+      if (onClose) onClose(); else reportExerciseDone('GroundingSession', { goBackOnDismiss: true });
     }
   };
 

@@ -22,7 +22,7 @@ async function promoteToBank({ messageId }) {
 
   // Safety filters: never store crisis chats or very long text
   if (analyzeMessage(userText).crisis) return;
-  if (userText.length > 400 || reply.length > 1200) return;
+  if (userText.length > 400 || reply.length > 2500) return;
 
   const { data: row, error } = await supabaseAdmin
     .from('exemplar_bank')

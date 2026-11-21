@@ -4,6 +4,7 @@ import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSeq
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../contexts/ThemeContext';
 import { ChevronLeft } from 'lucide-react-native';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 const TOTAL_CYCLES = 3;
 const PHASE_MS = 4000;
@@ -50,6 +51,7 @@ export default function BalloonSession({ navigation }) {
         setCycle(completedCycles);
         if (completedCycles >= TOTAL_CYCLES) {
           stopSession();
+          reportExerciseDone('BalloonSession');
           return;
         }
       }

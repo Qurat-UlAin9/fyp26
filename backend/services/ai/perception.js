@@ -296,9 +296,9 @@ function formatHintsForPrompt(hints) {
 
   if (hints.urgency === 'high') {
     lines.push(
-      '- Urgency: the user sounds overwhelmed or panicked. Validate in one short sentence first, ' +
-        'keep the whole reply very short and calm, prefer suggest_emotion_exercise, and do not ' +
-        'create tasks or long lists unless they ask.'
+      '- Urgency: the user sounds overwhelmed or panicked. Make them feel heard first, keep the ' +
+        'whole reply short, calm and grounding, offer ONE calming exercise as a [[link: ...]] button, ' +
+        'and do not create tasks or give long lists or explanations unless they ask.'
     );
   }
 

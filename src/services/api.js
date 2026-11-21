@@ -583,10 +583,10 @@ export async function deleteAIConversation(id) {
 }
 
 
-export async function sendChatMessage(conversationId, message, fromOption = false, context = null) {
+export async function sendChatMessage(conversationId, message, fromOption = false, context = null, appState = null) {
   return request('/api/ai/chat', {
     method: 'POST',
-    body: JSON.stringify({ conversationId, message, fromOption, context }),
+    body: JSON.stringify({ conversationId, message, fromOption, context, appState }),
   });
 }
 
@@ -660,6 +660,20 @@ export async function submitFeedback(messageId, rating) {
 export async function fetchChatHistory() {
   return request('/api/ai/history');
 }
+
+/* =========================================================
+   REWARDS (coins, themes, music, badges: kept on the server)
+========================================================= */
+
+const postJson = (path, body) => request(path, { method: 'POST', body: JSON.stringify(body || {}) });
+
+export const fetchRewards = () => request('/api/rewards');
+export const importRewards = (local) => postJson('/api/rewards/import', local);
+export const sendRewardEvent = (body) => postJson('/api/rewards/event', body);
+export const unlockRewardApi = (kind, id) => postJson('/api/rewards/unlock', { kind, id });
+export const selectRewardApi = (kind, id) => postJson('/api/rewards/select', { kind, id });
+export const setFeaturedBadgeApi = (badgeId) => postJson('/api/rewards/featured', { badgeId });
+export const markBadgesCelebratedApi = (ids) => postJson('/api/rewards/celebrated', { ids });
 
 /* =========================================================
    API URL

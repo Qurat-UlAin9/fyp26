@@ -9,6 +9,8 @@ import { ThemeProvider } from './src/contexts/ThemeContext';
 import { AppDataProvider, useAppData } from './src/contexts/AppDataContext';
 import { ProductivityProvider } from './src/contexts/ProductivityContext';
 import AppNavigator from './src/navigation/AppNavigator';
+import CelebrationHost from './src/components/common/CelebrationHost';
+import { navigationRef } from './src/utils/navigationRef';
 import { toastConfig } from './src/utils/toastConfig';
 import {
   registerNotificationCategories,
@@ -110,9 +112,10 @@ export default function App() {
         <ThemeProvider>
           <AppDataProvider>
             <ProductivityProvider>
-              <NavigationContainer>
+              <NavigationContainer ref={navigationRef}>
                 <AppNavigator />
                 <NotificationBridge />
+                <CelebrationHost />
               </NavigationContainer>
               <Toast
                 config={toastConfig}

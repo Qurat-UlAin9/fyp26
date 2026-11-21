@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../../contexts/ThemeContext';
 import { coinsForGameScore } from '../../utils/gameRewards';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 const BASE_POSITIONS = [
   { x: 0.2, y: 0.18 }, { x: 0.75, y: 0.14 }, { x: 0.48, y: 0.4 }, { x: 0.86, y: 0.36 },
@@ -134,6 +135,7 @@ export default function PatternRecallGame({ navigation }) {
       text2: `${scoreRef.current} points · ${reward} coins earned`,
       visibilityTime: 3000,
     });
+    reportExerciseDone('PatternRecallGame', { summary: `${scoreRef.current} points` });
   };
 
   const handleStarPress = (id) => {

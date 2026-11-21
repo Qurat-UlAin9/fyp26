@@ -240,7 +240,7 @@ export default function HabitsScreen({ navigation, route }) {
     habits.forEach((h) => {
       const lastDate = h.metadata?.lastCompletionDate;
       const anyDone = (h.completions || []).some(Boolean);
-      if (lastDate !== today && anyDone) {
+      if (lastDate !== today && h.metadata?.completionsDate !== today && anyDone) {
         updateHabit(h.id, (prev) => ({
           ...prev,
           completions: new Array(prev.timeSlots.length).fill(false),

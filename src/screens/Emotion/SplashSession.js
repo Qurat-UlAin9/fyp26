@@ -13,6 +13,7 @@ import { Droplets } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../contexts/ThemeContext';
 import { ChevronLeft } from 'lucide-react-native';
+import { reportExerciseDone } from '../../utils/coachNav';
 
 const Ripple = ({ delay }) => {
   const progress = useSharedValue(0);
@@ -66,7 +67,7 @@ export default function SplashSession({ navigation, onClose }) {
     if (running && timer > 0) {
       interval = setInterval(() => setTimer(t => t - 1), 1000);
     } else if (timer === 0) {
-      if (onClose) onClose(); else navigation.goBack();
+      if (onClose) onClose(); else reportExerciseDone('SplashSession', { goBackOnDismiss: true });
     }
     return () => clearInterval(interval);
   }, [running, timer]);
