@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { Audio } from 'expo-av';
+import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import { ChevronLeft, Pause, Play } from 'lucide-react-native';
 import Animated, {
   Easing,
@@ -127,21 +127,23 @@ function TrackCard({ track, isActive, isPlaying, progress, onToggle, delay }) {
 
 export default function SoundscapesScreen({ navigation }) {
   const soundRef = useRef(null);
+  const subRef = useRef(null);
   const [activeId, setActiveId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [statusMap, setStatusMap] = useState({});
 
   useEffect(() => {
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      staysActiveInBackground: false,
-    });
+    setAudioModeAsync({
+      playsInSilentMode: true,
+      interruptionMode: 'duckOthers',
+      interruptionModeAndroid: 'duckOthers',
+      shouldPlayInBackground: false,
+    }).catch(() => {});
 
     return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
+      subRef.current?.remove();
+      try { soundRef.current?.remove(); } catch {}
+      soundRef.current = null;
     };
   }, []);
 
@@ -151,8 +153,8 @@ export default function SoundscapesScreen({ navigation }) {
     setStatusMap((prev) => ({
       ...prev,
       [trackId]: {
-        duration: status.durationMillis ?? 1,
-        position: status.positionMillis ?? 0,
+        duration: status.duration || 1,
+        position: status.currentTime || 0,
       },
     }));
 
@@ -162,27 +164,31 @@ export default function SoundscapesScreen({ navigation }) {
     }
   };
 
-  const toggleTrack = async (track) => {
+  const toggleTrack = (track) => {
     const isSame = activeId === track.id;
 
     if (isSame && soundRef.current) {
       if (isPlaying) {
-        await soundRef.current.pauseAsync();
+        soundRef.current.pause();
         setIsPlaying(false);
       } else {
-        await soundRef.current.playAsync();
+        soundRef.current.play();
         setIsPlaying(true);
       }
       return;
     }
 
+    subRef.current?.remove();
+    subRef.current = null;
     if (soundRef.current) {
-      await soundRef.current.unloadAsync();
+      try { soundRef.current.remove(); } catch {}
       soundRef.current = null;
     }
 
-    const { sound } = await Audio.Sound.createAsync(track.source, { shouldPlay: true }, statusListener(track.id));
-    soundRef.current = sound;
+    const player = createAudioPlayer(track.source);
+    subRef.current = player.addListener('playbackStatusUpdate', statusListener(track.id));
+    player.play();
+    soundRef.current = player;
     setActiveId(track.id);
     setIsPlaying(true);
   };
@@ -294,3 +300,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#A78BFA',
   },
 });
+
+

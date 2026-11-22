@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Audio } from 'expo-av';
+import { createAudioPlayer } from 'expo-audio';
 import {
   fetchRewards, importRewards, sendRewardEvent, unlockRewardApi, selectRewardApi,
   setFeaturedBadgeApi, markBadgesCelebratedApi,
@@ -155,7 +155,8 @@ export const ThemeProvider = ({ children }) => {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => undefined);
   }, [state]);
   useEffect(() => () => {
-    soundRef.current?.unloadAsync();
+    try { soundRef.current?.remove(); } catch {}
+    soundRef.current = null;
   }, []);
 
   // ------ SERVER SYNC ------
@@ -290,17 +291,16 @@ export const ThemeProvider = ({ children }) => {
     if (!state.selectedSoundId) return;
     try {
       if (!soundRef.current) {
-        const { sound } = await Audio.Sound.createAsync(SOUND_LIBRARY[state.selectedSoundId], {
-          isLooping: true,
-          shouldPlay: true,
-          volume: 0.5,
-        });
-        soundRef.current = sound;
+        const player = createAudioPlayer(SOUND_LIBRARY[state.selectedSoundId]);
+        player.loop = true;
+        player.volume = 0.5;
+        player.play();
+        soundRef.current = player;
         setIsSoundPlaying(true);
         return;
       }
-      if (isSoundPlaying) await soundRef.current.pauseAsync();
-      else await soundRef.current.playAsync();
+      if (isSoundPlaying) soundRef.current.pause();
+      else soundRef.current.play();
       setIsSoundPlaying((prev) => !prev);
     } catch {
       setIsSoundPlaying(false);
@@ -308,14 +308,10 @@ export const ThemeProvider = ({ children }) => {
   }, [isSoundPlaying, state.selectedSoundId]);
 
   useEffect(() => {
-    const swap = async () => {
-      if (!soundRef.current) return;
-      await soundRef.current.stopAsync();
-      await soundRef.current.unloadAsync();
-      soundRef.current = null;
-      setIsSoundPlaying(false);
-    };
-    swap();
+    if (!soundRef.current) return;
+    try { soundRef.current.pause(); soundRef.current.remove(); } catch {}
+    soundRef.current = null;
+    setIsSoundPlaying(false);
   }, [state.selectedSoundId]);
 
   // ------ STAT REGISTRATION (the server awards the coins: task 5, step 1, habit 2) ------

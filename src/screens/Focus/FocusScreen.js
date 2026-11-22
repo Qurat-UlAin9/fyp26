@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Audio } from 'expo-av';
+import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ListChecks, X, Clock3, Zap } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
@@ -159,86 +159,58 @@ export default function FocusScreen({ route, navigation }) {
   }, [route?.params?.autoStartConfig]);
 
   useEffect(() => {
-    Audio.setAudioModeAsync({
-      staysActiveInBackground: true,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
+    setAudioModeAsync({
+      shouldPlayInBackground: true,
+      playsInSilentMode: true,
+      interruptionMode: 'duckOthers',
+      interruptionModeAndroid: 'duckOthers',
     }).catch(() => {});
 
     return () => {
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
-      if (activeSoundRef.current) {
-        activeSoundRef.current.stopAsync().catch(() => {});
-        activeSoundRef.current.unloadAsync().catch(() => {});
-      }
-      if (chimeRef.current) {
-        chimeRef.current.unloadAsync().catch(() => {});
-      }
+      try { activeSoundRef.current?.remove(); } catch {}
+      try { chimeRef.current?.remove(); } catch {}
     };
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
+    const opt = sounds.find((s) => s.key === selectedSound);
+    const hasSound = opt && opt.source;
 
-    const manageSound = async () => {
-      const opt = sounds.find((s) => s.key === selectedSound);
-      const hasSound = opt && opt.source;
-
-      if (!hasSound) {
-        if (activeSoundRef.current) {
-          try { await activeSoundRef.current.stopAsync(); } catch {}
-          try { await activeSoundRef.current.unloadAsync(); } catch {}
-          activeSoundRef.current = null;
-          loadedSoundKeyRef.current = null;
-        }
-        return;
+    const release = () => {
+      if (activeSoundRef.current) {
+        try { activeSoundRef.current.pause(); } catch {}
+        try { activeSoundRef.current.remove(); } catch {}
+        activeSoundRef.current = null;
       }
-
-      if (
-        loadedSoundKeyRef.current &&
-        loadedSoundKeyRef.current !== selectedSound
-      ) {
-        if (activeSoundRef.current) {
-          try { await activeSoundRef.current.stopAsync(); } catch {}
-          try { await activeSoundRef.current.unloadAsync(); } catch {}
-          activeSoundRef.current = null;
-        }
-        loadedSoundKeyRef.current = null;
-      }
-
-      if (!activeSoundRef.current) {
-        try {
-          const { sound } = await Audio.Sound.createAsync(opt.source, {
-            shouldPlay: isRunning,
-            isLooping: true,
-            volume: 0.55,
-          });
-          if (cancelled) {
-            sound.unloadAsync().catch(() => {});
-            return;
-          }
-          activeSoundRef.current = sound;
-          loadedSoundKeyRef.current = selectedSound;
-        } catch (err) {
-          console.warn('Sound load failed:', err?.message);
-        }
-        return;
-      }
-
-      try {
-        if (isRunning) {
-          const status = await activeSoundRef.current.getStatusAsync();
-          if (status.isLoaded && !status.isPlaying) {
-            await activeSoundRef.current.playAsync();
-          }
-        } else {
-          await activeSoundRef.current.pauseAsync();
-        }
-      } catch {}
+      loadedSoundKeyRef.current = null;
     };
 
-    manageSound();
-    return () => { cancelled = true; };
+    if (!hasSound) {
+      release();
+      return;
+    }
+
+    if (loadedSoundKeyRef.current && loadedSoundKeyRef.current !== selectedSound) {
+      release();
+    }
+
+    try {
+      if (!activeSoundRef.current) {
+        const player = createAudioPlayer(opt.source);
+        player.loop = true;
+        player.volume = 0.55;
+        activeSoundRef.current = player;
+        loadedSoundKeyRef.current = selectedSound;
+      }
+      if (isRunning) {
+        if (!activeSoundRef.current.playing) activeSoundRef.current.play();
+      } else {
+        activeSoundRef.current.pause();
+      }
+    } catch (err) {
+      console.warn('Sound load failed:', err?.message);
+    }
   }, [isRunning, selectedSound, sounds]);
 
   const persistProgress = useCallback(
@@ -294,20 +266,20 @@ export default function FocusScreen({ route, navigation }) {
     setCompletedSessionMinutes(thisRunMinutes);
 
     if (activeSoundRef.current) {
-      try { await activeSoundRef.current.stopAsync(); } catch {}
-      try { await activeSoundRef.current.unloadAsync(); } catch {}
+      try { activeSoundRef.current.pause(); } catch {}
+      try { activeSoundRef.current.remove(); } catch {}
       activeSoundRef.current = null;
+      loadedSoundKeyRef.current = null;
     }
 
     try {
-      const { sound } = await Audio.Sound.createAsync(COMPLETION_CHIME, {
-        shouldPlay: true,
-        isLooping: false,
-        volume: 0.9,
-      });
-      chimeRef.current = sound;
+      const chime = createAudioPlayer(COMPLETION_CHIME);
+      chime.loop = false;
+      chime.volume = 0.9;
+      chime.play();
+      chimeRef.current = chime;
       setTimeout(() => {
-        sound.unloadAsync().catch(() => {});
+        try { chime.remove(); } catch {}
         chimeRef.current = null;
       }, 2500);
     } catch (err) {
@@ -414,9 +386,10 @@ export default function FocusScreen({ route, navigation }) {
     sessionStartTimeRef.current = null;
 
     if (activeSoundRef.current) {
-      try { await activeSoundRef.current.stopAsync(); } catch {}
-      try { await activeSoundRef.current.unloadAsync(); } catch {}
+      try { activeSoundRef.current.pause(); } catch {}
+      try { activeSoundRef.current.remove(); } catch {}
       activeSoundRef.current = null;
+      loadedSoundKeyRef.current = null;
     }
 
     const mins = Math.floor(accumulatedSecondsRef.current / 60);

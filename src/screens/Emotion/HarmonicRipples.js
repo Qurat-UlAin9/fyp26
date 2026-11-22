@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronLeft } from 'lucide-react-native';
-import { Audio } from 'expo-av';
+import { createAudioPlayer } from 'expo-audio';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const LAYERS = [
@@ -18,33 +18,33 @@ export default function HarmonicRipples({ navigation }) {
 
   useEffect(() => {
     return () => {
-      Object.values(soundsRef.current).forEach(async (sound) => {
-        await sound?.stopAsync();
-        await sound?.unloadAsync();
+      Object.values(soundsRef.current).forEach((player) => {
+        try { player.pause(); player.remove(); } catch {}
       });
+      soundsRef.current = {};
     };
   }, []);
 
-  const toggleLayer = async (layer) => {
+  const toggleLayer = (layer) => {
     if (!soundsRef.current[layer.id]) {
-      const { sound } = await Audio.Sound.createAsync(layer.src, { isLooping: true, shouldPlay: false, volume: 0.45 });
-      soundsRef.current[layer.id] = sound;
+      const player = createAudioPlayer(layer.src);
+      player.loop = true;
+      player.volume = 0.45;
+      soundsRef.current[layer.id] = player;
     }
     const snd = soundsRef.current[layer.id];
     const isActive = activeIds.includes(layer.id);
     if (isActive) {
-      await snd.pauseAsync();
+      snd.pause();
       setActiveIds((prev) => prev.filter((id) => id !== layer.id));
     } else {
-      await snd.playAsync();
+      snd.play();
       setActiveIds((prev) => [...prev, layer.id]);
     }
   };
 
-  const stopAll = async () => {
-    for (const sound of Object.values(soundsRef.current)) {
-      await sound?.pauseAsync();
-    }
+  const stopAll = () => {
+    Object.values(soundsRef.current).forEach((player) => player?.pause());
     setActiveIds([]);
   };
 
@@ -108,3 +108,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
   },
 });
+
+
