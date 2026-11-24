@@ -1,6 +1,7 @@
 import React, { forwardRef, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from '../common/SheetCompat';
+//import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Check, X, ListChecks } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 

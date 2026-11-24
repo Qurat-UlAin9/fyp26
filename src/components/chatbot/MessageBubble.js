@@ -23,24 +23,33 @@ function MarkdownText({ text, style }) {
         const marker = bullet ? '•' : numbered ? `${numbered[1]}.` : null;
         const parts = content.split(/(\*\*.*?\*\*)/g).filter(Boolean);
 
-        return (
-          <View key={i} style={{ flexDirection: 'row', marginBottom: 4 }}>
-            {marker ? <Text style={[style, { width: 20 }]}>{marker}</Text> : null}
-            <Text
-              style={[
-                style,
-                { flex: 1, lineHeight: 22 },
-                heading && { fontWeight: '700', fontSize: (style?.fontSize || 14) + 1 },
-              ]}
-            >
-              {parts.map((p, j) =>
-                p.startsWith('**') && p.endsWith('**') ? (
-                  <Text key={j} style={{ fontWeight: '700' }}>{p.slice(2, -2)}</Text>
-                ) : (
-                  <Text key={j}>{p}</Text>
-                )
-              )}
+        const body = parts.map((p, j) =>
+          p.startsWith('**') && p.endsWith('**') ? (
+            <Text key={j} style={{ fontWeight: '700' }}>{p.slice(2, -2)}</Text>
+          ) : (
+            <Text key={j}>{p}</Text>
+          )
+        );
+        const lineStyle = [
+          style,
+          { lineHeight: 22 },
+          heading && { fontWeight: '700', fontSize: (style?.fontSize || 14) + 1 },
+        ];
+
+        // A plain line is just a Text. Only list lines need a row (marker + text), and there the text
+        // uses flexShrink, not flex: 1. flex: 1 inside a bubble that is as wide as its content makes
+        // the text zero wide, so every word wraps onto its own line and the messages overlap.
+        if (!marker) {
+          return (
+            <Text key={i} style={[lineStyle, { marginBottom: 4 }]}>
+              {body}
             </Text>
+          );
+        }
+        return (
+          <View key={i} style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 4 }}>
+            <Text style={[style, { lineHeight: 22, minWidth: 20 }]}>{marker}</Text>
+            <Text style={[lineStyle, { flexShrink: 1 }]}>{body}</Text>
           </View>
         );
       })}
@@ -147,7 +156,7 @@ export default function MessageBubble({
 }
 
 const styles = StyleSheet.create({
-  bubble: { maxWidth: '84%', borderRadius: 16, paddingVertical: 10, paddingHorizontal: 12, marginBottom: 10 },
+  bubble: { maxWidth: '84%', flexShrink: 1, borderRadius: 16, paddingVertical: 10, paddingHorizontal: 12, marginBottom: 10 },
   userBubble: { alignSelf: 'flex-end', borderBottomRightRadius: 6 },
   aiBubble: { alignSelf: 'flex-start', borderBottomLeftRadius: 6, borderWidth: 1, borderColor: 'rgba(148,163,184,0.2)' },
   focusChip: { marginTop: 12, borderRadius: 12, overflow: 'hidden' },

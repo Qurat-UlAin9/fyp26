@@ -106,6 +106,7 @@ fyp26/
 │   │   ├── moodLogs.js
 │   │   ├── notifications.js
 │   │   ├── profiles.js
+│   │   ├── rewards.js
 │   │   ├── statistics.js
 │   │   └── tasks.js
 │   ├── scoring/
@@ -113,43 +114,59 @@ fyp26/
 │   │   ├── executive_function_scoring.py
 │   │   └── executiveFunctionScoring.js
 │   ├── scripts/
-│   │   └── seedExemplars.js
+│   │   ├── create_user_rewards.sql
+│   │   ├── removeSeedExemplars.js
+│   │   ├── seedExemplars.js
+│   │   └── update_prompt_versions.sql
 │   ├── services/
-│   │   └── ai/
-│   │       ├── context/
-│   │       │   └── moodContext.js
-│   │       ├── exemplars/
-│   │       │   ├── exemplarRetrieval.js
-│   │       │   └── promoteToBank.js
-│   │       ├── memory/
-│   │       │   ├── memoryRetrieval.js
-│   │       │   └── memoryStore.js
-│   │       ├── prompts/
-│   │       │   └── promptService.js
-│   │       ├── rag/
-│   │       │   ├── embeddings.js
-│   │       │   ├── pineconeClient.js
-│   │       │   └── retriever.js
-│   │       ├── tools/
-│   │       │   ├── assessmentTool.js
-│   │       │   ├── emotionTool.js
-│   │       │   ├── exerciseTool.js
-│   │       │   ├── focusTool.js
-│   │       │   ├── graph.js
-│   │       │   ├── habitTool.js
-│   │       │   ├── knowledgeTool.js
-│   │       │   ├── memoryTool.js
-│   │       │   ├── optionsTool.js
-│   │       │   └── taskTool.js
-│   │       ├── agent.js
-│   │       ├── coachLinks.js
-│   │       ├── llmClient.js
-│   │       ├── llmProvider.js
-│   │       ├── outputGuard.js
-│   │       ├── perception.js
-│   │       ├── promptBuilder.js
-│   │       ├── subtaskGenerator.js
-│   │       └── subtaskScheduler.js
+│   │   ├── ai/
+│   │   │   ├── context/
+│   │   │   │   ├── appState.js
+│   │   │   │   ├── knowledgeContext.js
+│   │   │   │   ├── moodContext.js
+│   │   │   │   ├── taskContext.js
+│   │   │   │   └── timeContext.js
+│   │   │   ├── exemplars/
+│   │   │   │   ├── exemplarRetrieval.js
+│   │   │   │   └── promoteToBank.js
+│   │   │   ├── memory/
+│   │   │   │   ├── memoryRetrieval.js
+│   │   │   │   └── memoryStore.js
+│   │   │   ├── prompts/
+│   │   │   │   └── promptService.js
+│   │   │   ├── rag/
+│   │   │   │   ├── embeddings.js
+│   │   │   │   ├── pineconeClient.js
+│   │   │   │   └── retriever.js
+│   │   │   ├── tools/
+│   │   │   │   ├── appActions.js
+│   │   │   │   ├── assessmentTool.js
+│   │   │   │   ├── emotionTool.js
+│   │   │   │   ├── exerciseTool.js
+│   │   │   │   ├── focusTool.js
+│   │   │   │   ├── graph.js
+│   │   │   │   ├── habitCheckTool.js
+│   │   │   │   ├── habitTool.js
+│   │   │   │   ├── knowledgeTool.js
+│   │   │   │   ├── memoryTool.js
+│   │   │   │   ├── moodTool.js
+│   │   │   │   ├── nameTool.js
+│   │   │   │   ├── optionsTool.js
+│   │   │   │   ├── rewardTool.js
+│   │   │   │   └── taskTool.js
+│   │   │   ├── agent.js
+│   │   │   ├── coachLinks.js
+│   │   │   ├── llmClient.js
+│   │   │   ├── llmProvider.js
+│   │   │   ├── outputGuard.js
+│   │   │   ├── perception.js
+│   │   │   ├── promptBuilder.js
+│   │   │   ├── subtaskGenerator.js
+│   │   │   ├── subtaskPlanner.js
+│   │   │   └── subtaskScheduler.js
+│   │   └── rewards/
+│   │       ├── catalog.js
+│   │       └── rewardsService.js
 │   ├── tests/
 │   │   ├── conftest.py
 │   │   ├── efScoring.test.js
@@ -251,6 +268,8 @@ fyp26/
 │   │   │   ├── AnimatedOrbsBackground.js
 │   │   │   ├── BackToCoachChip.js
 │   │   │   ├── ButtonPrimary.js
+│   │   │   ├── CelebrationHost.js
+│   │   │   ├── CoachDoneCard.js
 │   │   │   ├── CoinBalancePill.js
 │   │   │   ├── ErrorBoundary.js
 │   │   │   ├── GlassCard.js
@@ -358,11 +377,13 @@ fyp26/
 │   │   └── colors.js
 │   ├── utils/
 │   │   ├── alert.js
+│   │   ├── appSnapshot.js
 │   │   ├── backgroundCheck.js
 │   │   ├── challengeNav.js
 │   │   ├── coachNav.js
 │   │   ├── formatTime.js
 │   │   ├── gameRewards.js
+│   │   ├── navigationRef.js
 │   │   ├── notificationSetup.js
 │   │   ├── reminders.js
 │   │   ├── toastConfig.js

@@ -351,12 +351,16 @@ export default function HabitsScreen({ navigation, route }) {
           timeSlots: habitObj.timeSlots,
           completions: habitObj.completions,
           gradient: habitObj.gradient,
+          slotTimes: habitObj.slotTimes || {},
+          durationMins: habitObj.durationMins || null,
           metadata: {
             ...(prev.metadata || {}),
             timeSlots: habitObj.timeSlots,
             completions: habitObj.completions,
             gradient: habitObj.gradient,
             targetDays: habitObj.targetDays ?? prev.metadata?.targetDays ?? null,
+            slotTimes: habitObj.slotTimes || {},
+            durationMins: habitObj.durationMins || null,
           },
         }));
 
@@ -364,6 +368,7 @@ export default function HabitsScreen({ navigation, route }) {
           id: editingHabit.id,
           name: habitObj.name,
           timeSlots: habitObj.timeSlots,
+          slotTimes: habitObj.slotTimes || {},
         });
 
         setEditingHabit(null);
@@ -376,6 +381,7 @@ export default function HabitsScreen({ navigation, route }) {
             id: created.id,
             name: habitObj.name,
             timeSlots: habitObj.timeSlots,
+            slotTimes: habitObj.slotTimes || {},
           });
         }
 

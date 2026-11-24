@@ -59,7 +59,10 @@ const DAY_ABBR = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const todayISO = () => new Date().toISOString().slice(0, 10);
+// Local calendar date. toISOString() is UTC and shows the wrong day for part of every night.
+const localISO = (d) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const todayISO = () => localISO(new Date());
 
 function getWeekDays(base) {
   const d = new Date(base);
@@ -69,7 +72,7 @@ function getWeekDays(base) {
   return Array.from({ length: 7 }, (_, i) => {
     const day = new Date(sun);
     day.setDate(sun.getDate() + i);
-    const isoKey = day.toISOString().slice(0, 10);
+    const isoKey = localISO(day);
     return {
       abbr: DAY_ABBR[i],
       date: day.getDate(),
@@ -218,6 +221,7 @@ const TYPE_TABS = [
 
 const STATUS_TABS = [
   { key: 'active', label: 'Active', colors: ['#10B981', '#059669'] },
+  { key: 'missed', label: 'Missed', colors: ['#F59E0B', '#D97706'] },
   { key: 'done', label: 'Done', colors: ['#64748B', '#475569'] },
   { key: 'all', label: 'All', colors: ['#8B5CF6', '#6D28D9'] },
 ];
@@ -333,7 +337,7 @@ function EventCard({ placed, colIdx, columnWidth, onPress }) {
         <View style={styles.eventAccent} />
         <View style={styles.eventInner}>
           <View style={styles.eventTitleRow}>
-            <Text style={styles.eventTitleIcon}>{done ? '✓' : icon}</Text>
+            <Text style={styles.eventTitleIcon}>{done ? '✓' : event.missed ? '⚠️' : icon}</Text>
             <Text
               style={[
                 styles.eventTitle,
@@ -362,7 +366,34 @@ function EventCard({ placed, colIdx, columnWidth, onPress }) {
 }
 
 export default function TimelineScreen() {
-  const { timelineEvents, focusSessions } = useAppData();
+  const { timelineEvents, focusSessions, rescheduleMissed } = useAppData();
+  const [rescheduling, setRescheduling] = useState(false);
+  const [rescheduleNote, setRescheduleNote] = useState('');
+
+  // Missed steps anywhere on the timeline (not only the visible days)
+  const missedCount = useMemo(
+    () => timelineEvents.filter((e) => e.type === 'task' && e.missed && !e.done && !e.allDone).length,
+    [timelineEvents]
+  );
+
+  const handleRescheduleMissed = useCallback(async () => {
+    if (rescheduling) return;
+    setRescheduling(true);
+    setRescheduleNote('');
+    try {
+      const r = await rescheduleMissed();
+      const late = (r?.tasks || []).some((t) => t.pastDeadline || t.overdue);
+      setRescheduleNote(
+        r?.moved > 0
+          ? `Moved ${r.moved} step${r.moved === 1 ? '' : 's'} to new times.${late ? ' Some are past the deadline - consider a new due date.' : ''}`
+          : 'Nothing to move right now.'
+      );
+    } catch (e) {
+      setRescheduleNote('Could not reschedule right now. Try again in a moment.');
+    } finally {
+      setRescheduling(false);
+    }
+  }, [rescheduleMissed, rescheduling]);
   const { theme, isDark } = useTheme();
   const navigation = useNavigation();
   const { setActiveSessionTask } = useProductivity();
@@ -419,6 +450,7 @@ export default function TimelineScreen() {
       }
 
       // Status filter
+      if (statusFilter === 'missed') return Boolean(e.missed) && !e.done && !e.allDone;
       if (statusFilter === 'active') {
         if (e.type === 'focus') return false; // focus history is completed
         return !e.done && !e.allDone;
@@ -640,6 +672,17 @@ export default function TimelineScreen() {
           })}
         </View>
 
+        {missedCount > 0 && (
+          <View style={styles.missedBanner}>
+            <Text style={styles.missedText}>
+              {rescheduleNote || `${missedCount} step${missedCount === 1 ? '' : 's'} missed. No problem - let's find new times.`}
+            </Text>
+            <TouchableOpacity onPress={handleRescheduleMissed} disabled={rescheduling} style={styles.missedBtn} activeOpacity={0.8}>
+              <Text style={styles.missedBtnText}>{rescheduling ? 'Working...' : 'Reschedule'}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {visibleEvents.length === 0 && (
           <View style={styles.emptyBanner}>
             <Text style={styles.emptyBannerEmoji}>
@@ -768,6 +811,10 @@ const styles = StyleSheet.create({
   tabTextActive: { color: '#fff', fontWeight: '700', fontSize: 12 },
   tabTextInactive: { color: '#94A3B8', fontWeight: '600', fontSize: 12 },
 
+  missedBanner: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#FFFBEB', borderRadius: 14, borderWidth: 1, borderColor: '#FDE68A', paddingHorizontal: 14, paddingVertical: 10, marginBottom: 10 },
+  missedText: { flex: 1, color: '#92400E', fontSize: 12.5, fontWeight: '600' },
+  missedBtn: { backgroundColor: '#F59E0B', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 7 },
+  missedBtnText: { color: '#fff', fontWeight: '800', fontSize: 12 },
   statusRow: { flexDirection: 'row', gap: 8, marginBottom: 14 },
   statusBtn: { borderRadius: 20, overflow: 'hidden' },
   statusGrad: { paddingVertical: 6, paddingHorizontal: 16, alignItems: 'center', borderRadius: 20 },

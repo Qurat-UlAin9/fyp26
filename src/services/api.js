@@ -590,6 +590,14 @@ export async function sendChatMessage(conversationId, message, fromOption = fals
   });
 }
 
+// Re-plans unfinished steps of every task that has a missed step. Safe to call repeatedly.
+export async function rescheduleMissedSteps() {
+  return request('/api/ai/reschedule-missed', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  });
+}
+
 export async function suggestSubtasks(title, { category, subject, deadline } = {}) {
   return request('/api/ai/suggest-subtasks', {
     method: 'POST',

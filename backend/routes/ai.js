@@ -7,8 +7,15 @@ const agent = require('../services/ai/tools/graph');
 const { analyzeMessage } = require('../services/ai/perception');
 const { checkReply } = require('../services/ai/outputGuard');
 const time = require('../services/ai/context/timeContext');
-const { getPlanningContext, planSteps, scheduleSteps } = require('../services/ai/subtaskPlanner');
+const {
+  getPlanningContext,
+  planSteps,
+  scheduleSteps,
+  estimateAvailableMinutes,
+  rescheduleMissedForUser,
+} = require('../services/ai/subtaskPlanner');
 const { extractLinks } = require('../services/ai/coachLinks');
+const { routeMessage, applyLanePolicy } = require('../services/ai/chatRouter');
 
 // Apply Auth Middleware to EVERYTHING in this file
 router.use(requireAuth);
@@ -104,7 +111,7 @@ router.post('/chat', async (req, res) => {
 
     const { data: historyRows, error: historyError } = await supabaseAdmin
       .from('ai_messages')
-      .select('sender, message, created_at')
+      .select('sender, message, created_at, metadata')
       .eq('conversation_id', conversationId)
       .order('created_at', { ascending: false })
       .limit(8);
@@ -113,10 +120,14 @@ router.post('/chat', async (req, res) => {
       console.warn('Failed to load chat history:', historyError.message);
     }
 
-    const history = (historyRows || []).reverse().map((row) => ({
+    const orderedRows = (historyRows || []).reverse();
+    const history = orderedRows.map((row) => ({
       sender: row.sender,
       message: row.message,
     }));
+    // The lane of the coach's last reply, so "yes" or a tapped button stays in the same lane
+    const lastLane =
+      [...orderedRows].reverse().find((row) => row.sender === 'assistant' && row.metadata?.lane)?.metadata?.lane || null;
 
     const { error: userMsgError } = await supabaseAdmin
       .from('ai_messages')
@@ -162,7 +173,16 @@ router.post('/chat', async (req, res) => {
       return res.json({ data: { conversationId, reply: mockReply, toolCalls: [], messageId: mockMsg.id, options: mockOptions } });
     }
 
-    // Run Agent
+    // Pick the lane (task / action / support / knowledge / chat) and run the agent for it
+    const { lane, reason: laneReason } = routeMessage({
+      message: message.trim(),
+      hints: perception.hints,
+      fromOption: !!fromOption,
+      focusContext: context,
+      lastLane,
+    });
+    console.log(`[route] lane=${lane} (${laneReason}) lastLane=${lastLane || 'none'}`);
+
     const { reply: agentReply, toolCalls, retrievedChunkIds, promptVersionId, appActions } = await agent.handleMessage({
       userId,
       conversationId,
@@ -170,6 +190,7 @@ router.post('/chat', async (req, res) => {
       history,
       hints: perception.hints,
       focusContext: context,
+      lane,
     });
 
     const guard = checkReply(agentReply || 'What would you like to do next?');
@@ -186,7 +207,7 @@ router.post('/chat', async (req, res) => {
       ? optMatch[1].split('|').map((o) => o.trim()).filter(Boolean).map((o) => o.slice(0, 40)).slice(0, 4)
       : [];
     // Screen links: [[link: Key | Label]] -> buttons that open an app screen
-    const links = extractLinks(rawReply);
+    const allLinks = extractLinks(rawReply);
     const reply =
       rawReply
         .replace(/\[\[\s*options\s*:[\s\S]*?\]\]/gi, '')
@@ -196,11 +217,16 @@ router.post('/chat', async (req, res) => {
 
     // Older tool-based options still work as a fallback (present_options tool)
     const optionsCall = [...(toolCalls || [])].reverse().find((tc) => tc.name === 'present_options');
-    const options = parsedOptions.length
+    const rawOptions = parsedOptions.length
       ? parsedOptions
       : Array.isArray(optionsCall?.args?.options)
         ? optionsCall.args.options.map((o) => String(o).slice(0, 40)).slice(0, 4)
         : [];
+
+    // The lane decides what may be on the reply: a knowledge answer never carries buttons or links,
+    // a task reply only links to task screens, and so on (even if the model added a marker anyway)
+    const { options, links: laneLinks } = applyLanePolicy(lane, { options: rawOptions, links: allLinks });
+    const links = laneLinks;
 
     console.log(
       '[chat] tools:', (toolCalls || []).map((t) => t.name),
@@ -219,6 +245,7 @@ router.post('/chat', async (req, res) => {
         retrieved_chunk_ids: retrievedChunkIds || [],
         prompt_version_id: promptVersionId,
         metadata: {
+          lane,
           ...(options.length ? { options } : {}),
           ...(links.length ? { links } : {}),
         },
@@ -255,6 +282,7 @@ router.post('/chat', async (req, res) => {
         messageId: aiMsg.id,
         options,
         links,
+        lane,
         appActions: Array.isArray(appActions) ? appActions : [],
       },
     });
@@ -289,22 +317,18 @@ router.post('/suggest-subtasks', async (req, res) => {
     if (dueISO < now.iso) dueISO = now.iso;
 
     const plan = await getPlanningContext(userId, tz);
+    const nowHour = now.hour + now.minute / 60;
     const steps = await planSteps(
       {
         title: title.trim(),
         category: typeof category === 'string' ? category : undefined,
         subject: typeof subject === 'string' ? subject : undefined,
         daysLeft: time.diffDaysISO(now.iso, dueISO),
+        availableMinutes: estimateAvailableMinutes({ today: now.iso, nowHour, deadline: dueISO, ...plan.schedOpts }),
       },
       plan.maxSession
     );
-    const sched = scheduleSteps(steps, {
-      today: now.iso,
-      nowHour: now.hour + now.minute / 60,
-      deadline: dueISO,
-      preferredHour: plan.preferredHour,
-      busy: plan.busy,
-    });
+    const sched = scheduleSteps(steps, { today: now.iso, nowHour, deadline: dueISO, ...plan.schedOpts });
 
     return res.json({
       data: {
@@ -319,10 +343,30 @@ router.post('/suggest-subtasks', async (req, res) => {
         })),
         preferredHour: plan.preferredHour,
         tight: sched.tight,
+        // extra detail for the app: normal | stretched | extended | overloaded
+        mode: sched.mode,
+        window: sched.window,
+        shortfallMinutes: sched.shortfallMinutes,
+        pastDeadline: sched.pastDeadline,
       },
     });
   } catch (error) {
     console.error('POST /api/ai/suggest-subtasks failed:', error);
+    return res.status(500).json({ error: error.message || 'Failed.' });
+  }
+});
+
+// POST /api/ai/reschedule-missed
+// Re-plans the unfinished steps of every task that has a missed step (see rescheduleMissedForUser).
+// Safe to call repeatedly: when nothing is missed it changes nothing.
+router.post('/reschedule-missed', async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const tz = await time.getUserTimezone(userId);
+    const result = await rescheduleMissedForUser(userId, tz);
+    return res.json({ data: result });
+  } catch (error) {
+    console.error('POST /api/ai/reschedule-missed failed:', error);
     return res.status(500).json({ error: error.message || 'Failed.' });
   }
 });

@@ -72,11 +72,26 @@ function scheduleSubtasks(subtasks, deadlineISO, opts = {}) {
   });
 }
 
+// Hour of day (0-23) of a moment as seen in the user's timezone. Without a timezone it falls back to
+// the server's local hour, which on a cloud server is UTC and would be off for most users.
+function hourInTz(date, tz) {
+  if (!tz) return date.getHours();
+  try {
+    const part = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: '2-digit', hour12: false })
+      .formatToParts(date)
+      .find((p) => p.type === 'hour');
+    return Number(part.value) % 24;
+  } catch (_) {
+    return date.getHours();
+  }
+}
+
 /**
  * Reads the last 30 days of completed focus sessions and returns the hour
- * of day where the user accumulates the most focus time. Falls back to 9am.
+ * of day (in the user's timezone) where the user accumulates the most focus time.
+ * Falls back to 9am.
  */
-async function computePreferredWorkHour(userId) {
+async function computePreferredWorkHour(userId, tz) {
   if (!userId) return DEFAULT_HOUR;
 
   const since = new Date(Date.now() - LOOKBACK_DAYS * 86400000).toISOString();
@@ -94,7 +109,7 @@ async function computePreferredWorkHour(userId) {
     const buckets = {};
     for (const s of data) {
       if (!s.started_at) continue;
-      const h = new Date(s.started_at).getHours();
+      const h = hourInTz(new Date(s.started_at), tz);
       const weight = Math.max(1, s.actual_minutes || 1);
       buckets[h] = (buckets[h] || 0) + weight;
     }
@@ -116,6 +131,7 @@ async function computePreferredWorkHour(userId) {
 module.exports = {
   scheduleSubtasks,
   computePreferredWorkHour,
+  hourInTz,
   DEFAULT_HOUR,
   DEFAULT_DURATION,
 };

@@ -9,7 +9,8 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from '../../components/common/SheetCompat';
+//import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { X, Calendar, Bell, Sparkles } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
@@ -264,7 +265,7 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
                 <Text style={styles.scheduleDate}>
                   {formatDate(s.scheduledDate)}
                   {s.scheduledHour != null
-                    ? ` · ${String(s.scheduledHour).padStart(2, '0')}:00`
+                    ? ` · ${String(Math.floor(s.scheduledHour + 1e-9)).padStart(2, '0')}:${String(Math.round((s.scheduledHour - Math.floor(s.scheduledHour + 1e-9)) * 60)).padStart(2, '0')}`
                     : ''}
                 </Text>
               ) : null}

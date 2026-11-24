@@ -3,6 +3,8 @@
 const { tool } = require('@langchain/core/tools');
 const { z } = require('zod');
 const { supabaseAdmin } = require('../../../config/supabase');
+const timeCtx = require('../context/timeContext');
+const { parseHHMM, formatHHMM, slotForHour, habitMinutes } = require('../habitTimes');
 
 const VALID_SLOTS = ['Morning', 'Noon', 'Evening', 'Night'];
 const VALID_COLORS = ['coral', 'blue', 'green', 'purple', 'teal'];
@@ -63,6 +65,8 @@ const createHabit = tool(
       goal_value,
       unit,
       target_days,
+      clock_time,
+      duration_mins,
       reason,
     },
     config
@@ -100,14 +104,30 @@ const createHabit = tool(
     const slots = Array.isArray(time_slots)
       ? time_slots.filter((s) => VALID_SLOTS.includes(s))
       : [];
-    const finalSlots = slots.length > 0 ? slots : ['Morning'];
+    let finalSlots = slots.length > 0 ? slots : ['Morning'];
 
-    const today = new Date().toISOString().slice(0, 10);
+    // Optional exact time ("07:30"). The slot is still stored (completions, streaks and nudges use it);
+    // the time only decides where the habit sits on the timeline and keeps task steps off it.
+    const slotTimes = {};
+    if (clock_time !== undefined && clock_time !== null && clock_time !== '') {
+      const clock = parseHHMM(clock_time);
+      if (clock === null) return 'Error: clock_time must look like "07:30" (24-hour). Ask the user for the time.';
+      const slot = slotForHour(clock);
+      slotTimes[slot] = formatHHMM(clock);
+      finalSlots = slots.length > 0 ? (slots.includes(slot) ? slots : [slot, ...slots]) : [slot];
+    }
+    const durationMins = Number(duration_mins) > 0 ? habitMinutes({ durationMins: duration_mins }) : null;
+
+    // The user's own calendar day (the server runs in UTC, which is the wrong day for much of the evening/night)
+    const tz = config?.configurable?.timezone || (await timeCtx.getUserTimezone(userId));
+    const today = timeCtx.nowInTz(tz).iso;
     const targetDays =
       typeof target_days === 'number' && target_days > 0 ? target_days : null;
 
     const metadata = {
       timeSlots: finalSlots,
+      ...(Object.keys(slotTimes).length > 0 ? { slotTimes } : {}),
+      ...(durationMins ? { durationMins } : {}),
       completions: new Array(finalSlots.length).fill(false),
       gradient: pickGradient(finalColor),
       streak: 0,
@@ -136,10 +156,13 @@ const createHabit = tool(
 
     if (error) return `Error creating habit: ${error.message}`;
 
-    const slotNote = finalSlots.length > 1 ? ` at ${finalSlots.join(' + ')}` : '';
+    const slotNote = Object.keys(slotTimes).length > 0
+      ? ` at ${Object.values(slotTimes).join(' + ')}`
+      : finalSlots.length > 1 ? ` at ${finalSlots.join(' + ')}` : '';
+    const lenNote = durationMins ? ` (${durationMins} min each)` : '';
     const durNote = targetDays ? ` for ${targetDays} days` : '';
     return (
-      `Created habit "${data.title}"${slotNote}${durNote} ` +
+      `Created habit "${data.title}"${slotNote}${lenNote}${durNote} ` +
       `(color: ${finalColor}).` +
       (reason ? ` Reason: ${reason}` : '')
     );
@@ -172,6 +195,14 @@ const createHabit = tool(
           'How many days the user wants to commit to this habit. Set when the user says ' +
           '"for 7 days", "for 30 days", "for a month" etc. Omit for open-ended habits.'
         ),
+      clock_time: z
+        .string()
+        .optional()
+        .describe('Exact time in 24-hour HH:MM, only when the user names one (e.g. "07:30"). For a habit with ONE time of day.'),
+      duration_mins: z
+        .number()
+        .optional()
+        .describe('How many minutes one check-in takes, only when the user says (e.g. 5 for meditation). Habits are short; the default is 10.'),
       reason: z.string().optional(),
     }),
   }
@@ -193,6 +224,8 @@ const updateHabit = tool(
       unit,
       active,
       target_days,
+      clock_time,
+      duration_mins,
       reason,
     },
     config
@@ -234,7 +267,33 @@ const updateHabit = tool(
           const oldIdx = (existing.metadata?.timeSlots || []).indexOf(slot);
           return oldIdx >= 0 ? Boolean(priorCompletions[oldIdx]) : false;
         });
+        if (metadata.slotTimes) {
+          metadata.slotTimes = Object.fromEntries(Object.entries(metadata.slotTimes).filter(([s]) => slots.includes(s)));
+        }
       }
+    }
+
+    // Exact time for a slot. The slot is added if the habit does not have it yet.
+    if (clock_time !== undefined && clock_time !== null && clock_time !== '') {
+      const clock = parseHHMM(clock_time);
+      if (clock === null) return 'Error: clock_time must look like "07:30" (24-hour). Ask the user for the time.';
+      const slot = slotForHour(clock);
+      const oldSlots = Array.isArray(metadata.timeSlots) && metadata.timeSlots.length ? metadata.timeSlots : ['Morning'];
+      if (!oldSlots.includes(slot)) {
+        const priorCompletions = Array.isArray(metadata.completions) ? metadata.completions : [];
+        const newSlots = [...oldSlots, slot];
+        metadata.timeSlots = newSlots;
+        metadata.completions = newSlots.map((s) => {
+          const oldIdx = oldSlots.indexOf(s);
+          return oldIdx >= 0 ? Boolean(priorCompletions[oldIdx]) : false;
+        });
+      }
+      metadata.slotTimes = { ...(metadata.slotTimes || {}), [slot]: formatHHMM(clock) };
+    }
+
+    if (duration_mins !== undefined) {
+      if (Number(duration_mins) > 0) metadata.durationMins = habitMinutes({ durationMins: duration_mins });
+      else delete metadata.durationMins;
     }
 
     if (target_days !== undefined) {
@@ -274,6 +333,8 @@ const updateHabit = tool(
       unit: z.string().optional(),
       active: z.boolean().optional(),
       target_days: z.number().optional(),
+      clock_time: z.string().optional().describe('Exact time in 24-hour HH:MM, only when the user names one (e.g. "07:30").'),
+      duration_mins: z.number().optional().describe('Minutes one check-in takes (habits are short; default 10).'),
       reason: z.string().optional(),
     }),
   }
@@ -329,7 +390,9 @@ const listHabits = tool(
         const slots = h.metadata?.timeSlots || [];
         const streak = h.metadata?.streak || 0;
         const target = h.metadata?.targetDays;
-        const slotNote = slots.length > 0 ? ` at ${slots.join(' + ')}` : '';
+        const slotNote = slots.length > 0
+          ? ` at ${slots.map((s) => (h.metadata?.slotTimes?.[s] ? `${s} ${h.metadata.slotTimes[s]}` : s)).join(' + ')} (${habitMinutes(h.metadata)} min)`
+          : '';
         const streakNote = streak > 0 ? ` (🔥 ${streak})` : '';
         const targetNote = target ? ` [${target}-day plan]` : '';
         return `- ${h.title}${slotNote}${streakNote}${targetNote} — id: ${h.id}`;

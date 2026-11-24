@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from '../common/SheetCompat';
+//import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check, Volume2, VolumeX, X } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';

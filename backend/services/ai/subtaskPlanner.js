@@ -11,18 +11,29 @@ const { createChatModel } = require('./llmProvider');
 const { supabaseAdmin } = require('../../config/supabase');
 const time = require('./context/timeContext');
 const { computePreferredWorkHour } = require('./subtaskScheduler');
+const core = require('./scheduleCore');
+const { habitBlocksFromRows } = require('./habitTimes');
+
+const { scheduleSteps, estimateAvailableMinutes, describeSchedule, isMissedStep } = core;
 
 const DEFAULT_MAX_SESSION = 25; // minutes; the user's preferred focus length overrides it
 const MIN_SESSION = 10;
 const MAX_SESSION = 45;
-const MAX_STEPS_PER_DAY = 3;
-const MAX_MINUTES_PER_DAY = 90;
-const DAY_START_HOUR = 8;
-const DAY_END_HOUR = 21; // last step must end by 22:00
 
 const model = createChatModel({ temperature: 0.4, maxTokens: 700 });
 
 // ---------------------------------------------------------------- planning context
+
+// The daily window steps are placed in (default 6 PM - 10 PM). It is read from user_preferences
+// (task_window_start / task_window_end, in hours) when those columns exist, and falls back to the default.
+async function getTaskWindow(userId) {
+  try {
+    const { data } = await supabaseAdmin.from('user_preferences').select('*').eq('user_id', userId).maybeSingle();
+    return core.normalizeWindow(data?.task_window_start, data?.task_window_end);
+  } catch (_) {
+    return core.normalizeWindow();
+  }
+}
 
 async function getPlanningContext(userId, tz, { excludeTaskId = null } = {}) {
   const today = time.nowInTz(tz).iso;
@@ -33,7 +44,10 @@ async function getPlanningContext(userId, tz, { excludeTaskId = null } = {}) {
     if (Number.isFinite(n) && n > 0) maxSession = Math.max(MIN_SESSION, Math.min(MAX_SESSION, Math.round(n)));
   } catch (_) { /* default */ }
 
-  const preferredHour = await computePreferredWorkHour(userId);
+  const preferredHour = await computePreferredWorkHour(userId, tz);
+  const window = await getTaskWindow(userId);
+  // a step can never be longer than the user's daily window
+  maxSession = Math.max(5, Math.min(maxSession, Math.floor((window.end - window.start) * 60)));
 
   // steps the user already has scheduled on other open tasks
   const busy = [];
@@ -49,7 +63,23 @@ async function getPlanningContext(userId, tz, { excludeTaskId = null } = {}) {
     });
   } catch (_) { /* no busy info */ }
 
-  return { today, maxSession, preferredHour, busy };
+  // habits are fixed points the steps must not sit on
+  let habitBlocks = [];
+  try {
+    const { data } = await supabaseAdmin.from('habits').select('active, frequency, metadata').eq('user_id', userId).eq('active', true);
+    habitBlocks = habitBlocksFromRows(data, today);
+  } catch (_) { /* no habit info */ }
+
+  return {
+    today,
+    maxSession,
+    preferredHour,
+    busy,
+    habitBlocks,
+    window,
+    // pass this straight into scheduleSteps / estimateAvailableMinutes
+    schedOpts: { preferredHour, busy, habitBlocks, windowStart: window.start, windowEnd: window.end },
+  };
 }
 
 // ---------------------------------------------------------------- step writing
@@ -163,99 +193,86 @@ async function planSteps(info, maxSession) {
 }
 
 // ---------------------------------------------------------------- scheduling
+// The placement maths lives in scheduleCore.js (no database or model, so it is unit tested).
+// scheduleSteps(steps, { today, nowHour, deadline, ...plan.schedOpts }) keeps the same call shape as before.
 
-const overlaps = (a, b) => a.start < b.end + 0.25 && b.start < a.end + 0.25; // 15 min breathing room
+// ---------------------------------------------------------------- missed steps
 
 /**
- * steps: [{title, minutes, kind}]
- * opts: { today, nowHour, deadline, preferredHour, busy }
- * Returns { items: [{title, minutes, kind, scheduledDate, scheduledHour, durationMins}], tight, neededMinutes, capacityMinutes }
+ * Re-plans every open task that has a missed step. A step is missed when it should have ended
+ * a while ago and is not done. For each such task ALL its unfinished steps are placed again,
+ * from now to the deadline, so their order is kept. Tasks with the earliest deadline go first,
+ * so they get the best slots. Done steps are never touched.
+ * Returns { moved, tasks: [{ taskId, title, moved, mode, overdue, pastDeadline }] }.
  */
-function scheduleSteps(steps, opts) {
-  const { today, nowHour = 9, deadline, preferredHour = 9, busy = [] } = opts;
-  const n = steps.length;
-  if (n === 0) return { items: [], tight: false, neededMinutes: 0, capacityMinutes: 0 };
+async function rescheduleMissedForUser(userId, tz) {
+  const now = time.nowInTz(tz);
+  const nowHour = now.hour + now.minute / 60;
 
-  const startDay = nowHour <= 19 ? today : time.addDaysISO(today, 1);
-  const daysToDeadline = time.diffDaysISO(startDay, deadline);
-  // keep one spare day before the deadline when there is room for it
-  const lastDay = daysToDeadline <= 1 ? (daysToDeadline < 0 ? startDay : deadline) : time.addDaysISO(deadline, -1);
-  const dayCount = Math.max(1, Math.min(60, time.diffDaysISO(startDay, lastDay) + 1));
-  const days = Array.from({ length: dayCount }, (_, i) => time.addDaysISO(startDay, i));
+  const { data, error } = await supabaseAdmin
+    .from('tasks')
+    .select('id, title, status, due_date, metadata')
+    .eq('user_id', userId)
+    .neq('status', 'Completed')
+    .neq('status', 'Cancelled');
+  if (error) throw error;
 
-  const usage = new Map(days.map((d) => [d, { count: 0, minutes: 0, slots: [] }]));
-  busy.forEach((b) => {
-    const u = usage.get(b.date);
-    if (u) {
-      u.count += 1;
-      u.minutes += b.minutes;
-      u.slots.push({ start: b.hour, end: b.hour + b.minutes / 60 });
-    }
-  });
+  const affected = (data || []).filter(
+    (t) => Array.isArray(t.metadata?.subtasks) && t.metadata.subtasks.some((s) => isMissedStep(s, now.iso, nowHour))
+  );
+  affected.sort((a, b) => String(a.due_date || '9999').localeCompare(String(b.due_date || '9999')));
 
-  const neededMinutes = steps.reduce((s, x) => s + x.minutes, 0);
-  const capacityMinutes = days.reduce((sum, d) => {
-    const u = usage.get(d);
-    return sum + (u.count >= MAX_STEPS_PER_DAY ? 0 : Math.max(0, MAX_MINUTES_PER_DAY - u.minutes));
-  }, 0);
+  const results = [];
+  for (const task of affected) {
+    const subs = task.metadata.subtasks;
+    const todo = subs.filter((s) => !s.done);
+    // fresh context every time, so tasks re-planned a moment ago count as busy for the next one
+    const plan = await getPlanningContext(userId, tz, { excludeTaskId: task.id });
 
-  const hoursFor = (day, earliest) => {
-    const first = Math.max(preferredHour, earliest);
-    const list = [];
-    for (let h = Math.ceil(first); h <= DAY_END_HOUR; h++) list.push(h);
-    for (let h = Math.ceil(first) - 1; h >= Math.max(DAY_START_HOUR, Math.ceil(earliest)); h--) list.push(h);
-    return list;
-  };
+    const dueRaw = String(task.due_date || '').slice(0, 10);
+    const overdue = !!dueRaw && dueRaw < now.iso;
+    const deadline = !dueRaw ? time.addDaysISO(now.iso, 7) : overdue ? now.iso : dueRaw;
 
-  const tryPlace = (dayIdx, step, minHour) => {
-    const day = days[dayIdx];
-    const u = usage.get(day);
-    if (u.count >= MAX_STEPS_PER_DAY || u.minutes + step.minutes > MAX_MINUTES_PER_DAY) return null;
-    let earliest = Math.max(DAY_START_HOUR, minHour || 0);
-    if (day === today) earliest = Math.max(earliest, Math.ceil(nowHour + 0.5));
-    for (const h of hoursFor(day, earliest)) {
-      const slot = { start: h, end: h + step.minutes / 60 };
-      if (slot.end > DAY_END_HOUR + 1) continue;
-      if (u.slots.some((s) => overlaps(slot, s))) continue;
-      return { day, hour: h, slot };
-    }
-    return null;
-  };
+    const sched = scheduleSteps(
+      todo.map((s) => ({ title: s.title, minutes: Number(s.durationMins) || 15, kind: s.kind || 'do' })),
+      { today: now.iso, nowHour, deadline, ...plan.schedOpts }
+    );
 
-  let tight = neededMinutes > capacityMinutes;
-  let prevIdx = 0;
-  let prevEnd = 0;
-  const items = steps.map((step, i) => {
-    const target = Math.min(dayCount - 1, Math.floor((i * dayCount) / n));
-    let from = Math.max(target, prevIdx);
-    let placed = null;
-    let idx = from;
-    for (; idx < dayCount; idx++) {
-      placed = tryPlace(idx, step, idx === prevIdx ? prevEnd + 0.25 : 0);
-      if (placed) break;
-    }
-    if (!placed) {
-      // no room anywhere ahead: put it on the last day at the first free hour and flag it
-      tight = true;
-      idx = dayCount - 1;
-      const u = usage.get(days[idx]);
-      let h = Math.max(preferredHour, idx === prevIdx ? Math.ceil(prevEnd + 0.25) : DAY_START_HOUR);
-      while (h < DAY_END_HOUR && u.slots.some((s) => overlaps({ start: h, end: h + step.minutes / 60 }, s))) h += 1;
-      placed = { day: days[idx], hour: h, slot: { start: h, end: h + step.minutes / 60 } };
-    }
-    const u = usage.get(placed.day);
-    u.count += 1;
-    u.minutes += step.minutes;
-    u.slots.push(placed.slot);
-    prevIdx = idx;
-    prevEnd = placed.slot.end;
-    return { ...step, scheduledDate: placed.day, scheduledHour: placed.hour, durationMins: step.minutes };
-  });
+    const stamp = new Date().toISOString();
+    let k = 0;
+    let moved = 0;
+    const next = subs.map((s) => {
+      if (s.done) return s;
+      const it = sched.items[k++];
+      const missed = isMissedStep(s, now.iso, nowHour);
+      if (missed) moved += 1;
+      return {
+        ...s,
+        scheduledDate: it.scheduledDate,
+        scheduledHour: it.scheduledHour,
+        durationMins: it.durationMins,
+        rescheduledAt: stamp,
+        rescheduledReason: missed ? 'missed' : 'replanned',
+        rescheduleCount: (Number(s.rescheduleCount) || 0) + (missed ? 1 : 0),
+      };
+    });
 
-  return { items, tight, neededMinutes, capacityMinutes };
+    const { error: upErr } = await supabaseAdmin
+      .from('tasks')
+      .update({ metadata: { ...task.metadata, subtasks: next } })
+      .eq('id', task.id)
+      .eq('user_id', userId);
+    if (upErr) throw upErr;
+
+    results.push({ taskId: task.id, title: task.title, moved, mode: sched.mode, overdue, pastDeadline: sched.pastDeadline });
+  }
+
+  return { moved: results.reduce((sum, r) => sum + r.moved, 0), tasks: results };
 }
 
 module.exports = {
-  getPlanningContext, planSteps, scheduleSteps, cleanSteps, fallbackSteps,
+  getPlanningContext, getTaskWindow, planSteps, scheduleSteps, cleanSteps, fallbackSteps,
+  estimateAvailableMinutes, describeSchedule, isMissedStep, rescheduleMissedForUser,
   DEFAULT_MAX_SESSION, BANNED, sendsOutside,
 };
+

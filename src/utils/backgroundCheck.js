@@ -81,7 +81,10 @@ async function evaluateAndFire() {
 
     for (let i = 0; i < slots.length; i++) {
       const slot = slots[i];
-      const nudgeHour = SLOT_NUDGE_HOUR[slot];
+      const exact = /^(\d{1,2}):(\d{2})$/.exec(String(habit.slotTimes?.[slot] || ''));
+      const nudgeHour = exact
+        ? Number(exact[1]) + Number(exact[2]) / 60 + 0.25
+        : SLOT_NUDGE_HOUR[slot];
       if (!nudgeHour) continue;
 
       // Not yet time

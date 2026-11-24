@@ -35,13 +35,41 @@ import {
   getMoodLogs as apiGetMoodLogs,
   getLatestADHDAssessment,
   getLatestEFAssessment,
+  rescheduleMissedSteps as apiRescheduleMissedSteps,
 } from '../services/api';
 
 const APP_DATA_KEY = 'adhd_app_data_v2';
 
-const todayISO = () => {
-  const date = new Date();
-  return date.toISOString().slice(0, 10);
+// Local calendar date (YYYY-MM-DD). toISOString() is UTC, which is the wrong day for the user
+// for several hours every night (for example 00:00-05:00 in Pakistan).
+const toLocalISO = (date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
+const todayISO = () => toLocalISO(new Date());
+
+// "07:30" -> 7.5, anything else -> null
+const parseClock = (value) => {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(value || '').trim());
+  if (!m) return null;
+  const h = Number(m[1]);
+  const min = Number(m[2]);
+  return h > 23 || min > 59 ? null : h + min / 60;
+};
+
+// A step is "missed" once it should have ended a while ago and is still not done.
+// Keep in sync with isMissedStep in backend/services/ai/scheduleCore.js.
+const MISSED_GRACE_HOURS = 2;
+const isStepMissed = (step, today, nowHour) => {
+  if (!step || step.done || !step.scheduledDate) return false;
+  if (step.scheduledDate < today) return true;
+  if (step.scheduledDate > today) return false;
+  const h = Number(step.scheduledHour);
+  if (!Number.isFinite(h)) return false;
+  return h + (Number(step.durationMins) || 30) / 60 + MISSED_GRACE_HOURS <= nowHour;
 };
 
 const THEME_TO_COLOR_IDX = {
@@ -61,7 +89,7 @@ const HABIT_COLOR_TO_IDX = {
 };
 
 const SLOT_TO_HOUR = { Morning: 7, Noon: 12, Evening: 18, Night: 21 };
-const SLOT_DURATION_MINS = 15;
+const SLOT_DURATION_MINS = 10; // a habit check-in is short; a habit can set its own durationMins
 
 const TASK_ARCHIVE_DAYS = 10;
 const FOCUS_ARCHIVE_DAYS = 30;
@@ -111,7 +139,7 @@ function getDateParts(value) {
   const date = safeDate(value);
   if (!date) return { date: todayISO(), hour: 9, minute: 0 };
   return {
-    date: date.toISOString().slice(0, 10),
+    date: toLocalISO(date),
     hour: date.getHours(),
     minute: date.getMinutes(),
   };
@@ -256,6 +284,10 @@ function normalizeHabit(habit) {
     gradient,
     targetDays: metadata.targetDays ?? null,
     streak: metadata.streak ?? 0,
+    // optional exact time per slot ({ Morning: '07:30' }) and minutes per check-in
+    slotTimes:
+      metadata.slotTimes && typeof metadata.slotTimes === 'object' ? metadata.slotTimes : {},
+    durationMins: Number(metadata.durationMins) > 0 ? Number(metadata.durationMins) : null,
   };
 }
 
@@ -271,6 +303,12 @@ function habitToApiPayload(habit) {
   }
   if (habit?.gradient !== undefined) {
     metadata.gradient = Array.isArray(habit.gradient) ? habit.gradient : [];
+  }
+  if (habit?.slotTimes && typeof habit.slotTimes === 'object') {
+    metadata.slotTimes = habit.slotTimes;
+  }
+  if (Number(habit?.durationMins) > 0) {
+    metadata.durationMins = Number(habit.durationMins);
   }
 
   return {
@@ -329,7 +367,7 @@ function normalizeFocusSession(session) {
     userRating: session.user_rating ?? null,
     notes: session.notes || '',
     metadata,
-    isoKey: startedAt ? startedAt.toISOString().slice(0, 10) : todayISO(),
+    isoKey: startedAt ? toLocalISO(startedAt) : todayISO(),
     startHour: startedAt ? startParts.hour : 9,
     startMin: startedAt ? startParts.minute : 0,
     durationMins: actualMinutes > 0 ? actualMinutes : plannedMinutes,
@@ -572,6 +610,8 @@ export function AppDataProvider({ children }) {
         id: h.id,
         name: h.name || h.title || 'Habit',
         timeSlots: h.timeSlots || [],
+        slotTimes: h.slotTimes || {},
+        durationMins: h.durationMins || null,
         completions: h.completions || [],
       })),
       updatedAt: Date.now(),
@@ -862,11 +902,26 @@ export function AppDataProvider({ children }) {
     await AsyncStorage.removeItem(APP_DATA_KEY);
   }, [tasks, habits, focusSessions]);
 
+  // Steps whose time has passed are re-planned by the server, which knows the user's daily window,
+  // their habits and their other tasks. Returns { moved, tasks }.
+  const rescheduleMissed = useCallback(async () => {
+    const res = await apiRescheduleMissedSteps();
+    const result = res?.data || { moved: 0, tasks: [] };
+    if (result.moved > 0) {
+      const fresh = await getTasks();
+      const list = Array.isArray(fresh?.data) ? fresh.data : [];
+      setTasks(list.map(normalizeTask).filter(Boolean));
+    }
+    return result;
+  }, []);
+
   useEffect(() => {
     if (!hydrated) return;
     if (autoRescheduleRanRef.current) return;
     autoRescheduleRanRef.current = true;
 
+    // Old behaviour, kept as a fallback for when the server cannot be reached
+    const moveMissedToTodayLocally = () => {
     const today = todayISO();
 
     tasks.forEach((task) => {
@@ -898,10 +953,19 @@ export function AppDataProvider({ children }) {
         );
       }
     });
-  }, [hydrated, tasks, updateTask]);
+    };
+
+    rescheduleMissed().catch((e) => {
+      console.warn('Server reschedule failed, moving missed steps to today:', e?.message);
+      moveMissedToTodayLocally();
+    });
+  }, [hydrated, tasks, updateTask, rescheduleMissed]);
 
   const timelineEvents = useMemo(() => {
     const events = [];
+    const nowDate = new Date();
+    const todayKey = todayISO();
+    const nowHour = nowDate.getHours() + nowDate.getMinutes() / 60;
 
     tasks.forEach((task) => {
       if (task.status === 'Cancelled') return;
@@ -934,7 +998,12 @@ export function AppDataProvider({ children }) {
           });
 
           const headlineSrc = allDone ? sorted[0] : remaining[0];
-          const startHour = headlineSrc.scheduledHour ?? 9;
+          // steps can start on a quarter hour (18.25 = 18:15); the grid needs hour and minute apart
+          const rawHour = Number(headlineSrc.scheduledHour);
+          const hourValue = Number.isFinite(rawHour) ? rawHour : 9;
+          const startHour = Math.floor(hourValue + 1e-9);
+          const startMin = Math.round((hourValue - startHour) * 60);
+          const missed = remaining.some((s) => isStepMissed(s, todayKey, nowHour));
 
           const totalMins = allDone
             ? group.reduce((sum, g) => sum + (g.durationMins ?? 30), 0)
@@ -954,7 +1023,8 @@ export function AppDataProvider({ children }) {
             type: 'task',
             isoKey: date,
             startHour,
-            startMin: 0,
+            startMin,
+            missed,
             durationMins: Math.max(15, totalMins),
             colorIdx: THEME_TO_COLOR_IDX[task.themeId] ?? 0,
             taskId: task.id,
@@ -993,7 +1063,7 @@ export function AppDataProvider({ children }) {
         allDone: task.status === 'Completed',
         done: task.status === 'Completed',
         type: 'task',
-        isoKey: dueDate ? dueDate.toISOString().slice(0, 10) : todayISO(),
+        isoKey: dueDate ? toLocalISO(dueDate) : todayISO(),
         startHour,
         startMin,
         durationMins: Math.max(30, durationMins || 30),
@@ -1019,6 +1089,9 @@ export function AppDataProvider({ children }) {
         colorIdx = HABIT_COLOR_TO_IDX.teal;
 
       (habit.timeSlots || []).forEach((slot, index) => {
+        // exact time when the habit has one, otherwise the default hour of the slot
+        const slotHour = parseClock(habit.slotTimes?.[slot]) ?? SLOT_TO_HOUR[slot] ?? 8;
+        const slotStartHour = Math.floor(slotHour + 1e-9);
         events.push({
           id: `habit-${habit.id}-${index}`,
           title: habit.name || habit.title || 'Habit',
@@ -1028,9 +1101,9 @@ export function AppDataProvider({ children }) {
           done: Boolean(habit.completions?.[index]),
           type: 'habit',
           isoKey: today,
-          startHour: SLOT_TO_HOUR[slot] ?? 8,
-          startMin: 0,
-          durationMins: SLOT_DURATION_MINS,
+          startHour: slotStartHour,
+          startMin: Math.round((slotHour - slotStartHour) * 60),
+          durationMins: habit.durationMins || SLOT_DURATION_MINS,
           colorIdx,
           habitId: habit.id,
           slotIndex: index,
@@ -1124,6 +1197,7 @@ export function AppDataProvider({ children }) {
       addMoodLog,
       updateProfile,
       resetAppData,
+      rescheduleMissed,
       timelineEvents,
       habitStats,
     }),
@@ -1157,6 +1231,7 @@ export function AppDataProvider({ children }) {
       addMoodLog,
       updateProfile,
       resetAppData,
+      rescheduleMissed,
       timelineEvents,
       habitStats,
     ]

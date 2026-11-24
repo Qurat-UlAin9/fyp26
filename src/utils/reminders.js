@@ -55,14 +55,24 @@ export async function scheduleHabitNudges(habit) {
   const scheduled = [];
 
   for (const slot of habit.timeSlots) {
-    const endHour = SLOT_END[slot];
-    if (!endHour) continue;
+    let nudgeHour;
+    let nudgeMinute;
 
-    let nudgeHour = endHour;
-    let nudgeMinute = -NUDGE_OFFSET_MIN;
-    if (nudgeMinute < 0) {
-      nudgeMinute += 60;
-      nudgeHour -= 1;
+    // Exact time ("07:30"): nudge 15 minutes after it, if the habit was not ticked yet
+    const exact = /^(\d{1,2}):(\d{2})$/.exec(String(habit.slotTimes?.[slot] || ''));
+    if (exact) {
+      const total = Number(exact[1]) * 60 + Number(exact[2]) + 15;
+      nudgeHour = Math.floor(total / 60) % 24;
+      nudgeMinute = total % 60;
+    } else {
+      const endHour = SLOT_END[slot];
+      if (!endHour) continue;
+      nudgeHour = endHour;
+      nudgeMinute = -NUDGE_OFFSET_MIN;
+      if (nudgeMinute < 0) {
+        nudgeMinute += 60;
+        nudgeHour -= 1;
+      }
     }
 
     try {

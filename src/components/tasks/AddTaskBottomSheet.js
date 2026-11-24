@@ -220,7 +220,9 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
               {s.scheduledDate ? (
                 <Text style={[styles.scheduleDate, { color: theme.textSecondary }]}>
                   {formatDate(s.scheduledDate)}
-                  {s.scheduledHour != null ? ` · ${String(s.scheduledHour).padStart(2, '0')}:00` : ''}
+                  {s.scheduledHour != null
+                    ? ` · ${String(Math.floor(s.scheduledHour + 1e-9)).padStart(2, '0')}:${String(Math.round((s.scheduledHour - Math.floor(s.scheduledHour + 1e-9)) * 60)).padStart(2, '0')}`
+                    : ''}
                 </Text>
               ) : null}
             </View>

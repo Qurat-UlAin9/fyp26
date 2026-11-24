@@ -6,7 +6,7 @@ const { supabaseAdmin } = require('../../../config/supabase');
 const { pushAppAction } = require('./appActions');
 const rewards = require('../../rewards/rewardsService');
 const time = require('../context/timeContext');
-const { getPlanningContext, planSteps, scheduleSteps } = require('../subtaskPlanner');
+const { getPlanningContext, planSteps, scheduleSteps, estimateAvailableMinutes, describeSchedule } = require('../subtaskPlanner');
 
 const COLOR_ENUM = ['coral', 'sky', 'mint', 'lavender', 'teal'];
 const CATEGORY_COLOR = {
@@ -96,8 +96,16 @@ const createTask = tool(
     if (userSteps.length > 0) {
       steps = userSteps.map((t) => ({ title: t, minutes: Math.min(15, plan.maxSession), kind: 'do' }));
     } else {
+      // tell the planner how much free time there really is (window, habits, other tasks), so a tight
+      // deadline gets fewer steps instead of an impossible plan
+      const availableMinutes = estimateAvailableMinutes({
+        today: now.iso,
+        nowHour: now.hour + now.minute / 60,
+        deadline: dueISO,
+        ...plan.schedOpts,
+      });
       steps = await planSteps(
-        { title, description, category, subject, difficulty, daysLeft, availableMinutes: Math.max(0, daysLeft + 1) * 90 },
+        { title, description, category, subject, difficulty, daysLeft, availableMinutes },
         plan.maxSession
       );
     }
@@ -106,8 +114,7 @@ const createTask = tool(
       today: now.iso,
       nowHour: now.hour + now.minute / 60,
       deadline: dueISO,
-      preferredHour: plan.preferredHour,
-      busy: plan.busy,
+      ...plan.schedOpts,
     });
     const scheduled = sched.items;
     const totalMinutes = sched.neededMinutes;
@@ -153,13 +160,12 @@ const createTask = tool(
       (s, i) =>
         `${i + 1}. [${s.durationMins} min, ${s.kind}] ${s.title} — ${time.friendlyDate(s.scheduledDate, now.iso)}, ${time.friendlyTime(s.scheduledHour)}`
     );
-    const tightNote = sched.tight
-      ? `\nHEADS UP: this is tight (about ${sched.neededMinutes} min of work and little free time before ${time.friendlyDate(dueISO, now.iso)}). Say so honestly and offer a later deadline or fewer steps.`
-      : '';
+    const tightNote = describeSchedule(sched, { deadline: time.friendlyDate(dueISO, now.iso) });
     return (
       `Created task "${data.title}" (task_id: ${data.id}), due ${time.friendlyDate(dueISO, now.iso)} (${dueISO}).\n` +
       `Plan: ${scheduled.length} steps, about ${totalMinutes} min in total, each at most ${plan.maxSession} min, ` +
-      `spread over the days with a spare day before the deadline. Times are the user's local time:\n` +
+      `placed in the user's ${time.friendlyTime(sched.window.start)}-${time.friendlyTime(sched.window.end % 24)} work slot and spread over the days ` +
+      `(a spare day is kept before the deadline when there is room). Times are the user's local time:\n` +
       planLines.join('\n') +
       tightNote +
       `\nSubtask ids are in get_task_details. Read dates and times to the user exactly as written above. ` +
@@ -293,8 +299,7 @@ const updateTask = tool(
           today: now.iso,
           nowHour: now.hour + now.minute / 60,
           deadline: deadline < now.iso ? now.iso : deadline,
-          preferredHour: plan.preferredHour,
-          busy: plan.busy,
+          ...plan.schedOpts,
         });
 
         metadata.subtasks = [
@@ -314,7 +319,7 @@ const updateTask = tool(
           sched.items
             .map((s, i) => `${i + 1}. ${s.title} — ${time.friendlyDate(s.scheduledDate, now.iso)}, ${time.friendlyTime(s.scheduledHour)}`)
             .join('\n') +
-          (sched.tight ? '\nHEADS UP: this is tight. Say so honestly.' : '');
+          describeSchedule(sched, { deadline: time.friendlyDate(deadline, now.iso) });
       }
     }
 
