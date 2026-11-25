@@ -151,7 +151,7 @@ SCREEN BUTTONS: after you change something, you may add one line [[link: Key | B
 const SUPPORT_LINK_RULES = `
 
 SCREEN BUTTONS (most replies need none):
-- When the user is clearly stressed, anxious, angry, sad or restless (said in chat or visible in the recent mood), or asks for something calming, offer ONE fitting exercise as a line [[link: Key | Button label]], never as an order. Match the feeling: overwhelm or panic -> Grounding; anger or anxiety -> Balloon; sadness -> Ripples; racing thoughts or restlessness -> Meditation; a quick reset -> Splash; calming music -> Soundscapes; a menu of quick exercises -> ImmediateRelief; emotion skills -> EmotionRegulation. Put it before any options line. Use no other keys in this reply.
+- When the user is clearly stressed, anxious, angry, sad or restless (said in chat or visible in the recent mood), or asks for something calming, offer ONE fitting exercise as a line [[link: Key | Button label]], never as an order. Match the feeling: overwhelm or panic -> Grounding; anger or anxiety -> Balloon; sadness -> Ripples; racing thoughts or restlessness -> Ripples; a quick reset -> Splash; calming music -> Soundscapes; a menu of quick exercises -> ImmediateRelief; emotion skills -> EmotionRegulation. Put it before any options line. Use no other keys in this reply.
 - Suggest an exercise only when the user is clearly distressed or asks for one, at most one per reply, and not in consecutive replies.
 
 AFTER AN EXERCISE OR GAME (the user's message says they finished one and how they feel):
@@ -163,11 +163,50 @@ LOGGING MOOD: when the user clearly says how they feel (in words, or in a messag
 
 function formatFocusContext(ctx) {
   if (!ctx || typeof ctx !== 'object') return '';
-  const s = (v) => String(v || '').slice(0, 200);
+  const s = (v, n = 200) => String(v ?? '').slice(0, n);
+
+  // Older / fallback shape: only ids and titles
+  if (!Array.isArray(ctx.steps)) {
+    return (
+      `\n\nCURRENT FOCUS (the user tapped "Ask coach" on this step): task "${s(ctx.taskTitle)}" (task_id: ${s(ctx.taskId)}), ` +
+      `step "${s(ctx.subtaskTitle)}" (subtask_id: ${s(ctx.subtaskId)}). ` +
+      'Open with a short motivating line about why this step matters, then ask how they would like to tackle it together.\n'
+    );
+  }
+
+  const cur = ctx.current;
+  const mark = (st) => (st.done ? 'done' : st.missed ? 'missed' : 'todo');
+  const lines = ctx.steps.map(
+    (st) =>
+      `  ${st.n}. [${mark(st)}] (${st.kind}) ${s(st.title, 120)}${st.detail ? ` - ${s(st.detail, 160)}` : ''}` +
+      `${st.note ? ` (their result: ${s(st.note, 120)})` : ''}` +
+      `${cur && st.id === cur.id ? '   <- THE STEP THE USER IS ASKING ABOUT' : ''}`
+  );
+
+  const typeRule =
+    cur?.kind === 'learn'
+      ? 'This is a LEARN step: teach this one sub-topic yourself, in small pieces (what it is, why it matters, how it works in 3 to 5 short stages, one concrete comparison). Give ONE piece, then a quick check question, then ask if they want the next piece.'
+      : cur?.kind === 'prepare'
+        ? 'This is a PREPARE step: go through the list of what to gather as a checklist, one or two items at a time, and ask them to confirm when everything is within reach.'
+        : cur?.kind === 'review'
+          ? 'This is a REVIEW step: ask them to show or tell you the result, point out what is good and ONE thing to fix.'
+          : 'This is a DO step: guide the action one small move at a time, using the step detail, and ask them to tell you when each move is done.';
+
   return (
-    `\n\nCURRENT FOCUS (the user tapped "Ask coach" on this step): task "${s(ctx.taskTitle)}" (task_id: ${s(ctx.taskId)}), ` +
-    `step "${s(ctx.subtaskTitle)}" (subtask_id: ${s(ctx.subtaskId)}). ` +
-    'Open with a short motivating line about why this step matters, then ask how they would like to tackle it together (buttons are fine here because it is a real choice).\n'
+    '\n\nCURRENT FOCUS (the user tapped "Ask coach" on a step). You know everything about this task from here; never ask them to repeat it.\n' +
+    `TASK: "${s(ctx.taskTitle)}" (task_id: ${s(ctx.taskId)}), type: ${s(ctx.taskType || 'unknown')}, status: ${s(ctx.taskStatus)}` +
+    `${ctx.dueDate ? `, due ${s(ctx.dueDate)}` : ''}, today is ${s(ctx.today)}.\n` +
+    `${ctx.taskDescription ? `DESCRIPTION: ${s(ctx.taskDescription, 300)}\n` : ''}` +
+    `${ctx.materials?.length ? `MATERIALS TO GATHER: ${ctx.materials.map((m) => s(m, 80)).join('; ')}\n` : ''}` +
+    `PROGRESS: ${ctx.doneSteps} of ${ctx.totalSteps} steps done.\n` +
+    `ALL STEPS IN ORDER:\n${lines.join('\n')}\n` +
+    (cur
+      ? `CURRENT STEP: ${cur.n}. "${s(cur.title)}" (subtask_id: ${s(cur.id)}), status ${mark(cur)}` +
+        `${cur.scheduledDate ? `, scheduled ${s(cur.scheduledDate)}` : ''}.\n`
+      : `CURRENT STEP: "${s(ctx.subtaskTitle)}" (subtask_id: ${s(ctx.subtaskId)}).\n`) +
+    `${typeRule}\n` +
+    'Open with one short motivating line about why this step matters for the whole task, then start on it right away (buttons are fine only for a real choice). ' +
+    'When they finish the step, call complete_subtask with this subtask_id and put their result in the note. Use the steps before and after it to connect the work; do not re-plan the task unless they ask.\n'
   );
 }
 
@@ -263,7 +302,7 @@ const LANE_TOOLS = {
   chat: [],
 };
 
-const model = createChatModel({ temperature: 0.5, maxTokens: 1500 });
+const model = createChatModel({ temperature: 0.5, maxTokens: 1500, purpose: 'coach' });
 const agentCache = {};
 function agentFor(lane) {
   if (!agentCache[lane]) agentCache[lane] = createReactAgent({ llm: model, tools: LANE_TOOLS[lane] });

@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from '../../components/common/ThemeProvider';
 import ADHDCard from '../../components/common/ADHDCard';
 import ADHDButton from '../../components/common/ADHDButton';
-import { Globe, Sun, Moon } from 'lucide-react-native';
+//import { Globe, Sun, Moon } from 'lucide-react-native';
 
 const LanguageThemeScreen = ({ navigation }) => {
   const { colors, toggleTheme } = useTheme();

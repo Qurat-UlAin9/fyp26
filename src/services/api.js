@@ -592,10 +592,32 @@ export async function sendChatMessage(conversationId, message, fromOption = fals
 
 // Re-plans unfinished steps of every task that has a missed step. Safe to call repeatedly.
 export async function rescheduleMissedSteps() {
+  // send the phone's own timezone so the server and the phone agree on what "now" is
+  let timezone = null;
+  try { timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || null; } catch { /* ignore */ }
   return request('/api/ai/reschedule-missed', {
     method: 'POST',
-    body: JSON.stringify({}),
+    body: JSON.stringify({ timezone }),
   });
+}
+
+/* =========================================================
+   THOUGHT REFRAMING (its own endpoint and prompt; not the coach chat)
+========================================================= */
+
+export async function reframeThought({ thought, situation, feedback, previous }) {
+  return request('/api/reframe', {
+    method: 'POST',
+    body: JSON.stringify({ thought, situation, feedback, previous }),
+  });
+}
+
+export async function getReframeHistory() {
+  return request('/api/reframe');
+}
+
+export async function deleteReframe(id) {
+  return request(`/api/reframe/${id}`, { method: 'DELETE' });
 }
 
 export async function suggestSubtasks(title, { category, subject, deadline } = {}) {

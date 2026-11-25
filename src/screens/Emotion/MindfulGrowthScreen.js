@@ -3,7 +3,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { Dimensions, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { AudioLines, ChevronLeft, CloudSun, Flower2 } from 'lucide-react-native';
+import { AudioLines, ChevronLeft, CloudSun } from 'lucide-react-native';
 import Animated, {
   Easing,
   FadeInDown,
@@ -19,18 +19,11 @@ const CARD_WIDTH = width * 0.88;
 
 const GROWTH_PATHS = [
   {
-    id: 'meditation',
-    title: 'Meditation Session',
-    desc: 'Slow down, settle attention, and reset.',
-    icon: Flower2,
-    route: 'MeditationSession',
-  },
-  {
     id: 'reframing',
     title: 'Thought Reframing',
-    desc: 'Shift automatic negative thoughts with your AI coach.',
+    desc: 'Write a hard thought and get it broken down and rebalanced.',
     icon: CloudSun,
-    route: 'Chatbot',
+    route: 'ThoughtReframe',
   },
   {
     id: 'soundscapes',

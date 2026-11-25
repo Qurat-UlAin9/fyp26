@@ -6,7 +6,8 @@ import ADHDButton from '../../components/common/ADHDButton';
 import { useTheme } from '../../contexts/ThemeContext';
 
 export default function WelcomeScreen({ navigation }) {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
+  const accent = theme.accentGradient?.[0] || '#8B5CF6';
 
   const goToADHDAssessment = () => {
     navigation.navigate('Questionnaire');
@@ -17,9 +18,11 @@ export default function WelcomeScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#0F172A' : '#EEF2FF' }]}>
+    <LinearGradient colors={theme.background} style={styles.container}>
       <LinearGradient
-        colors={isDark ? ['#312E81', '#1D4ED8'] : ['#A5B4FC', '#7DD3FC']}
+        colors={[theme.accentGradient[0], theme.accentGradient[1]]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={styles.heroCard}
       >
         <Sparkles color="#FFFFFF" size={26} />
@@ -34,7 +37,7 @@ export default function WelcomeScreen({ navigation }) {
         onPress={goToADHDAssessment}
         style={[styles.assessmentCard, { backgroundColor: theme.card, borderColor: theme.border }]}
       >
-        <ClipboardList color={theme.primary} size={22} />
+        <ClipboardList color={accent} size={22} />
         <View style={styles.assessmentCopy}>
           <Text style={[styles.assessmentTitle, { color: theme.text }]}>ADHD Screening</Text>
           <Text style={[styles.assessmentSubtitle, { color: theme.textSecondary }]}>2-3 minutes • Understand your needs</Text>
@@ -46,7 +49,7 @@ export default function WelcomeScreen({ navigation }) {
         onPress={goToEFAssessment}
         style={[styles.assessmentCard, { backgroundColor: theme.card, borderColor: theme.border }]}
       >
-        <Brain color={theme.primary} size={22} />
+        <Brain color={accent} size={22} />
         <View style={styles.assessmentCopy}>
           <Text style={[styles.assessmentTitle, { color: theme.text }]}>Executive Function Assessment</Text>
           <Text style={[styles.assessmentSubtitle, { color: theme.textSecondary }]}>5-7 minutes • Attention, organization, and more</Text>
@@ -55,7 +58,7 @@ export default function WelcomeScreen({ navigation }) {
 
       <ADHDButton title="Start ADHD Screening" onPress={goToADHDAssessment} style={styles.primaryButton} />
       <ADHDButton title="Continue to Home" gradient={false} onPress={() => navigation.replace('MainTabs')} />
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   heroText: {
-    color: '#E0E7FF',
+    color: 'rgba(255,255,255,0.9)',
     marginTop: 8,
     fontSize: 16,
     lineHeight: 24,

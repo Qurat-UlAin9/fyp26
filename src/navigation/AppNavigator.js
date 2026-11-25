@@ -15,6 +15,7 @@ import ImmediateReliefScreen from '../screens/Emotion/ImmediateReliefScreen';
 import MindfulGrowthScreen from '../screens/Emotion/MindfulGrowthScreen';
 import CognitivePowerScreen from '../screens/Emotion/CognitivePowerScreen';
 import ChatbotScreen from '../screens/Chatbot/ChatbotScreen';
+import ThoughtReframeScreen from '../screens/Reframe/ThoughtReframeScreen';
 import QuestionnaireScreen from '../screens/Detection/QuestionnaireScreen';
 import AssessmentResultScreen from '../screens/Detection/AssessmentResultScreen';
 import EFQuestionnaireScreen from '../screens/Detection/EFQuestionnaireScreen';
@@ -23,7 +24,6 @@ import BalloonSession from '../screens/Emotion/BallonSession';
 import SplashSession from '../screens/Emotion/SplashSession';
 import GroundingSession from '../screens/Emotion/GroundingSession';
 import HarmonicRipples from '../screens/Emotion/HarmonicRipples';
-import MeditationSession from '../screens/Emotion/MeditationSession';
 import NBackGame from '../screens/Emotion/NBackGame';
 import RabbitHunterScreen from '../screens/Emotion/RabbitHunterScreen';
 import StroopGame from '../screens/Emotion/StroopGame';
@@ -80,7 +80,6 @@ export default function AppNavigator() {
       <Stack.Screen name="SplashSession" component={SplashSession} options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="GroundingSession" component={GroundingSession} options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="HarmonicRipples" component={HarmonicRipples} options={{ headerShown: false, animation: 'fade' }} />
-      <Stack.Screen name="MeditationSession" component={MeditationSession} options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="Soundscapes" component={SoundscapesScreen} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="NBackGame" component={NBackGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="RabbitHunter" component={RabbitHunterScreen} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
@@ -89,6 +88,7 @@ export default function AppNavigator() {
       <Stack.Screen name="TongueTwisterGame" component={TongueTwisterGame} options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <Stack.Screen name="TaskHistory" component={TaskHistoryScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Chatbot" component={ChatbotScreen} options={{ title: 'AI Coach' }} />
+      <Stack.Screen name="ThoughtReframe" component={ThoughtReframeScreen} options={{ title: 'Thought Reframing' }} />
       <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} options={{ headerShown: false }} />
       <Stack.Screen name="AssessmentResult" component={AssessmentResultScreen} options={{ headerShown: false }} />
       <Stack.Screen name="EFQuestionnaire" component={EFQuestionnaireScreen} options={{ headerShown: false }} />

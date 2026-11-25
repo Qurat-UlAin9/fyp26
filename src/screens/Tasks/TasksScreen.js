@@ -228,6 +228,19 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
               ⚡ Priority: {task.priority || 'Medium'}
             </Text>
 
+            {Array.isArray(task.metadata?.materials) && task.metadata.materials.length > 0 ? (
+              <View style={{ marginTop: 8, marginBottom: 6 }}>
+                <Text style={[styles.timeRange, { color: th.textLight, fontWeight: '800', opacity: 0.95 }]}>
+                  🧺 What you'll need
+                </Text>
+                {task.metadata.materials.map((m, i) => (
+                  <Text key={`${m}-${i}`} style={[styles.timeRange, { color: th.textLight, opacity: 0.85 }]}>
+                    • {m}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
+
             {subtasks.length > 0 ? (
               subtasks.map((sub, index) => (
                 <TouchableOpacity
@@ -259,6 +272,7 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
                     },
                   ]}>
                     {sub.title}
+                    {sub.detail ? `\n${sub.detail}` : ''}
                   </Text>
                   {!sub.done && !subtasks.slice(0, index).some((s) => !s.done) && (
                     <TouchableOpacity onPress={() => onAskCoach(task, sub)} style={styles.askBtn} hitSlop={6}>

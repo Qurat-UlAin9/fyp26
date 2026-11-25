@@ -1,10 +1,11 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import CircularProgress from '../../components/detection/CircularProgress';
+import { getLatestADHDAssessment } from '../../services/api';
 
 function getRiskLabel(percentage) {
   if (percentage >= 70) return { label: 'High likelihood', color: '#EF4444', icon: 'alert-circle' };
@@ -15,14 +16,51 @@ function getRiskLabel(percentage) {
 export default function AssessmentResultScreen({ navigation, route }) {
   const { theme, isDark } = useTheme();
 
-  const score = route?.params?.score ?? 0;
-  const maxScore = route?.params?.maxScore ?? 72;
-  const percentage = route?.params?.percentage ?? 0;
-  const answeredCount = route?.params?.answeredCount ?? 0;
-  const totalQuestions = route?.params?.totalQuestions ?? 18;
-  const predictedLabel = route?.params?.predictedLabel ?? 'Unknown';
-  const adhdProbability = route?.params?.adhdProbability ?? 0;
-  const topFactors = route?.params?.topFactors ?? [];
+  // Opened right after the questionnaire: the result comes in as params.
+  // Opened from Home or Profile: no params, so load the latest saved result.
+  const hasParams = route?.params?.score !== undefined;
+  const [saved, setSaved] = useState(null);
+  const [loading, setLoading] = useState(!hasParams);
+
+  useEffect(() => {
+    if (hasParams) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const latest = await getLatestADHDAssessment();
+        if (!cancelled) setSaved(latest);
+      } catch {
+        /* shown below as "no result yet" */
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [hasParams]);
+
+  const source = hasParams
+    ? route.params
+    : saved
+      ? {
+          score: saved.score,
+          maxScore: saved.max_score,
+          percentage: saved.percentage,
+          answeredCount: Array.isArray(saved.answers) ? saved.answers.filter((x) => x !== null && x !== undefined && x !== '').length : undefined,
+          totalQuestions: Array.isArray(saved.answers) ? saved.answers.length : undefined,
+          predictedLabel: saved.predicted_label,
+          adhdProbability: saved.adhd_probability,
+          topFactors: saved.top_factors,
+        }
+      : {};
+
+  const score = source.score ?? 0;
+  const maxScore = source.maxScore ?? 72;
+  const percentage = source.percentage ?? 0;
+  const answeredCount = source.answeredCount ?? 0;
+  const totalQuestions = source.totalQuestions ?? 18;
+  const predictedLabel = source.predictedLabel ?? 'Unknown';
+  const adhdProbability = source.adhdProbability ?? 0;
+  const topFactors = Array.isArray(source.topFactors) ? source.topFactors : [];
 
   const risk = getRiskLabel(percentage);
   const accent = theme.accentGradient?.[0] || '#8B5CF6';
@@ -31,6 +69,26 @@ export default function AssessmentResultScreen({ navigation, route }) {
   const maxImpact = topFactors.length
     ? Math.max(...topFactors.map((f) => Math.abs(f.impact ?? 0)))
     : 1;
+
+  if (loading || (!hasParams && !saved)) {
+    return (
+      <LinearGradient colors={theme.background} style={[styles.container, { alignItems: 'center', justifyContent: 'center', padding: 24 }]}>
+        {loading ? (
+          <ActivityIndicator color={accent} />
+        ) : (
+          <>
+            <Text style={[styles.title, { color: theme.text, textAlign: 'center' }]}>No screening yet</Text>
+            <Text style={[styles.subtitle, { color: theme.textSecondary, textAlign: 'center', marginBottom: 18 }]}>
+              Take the short ADHD screening and your result will show up here.
+            </Text>
+            <Pressable onPress={() => navigation.replace('Questionnaire')} style={{ paddingVertical: 12, paddingHorizontal: 24, borderRadius: 24, backgroundColor: accent }}>
+              <Text style={{ color: '#fff', fontWeight: '800' }}>Start screening</Text>
+            </Pressable>
+          </>
+        )}
+      </LinearGradient>
+    );
+  }
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>

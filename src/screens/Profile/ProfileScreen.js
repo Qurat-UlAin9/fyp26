@@ -33,6 +33,7 @@ import {
   getLatestEFAssessment,
 } from '../../services/api';
 import { EF_DIMENSIONS_META } from '../../data/efQuestions';
+import { displayUsername } from '../../utils/userDisplay';
 
 function riskLabel(percentage) {
   if (percentage >= 70) return 'High likelihood';
@@ -178,7 +179,7 @@ export default function ProfileScreen({ navigation }) {
               )}
               <View style={{ flex: 1 }}>
                 <Text style={styles.bannerName} numberOfLines={1}>
-                  {profile.name || 'Friend'}
+                  {displayUsername(profile)}
                 </Text>
                 {profile.email ? (
                   <Text style={styles.bannerEmail} numberOfLines={1}>
@@ -195,14 +196,6 @@ export default function ProfileScreen({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.chipRow}>
-              <View style={styles.chip}>
-                <Text style={styles.chipText}>Mood: {profile.mood}</Text>
-              </View>
-              <View style={styles.chip}>
-                <Text style={styles.chipText}>ADHD: {profile.adhdScreening}</Text>
-              </View>
-            </View>
           </View>
         </LinearGradient>
 

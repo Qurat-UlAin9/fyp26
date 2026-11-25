@@ -37,7 +37,12 @@ export default function LoginScreen({ navigation }) {
       setLoading(true);
       await loginUser({ username: loginValue, email: loginValue, password: password.trim() });
       const saved = await getCurrentUser();
-      if (saved) updateProfile({ name: saved.username || saved.full_name || loginValue, email: saved.email || '' });
+      if (saved) {
+        // Never use what was typed in the box as the name: people often log in with their email
+        const pick = [saved.full_name, saved.username].find((v) => v && !String(v).includes('@'));
+        const fallback = String(saved.username || saved.full_name || saved.email || '').split('@')[0];
+        updateProfile({ name: pick || fallback || 'Friend', email: saved.email || '' });
+      }
       navigation.replace('Onboarding');
     } catch (error) {
       Alert.alert(

@@ -14,7 +14,6 @@ const LINK_CATALOG = {
   Splash: 'a 30-second cooling reset',
   Grounding: '5-4-3-2-1 sensory grounding (overwhelm, panic, anxiety)',
   Ripples: 'tap gentle tones for emotional release (sadness, heaviness)',
-  Meditation: 'guided meditation (restlessness, racing thoughts)',
   Soundscapes: 'calm classical / ancient instrumental tracks',
   NBack: 'working-memory brain game',
   Stroop: 'attention and impulse-control game',

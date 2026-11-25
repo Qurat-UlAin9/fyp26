@@ -7,7 +7,7 @@
 //                       has, with a limit per day and a buffer day before the deadline.
 // Dates, hours and limits are decided in code. The model only writes the step wording.
 
-const { createChatModel } = require('./llmProvider');
+const { createChatModel, textOf } = require('./llmProvider');
 const { supabaseAdmin } = require('../../config/supabase');
 const time = require('./context/timeContext');
 const { computePreferredWorkHour } = require('./subtaskScheduler');
@@ -20,7 +20,7 @@ const DEFAULT_MAX_SESSION = 25; // minutes; the user's preferred focus length ov
 const MIN_SESSION = 10;
 const MAX_SESSION = 45;
 
-const model = createChatModel({ temperature: 0.4, maxTokens: 700 });
+const model = createChatModel({ temperature: 0.4, maxTokens: 1100, purpose: 'tasks' });
 
 // ---------------------------------------------------------------- planning context
 
@@ -83,6 +83,12 @@ async function getPlanningContext(userId, tz, { excludeTaskId = null } = {}) {
 }
 
 // ---------------------------------------------------------------- step writing
+//
+// planTask() is the task planner. It does NOT use the research library (RAG): that only holds ADHD and
+// wellbeing material. The model writes the plan from its own general knowledge, shaped by the TYPE of task:
+//   understand  a topic to learn: sub-topics in the order they must be met, each named, with explain-back checks
+//   do          something to make or finish: gather what is needed first (ingredients, tools), then each action
+//   mixed       understand first, then make something with it
 
 const BANNED = /\b(watch|youtube|videos?|tutorials?|google|research|look up|browse|wikipedia)\b|\bread\b[^.]*\b(blog|article|paper|chapter|docs?|documentation|post|book)\b|\bsearch\b[^.]*\b(online|web|internet)\b/i;
 
@@ -94,35 +100,62 @@ function sendsOutside(stepTitle, taskText) {
   return !String(taskText || '').toLowerCase().includes(word);
 }
 
-const SYSTEM_PROMPT = `You plan a task for someone with ADHD. The user does every step TOGETHER with their AI coach (Compass) inside the AIMS app, in one sitting.
+const SYSTEM_PROMPT = `You plan a task for someone with ADHD. The user does every step TOGETHER with their AI coach (Compass) inside the AIMS app, one step per sitting.
 
-Return ONLY a JSON array, no markdown, in this shape:
-[{"title": string, "minutes": number, "kind": "learn" | "do" | "decide" | "review"}]
+First decide the TASK TYPE:
+- "understand": the user wants to learn, study, revise or understand something (a topic, a chapter, a concept, an exam subject).
+- "do": the user wants to make or finish something practical (cook a dish, clean a room, write an email, fix or build something, pack a bag, organise files).
+- "mixed": they must understand something and then produce something with it (a report, essay, presentation, project).
 
-How to plan:
+Return ONLY one JSON object, no markdown, in exactly this shape:
+{"taskType": "understand" | "do" | "mixed",
+ "materials": [string],
+ "steps": [{"title": string, "detail": string, "minutes": number, "kind": "prepare" | "learn" | "do" | "decide" | "review"}]}
+
+Rules for every plan:
 - Think about how big and hard the task really is, then choose 3 to 8 steps. A bigger or harder task gets MORE steps, never longer ones.
 - Every step must fit inside the time cap you are given (minutes <= cap). Use the real time a step needs: 5 to 10 for tiny or easy steps, up to the cap for the hardest.
 - The first step must be very easy to start (10 minutes or less) and give a quick win.
-- kind "learn": the coach teaches this part in chat (what it is, why it matters, how it works, in small pieces). Write it as "Learn <specific thing> with Compass". Follow a learn step with a "do" step where the user uses it: explain it back in their own words, answer a few questions, write a short summary, solve one small problem.
-- kind "do": makes one visible result. kind "decide": choose or narrow something. kind "review": check the result and finish.
+- "title": imperative, at most 12 words, uses the real subject words from the task, says the exact output. No vague verbs like "research", "work on", "prepare", "plan". Do not repeat the task title as a step.
+- "detail": ONE or TWO short sentences saying exactly what happens in this step.
 - The coach is the helper. Never send the user to outside material: no watching videos or tutorials, no reading articles, blogs, papers or docs, no searching the web, unless the task itself names that exact resource.
-- Each title: imperative, at most 12 words, uses the real subject words from the task, says the exact output. No vague verbs like "research", "work on", "prepare", "plan".
-- Do not repeat the task title as a step. Order steps in the sequence they should happen. The last step is a short review or finish line.`;
+- Order the steps in the sequence they should happen. The last step is a short review or finish line.
 
-function parseSteps(raw) {
+Rules for "understand":
+- Break the subject into its real SUB-TOPICS, in the order someone must meet them (what comes first is what the next one builds on). Name each sub-topic specifically, for example "Learn Newton's second law with Compass", never "Learn the basics".
+- Each sub-topic is a step of kind "learn", titled "Learn <specific sub-topic> with Compass". Its "detail" says what that sub-topic covers.
+- After every two or three "learn" steps add one "do" step where the user proves it: explain it back in their own words, answer 3 questions, or solve one small problem. End with a "review" step.
+- "materials" is an empty list.
+
+Rules for "do":
+- The FIRST step has kind "prepare" and gathers everything needed. Its "detail" lists the items with quantities when that makes sense (for a dish: every ingredient with an amount for 2 servings unless the task says otherwise, plus the tools). Put the same items in "materials", one string per item.
+- Then every action in the order it really happens, kind "do". Its "detail" is the concrete action: what to do, for how long, and what it should look or feel like when it is right.
+- The last step is kind "review": check the result, then tidy up, serve or send.
+- Do not skip the small steps a beginner would forget.
+
+Rules for "mixed": the "understand" steps first, then the "do" steps for what must be produced. Fill "materials" only when physical items are needed.`;
+
+const KINDS = new Set(['prepare', 'learn', 'do', 'decide', 'review']);
+const TYPES = new Set(['understand', 'do', 'mixed']);
+
+function parsePlan(raw) {
   const text = String(raw || '').trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
   const tryParse = (s) => { try { return JSON.parse(s); } catch (_) { return null; } };
   let parsed = tryParse(text);
-  if (!Array.isArray(parsed)) {
-    const m = text.match(/\[[\s\S]*\]/);
-    parsed = m ? tryParse(m[0]) : null;
+  if (!parsed) {
+    const obj = text.match(/\{[\s\S]*\}/);
+    parsed = obj ? tryParse(obj[0]) : null;
   }
-  if (!Array.isArray(parsed)) return null;
-  return parsed;
+  if (!parsed) {
+    const arr = text.match(/\[[\s\S]*\]/);
+    parsed = arr ? tryParse(arr[0]) : null;
+  }
+  if (Array.isArray(parsed)) return { taskType: 'mixed', materials: [], steps: parsed }; // old answer shape
+  if (parsed && Array.isArray(parsed.steps)) return parsed;
+  return null;
 }
 
 function cleanSteps(list, maxSession, taskTitle) {
-  const kinds = new Set(['learn', 'do', 'decide', 'review']);
   const out = [];
   (list || []).forEach((s) => {
     const title = String(typeof s === 'string' ? s : s?.title || '').replace(/\s+/g, ' ').trim().slice(0, 100);
@@ -131,33 +164,90 @@ function cleanSteps(list, maxSession, taskTitle) {
     let minutes = Math.round(Number(s?.minutes));
     if (!Number.isFinite(minutes) || minutes <= 0) minutes = Math.min(15, maxSession);
     minutes = Math.max(5, Math.min(minutes, maxSession));
-    const kind = kinds.has(s?.kind) ? s.kind : 'do';
-    out.push({ title, minutes, kind });
+    const kind = KINDS.has(s?.kind) ? s.kind : 'do';
+    const detail = typeof s === 'object' && s?.detail ? String(s.detail).replace(/\s+/g, ' ').trim().slice(0, 240) : '';
+    out.push({ title, minutes, kind, ...(detail ? { detail } : {}) });
   });
   if (out.length > 0) out[0].minutes = Math.min(out[0].minutes, 10); // an easy first step
-  return out.slice(0, 8);
+  return out.slice(0, 9);
 }
 
-function fallbackSteps(title, maxSession) {
+function cleanPlan(plan, maxSession, taskTitle) {
+  const taskType = TYPES.has(plan?.taskType) ? plan.taskType : 'mixed';
+  const materials = (Array.isArray(plan?.materials) ? plan.materials : [])
+    .map((m) => String(m || '').replace(/\s+/g, ' ').trim().slice(0, 80))
+    .filter(Boolean)
+    .slice(0, 20);
+  let steps = cleanSteps(plan?.steps, maxSession, taskTitle);
+
+  // A "do" task always starts by gathering what is needed, even if the model forgot that step
+  if (taskType !== 'understand' && materials.length > 0 && !steps.some((s) => s.kind === 'prepare')) {
+    steps = [
+      { title: 'Gather what you need', minutes: Math.min(10, maxSession), kind: 'prepare', detail: materials.join(', ').slice(0, 240) },
+      ...steps,
+    ].slice(0, 9);
+  }
+  return { taskType, materials, steps };
+}
+
+function guessType(title) {
+  const t = String(title || '').toLowerCase();
+  if (/^(learn|understand|study|revise|revision|master|explain|review)\b/.test(t)) return 'understand';
+  if (/\b(cook|make|bake|clean|organi[sz]e|pack|fix|build|assemble|wash|buy|repair|tidy|decorate|send|book)\b/.test(t)) return 'do';
+  return 'mixed';
+}
+
+function fallbackPlan(title, maxSession) {
   const m = (n) => Math.min(n, maxSession);
-  return [
-    { title: `Write what you already know about ${title}`, minutes: m(8), kind: 'do' },
-    { title: `Learn the core idea of ${title} with Compass`, minutes: m(15), kind: 'learn' },
-    { title: 'Explain it back in your own words, 5 lines', minutes: m(15), kind: 'do' },
-    { title: 'Check the result with Compass and fix one thing', minutes: m(10), kind: 'review' },
-  ];
+  const type = guessType(title);
+  if (type === 'understand') {
+    return {
+      taskType: 'understand',
+      materials: [],
+      steps: [
+        { title: `Write what you already know about ${title}`, minutes: m(8), kind: 'do', detail: 'Five lines is enough. This shows where to start.' },
+        { title: `Learn the core idea of ${title} with Compass`, minutes: m(15), kind: 'learn', detail: 'What it is and why it matters, in plain words.' },
+        { title: `Learn how ${title} works, stage by stage, with Compass`, minutes: m(15), kind: 'learn', detail: 'The main parts in the order they happen.' },
+        { title: 'Explain it back in your own words, 5 lines', minutes: m(15), kind: 'do', detail: 'If a part is hard to say, that is the part to revisit.' },
+        { title: 'Check the result with Compass and fix one thing', minutes: m(10), kind: 'review', detail: 'Compass checks your explanation and points out one gap.' },
+      ],
+    };
+  }
+  if (type === 'do') {
+    return {
+      taskType: 'do',
+      materials: [],
+      steps: [
+        { title: `Gather what you need for ${title}`, minutes: m(10), kind: 'prepare', detail: 'Make a list of the items and tools, then put them within reach.' },
+        { title: `Do the first part of ${title}`, minutes: m(15), kind: 'do', detail: 'Start with the easiest piece and stop when it is done.' },
+        { title: `Finish ${title}`, minutes: m(15), kind: 'do', detail: 'Complete the remaining part.' },
+        { title: 'Check the result and tidy up', minutes: m(10), kind: 'review', detail: 'Look at it once with fresh eyes and fix one thing.' },
+      ],
+    };
+  }
+  return {
+    taskType: 'mixed',
+    materials: [],
+    steps: [
+      { title: `Write what you already know about ${title}`, minutes: m(8), kind: 'do', detail: 'Five lines is enough.' },
+      { title: `Learn the core idea of ${title} with Compass`, minutes: m(15), kind: 'learn', detail: 'What it is and why it matters.' },
+      { title: 'Explain it back in your own words, 5 lines', minutes: m(15), kind: 'do', detail: 'Say it simply, as if to a friend.' },
+      { title: 'Check the result with Compass and fix one thing', minutes: m(10), kind: 'review', detail: 'Compass points out one gap to fix.' },
+    ],
+  };
 }
 
 async function askModel(userPrompt) {
   const result = await Promise.race([
     model.invoke([{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: userPrompt }]),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000)),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 25000)),
   ]);
-  return parseSteps(typeof result === 'string' ? result : result.content);
+  return parsePlan(textOf(typeof result === 'string' ? result : result.content));
 }
 
 // info: { title, description, category, subject, difficulty, daysLeft, availableMinutes }
-async function planSteps(info, maxSession) {
+// returns { taskType: 'understand'|'do'|'mixed', materials: string[], steps: [{ title, detail?, minutes, kind }] }
+async function planTask(info, maxSession) {
   const lines = [
     `Task: "${info.title}"`,
     info.description ? `Details: ${info.description}` : null,
@@ -170,26 +260,33 @@ async function planSteps(info, maxSession) {
       ? `Free time available before the deadline: about ${info.availableMinutes} minutes. If the whole task would not fit, plan the most valuable steps that do.`
       : null,
     '',
-    'Return the JSON array now.',
+    'Return the JSON object now.',
   ].filter((l) => l !== null);
 
-  let steps = null;
+  const taskText = `${info.title} ${info.description || ''}`;
+  let plan = null;
   try {
-    steps = cleanSteps(await askModel(lines.join('\n')), maxSession, info.title);
-    const taskText = `${info.title} ${info.description || ''}`;
-    const bad = steps.filter((s) => sendsOutside(s.title, taskText));
+    plan = cleanPlan(await askModel(lines.join('\n')), maxSession, info.title);
+    const bad = plan.steps.filter((s) => sendsOutside(s.title, taskText));
     if (bad.length > 0) {
       const retry = `${lines.join('\n')}\n\nYour last answer sent the user to outside material in these steps: ${bad.map((b) => `"${b.title}"`).join('; ')}. Rewrite the whole plan so Compass teaches or guides every step inside the app.`;
-      steps = cleanSteps(await askModel(retry), maxSession, info.title);
+      plan = cleanPlan(await askModel(retry), maxSession, info.title);
     }
   } catch (e) {
-    console.warn('planSteps failed, using fallback:', e.message);
+    console.warn('planTask failed, using fallback:', e.message);
   }
-  if (!steps || steps.length < 2) return fallbackSteps(info.title, maxSession);
+  if (!plan || plan.steps.length < 2) return fallbackPlan(info.title, maxSession);
 
   // last line of defence: never ship an order to go and watch something
-  const taskText = `${info.title} ${info.description || ''}`;
-  return steps.map((s) => (sendsOutside(s.title, taskText) ? { ...s, title: `Work through this part with Compass: ${info.title}`.slice(0, 100) } : s));
+  return {
+    ...plan,
+    steps: plan.steps.map((s) => (sendsOutside(s.title, taskText) ? { ...s, title: `Work through this part with Compass: ${info.title}`.slice(0, 100) } : s)),
+  };
+}
+
+// The old name still works for callers that only need the list of steps
+async function planSteps(info, maxSession) {
+  return (await planTask(info, maxSession)).steps;
 }
 
 // ---------------------------------------------------------------- scheduling
@@ -271,7 +368,7 @@ async function rescheduleMissedForUser(userId, tz) {
 }
 
 module.exports = {
-  getPlanningContext, getTaskWindow, planSteps, scheduleSteps, cleanSteps, fallbackSteps,
+  getPlanningContext, getTaskWindow, planTask, planSteps, scheduleSteps, cleanSteps, fallbackPlan,
   estimateAvailableMinutes, describeSchedule, isMissedStep, rescheduleMissedForUser,
   DEFAULT_MAX_SESSION, BANNED, sendsOutside,
 };

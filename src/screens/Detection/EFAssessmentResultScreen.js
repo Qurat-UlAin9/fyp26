@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { EF_DIMENSIONS_META } from '../../data/efQuestions';
+import { getLatestEFAssessment } from '../../services/api';
 
 // Fixed hues so each dimension reads distinct on every theme
 const DIMENSION_ACCENTS = {
@@ -35,7 +36,28 @@ function scoreLabel(pct) {
 
 export default function EFAssessmentResultScreen({ navigation, route }) {
   const { theme, isDark } = useTheme();
-  const dimensionScores = route?.params?.dimensionScores || {};
+  const paramScores = route?.params?.dimensionScores;
+  const [savedScores, setSavedScores] = useState(null);
+  const [loading, setLoading] = useState(!paramScores);
+
+  // Opened from Home or Profile (no params): load the latest saved result
+  useEffect(() => {
+    if (paramScores) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const latest = await getLatestEFAssessment();
+        if (!cancelled) setSavedScores(latest?.dimension_scores || null);
+      } catch {
+        /* handled below */
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [paramScores]);
+
+  const dimensionScores = paramScores || savedScores || {};
 
   const entries = useMemo(() => {
     return Object.entries(dimensionScores).map(([key, score]) => {
@@ -64,6 +86,26 @@ export default function EFAssessmentResultScreen({ navigation, route }) {
   }, [entries]);
 
   const overallAccent = theme.accentGradient[0];
+
+  if (loading || entries.length === 0) {
+    return (
+      <LinearGradient colors={theme.background} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+        {loading ? (
+          <ActivityIndicator color={overallAccent} />
+        ) : (
+          <>
+            <Text style={[styles.title, { color: theme.text, textAlign: 'center' }]}>No assessment yet</Text>
+            <Text style={[styles.subtitle, { color: theme.textSecondary, textAlign: 'center', marginBottom: 18 }]}>
+              Take the executive function assessment and your profile will show up here.
+            </Text>
+            <Pressable onPress={() => navigation.replace('EFQuestionnaire')} style={{ paddingVertical: 12, paddingHorizontal: 24, borderRadius: 24, backgroundColor: overallAccent }}>
+              <Text style={{ color: '#fff', fontWeight: '800' }}>Start assessment</Text>
+            </Pressable>
+          </>
+        )}
+      </LinearGradient>
+    );
+  }
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>

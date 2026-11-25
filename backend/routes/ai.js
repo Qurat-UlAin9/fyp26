@@ -9,13 +9,14 @@ const { checkReply } = require('../services/ai/outputGuard');
 const time = require('../services/ai/context/timeContext');
 const {
   getPlanningContext,
-  planSteps,
+  planTask,
   scheduleSteps,
   estimateAvailableMinutes,
   rescheduleMissedForUser,
 } = require('../services/ai/subtaskPlanner');
 const { extractLinks } = require('../services/ai/coachLinks');
 const { routeMessage, applyLanePolicy } = require('../services/ai/chatRouter');
+const { buildTaskCoachContext } = require('../services/ai/context/taskCoachContext');
 
 // Apply Auth Middleware to EVERYTHING in this file
 router.use(requireAuth);
@@ -183,13 +184,16 @@ router.post('/chat', async (req, res) => {
     });
     console.log(`[route] lane=${lane} (${laneReason}) lastLane=${lastLane || 'none'}`);
 
+    // "Ask coach" on a step: the app sends ids only; the server loads the full, current task state
+    const coachFocus = context ? await buildTaskCoachContext(userId, context).catch(() => context) : null;
+
     const { reply: agentReply, toolCalls, retrievedChunkIds, promptVersionId, appActions } = await agent.handleMessage({
       userId,
       conversationId,
       userMessage: message.trim(),
       history,
       hints: perception.hints,
-      focusContext: context,
+      focusContext: coachFocus,
       lane,
     });
 
@@ -318,7 +322,7 @@ router.post('/suggest-subtasks', async (req, res) => {
 
     const plan = await getPlanningContext(userId, tz);
     const nowHour = now.hour + now.minute / 60;
-    const steps = await planSteps(
+    const planned = await planTask(
       {
         title: title.trim(),
         category: typeof category === 'string' ? category : undefined,
@@ -328,6 +332,7 @@ router.post('/suggest-subtasks', async (req, res) => {
       },
       plan.maxSession
     );
+    const steps = planned.steps;
     const sched = scheduleSteps(steps, { today: now.iso, nowHour, deadline: dueISO, ...plan.schedOpts });
 
     return res.json({
@@ -337,10 +342,13 @@ router.post('/suggest-subtasks', async (req, res) => {
           title: s.title,
           done: false,
           kind: s.kind,
+          detail: s.detail || null,
           scheduledDate: s.scheduledDate,
           scheduledHour: s.scheduledHour,
           durationMins: s.durationMins,
         })),
+        taskType: planned.taskType,
+        materials: planned.materials,
         preferredHour: plan.preferredHour,
         tight: sched.tight,
         // extra detail for the app: normal | stretched | extended | overloaded
@@ -362,7 +370,10 @@ router.post('/suggest-subtasks', async (req, res) => {
 router.post('/reschedule-missed', async (req, res) => {
   try {
     const userId = req.user?.id;
-    const tz = await time.getUserTimezone(userId);
+    // Use the phone's own timezone when it sends one, so the server and the phone agree on "now"
+    const deviceTz = req.body?.timezone;
+    if (time.validTz(deviceTz)) await time.rememberUserTimezone(userId, deviceTz);
+    const tz = time.validTz(deviceTz) ? deviceTz : await time.getUserTimezone(userId);
     const result = await rescheduleMissedForUser(userId, tz);
     return res.json({ data: result });
   } catch (error) {

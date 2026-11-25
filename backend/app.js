@@ -21,6 +21,7 @@ app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/statistics', require('./routes/statistics'));
 app.use('/api/exercises', require('./routes/exercises'));
 app.use('/api/ai', require('./routes/ai'));
+app.use('/api/reframe', require('./routes/reframe'));
 app.use('/api/knowledge', require('./routes/knowledge'));
 app.use('/api/assessments', require('./routes/assessments'));
 app.use('/api/executive-function', require('./routes/executiveFunction'));

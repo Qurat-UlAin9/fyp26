@@ -6,7 +6,7 @@ const { supabaseAdmin } = require('../../../config/supabase');
 const { pushAppAction } = require('./appActions');
 const rewards = require('../../rewards/rewardsService');
 const time = require('../context/timeContext');
-const { getPlanningContext, planSteps, scheduleSteps, estimateAvailableMinutes, describeSchedule } = require('../subtaskPlanner');
+const { getPlanningContext, planTask, scheduleSteps, estimateAvailableMinutes, describeSchedule } = require('../subtaskPlanner');
 
 const COLOR_ENUM = ['coral', 'sky', 'mint', 'lavender', 'teal'];
 const CATEGORY_COLOR = {
@@ -90,6 +90,7 @@ const createTask = tool(
     const plan = await getPlanningContext(userId, tz);
     const daysLeft = time.diffDaysISO(now.iso, dueISO);
     let steps;
+    let planned = null;
     const userSteps = Array.isArray(subtasks)
       ? subtasks.map((x) => (typeof x === 'string' ? x : String(x.title || x))).filter(Boolean)
       : [];
@@ -104,10 +105,11 @@ const createTask = tool(
         deadline: dueISO,
         ...plan.schedOpts,
       });
-      steps = await planSteps(
+      planned = await planTask(
         { title, description, category, subject, difficulty, daysLeft, availableMinutes },
         plan.maxSession
       );
+      steps = planned.steps;
     }
 
     const sched = scheduleSteps(steps, {
@@ -125,10 +127,15 @@ const createTask = tool(
         title: s.title,
         done: false,
         kind: s.kind,
+        ...(s.detail ? { detail: s.detail } : {}),
         scheduledDate: s.scheduledDate,
         scheduledHour: s.scheduledHour,
         durationMins: s.durationMins,
       }));
+    }
+    if (planned) {
+      metadata.taskType = planned.taskType;
+      if (planned.materials.length) metadata.materials = planned.materials;
     }
 
     metadata.themeId = await pickColor(userId, category, color);
@@ -158,7 +165,7 @@ const createTask = tool(
 
     const planLines = scheduled.map(
       (s, i) =>
-        `${i + 1}. [${s.durationMins} min, ${s.kind}] ${s.title} — ${time.friendlyDate(s.scheduledDate, now.iso)}, ${time.friendlyTime(s.scheduledHour)}`
+        `${i + 1}. [${s.durationMins} min, ${s.kind}] ${s.title}${s.detail ? ` (${s.detail})` : ''} — ${time.friendlyDate(s.scheduledDate, now.iso)}, ${time.friendlyTime(s.scheduledHour)}`
     );
     const tightNote = describeSchedule(sched, { deadline: time.friendlyDate(dueISO, now.iso) });
     return (
@@ -169,7 +176,8 @@ const createTask = tool(
       planLines.join('\n') +
       tightNote +
       `\nSubtask ids are in get_task_details. Read dates and times to the user exactly as written above. ` +
-      `Steps marked "learn" are taught by you in chat; offer to start the first step right now.`
+      `Steps marked "learn" are taught by you in chat. A "prepare" step is a checklist of what to gather: go through it with the user when they start it. ` +
+      `Offer to start the first step right now.`
     );
   },
   {

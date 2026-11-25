@@ -37,6 +37,17 @@ async function getUserTimezone(userId) {
   return tz;
 }
 
+// Save the timezone the phone reports (so the server and the phone agree on "today" and "now")
+async function rememberUserTimezone(userId, tz) {
+  if (!validTz(tz)) return;
+  const hit = tzCache.get(userId);
+  if (hit && hit.tz === tz) return;
+  tzCache.set(userId, { tz, at: Date.now() });
+  try {
+    await supabaseAdmin.from('profiles').update({ timezone: tz }).eq('user_id', userId);
+  } catch (_) { /* not critical */ }
+}
+
 // Current date/time as seen by someone in `tz`
 function nowInTz(tz = DEFAULT_TZ, now = new Date()) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -165,6 +176,6 @@ function resolveDueDate(input, tz = DEFAULT_TZ, now = new Date()) {
 }
 
 module.exports = {
-  DEFAULT_TZ, getUserTimezone, nowInTz, addDaysISO, diffDaysISO, weekdayOf, isRealISO,
+  DEFAULT_TZ, getUserTimezone, rememberUserTimezone, validTz, nowInTz, addDaysISO, diffDaysISO, weekdayOf, isRealISO,
   friendlyDate, friendlyTime, formatDateBlock, resolveDueDate,
 };

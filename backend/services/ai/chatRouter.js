@@ -24,7 +24,7 @@ const LANE_POLICY = {
   support: {
     options: true,
     linkKeys: [
-      'ImmediateRelief', 'Balloon', 'Splash', 'Grounding', 'Ripples', 'Meditation', 'Soundscapes',
+      'ImmediateRelief', 'Balloon', 'Splash', 'Grounding', 'Ripples', 'Soundscapes',
       'EmotionRegulation', 'Focus', 'Tasks',
     ],
   },

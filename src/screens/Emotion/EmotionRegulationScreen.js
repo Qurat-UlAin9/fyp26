@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { displayUsername } from '../../utils/userDisplay';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -167,7 +168,7 @@ export default function EmotionRegulationScreen({ navigation }) {
       <TouchableOpacity style={[styles.backBtn, { borderColor: theme.border }]} onPress={() => navigation.goBack()}>
         <ChevronLeft color={theme.text} size={20} />
       </TouchableOpacity>
-      <Text style={[styles.header, { color: theme.text }]}>Explore your inner space, {profile.name || 'Friend'}</Text>
+      <Text style={[styles.header, { color: theme.text }]}>Explore your inner space, {displayUsername(profile)}</Text>
 
       <View style={styles.portalsStage}>
         {PORTALS.map((portal, index) => (
