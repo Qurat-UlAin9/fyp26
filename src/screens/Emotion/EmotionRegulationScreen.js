@@ -40,6 +40,7 @@ const PORTALS = [
 ];
 
 function Portal({ config, index, onPress, textColor, subtitleColor }) {
+  const { isDark } = useTheme();
   const floatOffset = useSharedValue(0);
   const pulseScale = useSharedValue(1);
   const spin = useSharedValue(0);
@@ -133,7 +134,7 @@ function Portal({ config, index, onPress, textColor, subtitleColor }) {
             </>
           )}
 
-          <BlurView intensity={42} tint="dark" style={styles.portalGlass}>
+          <BlurView intensity={42} tint={isDark ? 'dark' : 'light'} style={[styles.portalGlass, { borderColor: config.glowColor }]}>
             <LinearGradient
               colors={['rgba(255,255,255,0.18)', 'rgba(255,255,255,0.04)']}
               start={{ x: 0.1, y: 0.1 }}
@@ -165,9 +166,6 @@ export default function EmotionRegulationScreen({ navigation }) {
       <View style={styles.meshBlobTwo} />
       <View style={styles.meshBlobThree} />
 
-      <TouchableOpacity style={[styles.backBtn, { borderColor: theme.border }]} onPress={() => navigation.goBack()}>
-        <ChevronLeft color={theme.text} size={20} />
-      </TouchableOpacity>
       <Text style={[styles.header, { color: theme.text }]}>Explore your inner space, {displayUsername(profile)}</Text>
 
       <View style={styles.portalsStage}>
@@ -195,7 +193,7 @@ export default function EmotionRegulationScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 52,
+    paddingTop: 16,
     paddingHorizontal: 22,
   },
   backBtn: {

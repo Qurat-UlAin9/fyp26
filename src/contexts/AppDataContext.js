@@ -8,6 +8,8 @@ import React, {
   useState,
 } from 'react';
 
+import { AppState } from 'react-native';
+import { scheduleStepReminders, cancelStepReminders } from '../utils/reminders';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
@@ -50,6 +52,40 @@ const toLocalISO = (date) => {
 };
 
 const todayISO = () => toLocalISO(new Date());
+
+// Shift a YYYY-MM-DD string by n days (local calendar, DST safe)
+const shiftISO = (iso, n) => {
+  const [y, m, d] = String(iso).split('-').map(Number);
+  return toLocalISO(new Date(y, (m || 1) - 1, (d || 1) + n));
+};
+
+export { toLocalISO, todayISO, shiftISO };
+
+const HISTORY_DAYS = 45;
+
+// history = { 'YYYY-MM-DD': { done, total } }. A day counts when every slot of the habit was ticked.
+const dayComplete = (entry) => Boolean(entry && entry.total > 0 && entry.done >= entry.total);
+
+// Consecutive complete days ending today. Today not being finished yet does not break the streak.
+function streakFromHistory(history, today) {
+  let cursor = dayComplete(history?.[today]) ? today : shiftISO(today, -1);
+  let n = 0;
+  while (dayComplete(history?.[cursor]) && n < 400) {
+    n += 1;
+    cursor = shiftISO(cursor, -1);
+  }
+  return n;
+}
+
+function trimHistory(history) {
+  const keys = Object.keys(history || {}).sort();
+  const keep = keys.slice(-HISTORY_DAYS);
+  const out = {};
+  keep.forEach((k) => {
+    out[k] = history[k];
+  });
+  return out;
+}
 
 // "07:30" -> 7.5, anything else -> null
 const parseClock = (value) => {
@@ -118,8 +154,11 @@ const defaultHabitStats = {
   streakDays: 0,
   dailyTarget: 0,
   todayDone: 0,
-  rollingThreeDayTarget: 0,
-  rollingThreeDayDone: 0,
+  habitCount: 0,
+  habitsDone: 0,
+  weekDays: [],
+  weekRate: 0,
+  bestHabitName: null,
 };
 
 const AppDataContext = createContext(null);
@@ -262,6 +301,28 @@ function normalizeHabit(habit) {
       ? habit.gradient
       : [];
 
+  // New day: archive yesterday's ticks into history and start with a clean row
+  const today = todayISO();
+  const stamp =
+    metadata.completionsDate ||
+    (habit.updated_at && safeDate(habit.updated_at) ? toLocalISO(safeDate(habit.updated_at)) : today);
+  const history = { ...(metadata.history && typeof metadata.history === 'object' ? metadata.history : {}) };
+  let todaysCompletions = completions;
+  if (stamp !== today) {
+    if (!history[stamp] && timeSlots.length) {
+      history[stamp] = { done: completions.filter(Boolean).length, total: timeSlots.length };
+    }
+    todaysCompletions = [];
+  }
+  history[today] = { done: todaysCompletions.filter(Boolean).length, total: timeSlots.length };
+  const trimmed = trimHistory(history);
+  const legacyOk =
+    !Object.keys(metadata.history || {}).length &&
+    metadata.lastCompletionDate &&
+    metadata.lastCompletionDate >= shiftISO(today, -1);
+  const derivedStreak = streakFromHistory(trimmed, today);
+  const streak = derivedStreak || (legacyOk ? Number(metadata.streak) || 0 : 0);
+
   return {
     ...habit,
     id: habit.id,
@@ -278,12 +339,13 @@ function normalizeHabit(habit) {
     color: habit.color || 'blue',
     icon: habit.icon || '✓',
     createdByAI: Boolean(habit.created_by_ai ?? habit.createdByAI),
-    metadata,
+    metadata: { ...metadata, completions: todaysCompletions, completionsDate: today, history: trimmed },
     timeSlots,
-    completions,
+    completions: todaysCompletions,
     gradient,
     targetDays: metadata.targetDays ?? null,
-    streak: metadata.streak ?? 0,
+    streak,
+    history: trimmed,
     // optional exact time per slot ({ Morning: '07:30' }) and minutes per check-in
     slotTimes:
       metadata.slotTimes && typeof metadata.slotTimes === 'object' ? metadata.slotTimes : {},
@@ -421,6 +483,53 @@ export function AppDataProvider({ children }) {
   const [sessionExpired, setSessionExpired] = useState(false);
 
   const autoRescheduleRanRef = useRef(false);
+
+  // Latest lists for callbacks, so a tap never works from a stale closure
+  const tasksRef = useRef([]);
+  const habitsRef = useRef([]);
+  tasksRef.current = tasks;
+  habitsRef.current = habits;
+  // Per item counter: when the user taps twice quickly only the newest result is applied
+  const opSeq = useRef({});
+  const bumpSeq = (key) => {
+    opSeq.current[key] = (opSeq.current[key] || 0) + 1;
+    return opSeq.current[key];
+  };
+
+  // Keep a phone reminder for every planned step. Only tasks whose steps actually changed are touched.
+  const stepSigRef = useRef({});
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      tasks.forEach((task) => {
+        const open = task.status !== 'Completed' && task.status !== 'Cancelled';
+        const steps = open
+          ? (task.subtasks || []).filter((x) => !x.done && x.scheduledDate).map((x) => [x.id, x.scheduledDate, x.scheduledHour])
+          : [];
+        const sig = JSON.stringify(steps);
+        if (stepSigRef.current[task.id] === sig) return;
+        stepSigRef.current[task.id] = sig;
+        if (steps.length === 0) cancelStepReminders(task.id).catch(() => {});
+        else scheduleStepReminders(task).catch(() => {});
+      });
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [tasks]);
+
+  // Local day key. When the day changes (midnight, or the app comes back to the front) habits are
+  // re-normalized so yesterday's ticks are archived and today starts clean.
+  const [dayKey, setDayKey] = useState(todayISO());
+  useEffect(() => {
+    const check = () => setDayKey((prev) => (prev === todayISO() ? prev : todayISO()));
+    const sub = AppState.addEventListener('change', (st) => st === 'active' && check());
+    const timer = setInterval(check, 60 * 1000);
+    return () => {
+      sub?.remove?.();
+      clearInterval(timer);
+    };
+  }, []);
+  useEffect(() => {
+    setHabits((prev) => prev.map((h) => normalizeHabit(h)));
+  }, [dayKey]);
 
   const taskHistory = useMemo(() => {
     return tasks
@@ -674,29 +783,42 @@ export function AppDataProvider({ children }) {
     [tasks, updateTask]
   );
 
-  const toggleSubtask = useCallback(
-    async (taskId, subtaskId) => {
-      const current = tasks.find((task) => task.id === taskId);
-      if (!current) return;
-      const subtasks = Array.isArray(current.subtasks) ? current.subtasks : [];
-      const target = subtasks.find((item) => item.id === subtaskId);
-      if (!target) return;
+  // Optimistic: the tick shows at once, the server catches up in the background and the tick is
+  // rolled back (and the error thrown) if the save fails.
+  const toggleSubtask = useCallback(async (taskId, subtaskId) => {
+    const current = tasksRef.current.find((task) => task.id === taskId);
+    if (!current) return null;
+    const subtasks = Array.isArray(current.subtasks) ? current.subtasks : [];
+    const target = subtasks.find((item) => item.id === subtaskId);
+    if (!target) return null;
 
-      const updatedSubtasks = subtasks.map((item) =>
-        item.id === subtaskId ? { ...item, done: !item.done } : item
-      );
+    const updatedSubtasks = subtasks.map((item) =>
+      item.id === subtaskId ? { ...item, done: !item.done } : item
+    );
+    const optimistic = {
+      ...current,
+      subtasks: updatedSubtasks,
+      metadata: { ...(current.metadata || {}), subtasks: updatedSubtasks },
+    };
+    const seq = bumpSeq(`t:${taskId}`);
+    setTasks((prev) => prev.map((task) => (task.id === taskId ? optimistic : task)));
 
-      await updateTask(taskId, {
-        ...current,
-        subtasks: updatedSubtasks,
-        metadata: {
-          ...(current.metadata || {}),
-          subtasks: updatedSubtasks,
-        },
+    apiUpdateTask(taskId, taskToApiPayload(optimistic))
+      .then((response) => {
+        const saved = normalizeTask(response?.data);
+        if (saved && opSeq.current[`t:${taskId}`] === seq) {
+          setTasks((prev) => prev.map((task) => (task.id === taskId ? saved : task)));
+        }
+      })
+      .catch((err) => {
+        console.warn('toggleSubtask save failed:', err?.message);
+        if (opSeq.current[`t:${taskId}`] === seq) {
+          setTasks((prev) => prev.map((task) => (task.id === taskId ? current : task)));
+          setSyncError(err?.message || 'Could not save that step.');
+        }
       });
-    },
-    [tasks, updateTask]
-  );
+    return { done: !target.done, allDone: updatedSubtasks.every((x) => x.done) };
+  }, []);
 
   const addHabit = useCallback(async (habitObj) => {
     const response = await apiCreateHabit(habitToApiPayload(habitObj));
@@ -741,20 +863,53 @@ export function AppDataProvider({ children }) {
     [habits]
   );
 
-  const toggleHabitSlot = useCallback(
-    async (habitId, slotIndex) => {
-      const current = habits.find((habit) => habit.id === habitId);
-      if (!current) return;
-      const completions = [...(current.completions || [])];
-      completions[slotIndex] = !completions[slotIndex];
-      await updateHabit(habitId, {
-        ...current,
-        completions,
-        metadata: { ...(current.metadata || {}), completions },
+  // Optimistic as well. Also records today's progress in metadata.history, which is where the streak
+  // and the week strip come from.
+  const toggleHabitSlot = useCallback(async (habitId, slotIndex) => {
+    const current = habitsRef.current.find((habit) => habit.id === habitId);
+    if (!current) return null;
+    const today = todayISO();
+    const total = (current.timeSlots || []).length;
+    const completions = Array.from({ length: total }, (_, i) => Boolean(current.completions?.[i]));
+    completions[slotIndex] = !completions[slotIndex];
+    const done = completions.filter(Boolean).length;
+    const history = trimHistory({
+      ...(current.history || {}),
+      [today]: { done, total },
+    });
+    const metadata = {
+      ...(current.metadata || {}),
+      completions,
+      completionsDate: today,
+      history,
+    };
+    const optimistic = {
+      ...current,
+      completions,
+      history,
+      metadata,
+      streak: streakFromHistory(history, today),
+    };
+    const seq = bumpSeq(`h:${habitId}`);
+    setHabits((prev) => prev.map((h) => (h.id === habitId ? optimistic : h)));
+
+    apiUpdateHabit(habitId, habitToApiPayload(optimistic))
+      .then((response) => {
+        const saved = normalizeHabit(response?.data);
+        if (saved && opSeq.current[`h:${habitId}`] === seq) {
+          setHabits((prev) => prev.map((h) => (h.id === habitId ? saved : h)));
+        }
+      })
+      .catch((err) => {
+        console.warn('toggleHabitSlot save failed:', err?.message);
+        if (opSeq.current[`h:${habitId}`] === seq) {
+          setHabits((prev) => prev.map((h) => (h.id === habitId ? current : h)));
+          setSyncError(err?.message || 'Could not save that habit.');
+        }
       });
-    },
-    [habits, updateHabit]
-  );
+
+    return { checked: completions[slotIndex], allDone: total > 0 && done >= total, streak: optimistic.streak };
+  }, []);
 
   const deleteHabit = useCallback(async (habitId) => {
     await apiDeleteHabit(habitId);
@@ -966,6 +1121,18 @@ export function AppDataProvider({ children }) {
     const nowDate = new Date();
     const todayKey = todayISO();
     const nowHour = nowDate.getHours() + nowDate.getMinutes() / 60;
+    const clock = (h) => {
+      const hh = Math.floor(h + 1e-9);
+      return `${String(hh % 24).padStart(2, '0')}:${String(Math.round((h - hh) * 60)).padStart(2, '0')}`;
+    };
+
+    // Minutes actually focused per task per day, shown as a badge on that task's timeline card
+    const focusByTaskDay = {};
+    focusSessions.forEach((fs) => {
+      if (!fs.taskId || !(fs.actualMinutes > 0)) return;
+      const k = `${fs.taskId}|${fs.isoKey}`;
+      focusByTaskDay[k] = (focusByTaskDay[k] || 0) + fs.actualMinutes;
+    });
 
     tasks.forEach((task) => {
       if (task.status === 'Cancelled') return;
@@ -1028,6 +1195,9 @@ export function AppDataProvider({ children }) {
             durationMins: Math.max(15, totalMins),
             colorIdx: THEME_TO_COLOR_IDX[task.themeId] ?? 0,
             taskId: task.id,
+            focusMins: focusByTaskDay[`${task.id}|${date}`] || 0,
+            // "14:00–14:25" for the step shown on the card
+            timeLabel: `${clock(hourValue)}–${clock(hourValue + (Number(headlineSrc.durationMins) || 30) / 60)}`,
           });
         });
         return;
@@ -1114,16 +1284,19 @@ export function AppDataProvider({ children }) {
     focusSessions.forEach((session) => {
       const sessionDate = session.started_at || session.startedAt;
       if (daysSince(sessionDate) > FOCUS_ARCHIVE_DAYS) return;
+      // a timer that was opened and cancelled straight away is not worth a card
+      if (session.status === 'Cancelled' && !(session.actualMinutes > 0)) return;
+
+      const finished =
+        Boolean(session.completed) || (session.actualMinutes > 0 && session.status !== 'Running');
 
       events.push({
         id: `focus-${session.id}`,
-        title: session.taskTitle
-          ? `Focus: ${session.taskTitle}`
-          : 'Focus Session',
+        title: session.taskTitle ? `Focus: ${session.taskTitle}` : 'Focus Session',
         subtitle: null,
         remainingCount: 0,
-        allDone: false,
-        done: false,
+        allDone: finished,
+        done: finished,
         type: 'focus',
         isoKey: session.isoKey || todayISO(),
         startHour: safeNumber(session.startHour, 9),
@@ -1131,38 +1304,62 @@ export function AppDataProvider({ children }) {
         durationMins: Math.max(1, safeNumber(session.durationMins, 25)),
         colorIdx: 2,
         sessionId: session.id,
+        taskId: session.taskId || null,
+        timeLabel: `${session.actualMinutes || session.plannedMinutes || 25}m`,
       });
     });
 
     return events;
   }, [tasks, habits, focusSessions]);
 
+  // Everything on the Habits banner and the Home pills is derived from the habits themselves:
+  // today's ticks, the best running streak, and a 7 day strip built from each habit's history.
   const habitStats = useMemo(() => {
     const today = todayISO();
-    const slotsPerDay = habits.reduce(
-      (total, habit) => total + (habit.timeSlots?.length || 0),
-      0
-    );
-    const todayDone = habits.reduce(
-      (total, habit) =>
-        total + (habit.completions?.filter(Boolean).length || 0),
-      0
-    );
-    const rollingThreeDayTarget = slotsPerDay * 3;
-    const rollingThreeDayDone = todayDone;
-    const streakDays =
-      slotsPerDay > 0
-        ? Math.min(3, Math.floor(todayDone / slotsPerDay))
-        : 0;
+    const active = habits.filter((h) => h.active !== false);
+    const dailyTarget = active.reduce((n, h) => n + (h.timeSlots?.length || 0), 0);
+    const todayDone = active.reduce((n, h) => n + (h.completions?.filter(Boolean).length || 0), 0);
+    const habitsDone = active.filter(
+      (h) => (h.timeSlots?.length || 0) > 0 && (h.completions?.filter(Boolean).length || 0) >= h.timeSlots.length
+    ).length;
+    const streakDays = active.reduce((best, h) => Math.max(best, h.streak || 0), 0);
+    const bestHabit = active.find((h) => (h.streak || 0) === streakDays && streakDays > 0) || null;
+
+    const weekDays = Array.from({ length: 7 }, (_, i) => {
+      const iso = shiftISO(today, i - 6);
+      let done = 0;
+      let total = 0;
+      active.forEach((h) => {
+        const e = h.history?.[iso];
+        if (e) {
+          done += e.done || 0;
+          total += e.total || 0;
+        }
+      });
+      const [y, m, d] = iso.split('-').map(Number);
+      return {
+        iso,
+        label: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][new Date(y, m - 1, d).getDay()],
+        done,
+        total,
+        ratio: total > 0 ? done / total : 0,
+        isToday: iso === today,
+      };
+    });
+    const weekTotal = weekDays.reduce((n, d) => n + d.total, 0);
+    const weekDone = weekDays.reduce((n, d) => n + d.done, 0);
 
     return {
       ...defaultHabitStats,
       today,
       streakDays,
-      dailyTarget: slotsPerDay,
+      bestHabitName: bestHabit?.name || null,
+      dailyTarget,
       todayDone,
-      rollingThreeDayTarget,
-      rollingThreeDayDone,
+      habitCount: active.length,
+      habitsDone,
+      weekDays,
+      weekRate: weekTotal > 0 ? Math.round((weekDone / weekTotal) * 100) : 0,
     };
   }, [habits]);
 

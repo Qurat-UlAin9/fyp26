@@ -1,7 +1,8 @@
 import React, { forwardRef, useMemo, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 //import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import BottomSheet, { BottomSheetScrollView } from '../../components/common/SheetCompat';
+import BottomSheet, { BottomSheetScrollView, sheetColors } from '../../components/common/SheetCompat';
+import { useTheme } from '../../contexts/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { X } from 'lucide-react-native';
 
@@ -37,6 +38,9 @@ const DURATION_OPTIONS = [
 ];
 
 const AddHabitBottomSheet = forwardRef(({ onSubmit, initialHabit, onClose }, ref) => {
+  const { theme, isDark } = useTheme();
+  const c = useMemo(() => sheetColors(theme, isDark), [theme, isDark]);
+  const styles = useMemo(() => makeStyles(c), [c]);
   const snapPoints = useMemo(() => ['85%'], []);
   const isEdit = Boolean(initialHabit);
 
@@ -292,20 +296,21 @@ const AddHabitBottomSheet = forwardRef(({ onSubmit, initialHabit, onClose }, ref
 
 export default AddHabitBottomSheet;
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   sheetBg: { borderTopLeftRadius: 32, borderTopRightRadius: 32 },
   content: { padding: 24, paddingBottom: 60 },
   header: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
-  title: { fontSize: 24, fontWeight: '800' },
-  label: { fontSize: 12, fontWeight: '800', color: '#94A3B8', marginBottom: 12, letterSpacing: 1 },
+  title: { fontSize: 24, fontWeight: '800', color: c.text },
+  label: { fontSize: 12, fontWeight: '800', color: c.muted, marginBottom: 12, letterSpacing: 1 },
   input: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.field,
     borderRadius: 16,
     padding: 16,
     fontSize: 16,
+    color: c.text,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderColor: c.fieldBorder,
   },
   colorRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 },
   colorRing: {
@@ -324,21 +329,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
-    backgroundColor: '#F8FAFC',
+    borderColor: c.fieldBorder,
+    backgroundColor: c.field,
   },
-  slotPillText: { fontWeight: '700', color: '#64748B' },
+  slotPillText: { fontWeight: '700', color: c.muted },
   clockRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },
-  clockSlot: { width: 70, fontWeight: '700', color: '#64748B' },
+  clockSlot: { width: 70, fontWeight: '700', color: c.muted },
   clockInput: {
     width: 90,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.field,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 8,
     fontSize: 15,
+    color: c.text,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderColor: c.fieldBorder,
   },
   clockHint: { color: '#EF4444', fontSize: 12, flexShrink: 1 },
   durationRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 30 },
@@ -347,10 +353,10 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
-    backgroundColor: '#F8FAFC',
+    borderColor: c.fieldBorder,
+    backgroundColor: c.field,
   },
-  durationText: { fontWeight: '700', color: '#64748B', fontSize: 13 },
+  durationText: { fontWeight: '700', color: c.muted, fontSize: 13 },
   submitContainer: {},
   submitBtn: { padding: 18, borderRadius: 20, alignItems: 'center' },
   submitText: { color: '#FFF', fontSize: 18, fontWeight: '800' },

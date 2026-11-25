@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Coins } from 'lucide-react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme, COIN_COLORS } from '../../contexts/ThemeContext';
 
 export default function CoinBalancePill() {
   const { coins, theme } = useTheme();
 
   return (
     <View style={[styles.pill, { backgroundColor: theme.card, borderColor: theme.border }]}> 
-      <Coins color={theme.accentGradient[0]} size={16} />
+      <Coins color={COIN_COLORS.fill} size={16} />
       <Text style={[styles.value, { color: theme.text }]}>{coins}</Text>
     </View>
   );

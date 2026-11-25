@@ -10,6 +10,7 @@ import BackgroundOrb from '../../components/emotion/BackgroundOrb';
 const RELIEF_ROUTES = [
   {
     id: 'balloon',
+    accent: '#FB7185',
     title: 'Balloon Session',
     subtitle: 'Slow breath to settle your body',
     icon: Wind,
@@ -18,6 +19,7 @@ const RELIEF_ROUTES = [
   },
   {
     id: 'splash',
+    accent: '#38BDF8',
     title: 'Splash Session',
     subtitle: 'A cooling reset in 30 seconds',
     icon: Droplets,
@@ -26,6 +28,7 @@ const RELIEF_ROUTES = [
   },
   {
     id: 'grounding',
+    accent: '#A78BFA',
     title: 'Grounding Session',
     subtitle: '5-4-3-2-1 sensory anchor',
     icon: Flower2,
@@ -34,6 +37,7 @@ const RELIEF_ROUTES = [
   },
   {
     id: 'harmonic',
+    accent: '#2DD4BF',
     title: 'Harmonic Ripples',
     subtitle: 'Tap tones for gentle emotional release',
     icon: Waves,
@@ -43,6 +47,8 @@ const RELIEF_ROUTES = [
 ];
 
 function ReliefCard({ item, delay, onPress }) {
+  const { theme, isDark } = useTheme();
+  const accent = item.accent || theme.accentGradient[0];
   const scale = useSharedValue(1);
 
   const pressStyle = useAnimatedStyle(() => ({
@@ -63,13 +69,13 @@ function ReliefCard({ item, delay, onPress }) {
           }}
           onPress={onPress}
         >
-          <BlurView intensity={30} tint="dark" style={styles.cardBlur}>
-            <LinearGradient colors={item.colors} style={styles.cardContent}>
-              <View style={styles.iconBubble}>
-                <Icon size={20} color="#E2E8F0" strokeWidth={1.8} />
+          <BlurView intensity={30} tint={isDark ? 'dark' : 'light'} style={[styles.cardBlur, { borderColor: theme.border }]}>
+            <LinearGradient colors={[`${accent}33`, theme.card]} style={styles.cardContent}>
+              <View style={[styles.iconBubble, { borderColor: theme.border }]}>
+                <Icon size={20} color={accent} strokeWidth={1.8} />
               </View>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+              <Text style={[styles.cardTitle, { color: theme.text }]}>{item.title}</Text>
+              <Text style={[styles.cardSubtitle, { color: theme.textSecondary }]}>{item.subtitle}</Text>
             </LinearGradient>
           </BlurView>
         </Pressable>
@@ -83,19 +89,11 @@ export default function ImmediateReliefScreen({ navigation }) {
 
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
-      <BackgroundOrb size={250} color="rgba(96,165,250,0.2)" top={70} left={-80} duration={10000} />
+      <BackgroundOrb size={250} color={`${theme.accentGradient[0]}33`} top={70} left={-80} duration={10000} />
       <BackgroundOrb size={260} color="rgba(147,197,253,0.14)" top={420} right={-90} duration={9200} />
 
       <SafeAreaView style={styles.safeArea}>
-        <Animated.View entering={FadeInDown.duration(420)} style={styles.headerRow}>
-          <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-            <ArrowLeft size={18} color="#E2E8F0" />
-          </Pressable>
-          <View style={styles.titleWrap}>
-            <Text style={styles.title}>Immediate Relief</Text>
-            <Text style={styles.subtitle}>Choose a quick practice for right now.</Text>
-          </View>
-        </Animated.View>
+        <Text style={[styles.subtitle, { color: theme.textSecondary, paddingHorizontal: 20 }]}>Choose a quick practice for right now.</Text>
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {RELIEF_ROUTES.map((item, index) => (
@@ -114,7 +112,7 @@ export default function ImmediateReliefScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  safeArea: { flex: 1, paddingTop: 12 },
+  safeArea: { flex: 1, paddingTop: 6 },
   headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingHorizontal: 18 },
   backButton: {
     width: 36,

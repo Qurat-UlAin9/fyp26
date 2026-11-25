@@ -22,7 +22,22 @@ import {
   View,
 } from 'react-native';
 
+import { useTheme } from '../../contexts/ThemeContext';
+
 const DEFAULT_RATIO = 0.6;
+
+/** Colours for sheet content that follow the app theme (used by the Add Task / Add Habit sheets). */
+export function sheetColors(theme, isDark) {
+  return {
+    bg: theme.surface,
+    handle: theme.textSecondary,
+    text: theme.text,
+    muted: theme.textSecondary,
+    field: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(15,23,42,0.05)',
+    fieldBorder: isDark ? 'rgba(255,255,255,0.14)' : 'rgba(15,23,42,0.12)',
+    accent: theme.accentGradient[0],
+  };
+}
 
 // Uses the largest snap point, which is where gorhom's expand() goes
 function resolveHeight(snapPoints, windowHeight) {
@@ -42,6 +57,7 @@ const BottomSheet = forwardRef(function BottomSheet(
   ref
 ) {
   const { height: windowHeight } = useWindowDimensions();
+  const { theme } = useTheme();
   const sheetHeight = resolveHeight(snapPoints, windowHeight);
 
   const [visible, setVisible] = useState(false);
@@ -96,11 +112,13 @@ const BottomSheet = forwardRef(function BottomSheet(
               styles.sheet,
               { height: sheetHeight },
               backgroundStyle,
+              // the app theme always decides the sheet colour (a translucent card colour would show the screen through it)
+              { backgroundColor: theme.surface, borderColor: theme.border, borderWidth: StyleSheet.hairlineWidth },
               { transform: [{ translateY }] },
             ]}
           >
             <View style={styles.handleWrap}>
-              <View style={[styles.handle, handleIndicatorStyle]} />
+              <View style={[styles.handle, handleIndicatorStyle, { backgroundColor: theme.textSecondary, opacity: 0.5 }]} />
             </View>
             <View style={styles.content}>{children}</View>
           </Animated.View>

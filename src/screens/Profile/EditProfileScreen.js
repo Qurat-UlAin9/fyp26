@@ -10,6 +10,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+import { showAlert } from '../../utils/alert';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check, User, Mail, Sparkles, Trash2 } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -57,7 +58,7 @@ export default function EditProfileScreen({ navigation }) {
       });
       navigation.goBack();
     } catch (e) {
-      Alert.alert('Error', e?.message || 'Failed to save profile.');
+      showAlert('Error', e?.message || 'Failed to save profile.');
     } finally {
       setSaving(false);
     }

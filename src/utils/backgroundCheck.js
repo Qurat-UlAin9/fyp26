@@ -22,7 +22,8 @@ const TASK_COOLDOWN_MS = 6 * 60 * 60 * 1000;  // 6 hours per task
 const SLOT_NUDGE_HOUR = { Morning: 10.5, Noon: 13.5, Evening: 19.5, Night: 22.5 };
 
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date(); // local day, not UTC
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 function hoursNow() {

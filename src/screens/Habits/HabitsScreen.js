@@ -10,17 +10,15 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, Bell, Check, TrendingUp, Pencil, Trash2 } from 'lucide-react-native';
-import Animated, { FadeInDown, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAppData } from '../../contexts/AppDataContext';
+import { useAppData, todayISO } from '../../contexts/AppDataContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
 import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
 import AddHabitBottomSheet from './AddHabitBottomSheet';
 import { showConfirm } from '../../utils/alert';
 import { scheduleHabitNudges, cancelHabitNudges } from '../../utils/reminders';
-
-const todayISO = () => new Date().toISOString().slice(0, 10);
 
 // Richer gradient palette for habit cards
 const HABIT_GRADIENTS = [
@@ -80,6 +78,33 @@ function CoinFly({ tick }) {
   );
 }
 
+// Springs in at once (native driver, ~140ms) so the tick shows the moment the circle is pressed
+const TickBubble = React.memo(function TickBubble({ done, color }) {
+  const scale = useRef(new RNAnimated.Value(done ? 1 : 0)).current;
+  useEffect(() => {
+    RNAnimated.spring(scale, {
+      toValue: done ? 1 : 0,
+      speed: 40,
+      bounciness: done ? 10 : 0,
+      useNativeDriver: true,
+    }).start();
+  }, [done, scale]);
+  return (
+    <View
+      style={[
+        styles.bubble,
+        done
+          ? { backgroundColor: '#FFFFFF' }
+          : { backgroundColor: 'rgba(255,255,255,0.22)', borderColor: 'rgba(255,255,255,0.55)' },
+      ]}
+    >
+      <RNAnimated.View style={{ transform: [{ scale }], opacity: scale }}>
+        <Check size={18} color={color} strokeWidth={3.5} />
+      </RNAnimated.View>
+    </View>
+  );
+});
+
 function HabitCard({ habit, onToggle, onEdit, onDelete, highlight }) {
   const doneCount = (habit.completions || []).filter(Boolean).length;
   const totalSlots = habit.timeSlots?.length || 0;
@@ -92,8 +117,7 @@ function HabitCard({ habit, onToggle, onEdit, onDelete, highlight }) {
 
   return (
     <Animated.View
-      entering={FadeInDown.duration(500)}
-      layout={LinearTransition}
+      entering={FadeInDown.duration(300)}
       style={[
         styles.cardShadow,
         highlight && styles.cardHighlight,
@@ -171,7 +195,7 @@ function HabitCard({ habit, onToggle, onEdit, onDelete, highlight }) {
         {/* Slot bubbles */}
         <View style={styles.bubblesRow}>
           {habit.timeSlots.map((slot, i) => {
-            const done = Boolean(habit.completions[i]);
+            const done = Boolean(habit.completions?.[i]);
             return (
               <TouchableOpacity
                 key={i}
@@ -179,25 +203,7 @@ function HabitCard({ habit, onToggle, onEdit, onDelete, highlight }) {
                 style={styles.bubbleCol}
                 activeOpacity={0.75}
               >
-                <View
-                  style={[
-                    styles.bubble,
-                    done
-                      ? { backgroundColor: '#FFFFFF' }
-                      : {
-                          backgroundColor: 'rgba(255,255,255,0.22)',
-                          borderColor: 'rgba(255,255,255,0.55)',
-                        },
-                  ]}
-                >
-                  {done && (
-                    <Check
-                      size={18}
-                      color={gradient[0]}
-                      strokeWidth={3.5}
-                    />
-                  )}
-                </View>
+                <TickBubble done={done} color={gradient[0]} />
                 <Text style={styles.bubbleLabel}>{slot}</Text>
               </TouchableOpacity>
             );
@@ -229,75 +235,33 @@ export default function HabitsScreen({ navigation, route }) {
     return () => clearTimeout(timer);
   }, [route?.params?.highlightHabitId, route?.params?._ts, navigation]);
 
-  const resetRanRef = useRef(false);
-
-  // Daily reset on mount
-  useEffect(() => {
-    if (resetRanRef.current) return;
-    resetRanRef.current = true;
-
-    const today = todayISO();
-    habits.forEach((h) => {
-      const lastDate = h.metadata?.lastCompletionDate;
-      const anyDone = (h.completions || []).some(Boolean);
-      if (lastDate !== today && h.metadata?.completionsDate !== today && anyDone) {
-        updateHabit(h.id, (prev) => ({
-          ...prev,
-          completions: new Array(prev.timeSlots.length).fill(false),
-          metadata: {
-            ...(prev.metadata || {}),
-            completions: new Array(prev.timeSlots.length).fill(false),
-            lastCompletionDate: today,
-          },
-        }));
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Yesterday's ticks are archived and reset by AppDataContext when the day changes.
 
   const handleToggle = useCallback(
-    (id, idx) => {
+    async (id, idx) => {
       const habit = habits.find((h) => h.id === id);
       if (!habit) return;
 
-      const willBeDone = !habit.completions[idx];
+      // The tick appears first (optimistic); coins follow the real result.
+      const result = await toggleHabitSlot(id, idx);
+      if (!result) return;
 
-      if (willBeDone) {
+      if (result.checked) {
         setCoinFxTick((t) => t + 1);
         registerHabitCompletion();
 
-        const willAllBeDone = habit.completions.every((c, i) =>
-          i === idx ? true : c
-        );
-
-        if (willAllBeDone && habit.timeSlots.length > 0) {
-          const today = todayISO();
-          const prevStreak = habit.metadata?.streak || 0;
-          const lastCompletionDate = habit.metadata?.lastCompletionDate;
-          const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-          const newStreak =
-            lastCompletionDate === yesterday ? prevStreak + 1 : 1;
-
-          updateHabit(id, (prev) => ({
-            ...prev,
-            metadata: {
-              ...(prev.metadata || {}),
-              streak: newStreak,
-              lastCompletionDate: today,
-            },
-          }));
-
+        if (result.allDone) {
           Toast.show({
             type: 'success',
             text1: 'All done for today! 🌿',
-            text2: newStreak > 1 ? `🔥 ${newStreak} day streak` : '+2 🪙',
+            text2: result.streak > 1 ? `🔥 ${result.streak} day streak` : '+2 🪙',
           });
 
           const target = habit.targetDays ?? habit.metadata?.targetDays;
           const startedAt = habit.metadata?.startedAt;
           if (target && startedAt) {
             const daysElapsed =
-              Math.floor((new Date(today) - new Date(startedAt)) / 86400000) + 1;
+              Math.floor((new Date(todayISO()) - new Date(startedAt)) / 86400000) + 1;
             if (daysElapsed >= target) {
               setTimeout(() => {
                 Toast.show({
@@ -313,10 +277,8 @@ export default function HabitsScreen({ navigation, route }) {
       } else {
         unregisterHabitCompletion();
       }
-
-      toggleHabitSlot(id, idx);
     },
-    [habits, toggleHabitSlot, updateHabit, registerHabitCompletion, unregisterHabitCompletion]
+    [habits, toggleHabitSlot, registerHabitCompletion, unregisterHabitCompletion]
   );
 
   const handleEdit = useCallback((habit) => {
@@ -406,10 +368,11 @@ export default function HabitsScreen({ navigation, route }) {
     });
   })();
 
-  const totalTarget = habitStats.rollingThreeDayTarget || 0;
-  const totalDone = habitStats.rollingThreeDayDone || 0;
-  const progressPct =
-    totalTarget > 0 ? Math.min(100, (totalDone / totalTarget) * 100) : 0;
+  const totalTarget = habitStats.dailyTarget || 0;
+  const totalDone = habitStats.todayDone || 0;
+  const progressPct = totalTarget > 0 ? Math.min(100, (totalDone / totalTarget) * 100) : 0;
+  const streak = habitStats.streakDays || 0;
+  const bannerColors = [theme.accentGradient[0], theme.accentGradient[1]];
 
   return (
     <View style={[styles.root, { backgroundColor: theme.background[0] }]}>
@@ -441,9 +404,9 @@ export default function HabitsScreen({ navigation, route }) {
             <CoinBalancePill />
           </View>
 
-          {/* Progress banner */}
+          {/* Today banner: built from the habits themselves, nothing fixed */}
           <LinearGradient
-            colors={['#6366F1', '#8B5CF6', '#A855F7']}
+            colors={bannerColors}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.progressBanner}
@@ -451,23 +414,46 @@ export default function HabitsScreen({ navigation, route }) {
             <View style={styles.progressBannerHeader}>
               <TrendingUp color="#FFFFFF" size={16} />
               <Text style={styles.progressBannerLabel}>
-                3-DAY PROGRESS
+                {totalTarget === 0
+                  ? 'TODAY'
+                  : totalDone >= totalTarget
+                    ? 'ALL DONE TODAY'
+                    : 'TODAY'}
               </Text>
+              {streak > 0 ? (
+                <Text style={[styles.progressBannerLabel, { marginLeft: 'auto' }]}>
+                  🔥 {streak} day{streak === 1 ? '' : 's'}
+                </Text>
+              ) : null}
             </View>
             <Text style={styles.progressBannerValue}>
               {totalDone}
-              <Text style={styles.progressBannerValueDim}>
-                {' '}/ {totalTarget}
-              </Text>
+              <Text style={styles.progressBannerValueDim}> / {totalTarget} check-ins</Text>
             </Text>
             <View style={styles.progressBannerTrack}>
-              <View
-                style={[
-                  styles.progressBannerFill,
-                  { width: `${progressPct}%` },
-                ]}
-              />
+              <View style={[styles.progressBannerFill, { width: `${progressPct}%` }]} />
             </View>
+            {(habitStats.weekDays || []).length > 0 ? (
+              <View style={styles.weekRow}>
+                {habitStats.weekDays.map((d) => (
+                  <View key={d.iso} style={styles.weekCol}>
+                    <View
+                      style={[
+                        styles.weekDot,
+                        d.total > 0 && { backgroundColor: `rgba(255,255,255,${0.25 + 0.75 * d.ratio})` },
+                        d.isToday && styles.weekDotToday,
+                      ]}
+                    >
+                      {d.total > 0 && d.ratio >= 1 ? <Check size={10} color={bannerColors[0]} strokeWidth={4} /> : null}
+                    </View>
+                    <Text style={styles.weekLabel}>{d.label}</Text>
+                  </View>
+                ))}
+              </View>
+            ) : null}
+            {habitStats.weekRate > 0 ? (
+              <Text style={styles.weekRate}>{habitStats.weekRate}% of check-ins this week</Text>
+            ) : null}
           </LinearGradient>
 
           {/* Habits list */}
@@ -519,6 +505,19 @@ export default function HabitsScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  weekRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 14 },
+  weekCol: { alignItems: 'center', flex: 1 },
+  weekDot: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  weekDotToday: { borderWidth: 2, borderColor: '#FFFFFF' },
+  weekLabel: { color: 'rgba(255,255,255,0.85)', fontSize: 10, fontWeight: '700', marginTop: 4 },
+  weekRate: { color: 'rgba(255,255,255,0.9)', fontSize: 12, fontWeight: '600', marginTop: 10 },
   root: { flex: 1 },
   safeArea: { flex: 1 },
   scrollContent: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 100 },

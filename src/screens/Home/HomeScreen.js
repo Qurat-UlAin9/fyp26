@@ -28,20 +28,16 @@ import {
   Wind,
 } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAppData } from '../../contexts/AppDataContext';
+import { useAppData, todayISO } from '../../contexts/AppDataContext';
 import { useProductivity } from '../../contexts/ProductivityContext';
 import CoinBalancePill from '../../components/common/CoinBalancePill';
 import AnimatedOrbsBackground from '../../components/common/AnimatedOrbsBackground';
 import FocusSessionScheduler from '../../components/focus/FocusSessionScheduler';
 import MoodCheckInCard from '../../components/home/MoodCheckInCard';
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function MetricPill({ icon: Icon, value, label, gradient, progress = 0 }) {
+function MetricPill({ icon: Icon, value, label, gradient, progress = 0, onPress }) {
   return (
-    <View style={styles.metricPillWrap}>
+    <TouchableOpacity activeOpacity={0.85} onPress={onPress} disabled={!onPress} style={styles.metricPillWrap}>
       <LinearGradient
         colors={gradient}
         start={{ x: 0, y: 0 }}
@@ -62,7 +58,7 @@ function MetricPill({ icon: Icon, value, label, gradient, progress = 0 }) {
           </View>
         )}
       </LinearGradient>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -127,7 +123,7 @@ function AssessmentCard({
   );
 }
 
-function UpNextCard({ nextTask, onStartFocus, isDark }) {
+function UpNextCard({ nextTask, onStartFocus, onOpen, isDark, colors }) {
   if (!nextTask) {
     return (
       <LinearGradient
@@ -174,8 +170,9 @@ function UpNextCard({ nextTask, onStartFocus, isDark }) {
       : null;
 
   return (
+    <TouchableOpacity activeOpacity={0.92} onPress={onOpen} accessibilityRole="button" accessibilityLabel="Open tasks">
     <LinearGradient
-      colors={['#6366F1', '#8B5CF6', '#A855F7']}
+      colors={colors}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.upNextCard}
@@ -235,6 +232,7 @@ function UpNextCard({ nextTask, onStartFocus, isDark }) {
         )}
       </View>
     </LinearGradient>
+    </TouchableOpacity>
   );
 }
 
@@ -318,13 +316,13 @@ export default function HomeScreen() {
     navigation.navigate('Focus', { task: nextTask.task });
   };
 
+  // Minutes actually focused today (local day). A planned-but-never-run session counts for nothing.
   const focusMinutesToday = useMemo(() => {
     return focusSessions
-      .filter(
-        (s) => (s.started_at || s.startedAt || '').slice(0, 10) === today
-      )
-      .reduce((sum, s) => sum + (s.actualMinutes || s.plannedMinutes || 0), 0);
+      .filter((s) => s.isoKey === today)
+      .reduce((sum, s) => sum + (s.actualMinutes || (s.completed ? s.plannedMinutes : 0) || 0), 0);
   }, [focusSessions, today]);
+  const streakDays = habitStats?.streakDays || 0;
 
   const habitTarget = habitStats?.dailyTarget || 0;
   const habitDone = habitStats?.todayDone || 0;
@@ -339,7 +337,7 @@ export default function HomeScreen() {
 
   const efTaken = Boolean(efAssessment);
   const efSubtitle = efTaken
-    ? 'Completed · view dimensions'
+    ? 'Completed · see results'
     : 'Not taken yet · 5 min';
 
   const avatarSource = profile?.avatarUrl ? { uri: profile.avatarUrl } : null;
@@ -467,7 +465,9 @@ export default function HomeScreen() {
         <UpNextCard
           nextTask={nextTask}
           onStartFocus={handleStartFocus}
+          onOpen={() => navigation.navigate('Tasks')}
           isDark={isDark}
+          colors={[theme.accentGradient[0], theme.accentGradient[1]]}
         />
 
         <View style={styles.metricsRow}>
@@ -475,20 +475,23 @@ export default function HomeScreen() {
             icon={Clock3}
             value={`${focusMinutesToday}m`}
             label="Focus"
-            gradient={['#A78BFA', '#7C3AED']}
+            gradient={(theme.cards?.[3] || ['#A78BFA', '#7C3AED'])}
+            onPress={() => navigation.navigate('Focus')}
           />
           <MetricPill
             icon={Leaf}
             value={habitTarget > 0 ? `${habitDone}/${habitTarget}` : '0'}
             label="Habits"
-            gradient={['#34D399', '#059669']}
+            gradient={(theme.cards?.[2] || ['#34D399', '#059669'])}
             progress={habitProgress}
+            onPress={() => navigation.navigate('Habits')}
           />
           <MetricPill
             icon={Flame}
-            value={String(stats?.streakDays || 0)}
-            label="Streak"
-            gradient={['#FB923C', '#EA580C']}
+            value={`${streakDays}d`}
+            label={streakDays === 1 ? 'Day streak' : 'Day streak'}
+            gradient={(theme.cards?.[0] || ['#FB923C', '#EA580C'])}
+            onPress={() => navigation.navigate('Habits')}
           />
         </View>
 
@@ -548,7 +551,7 @@ export default function HomeScreen() {
             title="ADHD Screening"
             subtitle={adhdSubtitle}
             taken={adhdTaken}
-            gradient={['#8B5CF6', '#6366F1']}
+            gradient={(theme.cards?.[3] || ['#8B5CF6', '#6366F1'])}
             icon={Sparkles}
             onPrimary={() =>
               adhdTaken
@@ -563,7 +566,7 @@ export default function HomeScreen() {
             title="Executive Function"
             subtitle={efSubtitle}
             taken={efTaken}
-            gradient={['#06B6D4', '#0891B2']}
+            gradient={(theme.cards?.[4] || ['#06B6D4', '#0891B2'])}
             icon={Target}
             onPrimary={() =>
               efTaken
@@ -887,9 +890,10 @@ const styles = StyleSheet.create({
   assessmentRow: { flexDirection: 'row', gap: 12, marginBottom: 18 },
   assessWrap: { flex: 1 },
   assessCard: {
+    flex: 1,
     borderRadius: 20,
     padding: 16,
-    minHeight: 168,
+    minHeight: 176,
     justifyContent: 'space-between',
   },
   assessTopRow: {
@@ -923,6 +927,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '800',
     lineHeight: 19,
+    minHeight: 38,
     marginBottom: 6,
   },
   assessSub: {
@@ -931,7 +936,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 15,
     marginBottom: 12,
-    flex: 1,
+    minHeight: 30,
   },
   assessCta: {
     flexDirection: 'row',

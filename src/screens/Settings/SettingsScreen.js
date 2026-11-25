@@ -3,6 +3,8 @@ import {
   View, Text, Switch, TouchableOpacity, StyleSheet, Alert,
   Modal, ScrollView, Platform,
 } from 'react-native';
+import { showAlert } from '../../utils/alert';
+import { sendTestNotification, describeScheduled } from '../../utils/reminders';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Moon, Sun, Bell, Trash2, LogOut, ChevronRight, ChevronLeft,
@@ -64,10 +66,10 @@ export default function SettingsScreen({ navigation }) {
     try {
       for (const task of tasks) await deleteTask(task.id);
       for (const habit of habits) await deleteHabit(habit.id);
-      Alert.alert('✅ Success', 'All data has been reset.');
+      showAlert('✅ Success', 'All data has been reset.');
       setResetModalVisible(false);
     } catch (e) {
-      Alert.alert('❌ Error', 'Failed to reset data.');
+      showAlert('❌ Error', 'Failed to reset data.');
       console.error(e);
     }
   }, [tasks, habits, deleteTask, deleteHabit]);
@@ -107,6 +109,42 @@ export default function SettingsScreen({ navigation }) {
             sub={currentThemeName}
             theme={theme}
             onPress={() => navigation.navigate('Rewards')}
+            isLast
+          />
+        </SectionCard>
+
+        {/* Try the reminders without waiting for a real one */}
+        <SectionCard title="TEST NOTIFICATIONS" theme={theme}>
+          <Row
+            icon={Bell}
+            label="Send a test notification"
+            sub="Arrives in 5 seconds. Leave the app to see it."
+            theme={theme}
+            onPress={async () => {
+              const r = await sendTestNotification('basic', 5).catch((e) => ({ ok: false, reason: e?.message }));
+              showAlert(r.ok ? 'Test scheduled' : 'Could not schedule', r.reason);
+            }}
+          />
+          <Row
+            icon={Bell}
+            label="Test habit check-in buttons"
+            sub="Long-press the notification: Did it / Later / Skip"
+            theme={theme}
+            onPress={async () => {
+              const r = await sendTestNotification('habit', 5).catch((e) => ({ ok: false, reason: e?.message }));
+              showAlert(r.ok ? 'Test scheduled' : 'Could not schedule', r.reason);
+            }}
+          />
+          <Row
+            icon={Bell}
+            label="What is scheduled?"
+            sub="Counts habit nudges, task and step reminders"
+            theme={theme}
+            onPress={async () => {
+              const list = await describeScheduled().catch(() => []);
+              const by = list.reduce((m, n) => ({ ...m, [n.kind || 'other']: (m[n.kind || 'other'] || 0) + 1 }), {});
+              showAlert('Scheduled on this phone', list.length ? Object.entries(by).map(([k, v]) => `${k}: ${v}`).join('\n') : 'Nothing scheduled yet.');
+            }}
             isLast
           />
         </SectionCard>
@@ -171,7 +209,7 @@ export default function SettingsScreen({ navigation }) {
             icon={Shield}
             label="Privacy policy"
             theme={theme}
-            onPress={() => Alert.alert('Privacy', 'We store your data securely with Supabase.')}
+            onPress={() => showAlert('Privacy', 'We store your data securely with Supabase.')}
           />
           <Row
             icon={Trash2}

@@ -11,7 +11,8 @@ import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ListChecks, X, Clock3, Zap } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme, SOUND_LIBRARY } from '../../contexts/ThemeContext';
+import { playTrack, pause as pauseAudio, stop as stopAudio, getAudioState } from '../../services/audioPlayer';
 import { useProductivity } from '../../contexts/ProductivityContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import TimerRing from '../../components/focus/TimerRing';
@@ -35,7 +36,7 @@ const SOUND_OPTIONS = [
 const COMPLETION_CHIME = require('../../../assets/sounds/Notes/Ripple1.mp3');
 
 export default function FocusScreen({ route, navigation }) {
-  const { theme, isDark } = useTheme();
+  const { theme, isDark, sounds: rewardSounds = [], unlockedSounds = [] } = useTheme();
   const { activeSessionTask, setActiveSessionTask } = useProductivity();
   const {
     tasks,
@@ -49,13 +50,12 @@ export default function FocusScreen({ route, navigation }) {
   const taskSheetRef = useRef(null);
   const timerIntervalRef = useRef(null);
   const timerEndAtRef = useRef(null);
-  const activeSoundRef = useRef(null);
+  const wasRunningRef = useRef(false);
   const chimeRef = useRef(null);
   const sessionStartTimeRef = useRef(null);
   const accumulatedSecondsRef = useRef(0);
   const lastPersistedSecondsRef = useRef(0);
   const sessionIdRef = useRef(null);
-  const loadedSoundKeyRef = useRef(null);
 
   const [durationMinutes, setDurationMinutes] = useState(DEFAULT_DURATION);
   const [timeLeft, setTimeLeft] = useState(DEFAULT_DURATION * 60);
@@ -74,7 +74,22 @@ export default function FocusScreen({ route, navigation }) {
   useEffect(() => { activeSessionTaskRef.current = activeSessionTask; }, [activeSessionTask]);
   useEffect(() => { isRunningRef.current = isRunning; }, [isRunning]);
 
-  const sounds = useMemo(() => SOUND_OPTIONS, []);
+  // Built-in ambience + every music track unlocked in Rewards (same ids as the Rewards screen, so
+  // they share one player)
+  const sounds = useMemo(() => {
+    const unlocked = rewardSounds
+      .filter((m) => unlockedSounds.includes(m.id) && SOUND_LIBRARY[m.id])
+      .map((m) => ({
+        key: `music:${m.id}`,
+        label: m.name,
+        emoji: '🎧',
+        description: `${m.artist} · unlocked music`,
+        source: SOUND_LIBRARY[m.id],
+        title: m.name,
+        subtitle: m.artist,
+      }));
+    return [...SOUND_OPTIONS, ...unlocked];
+  }, [rewardSounds, unlockedSounds]);
 
   const findExistingSessionForTask = useCallback(
     (taskId) => {
@@ -168,49 +183,29 @@ export default function FocusScreen({ route, navigation }) {
 
     return () => {
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
-      try { activeSoundRef.current?.remove(); } catch {}
+      // music is global now: it keeps playing after leaving this screen (stop it from the mini-player)
       try { chimeRef.current?.remove(); } catch {}
     };
   }, []);
 
+  // While a session runs, the chosen sound plays on the shared player. Pausing the timer pauses it.
   useEffect(() => {
-    const opt = sounds.find((s) => s.key === selectedSound);
-    const hasSound = opt && opt.source;
-
-    const release = () => {
-      if (activeSoundRef.current) {
-        try { activeSoundRef.current.pause(); } catch {}
-        try { activeSoundRef.current.remove(); } catch {}
-        activeSoundRef.current = null;
-      }
-      loadedSoundKeyRef.current = null;
-    };
-
-    if (!hasSound) {
-      release();
-      return;
+    const opt = sounds.find((x) => x.key === selectedSound);
+    if (!opt || !opt.source) return;
+    const trackId = opt.key.startsWith('music:') ? opt.key : `focus:${opt.key}`;
+    if (isRunning) {
+      playTrack({
+        id: trackId,
+        title: opt.title || opt.label,
+        subtitle: opt.subtitle || 'Focus sound',
+        source: opt.source,
+        kind: opt.key.startsWith('music:') ? 'music' : 'focus',
+        volume: 0.55,
+      });
+    } else if (wasRunningRef.current && getAudioState().track?.id === trackId) {
+      pauseAudio();
     }
-
-    if (loadedSoundKeyRef.current && loadedSoundKeyRef.current !== selectedSound) {
-      release();
-    }
-
-    try {
-      if (!activeSoundRef.current) {
-        const player = createAudioPlayer(opt.source);
-        player.loop = true;
-        player.volume = 0.55;
-        activeSoundRef.current = player;
-        loadedSoundKeyRef.current = selectedSound;
-      }
-      if (isRunning) {
-        if (!activeSoundRef.current.playing) activeSoundRef.current.play();
-      } else {
-        activeSoundRef.current.pause();
-      }
-    } catch (err) {
-      console.warn('Sound load failed:', err?.message);
-    }
+    wasRunningRef.current = isRunning;
   }, [isRunning, selectedSound, sounds]);
 
   const persistProgress = useCallback(
@@ -265,12 +260,7 @@ export default function FocusScreen({ route, navigation }) {
     const thisRunMinutes = Math.floor(accumulatedSecondsRef.current / 60);
     setCompletedSessionMinutes(thisRunMinutes);
 
-    if (activeSoundRef.current) {
-      try { activeSoundRef.current.pause(); } catch {}
-      try { activeSoundRef.current.remove(); } catch {}
-      activeSoundRef.current = null;
-      loadedSoundKeyRef.current = null;
-    }
+    pauseAudio(); // session over: pause (the mini-player can resume or stop it)
 
     try {
       const chime = createAudioPlayer(COMPLETION_CHIME);
@@ -385,12 +375,7 @@ export default function FocusScreen({ route, navigation }) {
     timerEndAtRef.current = null;
     sessionStartTimeRef.current = null;
 
-    if (activeSoundRef.current) {
-      try { activeSoundRef.current.pause(); } catch {}
-      try { activeSoundRef.current.remove(); } catch {}
-      activeSoundRef.current = null;
-      loadedSoundKeyRef.current = null;
-    }
+    pauseAudio(); // session over: pause (the mini-player can resume or stop it)
 
     const mins = Math.floor(accumulatedSecondsRef.current / 60);
 
@@ -424,9 +409,29 @@ export default function FocusScreen({ route, navigation }) {
     []
   );
 
+  // Tapping the active sound again, or "No Sound", stops it
   const handleSelectSound = useCallback((soundKey) => {
-    setSelectedSound(soundKey);
-  }, []);
+    setSelectedSound((prev) => {
+      const next = prev === soundKey ? 'none' : soundKey;
+      if (next === 'none') {
+        stopAudio();
+      } else {
+        const opt = sounds.find((x) => x.key === next);
+        if (opt?.source) {
+          // plays right away so the user hears what they picked
+          playTrack({
+            id: next.startsWith('music:') ? next : `focus:${next}`,
+            title: opt.title || opt.label,
+            subtitle: opt.subtitle || 'Focus sound',
+            source: opt.source,
+            kind: next.startsWith('music:') ? 'music' : 'focus',
+            volume: 0.55,
+          });
+        }
+      }
+      return next;
+    });
+  }, [sounds]);
 
   const handleOpenSoundSheet = useCallback(() => {
     soundSheetRef.current?.expand();

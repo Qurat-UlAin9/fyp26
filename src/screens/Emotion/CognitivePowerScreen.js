@@ -42,23 +42,25 @@ function PreviewPulse({ color = '#A78BFA' }) {
 }
 
 function PowerCard({ item, delay, onPress }) {
+  const { theme, isDark } = useTheme();
+  const accent = theme.accentGradient[0];
   const Icon = item.icon;
 
   return (
     <Animated.View entering={FadeInDown.delay(delay).duration(520)} style={styles.cardWrap}>
       <Pressable onPress={onPress} style={styles.cardPressable}>
-        <BlurView intensity={40} tint="dark" style={styles.cardBlur}>
-          <LinearGradient colors={['rgba(139,92,246,0.28)', 'rgba(15,23,42,0.58)']} style={styles.card}>
+        <BlurView intensity={40} tint={isDark ? 'dark' : 'light'} style={[styles.cardBlur, { borderColor: theme.border }]}>
+          <LinearGradient colors={[`${accent}38`, theme.card]} style={styles.card}>
             <View style={styles.headRow}>
-              <Icon color="#DDD6FE" size={18} strokeWidth={1.5} />
-              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Icon color={accent} size={18} strokeWidth={1.5} />
+              <Text style={[styles.cardTitle, { color: theme.text }]}>{item.title}</Text>
             </View>
 
             <View style={styles.content}>
               <PreviewPulse color={item.id === 'stroop' ? '#F472B6' : item.id === 'memory' ? '#FDE68A' : '#A78BFA'} />
             </View>
 
-            <Text style={styles.openText}>Play</Text>
+            <Text style={[styles.openText, { color: accent }]}>Play</Text>
           </LinearGradient>
         </BlurView>
       </Pressable>
@@ -70,18 +72,10 @@ export default function CognitivePowerScreen({ navigation }) {
   const { theme } = useTheme();
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
-      <BackgroundOrb size={260} color="rgba(139,92,246,0.2)" top={90} left={-70} />
+      <BackgroundOrb size={260} color={`${theme.accentGradient[0]}33`} top={90} left={-70} />
       <BackgroundOrb size={220} color="rgba(168,85,247,0.2)" top={380} right={-40} duration={9800} />
 
       <SafeAreaView style={styles.safeArea}>
-        <Animated.View entering={FadeInDown.duration(450)} style={styles.headerRow}>
-          <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-            <ChevronLeft color="#F5F3FF" size={20} strokeWidth={1.5} />
-            <Text style={styles.backText}>Back</Text>
-          </Pressable>
-          <Text style={styles.title}>Cognitive Power</Text>
-        </Animated.View>
-
         <ScrollView
           style={styles.gamesScroll}
           contentContainerStyle={styles.grid}

@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createAudioPlayer } from 'expo-audio';
+import { useGlobalAudio, playTrack, toggle as toggleGlobalAudio, getAudioState } from '../services/audioPlayer';
 import {
   fetchRewards, importRewards, sendRewardEvent, unlockRewardApi, selectRewardApi,
   setFeaturedBadgeApi, markBadgesCelebratedApi,
@@ -10,7 +10,7 @@ const STORAGE_KEY = 'app_rewards_theme_state_v3';
 
 // Music tracks unlocked via Rewards. Keys are stable IDs referenced
 // from SOUND_PRESETS below.
-const SOUND_LIBRARY = {
+export const SOUND_LIBRARY = {
   lofi_study: require('../../assets/sounds/music/lofi_study.mp3'),
   mozart_andante: require('../../assets/sounds/music/mozart_andante.mp3'),
   classical_mountain: require('../../assets/sounds/music/classical_mountain.mp3'),
@@ -19,6 +19,9 @@ const SOUND_LIBRARY = {
   deep_focus_mountain: require('../../assets/sounds/music/deep_focus_mountain.mp3'),
 };
 
+// One yellow for every coin, so the balance pill, the coin fly-up and the rewards screen match.
+export const COIN_COLORS = { fill: '#FACC15', deep: '#CA8A04', soft: '#FEF08A', text: '#713F12' };
+
 const THEME_PRESETS = {
   vibrantLight: {
     id: 'vibrantLight', name: 'Vibrant Light', mode: 'light', cost: 0,
@@ -26,6 +29,8 @@ const THEME_PRESETS = {
     text: '#0F172A', textSecondary: '#475569', accentGradient: ['#8B5CF6', '#22D3EE'],
     border: 'rgba(99,102,241,0.22)', glow: '#8B5CF6', tabGradient: ['#FFFFFF', '#EEF2FF'],
     quoteImage: 'https://images.unsplash.com/photo-1493244040629-496f6d136cc3?auto=format&fit=crop&w=1400&q=80',
+    surface: '#FFFFFF', sheetGradient: ['#F8FAFF','#EEF2FF'],
+    cards: [['#FF6B7A', '#FF8FA3'], ['#4DA6FF', '#7EC8FF'], ['#3ECFA0', '#6EECC0'], ['#9B7FE8', '#C4AAFF'], ['#2EC4B6', '#5EEADC']],
   },
   sereneBlueDark: {
     id: 'sereneBlueDark', name: 'Serene Blue Dark', mode: 'dark', cost: 0,
@@ -33,6 +38,8 @@ const THEME_PRESETS = {
     text: '#E2E8F0', textSecondary: '#BFDBFE', accentGradient: ['#60A5FA', '#22D3EE'],
     border: 'rgba(125,211,252,0.3)', glow: '#38BDF8', tabGradient: ['#081330', '#11204E'],
     quoteImage: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80',
+    surface: '#0F1B40', sheetGradient: ['#12224F','#0D1838'],
+    cards: [['#2563EB', '#38BDF8'], ['#0EA5E9', '#22D3EE'], ['#4F46E5', '#60A5FA'], ['#0891B2', '#2DD4BF'], ['#3B82F6', '#818CF8']],
   },
   auroraLight: {
     id: 'auroraLight', name: 'Aurora Light', mode: 'light', cost: 0,
@@ -40,6 +47,8 @@ const THEME_PRESETS = {
     text: '#0B3B33', textSecondary: '#2F6D61', accentGradient: ['#10B981', '#06B6D4'],
     border: 'rgba(16,185,129,0.24)', glow: '#10B981', tabGradient: ['#D1FAE5', '#CFFAFE'],
     quoteImage: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1400&q=80',
+    surface: '#F7FFFC', sheetGradient: ['#ECFDF5','#F0FDFA'],
+    cards: [['#10B981', '#06B6D4'], ['#14B8A6', '#22D3EE'], ['#34D399', '#84CC16'], ['#0EA5E9', '#2DD4BF'], ['#059669', '#34D399']],
   },
   forestLight: {
     id: 'forestLight', name: 'Forest Light', mode: 'light', cost: 120,
@@ -47,6 +56,8 @@ const THEME_PRESETS = {
     text: '#1f3d24', textSecondary: '#3f5c43', accentGradient: ['#84cc16', '#22c55e'],
     border: 'rgba(74, 124, 89, 0.2)', glow: '#65a30d', tabGradient: ['#eff9ef', '#f8f3e7'],
     quoteImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=80',
+    surface: '#F7FBF3', sheetGradient: ['#F1F8EC','#F8F5E8'],
+    cards: [['#65A30D', '#22C55E'], ['#15803D', '#4ADE80'], ['#CA8A04', '#A3E635'], ['#0F766E', '#34D399'], ['#92400E', '#D97706']],
   },
   galaxyDark: {
     id: 'galaxyDark', name: 'Galaxy Dark', mode: 'dark', cost: 140,
@@ -54,6 +65,8 @@ const THEME_PRESETS = {
     text: '#f8fafc', textSecondary: '#c4b5fd', accentGradient: ['#6366f1', '#22d3ee'],
     border: 'rgba(129,140,248,0.3)', glow: '#60a5fa', tabGradient: ['#11183b', '#1a1352'],
     quoteImage: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1400&q=80',
+    surface: '#1A1440', sheetGradient: ['#1F1850','#150F36'],
+    cards: [['#6366F1', '#A78BFA'], ['#7C3AED', '#EC4899'], ['#4F46E5', '#22D3EE'], ['#9333EA', '#F472B6'], ['#2563EB', '#8B5CF6']],
   },
   midnightDark: {
     id: 'midnightDark', name: 'Midnight Dark', mode: 'dark', cost: 150,
@@ -61,6 +74,8 @@ const THEME_PRESETS = {
     text: '#f8fafc', textSecondary: '#d1d5db', accentGradient: ['#a16207', '#facc15'],
     border: 'rgba(250,204,21,0.22)', glow: '#fcd34d', tabGradient: ['#0f0f10', '#1f2932'],
     quoteImage: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80',
+    surface: '#1A1A1C', sheetGradient: ['#1F1F22','#141416'],
+    cards: [['#A16207', '#FACC15'], ['#B45309', '#FBBF24'], ['#52525B', '#A1A1AA'], ['#854D0E', '#F59E0B'], ['#3F3F46', '#FDE047']],
   },
 };
 
@@ -112,7 +127,7 @@ const TITLES = [
 ];
 
 // Music presets — replace the old ambient sounds.
-const SOUND_PRESETS = [
+export const SOUND_PRESETS = [
   { id: 'lofi_study', name: 'Lofi Study', artist: 'Zephira Music', cost: 0, genre: 'Lo-fi' },
   { id: 'classical_mountain', name: 'Classical Mountain', artist: 'The Mountain', cost: 40, genre: 'Classical' },
   { id: 'night_drift', name: 'Night Drift', artist: 'Two Times', cost: 50, genre: 'Ambient' },
@@ -137,10 +152,10 @@ const defaultState = {
 
 export const ThemeProvider = ({ children }) => {
   const [state, setState] = useState(defaultState);
-  const [isSoundPlaying, setIsSoundPlaying] = useState(false);
+  // Playback is global (src/services/audioPlayer.js); this just says whether the selected reward track is the one playing
+  const globalAudio = useGlobalAudio();
   const [hydrated, setHydrated] = useState(false); // saved rewards loaded from the phone
   const [rewardsSynced, setRewardsSynced] = useState(false); // rewards loaded from the server at least once
-  const soundRef = useRef(null);
   const stateRef = useRef(defaultState);
   stateRef.current = state;
   const queueRef = useRef(Promise.resolve());
@@ -154,10 +169,6 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => undefined);
   }, [state]);
-  useEffect(() => () => {
-    try { soundRef.current?.remove(); } catch {}
-    soundRef.current = null;
-  }, []);
 
   // ------ SERVER SYNC ------
   // The server (user_rewards table) is the source of truth. Screens still update the phone copy
@@ -287,31 +298,27 @@ export const ThemeProvider = ({ children }) => {
     [serverCall]
   );
 
-  const toggleSoundPlayback = useCallback(async () => {
-    if (!state.selectedSoundId) return;
-    try {
-      if (!soundRef.current) {
-        const player = createAudioPlayer(SOUND_LIBRARY[state.selectedSoundId]);
-        player.loop = true;
-        player.volume = 0.5;
-        player.play();
-        soundRef.current = player;
-        setIsSoundPlaying(true);
-        return;
-      }
-      if (isSoundPlaying) soundRef.current.pause();
-      else soundRef.current.play();
-      setIsSoundPlaying((prev) => !prev);
-    } catch {
-      setIsSoundPlaying(false);
-    }
-  }, [isSoundPlaying, state.selectedSoundId]);
+  const selectedTrackId = state.selectedSoundId ? `music:${state.selectedSoundId}` : null;
+  const isSoundPlaying = Boolean(selectedTrackId) && globalAudio.isPlaying && globalAudio.track?.id === selectedTrackId;
 
-  useEffect(() => {
-    if (!soundRef.current) return;
-    try { soundRef.current.pause(); soundRef.current.remove(); } catch {}
-    soundRef.current = null;
-    setIsSoundPlaying(false);
+  // Play / pause the selected reward track on the shared player (keeps playing when leaving the screen)
+  const toggleSoundPlayback = useCallback(async () => {
+    const id = state.selectedSoundId;
+    if (!id || !SOUND_LIBRARY[id]) return;
+    const current = getAudioState();
+    if (current.track?.id === `music:${id}`) {
+      toggleGlobalAudio();
+      return;
+    }
+    const preset = SOUND_PRESETS.find((p) => p.id === id);
+    await playTrack({
+      id: `music:${id}`,
+      title: preset?.name || 'Music',
+      subtitle: preset?.artist || '',
+      source: SOUND_LIBRARY[id],
+      kind: 'music',
+      volume: 0.5,
+    });
   }, [state.selectedSoundId]);
 
   // ------ STAT REGISTRATION (the server awards the coins: task 5, step 1, habit 2) ------

@@ -62,23 +62,25 @@ function ReframeFlip() {
 }
 
 function GrowthCard({ item, delay, onPress }) {
+  const { theme, isDark } = useTheme();
+  const accent = theme.accentGradient[0];
   const Icon = item.icon;
 
   return (
     <Animated.View entering={FadeInDown.delay(delay).duration(550)} style={styles.cardWrap}>
       <Pressable onPress={onPress}>
-        <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
-          <LinearGradient colors={['rgba(251,191,36,0.18)', 'rgba(15,23,42,0.62)']} style={styles.card}>
+        <BlurView intensity={45} tint={isDark ? 'dark' : 'light'} style={[styles.cardBlur, { borderColor: theme.border }]}>
+          <LinearGradient colors={[`${accent}33`, theme.card]} style={styles.card}>
             <View style={styles.row}>
-              <Icon color="#FDE68A" size={20} strokeWidth={1.5} />
-              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Icon color={accent} size={20} strokeWidth={1.5} />
+              <Text style={[styles.cardTitle, { color: theme.text }]}>{item.title}</Text>
             </View>
-            <Text style={styles.cardDesc}>{item.desc}</Text>
+            <Text style={[styles.cardDesc, { color: theme.textSecondary }]}>{item.desc}</Text>
             {item.id === 'reframing' ? (
               <ReframeFlip />
             ) : (
-              <View style={styles.ctaRow}>
-                <Text style={styles.ctaText}>Open Session</Text>
+              <View style={[styles.ctaRow, { borderColor: accent }]}>
+                <Text style={[styles.ctaText, { color: accent }]}>Open Session</Text>
               </View>
             )}
           </LinearGradient>
@@ -92,18 +94,10 @@ export default function MindfulGrowthScreen({ navigation }) {
   const { theme } = useTheme();
   return (
     <LinearGradient colors={theme.background} style={styles.container}>
-      <BackgroundOrb size={250} color="rgba(251,191,36,0.2)" top={60} left={-45} />
+      <BackgroundOrb size={250} color={`${theme.accentGradient[0]}33`} top={60} left={-45} />
       <BackgroundOrb size={230} color="rgba(245,158,11,0.16)" top={380} right={-65} duration={10500} />
 
       <SafeAreaView style={styles.safeArea}>
-        <Animated.View entering={FadeInDown.duration(460)} style={styles.headerRow}>
-          <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-            <ChevronLeft color="#F8FAFC" size={20} strokeWidth={1.5} />
-            <Text style={styles.backText}>Back</Text>
-          </Pressable>
-          <Text style={styles.title}>Mindful Growth</Text>
-        </Animated.View>
-
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {GROWTH_PATHS.map((item, index) => (
             <GrowthCard
@@ -121,7 +115,7 @@ export default function MindfulGrowthScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  safeArea: { flex: 1, paddingTop: 14 },
+  safeArea: { flex: 1, paddingTop: 6 },
   headerRow: { paddingHorizontal: 20, marginBottom: 8 },
   backButton: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 12 },
   backText: { color: '#F8FAFC', fontSize: 15 },

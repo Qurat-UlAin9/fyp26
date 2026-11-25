@@ -22,7 +22,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AddTaskBottomSheet from './AddTaskBottomSheet';
 import { useAppData } from '../../contexts/AppDataContext';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme, COIN_COLORS } from '../../contexts/ThemeContext';
 import { showAlert } from '../../utils/alert';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -116,7 +116,31 @@ const CoinPill = React.forwardRef(({ coins, onHistoryPress }, ref) => (
 ));
 
 // ─── Task Card ────────────────────────────────────────────────────────────────
-function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, onDelete, onEdit, onCoinFly, onAskCoach }) {  const th        = getThemeById(task.themeId);
+// "Tue 25 Nov · 14:00–14:25" for a planned step
+const fmtClock = (h) => {
+  const hh = Math.floor(h + 1e-9);
+  const mm = Math.round((h - hh) * 60);
+  return `${String(hh % 24).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+};
+const stepTimeLabel = (sub) => {
+  if (!sub?.scheduledDate) return '';
+  const [y, m, d] = sub.scheduledDate.split('-').map(Number);
+  const day = new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+  if (sub.scheduledHour == null) return day;
+  const mins = Number(sub.durationMins || sub.minutes) || 0;
+  const end = mins ? `–${fmtClock(Number(sub.scheduledHour) + mins / 60)}` : '';
+  return `${day} · ${fmtClock(Number(sub.scheduledHour))}${end}`;
+};
+
+function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, onDelete, onEdit, onCoinFly, onAskCoach }) {
+  const { theme: appTheme } = useTheme();
+  // The card colour comes from the app theme (the default theme keeps the colourful look)
+  const baseTheme = getThemeById(task.themeId);
+  const paletteIdx = Math.max(0, CARD_THEMES.findIndex((t) => t.id === baseTheme.id));
+  const pal = appTheme.cards?.[paletteIdx % (appTheme.cards?.length || 1)];
+  const th = pal
+    ? { ...baseTheme, cardGradient: pal, accent: pal[0], dot: pal[0], glow: `${pal[0]}73` }
+    : baseTheme;
   const scaleAnim = useRef(new RNAnimated.Value(1)).current;
   const cardRef   = useRef(null);
 
@@ -179,7 +203,7 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
   };
 
   return (
-    <RNAnimated.View ref={cardRef} style={[styles.cardWrapper, { transform: [{ scale: scaleAnim }] }]}>
+    <RNAnimated.View ref={cardRef} collapsable={false} style={[styles.cardWrapper, { transform: [{ scale: scaleAnim }] }]}>
       <View style={[styles.cardGlow, { backgroundColor: th.glow, shadowColor: th.accent }]} />
       <LinearGradient colors={th.cardGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.card}>
 
@@ -273,6 +297,7 @@ function TaskCard({ task, isExpanded, onToggle, onToggleSubtask, onStartFocus, o
                   ]}>
                     {sub.title}
                     {sub.detail ? `\n${sub.detail}` : ''}
+                    {stepTimeLabel(sub) ? `\n🕒 ${stepTimeLabel(sub)}` : ''}
                   </Text>
                   {!sub.done && !subtasks.slice(0, index).some((s) => !s.done) && (
                     <TouchableOpacity onPress={() => onAskCoach(task, sub)} style={styles.askBtn} hitSlop={6}>
@@ -586,7 +611,7 @@ const styles = StyleSheet.create({
   historyBtn:  { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' },
   historyIcon: { fontSize: 18 },
   coinPill:    { paddingHorizontal: 14, paddingVertical: 7, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)' },
-  coinPillText:{ color: '#FDE68A', fontWeight: '700', fontSize: 14 },
+  coinPillText:{ color: COIN_COLORS.deep, fontWeight: '700', fontSize: 14 },
   listContent: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 120 },
   cardWrapper: { marginVertical: 9, borderRadius: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.35, shadowRadius: 16, elevation: 12 },
   cardGlow:    { position: 'absolute', inset: 0, borderRadius: 20, top: -4, left: -4, right: -4, bottom: -4, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.6, shadowRadius: 18, elevation: 0 },
@@ -607,7 +632,7 @@ const styles = StyleSheet.create({
   subtaskRow:  { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, gap: 10 },
   checkCircle: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   subtaskText: { flex: 1, fontSize: 14, fontWeight: '500' },
-  coinBadge:   { fontSize: 11, fontWeight: '700', color: '#FDE68A' },
+  coinBadge:   { fontSize: 11, fontWeight: '700', color: COIN_COLORS.fill },
   noSubtasks:  { fontSize: 13, fontStyle: 'italic', paddingVertical: 6 },
   actionRow:   { flexDirection: 'row', gap: 10, marginTop: 14 },
   focusBtn:    { flex: 1, paddingVertical: 11, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },

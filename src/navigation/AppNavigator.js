@@ -72,9 +72,9 @@ export default function AppNavigator() {
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
       <Stack.Screen name="Rewards" component={RewardsScreen} options={{ title: 'Rewards' }} />
       <Stack.Screen name="EmotionRegulation" component={EmotionRegulationScreen} options={{ title: 'Emotion Regulation' }} />
-      <Stack.Screen name="ImmediateRelief" component={ImmediateReliefScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="MindfulGrowth" component={MindfulGrowthScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="CognitivePower" component={CognitivePowerScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ImmediateRelief" component={ImmediateReliefScreen} options={{ title: 'Immediate Relief' }} />
+      <Stack.Screen name="MindfulGrowth" component={MindfulGrowthScreen} options={{ title: 'Mindful Growth' }} />
+      <Stack.Screen name="CognitivePower" component={CognitivePowerScreen} options={{ title: 'Cognitive Power' }} />
       <Stack.Screen name="BalloonSession" component={BalloonSession} options={{ headerShown: false, animation: 'fade' }} />
       
       <Stack.Screen name="SplashSession" component={SplashSession} options={{ headerShown: false, animation: 'fade' }} />

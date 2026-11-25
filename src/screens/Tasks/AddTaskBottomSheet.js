@@ -9,7 +9,8 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import BottomSheet, { BottomSheetScrollView } from '../../components/common/SheetCompat';
+import BottomSheet, { BottomSheetScrollView, sheetColors } from '../../components/common/SheetCompat';
+import { useTheme } from '../../contexts/ThemeContext';
 //import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { X, Calendar, Bell, Sparkles } from 'lucide-react-native';
@@ -77,6 +78,9 @@ function validateDeadline(iso) {
 }
 
 const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) => {
+  const { theme, isDark } = useTheme();
+  const c = useMemo(() => sheetColors(theme, isDark), [theme, isDark]);
+  const styles = useMemo(() => makeStyles(c), [c]);
   const snapPoints = useMemo(() => ['92%'], []);
   const isEdit = Boolean(initialTask);
 
@@ -536,29 +540,29 @@ const AddTaskBottomSheet = forwardRef(({ onSubmit, initialTask, onClose }, ref) 
 
 export default AddTaskBottomSheet;
 
-const styles = StyleSheet.create({
-  sheetBg: { backgroundColor: '#1E293B', borderTopLeftRadius: 28, borderTopRightRadius: 28, shadowColor: '#000', shadowOffset: { width: 0, height: -6 }, shadowOpacity: 0.4, shadowRadius: 18, elevation: 24 },
-  handle: { backgroundColor: '#475569', width: 40 },
+const makeStyles = (c) => StyleSheet.create({
+  sheetBg: { backgroundColor: c.bg, borderTopLeftRadius: 28, borderTopRightRadius: 28, shadowColor: '#000', shadowOffset: { width: 0, height: -6 }, shadowOpacity: 0.4, shadowRadius: 18, elevation: 24 },
+  handle: { backgroundColor: c.handle, width: 40 },
   content: { paddingHorizontal: 22, paddingTop: 8, paddingBottom: 40 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, marginTop: 4 },
-  sheetTitle: { fontSize: 22, fontWeight: '800', color: '#F1F5F9', letterSpacing: -0.3 },
-  closeBtn: { width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' },
-  label: { fontSize: 11, fontWeight: '800', color: '#64748B', letterSpacing: 1.2, marginBottom: 8, marginTop: 4, textTransform: 'uppercase' },
-  input: { backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, padding: 14, fontSize: 15, color: '#F1F5F9', marginBottom: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', minHeight: 52 },
-  rowInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, paddingHorizontal: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', height: 52, gap: 10, marginBottom: 8 },
-  flexInput: { flex: 1, color: '#F1F5F9', fontSize: 15 },
-  helperText: { fontSize: 12, color: '#64748B', marginBottom: 18, lineHeight: 16, fontStyle: 'italic' },
+  sheetTitle: { fontSize: 22, fontWeight: '800', color: c.text, letterSpacing: -0.3 },
+  closeBtn: { width: 34, height: 34, borderRadius: 17, backgroundColor: c.fieldBorder, alignItems: 'center', justifyContent: 'center' },
+  label: { fontSize: 11, fontWeight: '800', color: c.muted, letterSpacing: 1.2, marginBottom: 8, marginTop: 4, textTransform: 'uppercase' },
+  input: { backgroundColor: c.field, borderRadius: 14, padding: 14, fontSize: 15, color: c.text, marginBottom: 12, borderWidth: 1, borderColor: c.fieldBorder, minHeight: 52 },
+  rowInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: c.field, borderRadius: 14, paddingHorizontal: 14, borderWidth: 1, borderColor: c.fieldBorder, height: 52, gap: 10, marginBottom: 8 },
+  flexInput: { flex: 1, color: c.text, fontSize: 15 },
+  helperText: { fontSize: 12, color: c.muted, marginBottom: 18, lineHeight: 16, fontStyle: 'italic' },
   categoryRow: { gap: 8, paddingBottom: 22, paddingRight: 8 },
-  categoryChip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)', backgroundColor: 'rgba(255,255,255,0.04)' },
+  categoryChip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: c.fieldBorder, backgroundColor: c.field },
   categoryEmoji: { fontSize: 14 },
-  categoryLabel: { color: '#CBD5E1', fontWeight: '700', fontSize: 13 },
-  toggleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 16, padding: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', marginBottom: 24 },
+  categoryLabel: { color: c.muted, fontWeight: '700', fontSize: 13 },
+  toggleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: c.field, borderRadius: 16, padding: 14, borderWidth: 1, borderColor: c.fieldBorder, marginBottom: 24 },
   toggleLeft: { flexDirection: 'row', alignItems: 'center' },
-  toggleLabel: { color: '#E2E8F0', fontWeight: '700', fontSize: 14 },
-  toggleSub: { color: '#64748B', fontSize: 12, marginTop: 2 },
+  toggleLabel: { color: c.text, fontWeight: '700', fontSize: 14 },
+  toggleSub: { color: c.muted, fontSize: 12, marginTop: 2 },
   priorityRow: { flexDirection: 'row', gap: 10, marginBottom: 18 },
-  priorityPill: { flex: 1, paddingVertical: 10, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)', alignItems: 'center' },
-  priorityText: { color: '#CBD5E1', fontWeight: '700', fontSize: 13 },
+  priorityPill: { flex: 1, paddingVertical: 10, borderRadius: 12, borderWidth: 1, borderColor: c.fieldBorder, alignItems: 'center' },
+  priorityText: { color: c.muted, fontWeight: '700', fontSize: 13 },
   themeRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingVertical: 10, marginBottom: 20 },
   dotWrapper: { padding: 4 },
   themeDot: { width: 40, height: 40, borderRadius: 20 },
@@ -567,12 +571,12 @@ const styles = StyleSheet.create({
   previewSubject: { fontSize: 13, opacity: 0.85, marginBottom: 6, fontStyle: 'italic' },
   previewDate: { fontSize: 13, opacity: 0.82, fontWeight: '500' },
   previewScheduleWrap: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: c.field,
     borderRadius: 14,
     padding: 14,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: c.fieldBorder,
   },
   scheduleRow: {
     flexDirection: 'row',
@@ -586,13 +590,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 6,
   },
-  scheduleTitle: { color: '#E2E8F0', fontSize: 13, fontWeight: '600' },
-  scheduleDate: { color: '#64748B', fontSize: 11, marginTop: 2, fontWeight: '500' },
-  generatingBox: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: 14, marginBottom: 20 },
-  generatingText: { color: '#CBD5E1', fontSize: 14, fontWeight: '600' },
+  scheduleTitle: { color: c.text, fontSize: 13, fontWeight: '600' },
+  scheduleDate: { color: c.muted, fontSize: 11, marginTop: 2, fontWeight: '500' },
+  generatingBox: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: c.field, borderRadius: 14, padding: 14, marginBottom: 20 },
+  generatingText: { color: c.muted, fontSize: 14, fontWeight: '600' },
   saveBtnWrap: { borderRadius: 18, overflow: 'hidden', marginBottom: 14 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 16, borderRadius: 18 },
   saveBtnText: { color: '#fff', fontWeight: '800', fontSize: 16, letterSpacing: 0.2 },
   cancelBtn: { alignItems: 'center', paddingVertical: 10 },
-  cancelText: { color: '#64748B', fontWeight: '600', fontSize: 15 },
+  cancelText: { color: c.muted, fontWeight: '600', fontSize: 15 },
 });

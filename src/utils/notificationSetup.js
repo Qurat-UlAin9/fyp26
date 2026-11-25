@@ -9,8 +9,23 @@ import { Platform } from 'react-native';
 export const CATEGORY_HABIT = 'habit-nudge';
 export const CATEGORY_TASK = 'task-nudge';
 
+export const CHANNEL_ID = 'default';
+
+// Android 8+ needs a channel before anything can be shown (and Android 13+ only asks for permission
+// once one exists). Safe to call every launch.
+export async function ensureAndroidChannel() {
+  if (Platform.OS !== 'android') return;
+  await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
+    name: 'Reminders & nudges',
+    importance: Notifications.AndroidImportance.MAX,
+    vibrationPattern: [0, 250, 250, 250],
+    lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+  });
+}
+
 export async function registerNotificationCategories() {
   if (Platform.OS === 'web') return;
+  await ensureAndroidChannel();
 
   await Notifications.setNotificationCategoryAsync(CATEGORY_HABIT, [
     {
@@ -62,7 +77,7 @@ export function attachNotificationResponseListener(handlers) {
         const { actionIdentifier, notification } = response;
         const data = notification?.request?.content?.data || {};
 
-        // Fire the matching handler
+        // Fire the matching handler (a plain tap on the notification is DEFAULT_ACTION_IDENTIFIER)
         const handler = handlers[actionIdentifier];
         if (handler) {
           await handler(data);
@@ -74,4 +89,17 @@ export function attachNotificationResponseListener(handlers) {
   );
 
   return () => subscription.remove();
+}
+
+// The app was closed when the notification was tapped: handle that tap once the app is up
+export async function consumeLastNotificationResponse(handlers) {
+  if (Platform.OS === 'web') return;
+  try {
+    const last = await Notifications.getLastNotificationResponseAsync();
+    if (!last) return;
+    const handler = handlers[last.actionIdentifier];
+    if (handler) await handler(last.notification?.request?.content?.data || {});
+  } catch (err) {
+    console.warn('last notification response failed:', err?.message);
+  }
 }

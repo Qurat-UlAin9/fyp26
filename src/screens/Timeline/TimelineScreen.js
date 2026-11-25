@@ -94,8 +94,13 @@ function hashStr(s) {
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
-function colorForEvent(event) {
-  return CARD_COLORS[hashStr(String(event.id)) % CARD_COLORS.length].bg;
+// Card colours come from the app theme, so a task has the same colour here as on the Tasks screen
+function colorForEvent(event, theme) {
+  const palette = theme?.cards;
+  if (!palette?.length) return CARD_COLORS[hashStr(String(event.id)) % CARD_COLORS.length].bg;
+  if (event.type === 'focus') return theme.accentGradient;
+  if (event.type === 'habit') return palette[(hashStr(String(event.id)) + 3) % palette.length];
+  return palette[(event.colorIdx || 0) % palette.length];
 }
 
 // Estimate rendered height from text length + available card width.
@@ -304,19 +309,21 @@ function NowLine({ days, columnWidth, hourOffsets, hourHeights }) {
   );
 }
 
-function EventCard({ placed, colIdx, columnWidth, onPress }) {
+function EventCard({ placed, colIdx, columnWidth, onPress, theme }) {
   const { event, top, height } = placed;
 
   const leftOffset = TIME_COL_WIDTH + colIdx * columnWidth + 4;
   const cardWidth = columnWidth - 8;
 
-  const colors = colorForEvent(event);
+  const colors = colorForEvent(event, theme);
   const tight = height < TIGHT_CARD_THRESHOLD;
 
   const icon = event.type === 'focus' ? '🎯' : event.type === 'habit' ? '✅' : '📌';
   const hasSubtitle = Boolean(event.subtitle);
   const primaryText = hasSubtitle ? event.subtitle : event.title;
-  const secondaryText = hasSubtitle ? `From · ${event.title}` : null;
+  const secondaryText = hasSubtitle
+    ? `${event.timeLabel ? `${event.timeLabel} · ` : ''}${event.title}`
+    : event.timeLabel || null;
   const done = Boolean(event.done);
 
   return (
@@ -348,6 +355,11 @@ function EventCard({ placed, colIdx, columnWidth, onPress }) {
             >
               {primaryText}
             </Text>
+            {event.focusMins > 0 && (
+              <View style={styles.moreBadge}>
+                <Text style={styles.moreBadgeText}>🎯{event.focusMins}m</Text>
+              </View>
+            )}
             {event.remainingCount > 0 && (
               <View style={styles.moreBadge}>
                 <Text style={styles.moreBadgeText}>+{event.remainingCount}</Text>
@@ -450,15 +462,10 @@ export default function TimelineScreen() {
       }
 
       // Status filter
-      if (statusFilter === 'missed') return Boolean(e.missed) && !e.done && !e.allDone;
-      if (statusFilter === 'active') {
-        if (e.type === 'focus') return false; // focus history is completed
-        return !e.done && !e.allDone;
-      }
-      if (statusFilter === 'done') {
-        if (e.type === 'focus') return true; // all focus sessions are "done"
-        return e.done || e.allDone;
-      }
+      if (statusFilter === 'missed') return e.type === 'task' && Boolean(e.missed) && !e.done && !e.allDone;
+      // focus sessions are records, so they always show in Active; tasks and habits only while open
+      if (statusFilter === 'active') return e.type === 'focus' ? true : !e.done && !e.allDone;
+      if (statusFilter === 'done') return Boolean(e.done || e.allDone);
       return true; // 'all'
     });
   }, [timelineEvents, visibleKeys, activeTab, statusFilter]);
@@ -546,7 +553,7 @@ export default function TimelineScreen() {
     : activeTab === 'Habits'
     ? 'Add a habit — it will appear on the grid.'
     : activeTab === 'Focus'
-    ? 'Start a timer on the Focus tab. Completed sessions appear here.'
+    ? 'Start a timer on the Focus tab. Every session, finished or still running, appears here.'
     : 'Tasks, focus sessions, and habits all appear on this grid.';
 
   return (
@@ -759,6 +766,7 @@ export default function TimelineScreen() {
                     colIdx={colIdx}
                     columnWidth={columnWidth}
                     onPress={handleEventPress}
+                    theme={theme}
                   />
                 ));
               })}

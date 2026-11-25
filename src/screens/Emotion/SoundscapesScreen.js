@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
+import { useGlobalAudio } from '../../services/audioPlayer';
 import { ChevronLeft, Pause, Play } from 'lucide-react-native';
 import Animated, {
   Easing,
@@ -126,71 +126,27 @@ function TrackCard({ track, isActive, isPlaying, progress, onToggle, delay }) {
 }
 
 export default function SoundscapesScreen({ navigation }) {
-  const soundRef = useRef(null);
-  const subRef = useRef(null);
-  const [activeId, setActiveId] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [statusMap, setStatusMap] = useState({});
-
-  useEffect(() => {
-    setAudioModeAsync({
-      playsInSilentMode: true,
-      interruptionMode: 'duckOthers',
-      interruptionModeAndroid: 'duckOthers',
-      shouldPlayInBackground: false,
-    }).catch(() => {});
-
-    return () => {
-      subRef.current?.remove();
-      try { soundRef.current?.remove(); } catch {}
-      soundRef.current = null;
-    };
-  }, []);
-
-  const statusListener = (trackId) => (status) => {
-    if (!status.isLoaded) return;
-
-    setStatusMap((prev) => ({
-      ...prev,
-      [trackId]: {
-        duration: status.duration || 1,
-        position: status.currentTime || 0,
-      },
-    }));
-
-    if (status.didJustFinish) {
-      setIsPlaying(false);
-      setActiveId(null);
-    }
-  };
+  // Shared player: music started here keeps playing on other screens (see MiniPlayer)
+  const audio = useGlobalAudio();
+  const activeId = audio.track?.kind === 'soundscape' ? audio.track.id.replace('soundscape:', '') : null;
+  const isPlaying = Boolean(activeId) && audio.isPlaying;
+  const statusMap = activeId
+    ? { [activeId]: { duration: audio.duration || 1, position: audio.position || 0 } }
+    : {};
 
   const toggleTrack = (track) => {
-    const isSame = activeId === track.id;
-
-    if (isSame && soundRef.current) {
-      if (isPlaying) {
-        soundRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        soundRef.current.play();
-        setIsPlaying(true);
-      }
+    if (activeId === track.id) {
+      audio.toggle();
       return;
     }
-
-    subRef.current?.remove();
-    subRef.current = null;
-    if (soundRef.current) {
-      try { soundRef.current.remove(); } catch {}
-      soundRef.current = null;
-    }
-
-    const player = createAudioPlayer(track.source);
-    subRef.current = player.addListener('playbackStatusUpdate', statusListener(track.id));
-    player.play();
-    soundRef.current = player;
-    setActiveId(track.id);
-    setIsPlaying(true);
+    audio.playTrack({
+      id: `soundscape:${track.id}`,
+      title: track.title || track.name || 'Soundscape',
+      subtitle: 'Soundscapes',
+      source: track.source,
+      kind: 'soundscape',
+      loop: false,
+    });
   };
 
   const progressByTrack = useMemo(() => {

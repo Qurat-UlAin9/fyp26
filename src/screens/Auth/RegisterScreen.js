@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { showAlert } from '../../utils/alert';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Mail, Lock, User } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -28,19 +29,19 @@ export default function RegisterScreen({ navigation }) {
 
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
-      Alert.alert('Let’s complete your profile', 'Please enter username, email, and password to continue.');
+      showAlert('Let’s complete your profile', 'Please enter username, email, and password to continue.');
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      Alert.alert('Email looks invalid', 'Please enter a valid email format like name@example.com.');
+      showAlert('Email looks invalid', 'Please enter a valid email format like name@example.com.');
       return;
     }
     if (!isStrongPassword(password.trim())) {
-      Alert.alert('Password requirements', 'Use at least 6 characters and include at least 1 digit.');
+      showAlert('Password requirements', 'Use at least 6 characters and include at least 1 digit.');
       return;
     }
     if (password !== confirm) {
-      Alert.alert('Passwords do not match', 'Please make sure both password fields are exactly the same.');
+      showAlert('Passwords do not match', 'Please make sure both password fields are exactly the same.');
       return;
     }
 
@@ -55,7 +56,7 @@ export default function RegisterScreen({ navigation }) {
       updateProfile({ name: name.trim() || 'Friend', email: email.trim() });
       navigation.replace('Onboarding');
     } catch (error) {
-      Alert.alert(
+      showAlert(
         'Registration failed',
         `${error.message}\n\nGuidance:\n• Username must be unique\n• Email must be unique\n• Password must be 6+ chars with at least 1 digit`
       );

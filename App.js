@@ -10,47 +10,47 @@ import { AppDataProvider, useAppData } from './src/contexts/AppDataContext';
 import { ProductivityProvider } from './src/contexts/ProductivityContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import CelebrationHost from './src/components/common/CelebrationHost';
+import MiniPlayer from './src/components/common/MiniPlayer';
 import { navigationRef } from './src/utils/navigationRef';
 import { toastConfig } from './src/utils/toastConfig';
 import {
   registerNotificationCategories,
   attachNotificationResponseListener,
+  consumeLastNotificationResponse,
 } from './src/utils/notificationSetup';
 import { registerBackgroundCheck } from './src/utils/backgroundCheck';
 
 // Small effect component so we can use useAppData() inside the provider
 function NotificationBridge() {
-  const { habits, tasks, updateHabit, updateTask } = useAppData();
-  const detachRef = useRef(null);
+  const { toggleHabitSlot, updateTask } = useAppData();
+  // Always read the newest lists/functions; the listener itself is attached once
+  const live = useRef({});
+  const appData = useAppData();
+  live.current = appData;
 
   useEffect(() => {
     registerNotificationCategories().catch(() => {});
     registerBackgroundCheck().catch(() => {});
 
-    const detach = attachNotificationResponseListener({
-      'did-it': async (data) => {
-        if (data.kind !== 'habit-nudge') return;
-        const { habitId, slotIndex } = data;
-        const habit = habits.find((h) => h.id === habitId);
-        if (!habit) return;
-
-        const updated = [...habit.completions];
-        updated[slotIndex] = true;
-
-        await updateHabit(habitId, (prev) => ({
-          ...prev,
-          completions: updated,
-          metadata: {
-            ...(prev.metadata || {}),
-            completions: updated,
-            lastCompletionDate: new Date().toISOString().slice(0, 10),
-          },
-        }));
+    const handlers = {
+      // Tapping the notification itself
+      [Notifications.DEFAULT_ACTION_IDENTIFIER]: async (data) => {
+        if (!navigationRef.isReady()) return;
+        if (data.kind === 'habit-nudge') navigationRef.navigate('MainTabs', { screen: 'Habits' });
+        else if (data.kind === 'task-nudge' || data.kind === 'step-reminder')
+          navigationRef.navigate('MainTabs', { screen: 'Tasks', params: { expandTaskId: data.taskId, _ts: Date.now() } });
       },
 
-      'later': async (data) => {
+      'did-it': async (data) => {
         if (data.kind !== 'habit-nudge') return;
-        // Snooze: re-fire in 30 minutes
+        const habit = live.current.habits?.find((h) => h.id === data.habitId);
+        const idx = Number.isInteger(data.slotIndex) ? data.slotIndex : 0;
+        if (!habit || habit.completions?.[idx]) return; // unknown habit or already ticked
+        await live.current.toggleHabitSlot(data.habitId, idx);
+      },
+
+      later: async (data) => {
+        if (data.kind !== 'habit-nudge') return;
         await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Snoozed habit',
@@ -58,32 +58,27 @@ function NotificationBridge() {
             categoryIdentifier: 'habit-nudge',
             data,
           },
-          trigger: { seconds: 30 * 60 },
+          trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 30 * 60 },
         });
       },
 
-      'skip': async () => {
-        // Nothing to do; user dismissed for today. Cooldown prevents re-nudge.
-      },
+      skip: async () => {},
 
-      'starting': async (data) => {
-        if (data.kind !== 'task-nudge') return;
-        const { taskId } = data;
-        const task = tasks.find((t) => t.id === taskId);
+      starting: async (data) => {
+        if (data.kind !== 'task-nudge' && data.kind !== 'step-reminder') return;
+        const task = live.current.tasks?.find((t) => t.id === data.taskId);
         if (!task) return;
-        await updateTask(taskId, (prev) => ({
-          ...prev,
-          status: 'In Progress',
-        }));
+        await live.current.updateTask(data.taskId, (prev) => ({ ...prev, status: 'In Progress' }));
       },
 
-      'reschedule': async () => {
-        // opensAppToForeground:true means the app is opening anyway.
-        // The ChatbotScreen or Tasks screen will be reached manually.
+      // opens the app (opensAppToForeground), then the user lands on Tasks
+      reschedule: async (data) => {
+        if (navigationRef.isReady() && data.taskId)
+          navigationRef.navigate('MainTabs', { screen: 'Tasks', params: { expandTaskId: data.taskId, _ts: Date.now() } });
       },
 
       'not-now': async (data) => {
-        if (data.kind !== 'task-nudge') return;
+        if (data.kind !== 'task-nudge' && data.kind !== 'step-reminder') return;
         await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Task reminder',
@@ -91,16 +86,19 @@ function NotificationBridge() {
             categoryIdentifier: 'task-nudge',
             data,
           },
-          trigger: { seconds: 60 * 60 }, // 1 hour
+          trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 60 * 60 },
         });
       },
-    });
-
-    detachRef.current = detach;
-    return () => {
-      if (detachRef.current) detachRef.current();
     };
-  }, [habits, tasks, updateHabit, updateTask]);
+
+    const detach = attachNotificationResponseListener(handlers);
+    // the app was closed when the notification was tapped
+    const t = setTimeout(() => consumeLastNotificationResponse(handlers), 1500);
+    return () => {
+      detach();
+      clearTimeout(t);
+    };
+  }, []);
 
   return null;
 }
@@ -116,6 +114,7 @@ export default function App() {
                 <AppNavigator />
                 <NotificationBridge />
                 <CelebrationHost />
+                <MiniPlayer />
               </NavigationContainer>
               <Toast
                 config={toastConfig}
